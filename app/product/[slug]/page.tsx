@@ -2,13 +2,22 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getProductBySlug, getRelatedProducts } from "@/lib/products";
+import { getProductBySlug, getRelatedProducts, listCatalogProducts } from "@/lib/products";
 import ProductShowcase from "@/components/ProductShowcase";
 import ProductCard from "@/components/ProductCard";
 
 import { getAbsoluteUrl, generateProductJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 
 export const revalidate = 300;
+
+export async function generateStaticParams() {
+  try {
+    const prods = await listCatalogProducts({ status: "published", limit: 50 });
+    return prods.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
+}
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;

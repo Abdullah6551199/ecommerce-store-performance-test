@@ -11,6 +11,15 @@ import { normalizeImageUrl } from "@/lib/utils";
 
 export const revalidate = 300;
 
+export async function generateStaticParams() {
+  try {
+    const cats = await listCategories({ status: "active" });
+    return cats.map((c) => ({ slug: c.slug }));
+  } catch {
+    return [];
+  }
+}
+
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
 }

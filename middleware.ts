@@ -2,21 +2,25 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
 };
 
 /**
  * Next.js Edge Middleware for Admin Route Protection
- * - Intercepts all `/admin/*` routes
- * - Permits public access to `/admin/login`
- * - Redirects unauthenticated visitors immediately to `/admin/login`
+ * - Intercepts all `/admin/*` pages and `/api/admin/*` endpoints
+ * - Permits public access to `/admin/login` and `/api/admin/login`
+ * - Returns 401 JSON for unauthenticated API requests
+ * - Redirects unauthenticated page visitors immediately to `/admin/login`
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow unrestricted access to the admin login page
-  if (pathname === "/admin/login" || pathname.startsWith("/admin/login/")) {
-    // If already authenticated and visiting login, optionally continue or allow
+  // Allow unrestricted access to the admin login page and login endpoint
+  if (
+    pathname === "/admin/login" ||
+    pathname.startsWith("/admin/login/") ||
+    pathname === "/api/admin/login"
+  ) {
     return NextResponse.next();
   }
 
@@ -24,10 +28,17 @@ export function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get("admin_session");
 
   if (!sessionCookie || !sessionCookie.value) {
+    if (pathname.startsWith("/api/admin")) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Admin session required." },
+        { status: 401 }
+      );
+    }
+
     const loginUrl = new URL("/admin/login", request.url);
-    // Optional: attach returnUrl if needed in future
     return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
 }
+

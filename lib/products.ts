@@ -112,8 +112,8 @@ export type ProductInput = z.infer<typeof productSchema>;
  * ==============================================================================
  */
 
-const memoryProducts: ProductRecord[] = [];
-const memoryProductImages: ProductImageRecord[] = [];
+export const memoryProducts: ProductRecord[] = [];
+export const memoryProductImages: ProductImageRecord[] = [];
 
 /**
  * Format raw database row and associated images into ProductWithImagesAndCategory
@@ -451,7 +451,7 @@ export async function createProduct(input: ProductInput): Promise<ProductWithIma
     stockQuantity: Number(input.stockQuantity) || 0,
     stockStatus: input.stockStatus || "in_stock",
     lowStockThreshold: Number(input.lowStockThreshold) || 5,
-    trackInventory: Boolean(input.trackInventory),
+    trackInventory: input.trackInventory !== undefined ? Boolean(input.trackInventory) : true,
     allowBackorders: Boolean(input.allowBackorders),
     categoryId: input.categoryId || null,
     brand: input.brand || null,

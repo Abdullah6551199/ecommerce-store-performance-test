@@ -87,9 +87,11 @@ export default function CheckoutPage(): React.JSX.Element {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           ...formData,
           paymentMethod: "cod",
+          cartSessionId: cart?.sessionId || cart?.id || undefined,
         }),
       });
 

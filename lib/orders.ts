@@ -13,7 +13,8 @@ import {
 } from "./db";
 
 export type { OrderRecord, OrderItemRecord };
-import { getCartWithItems, clearCart } from "./cart";
+import { getCartWithItems, clearCart, getOrCreateCart, memoryCarts, type CartSummary } from "./cart";
+import { memoryProducts } from "./products";
 
 // Validation Schemas
 export const createOrderSchema = z.object({
@@ -79,8 +80,15 @@ export async function createOrderFromCart(
   // Validate schema
   const validated = createOrderSchema.parse(input);
 
-  // 1. Fetch current cart
-  const cartSummary = await getCartWithItems(cartSessionId || "");
+  // 1. Authoritatively resolve the current user or guest cart
+  let cartSummary: CartSummary | null = null;
+  if (cartSessionId || userId) {
+    const cart = await getOrCreateCart(cartSessionId, userId);
+    cartSummary = await getCartWithItems(cart.id);
+  } else {
+    cartSummary = await getCartWithItems("");
+  }
+
   if (!cartSummary || cartSummary.items.length === 0) {
     throw new Error("Your cart is empty. Please add items before checking out.");
   }
@@ -120,6 +128,9 @@ export async function createOrderFromCart(
       }
 
       const prod = prodRows[0];
+      if (prod.status !== "published" || prod.stockStatus === "out_of_stock") {
+        throw new Error(`Product "${prod.name}" is currently unavailable for purchase.`);
+      }
       productName = prod.name;
 
       if (item.variantId) {
@@ -261,6 +272,17 @@ export async function createOrderFromCart(
     memoryOrders.unshift(orderRecord);
     memoryOrderItems.push(...createdOrderItems);
     await clearCart(cartSummary.id);
+    const memCart = memoryCarts.find((c) => c.id === cartSummary.id || c.sessionId === cartSummary.sessionId);
+    if (memCart) {
+      memCart.status = "converted";
+      memCart.updatedAt = now;
+    }
+    for (const item of verifiedItems) {
+      const p = memoryProducts.find((mp) => mp.id === item.productId);
+      if (p && p.trackInventory) {
+        p.stockQuantity = Math.max(0, p.stockQuantity - item.quantity);
+      }
+    }
   }
 
   return {

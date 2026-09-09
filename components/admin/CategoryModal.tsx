@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import type { CategoryRecord, FlattenedCategory } from "@/lib/categories";
 import { generateSlug, getDescendantIds } from "@/lib/categories";
+import { normalizeImageUrl } from "@/lib/utils";
 
 interface CategoryModalProps {
   isOpen: boolean;
@@ -388,19 +389,19 @@ export default function CategoryModal({
               <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-3">
                 <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-white/15 bg-black/40">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={imageUrl} alt="Category preview" className="h-full w-full object-cover" />
+                  <img src={normalizeImageUrl(imageUrl)} alt="Category preview" className="h-full w-full object-cover" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-medium text-white truncate">{imageUrl}</p>
+                  <p className="text-xs font-mono text-white truncate">{imageUrl}</p>
                   <span className="inline-flex items-center gap-1 mt-1 text-[10px] text-[#18C729]">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#18C729]" />
-                    Ready & Stored in R2
+                    Ready &amp; Stored in Cloudflare R2
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 hover:bg-white/10 hover:text-white"
+                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 hover:bg-white/10 hover:text-white transition-colors"
                 >
                   Replace
                 </button>
@@ -434,8 +435,8 @@ export default function CategoryModal({
                       <svg className="h-6 w-6 text-white/50 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      <span className="text-xs font-medium text-white/80">Click to upload image to R2</span>
-                      <span className="text-[10px] text-white/40 mt-0.5">PNG, JPG, or WebP up to 5MB</span>
+                      <span className="text-xs font-medium text-white/80">Click to upload category image</span>
+                      <span className="text-[10px] text-white/40 mt-0.5">PNG, JPG, WebP up to 5MB (auto-uploaded to R2)</span>
                     </>
                   )}
                 </button>
@@ -445,21 +446,6 @@ export default function CategoryModal({
             {uploadError && (
               <p className="text-[11px] text-red-400 mt-1">{uploadError}</p>
             )}
-
-            {/* Direct URL input fallback */}
-            <div className="pt-1">
-              <label htmlFor="category-image-url" className="block text-[11px] font-medium text-white/50">
-                Or paste direct image URL
-              </label>
-              <input
-                id="category-image-url"
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://..."
-                className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white placeholder-white/20 focus:border-[#18C729] focus:outline-none"
-              />
-            </div>
           </div>
 
           {/* SEO Accordion */}

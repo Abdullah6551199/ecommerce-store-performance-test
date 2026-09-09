@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { uploadFile, validateUploadFile, ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE_BYTES } from "@/lib/r2";
 import { getDb, media } from "@/lib/db";
 import { desc } from "drizzle-orm";
+import { getCurrentAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,14 @@ export async function GET() {
  */
 export async function POST(req: NextRequest) {
   try {
+    const admin = await getCurrentAdmin();
+    if (!admin) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Admin session required." },
+        { status: 401 }
+      );
+    }
+
     const formData = await req.formData();
     const file = formData.get("file");
     const altText = (formData.get("altText") as string) || undefined;

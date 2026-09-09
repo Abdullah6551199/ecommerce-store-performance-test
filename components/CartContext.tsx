@@ -37,6 +37,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch("/api/cart", {
         headers: { Accept: "application/json" },
+        credentials: "include",
       });
       if (res.ok) {
         const json = (await res.json()) as CartApiResponse;
@@ -65,6 +66,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const res = await fetch("/api/cart/add", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({ productId, variantId, quantity }),
         });
         const json = (await res.json()) as CartApiResponse;
@@ -91,6 +93,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch("/api/cart/update", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ cartItemId, quantity }),
       });
       const json = (await res.json()) as CartApiResponse;
@@ -109,6 +112,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`/api/cart/remove?cartItemId=${encodeURIComponent(cartItemId)}`, {
         method: "DELETE",
+        credentials: "include",
       });
       const json = (await res.json()) as CartApiResponse;
       if (res.ok && json.success && json.data) {

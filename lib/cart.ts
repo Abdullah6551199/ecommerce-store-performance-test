@@ -1,6 +1,7 @@
-import { eq, and, sql, desc } from "drizzle-orm";
+import { eq, and, sql, desc, or } from "drizzle-orm";
 import { getDb, carts, cartItems, products, productImages, productVariants, type CartRecord, type CartItemRecord } from "./db";
 import { normalizeImageUrl } from "./utils";
+import { memoryProducts, memoryProductImages } from "./products";
 
 export const CART_COOKIE_NAME = "cart_session_id";
 export const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
@@ -36,7 +37,7 @@ export interface CartSummary {
 }
 
 // In-memory fallback for local dev/testing without D1
-interface MemoryCart {
+export interface MemoryCart {
   id: string;
   userId: string | null;
   sessionId: string | null;
@@ -45,7 +46,7 @@ interface MemoryCart {
   updatedAt: string;
 }
 
-interface MemoryCartItem {
+export interface MemoryCartItem {
   id: string;
   cartId: string;
   productId: string;
@@ -56,8 +57,8 @@ interface MemoryCartItem {
   updatedAt: string;
 }
 
-const memoryCarts: MemoryCart[] = [];
-const memoryCartItems: MemoryCartItem[] = [];
+export const memoryCarts: MemoryCart[] = [];
+export const memoryCartItems: MemoryCartItem[] = [];
 
 /**
  * Generate a random UUID string (compatible with all runtime environments)
@@ -141,17 +142,41 @@ export async function getOrCreateCart(
 }
 
 /**
- * Retrieve a cart along with all item details and server-calculated totals
+ * Retrieve a cart along with all item details and server-calculated totals.
+ * Accepts either cart.id (primary key) OR cart.sessionId (guest cookie ID).
  */
-export async function getCartWithItems(cartId: string): Promise<CartSummary> {
+export async function getCartWithItems(cartIdOrSessionId: string): Promise<CartSummary> {
   const db = getDb();
   const freeShippingThreshold = 100;
 
+  if (!cartIdOrSessionId) {
+    return {
+      id: "",
+      userId: null,
+      sessionId: null,
+      items: [],
+      itemCount: 0,
+      subtotal: 0,
+      shipping: 0,
+      freeShippingThreshold,
+      freeShippingRemaining: freeShippingThreshold,
+      total: 0,
+    };
+  }
+
   if (db) {
-    const [cart] = await db.select().from(carts).where(eq(carts.id, cartId));
+    // Look for active cart matching id OR sessionId
+    const matchedCarts = await db
+      .select()
+      .from(carts)
+      .where(or(eq(carts.id, cartIdOrSessionId), eq(carts.sessionId, cartIdOrSessionId)))
+      .orderBy(desc(carts.updatedAt));
+
+    const cart = matchedCarts.find((c) => c.status === "active") || matchedCarts[0];
+
     if (!cart) {
       return {
-        id: cartId,
+        id: cartIdOrSessionId,
         userId: null,
         sessionId: null,
         items: [],
@@ -164,11 +189,11 @@ export async function getCartWithItems(cartId: string): Promise<CartSummary> {
       };
     }
 
-    // Fetch cart items
+    // Fetch cart items using authoritative cart.id
     const rawItems = await db
       .select()
       .from(cartItems)
-      .where(eq(cartItems.cartId, cartId))
+      .where(eq(cartItems.cartId, cart.id))
       .orderBy(desc(cartItems.createdAt));
 
     const items: CartItemDetail[] = [];
@@ -247,25 +272,36 @@ export async function getCartWithItems(cartId: string): Promise<CartSummary> {
   }
 
   // Fallback memory calculation
-  const cart = memoryCarts.find((c) => c.id === cartId);
+  const cart =
+    memoryCarts.find(
+      (c) => (c.id === cartIdOrSessionId || c.sessionId === cartIdOrSessionId) && c.status === "active"
+    ) || memoryCarts.find((c) => c.id === cartIdOrSessionId || c.sessionId === cartIdOrSessionId);
+
+  const cartId = cart?.id || cartIdOrSessionId;
   const rawItems = memoryCartItems.filter((i) => i.cartId === cartId);
 
-  const items: CartItemDetail[] = rawItems.map((item) => ({
-    id: item.id,
-    cartId: item.cartId,
-    productId: item.productId,
-    variantId: item.variantId,
-    productName: "Simulated Product",
-    productSlug: "simulated-product",
-    sku: "SIM-SKU",
-    imageUrl: "/file.svg",
-    variantOptions: null,
-    quantity: item.quantity,
-    unitPrice: item.unitPrice,
-    lineTotal: Math.round(item.unitPrice * item.quantity * 100) / 100,
-    stockQuantity: 10,
-    stockStatus: "in_stock",
-  }));
+  const items: CartItemDetail[] = rawItems.map((item) => {
+    const prod = memoryProducts.find((p) => p.id === item.productId);
+    const img =
+      memoryProductImages.find((mi) => mi.productId === item.productId && mi.isMain) ||
+      memoryProductImages.find((mi) => mi.productId === item.productId);
+    return {
+      id: item.id,
+      cartId: item.cartId,
+      productId: item.productId,
+      variantId: item.variantId,
+      productName: prod?.name || "Simulated Product",
+      productSlug: prod?.slug || "simulated-product",
+      sku: prod?.sku || "SIM-SKU",
+      imageUrl: img?.imageUrl || "/file.svg",
+      variantOptions: null,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      lineTotal: Math.round(item.unitPrice * item.quantity * 100) / 100,
+      stockQuantity: prod?.stockQuantity ?? 10,
+      stockStatus: prod?.stockStatus || "in_stock",
+    };
+  });
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = Math.round(items.reduce((sum, item) => sum + item.lineTotal, 0) * 100) / 100;
@@ -384,13 +420,20 @@ export async function addItemToCart(
     return existing as CartItemRecord;
   }
 
+  const prod = memoryProducts.find((p) => p.id === productId);
+  const unitPrice = prod
+    ? prod.salePrice && prod.salePrice > 0
+      ? prod.salePrice
+      : prod.price
+    : 99.0;
+
   const newItem: MemoryCartItem = {
     id: generateCartId(),
     cartId,
     productId,
     variantId: variantId || null,
     quantity,
-    unitPrice: 99.0,
+    unitPrice,
     createdAt: now,
     updatedAt: now,
   };

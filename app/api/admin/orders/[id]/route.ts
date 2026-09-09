@@ -4,6 +4,7 @@ import {
   updateAdminOrderStatus,
   updateOrderStatusSchema,
 } from "@/lib/orders";
+import { getCurrentAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,14 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getCurrentAdmin();
+    if (!admin) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Admin session required." },
+        { status: 401 }
+      );
+    }
+
     const { id } = await context.params;
     if (!id) {
       return NextResponse.json(
@@ -49,6 +58,14 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getCurrentAdmin();
+    if (!admin) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Admin session required." },
+        { status: 401 }
+      );
+    }
+
     const { id } = await context.params;
     if (!id) {
       return NextResponse.json(

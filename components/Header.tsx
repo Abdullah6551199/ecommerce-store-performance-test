@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
+import { useCart } from "@/components/CartContext";
 
 interface HeaderProps {
   settings?: StoreSettings;
@@ -12,10 +13,11 @@ interface HeaderProps {
 /**
  * Dynamic Storefront Header Component
  * Fully bound to Cloudflare D1 settings with search bar, announcement bar,
- * dynamic logo, dynamic navigation, and Stage 9/10 placeholders.
+ * dynamic logo, dynamic navigation, and Stage 9 Cart integration.
  */
 export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProps): React.JSX.Element {
   const router = useRouter();
+  const { itemCount, openDrawer } = useCart();
   const [searchTerm, setSearchTerm] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -146,12 +148,13 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
               </svg>
             </Link>
 
-            {/* Cart Button (Placeholder for Stage 9) */}
-            <Link
-              href="/search"
-              className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all hover:scale-105 hover:border-[#18C729]/50"
-              aria-label="Shopping Cart"
-              title="Shopping Cart (Stage 9 Slot)"
+            {/* Cart Button with Live Dynamic Count & Drawer Trigger */}
+            <button
+              type="button"
+              onClick={openDrawer}
+              className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all hover:scale-105 hover:border-[#18C729]/50 hover:bg-[#18C729]/10 cursor-pointer"
+              aria-label="Open Shopping Cart"
+              title={`Shopping Cart (${itemCount} items)`}
             >
               <svg
                 className="h-4 w-4 text-white"
@@ -166,10 +169,12 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
                   d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 />
               </svg>
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#18C729] text-[9px] font-bold text-black shadow-sm">
-                0
-              </span>
-            </Link>
+              {itemCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-gradient-to-r from-[#18C729] to-[#FEF500] text-[10px] font-black text-black shadow-md animate-pulse">
+                  {itemCount}
+                </span>
+              )}
+            </button>
 
             {/* Mobile menu toggle */}
             <button

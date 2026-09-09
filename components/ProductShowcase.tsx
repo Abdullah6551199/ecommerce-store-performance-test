@@ -5,12 +5,15 @@ import Link from "next/link";
 import type { ProductWithImagesAndCategory } from "@/lib/products";
 import type { ProductVariantRecord } from "@/lib/variants";
 import { normalizeImageUrl } from "@/lib/utils";
+import { useCart } from "@/components/CartContext";
 
 interface ProductShowcaseProps {
   product: ProductWithImagesAndCategory;
 }
 
 export default function ProductShowcase({ product }: ProductShowcaseProps): React.JSX.Element {
+  const { addItem } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
   const variants = product.variants || [];
   const hasVariants = variants.length > 0;
 
@@ -146,31 +149,27 @@ export default function ProductShowcase({ product }: ProductShowcaseProps): Reac
   };
 
   // Add to cart handler
-  const handleAddToCart = () => {
-    if (isOutOfStock) return;
+  const handleAddToCart = async () => {
+    if (isOutOfStock || isAdding) return;
 
-    const payload = {
-      productId: product.id,
-      variantId: activeVariant?.id || undefined,
-      quantity,
-      unitPrice: currentSalePrice || currentPrice,
-      selectedOptions: activeVariant?.options || undefined,
-      sku: displayedSku,
-    };
-
-    console.log("[Storefront] Add to Cart payload dispatched:", payload);
-
-    setCartPayloadSummary(
-      activeVariant
-        ? `${product.name} (${Object.values(activeVariant.options).join(", ")}) [Variant: ${activeVariant.id.slice(0, 8)}]`
-        : product.name
-    );
-
-    setAddedNotice(true);
-    setTimeout(() => {
-      setAddedNotice(false);
-      setCartPayloadSummary(null);
-    }, 3000);
+    setIsAdding(true);
+    try {
+      const success = await addItem(product.id, activeVariant?.id || null, quantity, true);
+      if (success) {
+        setCartPayloadSummary(
+          activeVariant
+            ? `${product.name} (${Object.values(activeVariant.options).join(", ")})`
+            : product.name
+        );
+        setAddedNotice(true);
+        setTimeout(() => {
+          setAddedNotice(false);
+          setCartPayloadSummary(null);
+        }, 3000);
+      }
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   return (
@@ -414,16 +413,21 @@ export default function ProductShowcase({ product }: ProductShowcaseProps): Reac
             <button
               type="button"
               onClick={handleAddToCart}
-              disabled={isOutOfStock}
-              className={`flex-1 inline-flex items-center justify-center gap-2 rounded-2xl py-3.5 px-8 text-sm font-bold transition-all shadow-xl ${
-                isOutOfStock
+              disabled={isOutOfStock || isAdding}
+              className={`flex-1 inline-flex items-center justify-center gap-2 rounded-2xl py-3.5 px-8 text-sm font-bold transition-all shadow-xl cursor-pointer ${
+                isOutOfStock || isAdding
                   ? "bg-white/10 text-white/40 cursor-not-allowed border border-white/10"
                   : addedNotice
                   ? "bg-[#18C729] text-black shadow-[#18C729]/30 scale-[1.02]"
                   : "bg-gradient-to-r from-[#18C729] to-[#12a822] text-black shadow-[#18C729]/25 hover:brightness-110 active:scale-[0.98]"
               }`}
             >
-              {addedNotice ? (
+              {isAdding ? (
+                <>
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                  <span>Adding to Cart...</span>
+                </>
+              ) : addedNotice ? (
                 <>
                   <svg className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />

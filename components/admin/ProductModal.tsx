@@ -262,7 +262,7 @@ export default function ProductModal({
       return;
     }
     if (!mainImage.trim()) {
-      setErrorMessage("Main product image is required.");
+      setErrorMessage("Please upload a main product image (go to Media tab to upload).");
       setActiveTab("media");
       return;
     }
@@ -683,6 +683,14 @@ export default function ProductModal({
                   )}
                 </div>
 
+                <input
+                  ref={mainFileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/avif"
+                  onChange={handleUploadMainImage}
+                  className="hidden"
+                />
+
                 {mainImage ? (
                   <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-3">
                     <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-black/40">
@@ -693,31 +701,25 @@ export default function ProductModal({
                       <p className="text-xs font-mono text-white truncate">{mainImage}</p>
                       <span className="inline-flex items-center gap-1 mt-1 text-[10px] text-[#18C729]">
                         <span className="h-1.5 w-1.5 rounded-full bg-[#18C729]" />
-                        Main Showcase Asset
+                        Main Showcase Asset (Auto-Assigned)
                       </span>
                     </div>
                     <button
                       type="button"
+                      disabled={isUploadingMain}
                       onClick={() => mainFileInputRef.current?.click()}
-                      className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 hover:bg-white/10"
+                      className="rounded-lg border border-white/15 bg-white/10 px-3.5 py-2 text-xs font-semibold text-white hover:bg-white/20 hover:border-[#18C729]/50 transition-all cursor-pointer"
                     >
-                      Replace
+                      {isUploadingMain ? "Uploading..." : "Replace"}
                     </button>
                   </div>
                 ) : (
                   <div>
-                    <input
-                      ref={mainFileInputRef}
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp,image/avif"
-                      onChange={handleUploadMainImage}
-                      className="hidden"
-                    />
                     <button
                       type="button"
                       onClick={() => mainFileInputRef.current?.click()}
                       disabled={isUploadingMain}
-                      className="flex w-full flex-col items-center justify-center rounded-xl border border-dashed border-white/20 bg-white/5 p-6 text-center hover:border-[#18C729]/50 hover:bg-[#18C729]/5 transition-all"
+                      className="flex w-full flex-col items-center justify-center rounded-xl border border-dashed border-white/20 bg-white/5 p-6 text-center hover:border-[#18C729]/50 hover:bg-[#18C729]/5 transition-all cursor-pointer"
                     >
                       {isUploadingMain ? (
                         <span className="text-xs text-[#18C729]">Uploading to Cloudflare R2...</span>
@@ -726,22 +728,13 @@ export default function ProductModal({
                           <svg className="h-6 w-6 text-white/50 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
-                          <span className="text-xs font-semibold text-white">Click to upload Main Image (R2)</span>
-                          <span className="text-[10px] text-white/40 mt-0.5">JPG, PNG, WebP up to 5MB</span>
+                          <span className="text-xs font-semibold text-white">Click to Upload Main Image</span>
+                          <span className="text-[10px] text-white/40 mt-0.5">JPG, PNG, WebP up to 5MB (Uploaded directly to R2)</span>
                         </>
                       )}
                     </button>
                   </div>
                 )}
-
-                {/* Direct URL input fallback */}
-                <input
-                  type="url"
-                  value={mainImage}
-                  onChange={(e) => setMainImage(e.target.value)}
-                  placeholder="Or enter direct URL: https://..."
-                  className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white placeholder-white/20 focus:border-[#18C729] focus:outline-none"
-                />
               </div>
 
               {/* Gallery Images Section */}

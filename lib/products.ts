@@ -86,8 +86,8 @@ export const productSchema = z
     brand: z.string().trim().max(100).optional().nullable().or(z.literal("")),
     tags: z.union([z.array(z.string()), z.string()]).optional().nullable(),
     status: z.enum(["draft", "published", "archived"]).default("published"),
-    mainImage: z.string().trim().url("Main image must be a valid URL").min(1, "Main image is required"),
-    galleryImages: z.array(z.string().url("Gallery image must be a valid URL")).optional().default([]),
+    mainImage: z.string().trim().min(1, "Main product image is required"),
+    galleryImages: z.array(z.string().trim().min(1)).optional().default([]),
     seoTitle: z.string().trim().max(160).optional().nullable().or(z.literal("")),
     seoDescription: z.string().trim().max(320).optional().nullable().or(z.literal("")),
   })

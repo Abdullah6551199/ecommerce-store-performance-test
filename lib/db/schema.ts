@@ -264,6 +264,67 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 
+// 13. Carts Table (guest and authenticated carts)
+export const carts = sqliteTable("carts", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
+  sessionId: text("session_id"), // For anonymous guest carts via cookie
+  status: text("status", { enum: ["active", "converted", "abandoned"] })
+    .default("active")
+    .notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 14. Cart Items Table
+export const cartItems = sqliteTable("cart_items", {
+  id: text("id").primaryKey(),
+  cartId: text("cart_id")
+    .notNull()
+    .references(() => carts.id, { onDelete: "cascade" }),
+  productId: text("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+  variantId: text("variant_id").references(() => productVariants.id, {
+    onDelete: "set null",
+  }),
+  quantity: integer("quantity").default(1).notNull(),
+  unitPrice: real("unit_price").notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export const cartsRelations = relations(carts, ({ one, many }) => ({
+  user: one(users, {
+    fields: [carts.userId],
+    references: [users.id],
+  }),
+  items: many(cartItems),
+}));
+
+export const cartItemsRelations = relations(cartItems, ({ one }) => ({
+  cart: one(carts, {
+    fields: [cartItems.cartId],
+    references: [carts.id],
+  }),
+  product: one(products, {
+    fields: [cartItems.productId],
+    references: [products.id],
+  }),
+  variant: one(productVariants, {
+    fields: [cartItems.variantId],
+    references: [productVariants.id],
+  }),
+}));
+
 // Export inferred types for each table
 export type CategoryRecord = typeof categories.$inferSelect;
 export type NewCategoryRecord = typeof categories.$inferInsert;
@@ -300,3 +361,9 @@ export type NewLoginAttemptRecord = typeof loginAttempts.$inferInsert;
 
 export type SessionRecord = typeof sessions.$inferSelect;
 export type NewSessionRecord = typeof sessions.$inferInsert;
+
+export type CartRecord = typeof carts.$inferSelect;
+export type NewCartRecord = typeof carts.$inferInsert;
+
+export type CartItemRecord = typeof cartItems.$inferSelect;
+export type NewCartItemRecord = typeof cartItems.$inferInsert;

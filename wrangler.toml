@@ -1,5 +1,5 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "ecommerce-store"
+name = "ecommerce-store-v2"
 main = ".open-next/worker.js"
 compatibility_date = "2025-02-01"
 compatibility_flags = ["nodejs_compat"]
@@ -17,3 +17,10 @@ migrations_dir = "drizzle/migrations"
 [[r2_buckets]]
 binding = "R2"
 bucket_name = "ecommerce-store-assets"
+
+[vars]
+NEXT_PUBLIC_APP_URL = "https://ecommerce-store-v2.zia291930.workers.dev"
+SESSION_SECRET = "d6a39f5011387e0657e7a515cc23681312c5c3c6a83eec464660ca00d935fd7c"
+JWT_SECRET = "d6a39f5011387e0657e7a515cc23681312c5c3c6a83eec464660ca00d935fd7c"
+ADMIN_SECRET = "admin_secret_key_store_stage2"
+ADMIN_EMAIL = "admin@apexstore.com"

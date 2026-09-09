@@ -7,6 +7,9 @@ export type HomepageSectionType =
   | "featured_products"
   | "promo_banner"
   | "brand_story"
+  | "testimonials"
+  | "newsletter"
+  | "custom_html"
   | string;
 
 export interface HomepageSectionRecord {
@@ -105,6 +108,58 @@ export const DEFAULT_HOMEPAGE_SECTIONS: Array<Omit<HomepageSectionRecord, "creat
       ],
       ctaText: "Explore The Full Catalog",
       ctaUrl: "/search",
+    },
+  },
+  {
+    id: "sec-testimonials",
+    type: "testimonials",
+    title: "Elite Athlete Testimonials",
+    imageUrl: null,
+    sortOrder: 6,
+    isActive: true,
+    content: {
+      badgeText: "Pro Athlete Endorsements",
+      heading: "Trusted by World Champions",
+      subheading: "Hear from elite marathoners, sprinters, and triathletes competing on the global stage.",
+      testimonials: [
+        {
+          quote: "The Apex Velocity Runner cut 42 seconds off my marathon split. The energy return on carbon soles is unmatched.",
+          author: "Marcus Vance",
+          role: "Olympic Marathon Qualifier",
+          rating: 5,
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
+        },
+        {
+          quote: "Ultra-breathable fabrics that endure torrential rains and desert heat without chafing. Essential for race day.",
+          author: "Elena Rostova",
+          role: "Ultra-Trail Champion",
+          rating: 5,
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
+        },
+        {
+          quote: "Lightning fast edge store experience and the apparel quality exceeds any high-end legacy athletic brand.",
+          author: "David Chen",
+          role: "CrossFit Games Competitor",
+          rating: 5,
+          avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop",
+        },
+      ],
+    },
+  },
+  {
+    id: "sec-newsletter",
+    type: "newsletter",
+    title: "Apex Velocity Newsletter",
+    imageUrl: null,
+    sortOrder: 7,
+    isActive: true,
+    content: {
+      badgeText: "Join The Vanguard",
+      heading: "Unlock Exclusive Drops & VIP Gear Releases",
+      subheading: "Subscribe to receive private access codes, training insights, and limited-edition colorway launches directly to your inbox.",
+      buttonText: "Subscribe Now",
+      placeholderText: "Enter your email address...",
+      disclaimer: "No spam. Unsubscribe anytime with one click.",
     },
   },
 ];

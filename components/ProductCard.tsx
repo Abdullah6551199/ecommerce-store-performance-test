@@ -50,7 +50,10 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
   const resolvedImage = normalizeImageUrl(product.mainImage);
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0c140f]/80 p-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[#18C729]/40 hover:shadow-2xl hover:shadow-[#18C729]/10">
+    <div
+      className="group relative flex flex-col overflow-hidden border border-white/10 bg-[#0c140f]/80 p-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-white/30 hover:shadow-2xl"
+      style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
+    >
       {/* Product Image Link Container */}
       <Link href={`/product/${product.slug}`} className="relative block aspect-[4/4] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40">
         {resolvedImage ? (
@@ -79,44 +82,37 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
               -{discountPercent}% OFF
             </span>
           )}
-          {product.categoryName && (
-            <span className="rounded-full border border-white/15 bg-black/70 px-2.5 py-0.5 text-[10px] font-medium text-white/80 backdrop-blur-md">
-              {product.categoryName}
-            </span>
-          )}
-          {product.variants && product.variants.length > 0 && (
-            <span className="rounded-full border border-[#FEF500]/30 bg-black/80 px-2.5 py-0.5 text-[10px] font-semibold text-[#FEF500] backdrop-blur-md">
-              {product.variants.length} Options
+          {product.brand && (
+            <span className="rounded-full border border-white/20 bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white/90 backdrop-blur-md">
+              {product.brand}
             </span>
           )}
         </div>
 
-        {/* Stock Status Badge */}
-        <div className="absolute bottom-3 left-3">
+        {/* Stock status indicator pill */}
+        <div className="absolute top-3 right-3">
           {isOutOfStock ? (
-            <span className="rounded-md bg-black/80 px-2 py-0.5 text-[10px] font-medium text-red-400 border border-red-500/30 backdrop-blur-sm">
-              Out of Stock
+            <span className="rounded-full bg-red-950/80 border border-red-500/40 px-2 py-0.5 text-[10px] font-semibold text-red-300 backdrop-blur-md">
+              Sold Out
             </span>
           ) : isLowStock ? (
-            <span className="rounded-md bg-black/80 px-2 py-0.5 text-[10px] font-medium text-[#FEF500] border border-[#FEF500]/30 backdrop-blur-sm">
-              Only {product.stockQuantity} Left
+            <span className="rounded-full bg-amber-950/80 border border-amber-500/40 px-2 py-0.5 text-[10px] font-semibold text-amber-300 backdrop-blur-md">
+              Low Stock
             </span>
           ) : null}
         </div>
       </Link>
 
-      {/* Product Content Details */}
+      {/* Product Content Container */}
       <div className="mt-4 flex flex-1 flex-col justify-between space-y-3">
         <div>
-          {product.brand && (
-            <span className="text-[10px] uppercase font-bold tracking-wider text-white/40">
-              {product.brand}
+          {product.categoryName && (
+            <span className="text-[10px] font-medium uppercase tracking-wider text-white/40">
+              {product.categoryName}
             </span>
           )}
-          <h3 className="text-sm font-bold text-white group-hover:text-[#18C729] transition-colors line-clamp-1">
-            <Link href={`/product/${product.slug}`}>
-              {product.name}
-            </Link>
+          <h3 className="mt-0.5 text-sm font-bold text-white group-hover:text-[#18C729] transition-colors line-clamp-1">
+            <Link href={`/product/${product.slug}`}>{product.name}</Link>
           </h3>
           {product.shortDescription && (
             <p className="mt-1 text-xs text-white/50 line-clamp-2">
@@ -130,7 +126,10 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
           <div className="flex items-baseline gap-2">
             {hasSale ? (
               <>
-                <span className="text-base font-extrabold text-[#18C729]">
+                <span
+                  className="text-base font-extrabold"
+                  style={{ color: "var(--color-primary, #18C729)" }}
+                >
                   ${Number(product.salePrice).toFixed(2)}
                 </span>
                 <span className="text-xs text-white/40 line-through">
@@ -149,13 +148,16 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
             onClick={handleQuickAdd}
             disabled={isOutOfStock || isAdding}
             title={isOutOfStock ? "Out of Stock" : "Add to Cart"}
-            className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
               isOutOfStock || isAdding
                 ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                 : addedNotice
                 ? "bg-[#18C729] text-black shadow-lg shadow-[#18C729]/30"
                 : "bg-white/10 text-white hover:bg-[#18C729] hover:text-black hover:shadow-lg hover:shadow-[#18C729]/20 active:scale-95"
             }`}
+            style={{
+              borderRadius: "var(--radius-btn, 0.75rem)",
+            }}
           >
             {isAdding ? (
               <div className="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent" />

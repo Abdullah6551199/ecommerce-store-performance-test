@@ -25,15 +25,15 @@
  */
 .bg-brand-gradient,
 .bg-brand-gradient-270 {
-  background: linear-gradient(180deg, #18C729 0%, #FEF500 100%);
+  background: linear-gradient(180deg, var(--color-primary, #18C729) 0%, var(--color-accent, #FEF500) 100%);
 }
 
 /* Subtle overlay version for content readability while preserving vibrant ambient branding */
 .bg-brand-ambient {
   background: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(24, 199, 41, 0.25), transparent),
-    radial-gradient(ellipse 80% 50% at 50% 120%, rgba(254, 245, 0, 0.2), transparent),
-    #0d1410;
+    radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--color-primary, #18C729) 25%, transparent), transparent),
+    radial-gradient(ellipse 80% 50% at 50% 120%, color-mix(in srgb, var(--color-accent, #FEF500) 20%, transparent), transparent),
+    var(--color-background, #0d1410);
 }
 
 /* Glassmorphic utility surfaces */

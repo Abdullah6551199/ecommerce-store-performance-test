@@ -10,10 +10,17 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const theme = await getThemeSettings();
-    return NextResponse.json({
-      success: true,
-      data: theme,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        data: theme,
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=600",
+        },
+      }
+    );
   } catch (error) {
     console.error("[GET /api/appearance] Error:", error);
     return NextResponse.json(

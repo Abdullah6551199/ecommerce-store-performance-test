@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getDb, settings } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -92,8 +93,9 @@ let memorySettings: StoreSettings = { ...DEFAULT_STORE_SETTINGS };
 
 /**
  * Retrieve global store settings from Cloudflare D1 or fallback memory
+ * Wrapped with React.cache() to deduplicate queries within a single request.
  */
-export async function getStoreSettings(): Promise<StoreSettings> {
+export const getStoreSettings = cache(async (): Promise<StoreSettings> => {
   const db = getDb();
   if (db) {
     try {
@@ -132,7 +134,7 @@ export async function getStoreSettings(): Promise<StoreSettings> {
   }
 
   return memorySettings;
-}
+});
 
 /**
  * Update global store settings in Cloudflare D1

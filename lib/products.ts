@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { z } from "zod";
 import { eq, desc, asc, and, inArray } from "drizzle-orm";
 import { getDb, products, productImages, productVariants, categories } from "./db";
@@ -49,6 +50,26 @@ export interface ProductWithImagesAndCategory extends ProductRecord {
   mainImage: string | null;
   categoryName?: string | null;
   categorySlug?: string | null;
+  variants?: ProductVariantRecord[];
+}
+
+export interface CatalogProductItem {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  salePrice: number | null;
+  brand: string | null;
+  stockStatus: "in_stock" | "out_of_stock" | "backorder" | "preorder";
+  stockQuantity: number;
+  trackInventory: boolean;
+  allowBackorders: boolean;
+  lowStockThreshold: number;
+  mainImage: string | null;
+  categoryName?: string | null;
+  categorySlug?: string | null;
+  shortDescription?: string | null;
+  images?: ProductImageRecord[];
   variants?: ProductVariantRecord[];
 }
 
@@ -330,8 +351,9 @@ export async function getProductById(id: string): Promise<ProductWithImagesAndCa
 
 /**
  * Retrieve a single product by Slug
+ * Wrapped with React.cache() to deduplicate queries within a single request.
  */
-export async function getProductBySlug(slug: string): Promise<ProductWithImagesAndCategory | null> {
+export const getProductBySlug = cache(async (slug: string): Promise<ProductWithImagesAndCategory | null> => {
   const db = getDb();
 
   if (db) {
@@ -350,7 +372,14 @@ export async function getProductBySlug(slug: string): Promise<ProductWithImagesA
       if (rows.length === 0) return null;
 
       const imgs = await db
-        .select()
+        .select({
+          id: productImages.id,
+          productId: productImages.productId,
+          imageUrl: productImages.imageUrl,
+          altText: productImages.altText,
+          sortOrder: productImages.sortOrder,
+          isMain: productImages.isMain,
+        })
         .from(productImages)
         .where(eq(productImages.productId, rows[0].product.id))
         .orderBy(asc(productImages.sortOrder));
@@ -373,7 +402,7 @@ export async function getProductBySlug(slug: string): Promise<ProductWithImagesA
   const imgs = memoryProductImages.filter((img) => img.productId === p.id);
   const variants = await getVariantsByProductId(p.id);
   return formatProduct(p, imgs, null, variants);
-}
+});
 
 /**
  * Check if SKU is already in use
@@ -963,11 +992,146 @@ export async function searchProducts(
 }
 
 /**
- * Get featured products for homepage (published, ordered by createdAt DESC)
+ * Lightweight query for product grids, homepage carousels, and catalog listings.
+ * Fetches ONLY: id, name, slug, price, salePrice, brand, stockStatus, stockQuantity,
+ * trackInventory, allowBackorders, lowStockThreshold, and mainImage.
+ * Does NOT fetch secondary gallery images or variant matrices.
  */
-export async function getFeaturedProducts(limit = 4): Promise<ProductWithImagesAndCategory[]> {
-  return listProducts({ status: "published", limit });
+export async function listCatalogProducts(options?: {
+  categoryId?: string;
+  status?: "draft" | "published" | "archived";
+  limit?: number;
+}): Promise<CatalogProductItem[]> {
+  const db = getDb();
+
+  if (db) {
+    try {
+      const conditions = [];
+      if (options?.categoryId) {
+        conditions.push(eq(products.categoryId, options.categoryId));
+      }
+      if (options?.status) {
+        conditions.push(eq(products.status, options.status));
+      }
+
+      const query = db
+        .select({
+          id: products.id,
+          name: products.name,
+          slug: products.slug,
+          price: products.price,
+          salePrice: products.salePrice,
+          brand: products.brand,
+          stockStatus: products.stockStatus,
+          stockQuantity: products.stockQuantity,
+          trackInventory: products.trackInventory,
+          allowBackorders: products.allowBackorders,
+          lowStockThreshold: products.lowStockThreshold,
+          shortDescription: products.shortDescription,
+          categoryId: products.categoryId,
+          categoryName: categories.name,
+          categorySlug: categories.slug,
+        })
+        .from(products)
+        .leftJoin(categories, eq(products.categoryId, categories.id));
+
+      const rows = conditions.length > 0
+        ? await query.where(and(...conditions)).orderBy(desc(products.createdAt)).limit(options?.limit || 100)
+        : await query.orderBy(desc(products.createdAt)).limit(options?.limit || 100);
+
+      if (rows.length === 0) return [];
+
+      const productIds = rows.map((r) => r.id);
+
+      // Fetch ONLY main images (or first sortOrder image) for each product
+      const mainImages = await db
+        .select({
+          productId: productImages.productId,
+          imageUrl: productImages.imageUrl,
+          isMain: productImages.isMain,
+        })
+        .from(productImages)
+        .where(inArray(productImages.productId, productIds))
+        .orderBy(asc(productImages.sortOrder));
+
+      const mainImageMap = new Map<string, string>();
+      for (const img of mainImages) {
+        if (!mainImageMap.has(img.productId) || img.isMain) {
+          mainImageMap.set(img.productId, img.imageUrl);
+        }
+      }
+
+      return rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        slug: r.slug,
+        price: Number(r.price),
+        salePrice: r.salePrice !== null && r.salePrice !== undefined ? Number(r.salePrice) : null,
+        brand: r.brand || null,
+        stockStatus: r.stockStatus,
+        stockQuantity: Number(r.stockQuantity) || 0,
+        trackInventory: Boolean(r.trackInventory),
+        allowBackorders: Boolean(r.allowBackorders),
+        lowStockThreshold: Number(r.lowStockThreshold) || 5,
+        mainImage: mainImageMap.get(r.id) || null,
+        categoryName: r.categoryName || null,
+        categorySlug: r.categorySlug || null,
+        shortDescription: r.shortDescription || null,
+        images: mainImageMap.has(r.id)
+          ? [{ id: `img-${r.id}`, productId: r.id, imageUrl: mainImageMap.get(r.id)!, altText: r.name, sortOrder: 0, isMain: true }]
+          : [],
+        variants: [],
+      }));
+    } catch (err) {
+      console.warn("[Products] D1 listCatalogProducts failed, falling back:", err);
+    }
+  }
+
+  // Memory fallback
+  let items = [...memoryProducts];
+  if (options?.categoryId) {
+    items = items.filter((p) => p.categoryId === options.categoryId);
+  }
+  if (options?.status) {
+    items = items.filter((p) => p.status === options.status);
+  }
+  if (options?.limit) {
+    items = items.slice(0, options.limit);
+  }
+
+  return items.map((p) => {
+    const mainImg =
+      memoryProductImages.find((img) => img.productId === p.id && img.isMain) ||
+      memoryProductImages.find((img) => img.productId === p.id);
+    return {
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      price: Number(p.price),
+      salePrice: p.salePrice !== null && p.salePrice !== undefined ? Number(p.salePrice) : null,
+      brand: p.brand || null,
+      stockStatus: p.stockStatus,
+      stockQuantity: p.stockQuantity,
+      trackInventory: p.trackInventory,
+      allowBackorders: p.allowBackorders,
+      lowStockThreshold: p.lowStockThreshold,
+      mainImage: mainImg?.imageUrl || null,
+      categoryName: null,
+      categorySlug: null,
+      shortDescription: p.shortDescription || null,
+      images: mainImg ? [mainImg] : [],
+      variants: [],
+    };
+  });
 }
+
+/**
+ * Get featured products for homepage (published, ordered by createdAt DESC)
+ * Wrapped with React.cache() to deduplicate queries within a single request.
+ */
+export const getFeaturedProducts = cache(async (limit = 4): Promise<ProductWithImagesAndCategory[]> => {
+  return (await listCatalogProducts({ status: "published", limit })) as unknown as ProductWithImagesAndCategory[];
+});
 
 /**
  * Get published products belonging to a specific category
@@ -976,7 +1140,7 @@ export async function getProductsByCategory(
   categoryId: string,
   limit = 24
 ): Promise<ProductWithImagesAndCategory[]> {
-  return listProducts({ categoryId, status: "published", limit });
+  return (await listCatalogProducts({ categoryId, status: "published", limit })) as unknown as ProductWithImagesAndCategory[];
 }
 
 /**

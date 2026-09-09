@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import {
   listCategories,
@@ -107,6 +108,14 @@ export async function POST(req: NextRequest) {
     }
 
     const created = await createCategory(input);
+
+    try {
+      revalidatePath("/");
+      revalidatePath("/search");
+      if (input.slug) revalidatePath(`/category/${input.slug}`);
+    } catch (e) {
+      console.warn("[revalidatePath] Failed:", e);
+    }
 
     return NextResponse.json(
       {

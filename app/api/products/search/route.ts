@@ -63,23 +63,30 @@ export async function GET(req: NextRequest) {
 
     const result = await searchProductsAdvanced(params);
 
-    return NextResponse.json({
-      success: true,
-      data: result.products,
-      total: result.total,
-      count: result.products.length,
-      facets: result.facets,
-      query,
-      filters: {
-        minPrice,
-        maxPrice,
-        category,
-        brand,
-        tags: tags || [],
-        inStock,
-        sort: sort || "newest",
+    return NextResponse.json(
+      {
+        success: true,
+        data: result.products,
+        total: result.total,
+        count: result.products.length,
+        facets: result.facets,
+        query,
+        filters: {
+          minPrice,
+          maxPrice,
+          category,
+          brand,
+          tags: tags || [],
+          inStock,
+          sort: sort || "newest",
+        },
       },
-    });
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=600",
+        },
+      }
+    );
   } catch (error) {
     console.error("[GET /api/products/search] Error:", error);
     return NextResponse.json(

@@ -12,13 +12,20 @@ export async function GET() {
     const activeItems = await getActiveCategories();
     const tree = buildCategoryTree(activeItems);
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        categories: activeItems,
-        tree,
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          categories: activeItems,
+          tree,
+        },
       },
-    });
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=600",
+        },
+      }
+    );
   } catch (error) {
     console.error("[GET /api/categories] Error:", error);
     return NextResponse.json(

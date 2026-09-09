@@ -4,6 +4,7 @@ import { HomepageSectionRecord } from "@/lib/homepage";
 import { CategoryRecord } from "@/lib/categories";
 import { ProductWithImagesAndCategory } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
+import NewsletterForm from "./NewsletterForm";
 
 /**
  * 1. Hero Showcase Section
@@ -595,31 +596,10 @@ export function NewsletterSection({ section }: { section: HomepageSectionRecord 
           {content?.subheading}
         </p>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            alert("Thank you for subscribing to Apex VIP releases!");
-          }}
-          className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto"
-        >
-          <input
-            type="email"
-            required
-            placeholder={content?.placeholderText || "Enter your email address..."}
-            className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-xs text-white placeholder-white/40 focus:border-[#18C729] focus:outline-none focus:ring-1 focus:ring-[#18C729]"
-            style={{ borderRadius: "var(--radius-btn, 0.75rem)" }}
-          />
-          <button
-            type="submit"
-            className="w-full sm:w-auto shrink-0 px-6 py-3 text-xs font-bold text-black hover:brightness-110 active:scale-95 transition-all shadow-lg"
-            style={{
-              borderRadius: "var(--radius-btn, 0.75rem)",
-              background: "linear-gradient(135deg, var(--color-primary, #18C729), var(--color-secondary, #12a822))",
-            }}
-          >
-            {content?.buttonText || "Subscribe"}
-          </button>
-        </form>
+        <NewsletterForm
+          placeholderText={content?.placeholderText}
+          buttonText={content?.buttonText}
+        />
 
         {content?.disclaimer && (
           <p className="text-[10px] text-white/40 pt-2">{content.disclaimer}</p>

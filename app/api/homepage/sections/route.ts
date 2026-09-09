@@ -10,10 +10,17 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const sections = await listHomepageSections({ activeOnly: true });
-    return NextResponse.json({
-      success: true,
-      data: sections,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        data: sections,
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=600",
+        },
+      }
+    );
   } catch (error) {
     console.error("[GET /api/homepage/sections] Error:", error);
     return NextResponse.json(

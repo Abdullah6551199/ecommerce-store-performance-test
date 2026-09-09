@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { z } from "zod";
 import { eq, asc } from "drizzle-orm";
 import { getDb, categories } from "./db";
@@ -217,10 +218,11 @@ export async function listCategories(options?: {
 
 /**
  * Retrieve active categories for storefront display
+ * Wrapped with React.cache() to deduplicate queries within a single request.
  */
-export async function getActiveCategories(): Promise<CategoryRecord[]> {
+export const getActiveCategories = cache(async (): Promise<CategoryRecord[]> => {
   return listCategories({ status: "active" });
-}
+});
 
 /**
  * Retrieve category by ID
@@ -245,8 +247,9 @@ export async function getCategoryById(id: string): Promise<CategoryRecord | null
 
 /**
  * Retrieve category by Slug
+ * Wrapped with React.cache() to deduplicate queries within a single request.
  */
-export async function getCategoryBySlug(slug: string): Promise<CategoryRecord | null> {
+export const getCategoryBySlug = cache(async (slug: string): Promise<CategoryRecord | null> => {
   const db = getDb();
   if (db) {
     try {
@@ -262,7 +265,7 @@ export async function getCategoryBySlug(slug: string): Promise<CategoryRecord | 
   }
 
   return memoryCategories.find((c) => c.slug === slug) || null;
-}
+});
 
 /**
  * Create a new category

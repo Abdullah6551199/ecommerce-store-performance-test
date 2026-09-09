@@ -10,10 +10,17 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const settings = await getStoreSettings();
-    return NextResponse.json({
-      success: true,
-      data: settings,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        data: settings,
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=600",
+        },
+      }
+    );
   } catch (error) {
     console.error("[GET /api/settings] Error:", error);
     return NextResponse.json(

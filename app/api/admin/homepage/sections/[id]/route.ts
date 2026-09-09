@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import {
   getHomepageSectionById,
@@ -43,6 +44,11 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     }
 
     const updated = await updateHomepageSection(id, body);
+    try {
+      revalidatePath("/");
+    } catch (e) {
+      console.warn("[revalidatePath] Failed:", e);
+    }
     return NextResponse.json({
       success: true,
       message: "Homepage section updated successfully.",
@@ -88,6 +94,11 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     }
 
     await deleteHomepageSection(id);
+    try {
+      revalidatePath("/");
+    } catch (e) {
+      console.warn("[revalidatePath] Failed:", e);
+    }
     return NextResponse.json({
       success: true,
       message: "Homepage section deleted successfully.",

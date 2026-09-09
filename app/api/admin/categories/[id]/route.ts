@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import {
   getCategoryById,
@@ -149,6 +150,15 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 
     const updated = await updateCategory(id, input);
 
+    try {
+      revalidatePath("/");
+      revalidatePath("/search");
+      if (existing.slug) revalidatePath(`/category/${existing.slug}`);
+      if (input.slug && input.slug !== existing.slug) revalidatePath(`/category/${input.slug}`);
+    } catch (e) {
+      console.warn("[revalidatePath] Failed:", e);
+    }
+
     return NextResponse.json({
       success: true,
       message: "Category updated successfully.",
@@ -193,6 +203,14 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
         { success: false, error: "Failed to delete category from database." },
         { status: 500 }
       );
+    }
+
+    try {
+      revalidatePath("/");
+      revalidatePath("/search");
+      if (existing.slug) revalidatePath(`/category/${existing.slug}`);
+    } catch (e) {
+      console.warn("[revalidatePath] Failed:", e);
     }
 
     return NextResponse.json({

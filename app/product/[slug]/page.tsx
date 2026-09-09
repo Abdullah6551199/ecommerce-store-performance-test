@@ -8,7 +8,7 @@ import ProductCard from "@/components/ProductCard";
 
 import { getAbsoluteUrl, generateProductJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;

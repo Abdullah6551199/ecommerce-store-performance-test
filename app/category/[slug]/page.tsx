@@ -9,7 +9,7 @@ import ProductCard from "@/components/ProductCard";
 import { getAbsoluteUrl, generateCategoryJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 import { normalizeImageUrl } from "@/lib/utils";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;

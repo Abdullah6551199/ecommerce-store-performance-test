@@ -4,7 +4,7 @@ import { searchProductsAdvanced, type AdvancedSearchParams } from "@/lib/product
 import SearchClient from "@/components/search/SearchClient";
 import { getAbsoluteUrl } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface SearchPageProps {
   searchParams: Promise<{

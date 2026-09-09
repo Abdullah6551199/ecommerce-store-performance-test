@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getDb, homepageSections } from "./db";
 import { asc, eq } from "drizzle-orm";
 
@@ -174,10 +175,11 @@ let memorySections: HomepageSectionRecord[] = DEFAULT_HOMEPAGE_SECTIONS.map((sec
 /**
  * List all homepage sections, optionally filtering to active only.
  * Always ordered by sortOrder ascending.
+ * Wrapped with React.cache() to deduplicate queries within a single request.
  */
-export async function listHomepageSections(options?: {
+export const listHomepageSections = cache(async (options?: {
   activeOnly?: boolean;
-}): Promise<HomepageSectionRecord[]> {
+}): Promise<HomepageSectionRecord[]> => {
   const db = getDb();
   if (db) {
     try {
@@ -215,7 +217,7 @@ export async function listHomepageSections(options?: {
     return items.filter((s) => s.isActive);
   }
   return items;
-}
+});
 
 /**
  * Get a single homepage section by its ID

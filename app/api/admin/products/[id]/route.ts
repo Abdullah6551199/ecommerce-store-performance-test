@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import {
   getProductById,
@@ -137,6 +138,15 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 
     const updated = await updateProduct(id, input);
 
+    try {
+      revalidatePath("/");
+      revalidatePath("/search");
+      if (existing.slug) revalidatePath(`/product/${existing.slug}`);
+      if (input.slug && input.slug !== existing.slug) revalidatePath(`/product/${input.slug}`);
+    } catch (e) {
+      console.warn("[revalidatePath] Failed:", e);
+    }
+
     return NextResponse.json({
       success: true,
       message: "Product updated successfully.",
@@ -181,6 +191,14 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
         { success: false, error: "Failed to delete product from database." },
         { status: 500 }
       );
+    }
+
+    try {
+      revalidatePath("/");
+      revalidatePath("/search");
+      if (existing.slug) revalidatePath(`/product/${existing.slug}`);
+    } catch (e) {
+      console.warn("[revalidatePath] Failed:", e);
     }
 
     return NextResponse.json({

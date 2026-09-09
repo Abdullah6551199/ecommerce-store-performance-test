@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import {
   listHomepageSections,
@@ -75,6 +76,11 @@ export async function POST(req: NextRequest) {
         });
         createdList.push(item);
       }
+      try {
+        revalidatePath("/");
+      } catch (e) {
+        console.warn("[revalidatePath] Failed:", e);
+      }
       return NextResponse.json({
         success: true,
         message: "Default sections restored successfully.",
@@ -90,6 +96,11 @@ export async function POST(req: NextRequest) {
     }
 
     const created = await createHomepageSection(body);
+    try {
+      revalidatePath("/");
+    } catch (e) {
+      console.warn("[revalidatePath] Failed:", e);
+    }
     return NextResponse.json({
       success: true,
       message: "Section created successfully.",

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import {
   listProducts,
@@ -117,6 +118,14 @@ export async function POST(req: NextRequest) {
     }
 
     const created = await createProduct(input);
+
+    try {
+      revalidatePath("/");
+      revalidatePath("/search");
+      if (created.slug) revalidatePath(`/product/${created.slug}`);
+    } catch (e) {
+      console.warn("[Admin Product] revalidatePath failed:", e);
+    }
 
     return NextResponse.json(
       {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import { reorderHomepageSections, listHomepageSections } from "@/lib/homepage";
 
@@ -32,6 +33,12 @@ export async function POST(req: NextRequest) {
 
     await reorderHomepageSections(body.orderedIds);
     const updatedSections = await listHomepageSections({ activeOnly: false });
+
+    try {
+      revalidatePath("/");
+    } catch (e) {
+      console.warn("[revalidatePath] Failed:", e);
+    }
 
     return NextResponse.json({
       success: true,

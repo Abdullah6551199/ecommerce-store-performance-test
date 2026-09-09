@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { z } from "zod";
 import { eq, desc, asc, inArray } from "drizzle-orm";
 import { getDb, productVariants, products, attributes, attributeValues } from "./db";
@@ -167,14 +168,27 @@ export async function isVariantSkuTaken(sku: string, excludeVariantId?: string):
 
 /**
  * Retrieve all variants for a given product ID
+ * Wrapped with React.cache() to deduplicate queries within a single request.
  */
-export async function getVariantsByProductId(productId: string): Promise<ProductVariantRecord[]> {
+export const getVariantsByProductId = cache(async (productId: string): Promise<ProductVariantRecord[]> => {
   const db = getDb();
 
   if (db) {
     try {
       const rows = await db
-        .select()
+        .select({
+          id: productVariants.id,
+          productId: productVariants.productId,
+          sku: productVariants.sku,
+          price: productVariants.price,
+          salePrice: productVariants.salePrice,
+          stock: productVariants.stock,
+          imageUrl: productVariants.imageUrl,
+          options: productVariants.options,
+          weight: productVariants.weight,
+          dimensions: productVariants.dimensions,
+          isDefault: productVariants.isDefault,
+        })
         .from(productVariants)
         .where(eq(productVariants.productId, productId))
         .orderBy(desc(productVariants.isDefault), asc(productVariants.sku));
@@ -188,7 +202,7 @@ export async function getVariantsByProductId(productId: string): Promise<Product
   return memoryVariants
     .filter((v) => v.productId === productId)
     .sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
-}
+});
 
 /**
  * Bulk create or update variants for a product

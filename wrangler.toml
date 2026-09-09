@@ -1,0 +1,19 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "ecommerce-store"
+main = ".open-next/worker.js"
+compatibility_date = "2025-02-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ecommerce-db"
+database_id = "c9359eb2-a5dc-4eff-98f9-bac8118cb3dd"
+migrations_dir = "drizzle/migrations"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "ecommerce-store-assets"

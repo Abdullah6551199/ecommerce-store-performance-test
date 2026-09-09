@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-green: #18C729;
+  --color-secondary-yellow: #FEF500;
+  --color-brand-green: #18C729;
+  --color-brand-yellow: #FEF500;
+  --color-brand-dark: #0d1a12;
+  --color-primary: #18C729;
+  --color-secondary: #FEF500;
+}
+
+:root {
+  --primary-green: #18C729;
+  --secondary-yellow: #FEF500;
+  --background: #0d1410;
+  --foreground: #f4f7f5;
+}
+
+/* 
+ * 270-Degree Vertical Brand Gradient:
+ * Green (#18C729) at top -> Yellow (#FEF500) at bottom.
+ * In design tools (Figma/Photoshop), 270° indicates top-to-bottom.
+ * Standard CSS syntax: linear-gradient(180deg, #18C729 0%, #FEF500 100%).
+ */
+.bg-brand-gradient,
+.bg-brand-gradient-270 {
+  background: linear-gradient(180deg, #18C729 0%, #FEF500 100%);
+}
+
+/* Subtle overlay version for content readability while preserving vibrant ambient branding */
+.bg-brand-ambient {
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(24, 199, 41, 0.25), transparent),
+    radial-gradient(ellipse 80% 50% at 50% 120%, rgba(254, 245, 0, 0.2), transparent),
+    #0d1410;
+}
+
+/* Glassmorphic utility surfaces */
+.glass-panel {
+  background: rgba(13, 20, 16, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body {
+  min-height: 100vh;
+  color: var(--foreground);
+  background-color: var(--background);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}

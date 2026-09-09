@@ -1,0 +1,302 @@
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
+import { sql, relations } from "drizzle-orm";
+
+/**
+ * ==============================================================================
+ * Cloudflare D1 Database Schema for Dynamic E-Commerce Store
+ * Minimal for MVP, fully extensible, zero hardcoded business data.
+ * ==============================================================================
+ */
+
+// 1. Categories Table (hierarchical with parent_id self-reference)
+export const categories = sqliteTable("categories", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
+  parentId: text("parent_id"),
+  imageUrl: text("image_url"),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  status: text("status", { enum: ["active", "inactive", "archived"] })
+    .default("active")
+    .notNull(),
+  seoTitle: text("seo_title"),
+  seoDescription: text("seo_description"),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 2. Products Table
+export const products = sqliteTable("products", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
+  shortDescription: text("short_description"),
+  sku: text("sku").unique(),
+  price: real("price").notNull(),
+  salePrice: real("sale_price"),
+  costPrice: real("cost_price"),
+  compareAtPrice: real("compare_at_price"),
+  stockQuantity: integer("stock_quantity").default(0).notNull(),
+  stockStatus: text("stock_status", {
+    enum: ["in_stock", "out_of_stock", "backorder", "preorder"],
+  })
+    .default("in_stock")
+    .notNull(),
+  lowStockThreshold: integer("low_stock_threshold").default(5).notNull(),
+  trackInventory: integer("track_inventory", { mode: "boolean" })
+    .default(true)
+    .notNull(),
+  allowBackorders: integer("allow_backorders", { mode: "boolean" })
+    .default(false)
+    .notNull(),
+  categoryId: text("category_id").references(() => categories.id, {
+    onDelete: "set null",
+  }),
+  brand: text("brand"),
+  tags: text("tags", { mode: "json" }).$type<string[]>(),
+  status: text("status", { enum: ["draft", "published", "archived"] })
+    .default("draft")
+    .notNull(),
+  seoTitle: text("seo_title"),
+  seoDescription: text("seo_description"),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 3. Product Images Table
+export const productImages = sqliteTable("product_images", {
+  id: text("id").primaryKey(),
+  productId: text("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+  imageUrl: text("image_url").notNull(),
+  altText: text("alt_text"),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  isMain: integer("is_main", { mode: "boolean" }).default(false).notNull(),
+});
+
+// 4. Product Variants Table
+export const productVariants = sqliteTable("product_variants", {
+  id: text("id").primaryKey(),
+  productId: text("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+  sku: text("sku").unique(),
+  price: real("price").notNull(),
+  salePrice: real("sale_price"),
+  stock: integer("stock").default(0).notNull(),
+  imageUrl: text("image_url"),
+  options: text("options", { mode: "json" }).$type<Record<string, string>>(),
+  weight: real("weight"),
+  dimensions: text("dimensions", { mode: "json" }).$type<{
+    length?: number;
+    width?: number;
+    height?: number;
+    unit?: string;
+  }>(),
+  isDefault: integer("is_default", { mode: "boolean" })
+    .default(false)
+    .notNull(),
+});
+
+// 5. Media Table
+export const media = sqliteTable("media", {
+  id: text("id").primaryKey(),
+  url: text("url").notNull(),
+  type: text("type").notNull(), // e.g. 'image/jpeg', 'image/png', 'image/webp', 'image/avif', 'video/mp4'
+  altText: text("alt_text"),
+  size: integer("size").notNull(), // in bytes
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 6. Settings Table (Key-Value configuration storage)
+export const settings = sqliteTable("settings", {
+  id: text("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  value: text("value", { mode: "json" }).$type<unknown>(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 7. Homepage Sections Table (Dynamic marketing and showcase builder)
+export const homepageSections = sqliteTable("homepage_sections", {
+  id: text("id").primaryKey(),
+  type: text("type").notNull(), // e.g. 'hero_banner', 'featured_products', 'brand_strip', 'promo_grid'
+  title: text("title").notNull(),
+  content: text("content", { mode: "json" }).$type<Record<string, unknown>>(),
+  imageUrl: text("image_url"),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 8. Users Table
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  role: text("role").default("admin").notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 9. Login Attempts Table (Rate limiting tracker)
+export const loginAttempts = sqliteTable("login_attempts", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  attemptedAt: text("attempted_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  success: integer("success", { mode: "boolean" }).notNull(),
+  ip: text("ip"),
+});
+
+// 10. Sessions Table (Server-side session management)
+export const sessions = sqliteTable("sessions", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  token: text("token").notNull().unique(),
+  expiresAt: text("expires_at").notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 11. Attributes Table
+export const attributes = sqliteTable("attributes", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 12. Attribute Values Table
+export const attributeValues = sqliteTable("attribute_values", {
+  id: text("id").primaryKey(),
+  attributeId: text("attribute_id")
+    .notNull()
+    .references(() => attributes.id, { onDelete: "cascade" }),
+  value: text("value").notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// Relations Definitions
+export const categoriesRelations = relations(categories, ({ one, many }) => ({
+  parent: one(categories, {
+    fields: [categories.parentId],
+    references: [categories.id],
+    relationName: "sub_categories",
+  }),
+  subCategories: many(categories, { relationName: "sub_categories" }),
+  products: many(products),
+}));
+
+export const productsRelations = relations(products, ({ one, many }) => ({
+  category: one(categories, {
+    fields: [products.categoryId],
+    references: [categories.id],
+  }),
+  images: many(productImages),
+  variants: many(productVariants),
+}));
+
+export const productImagesRelations = relations(productImages, ({ one }) => ({
+  product: one(products, {
+    fields: [productImages.productId],
+    references: [products.id],
+  }),
+}));
+
+export const productVariantsRelations = relations(productVariants, ({ one }) => ({
+  product: one(products, {
+    fields: [productVariants.productId],
+    references: [products.id],
+  }),
+}));
+
+export const attributesRelations = relations(attributes, ({ many }) => ({
+  values: many(attributeValues),
+}));
+
+export const attributeValuesRelations = relations(attributeValues, ({ one }) => ({
+  attribute: one(attributes, {
+    fields: [attributeValues.attributeId],
+    references: [attributes.id],
+  }),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  sessions: many(sessions),
+}));
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
+}));
+
+// Export inferred types for each table
+export type CategoryRecord = typeof categories.$inferSelect;
+export type NewCategoryRecord = typeof categories.$inferInsert;
+
+export type ProductRecord = typeof products.$inferSelect;
+export type NewProductRecord = typeof products.$inferInsert;
+
+export type ProductImageRecord = typeof productImages.$inferSelect;
+export type NewProductImageRecord = typeof productImages.$inferInsert;
+
+export type ProductVariantRecord = typeof productVariants.$inferSelect;
+export type NewProductVariantRecord = typeof productVariants.$inferInsert;
+
+export type AttributeRecord = typeof attributes.$inferSelect;
+export type NewAttributeRecord = typeof attributes.$inferInsert;
+
+export type AttributeValueRecord = typeof attributeValues.$inferSelect;
+export type NewAttributeValueRecord = typeof attributeValues.$inferInsert;
+
+export type MediaRecord = typeof media.$inferSelect;
+export type NewMediaRecord = typeof media.$inferInsert;
+
+export type SettingRecord = typeof settings.$inferSelect;
+export type NewSettingRecord = typeof settings.$inferInsert;
+
+export type HomepageSectionRecord = typeof homepageSections.$inferSelect;
+export type NewHomepageSectionRecord = typeof homepageSections.$inferInsert;
+
+export type UserRecord = typeof users.$inferSelect;
+export type NewUserRecord = typeof users.$inferInsert;
+
+export type LoginAttemptRecord = typeof loginAttempts.$inferSelect;
+export type NewLoginAttemptRecord = typeof loginAttempts.$inferInsert;
+
+export type SessionRecord = typeof sessions.$inferSelect;
+export type NewSessionRecord = typeof sessions.$inferInsert;

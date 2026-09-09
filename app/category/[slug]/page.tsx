@@ -6,6 +6,8 @@ import { getCategoryBySlug, getCategoryById, listCategories } from "@/lib/catego
 import { getProductsByCategory } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 
+import { getAbsoluteUrl, generateCategoryJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
+
 export const dynamic = "force-dynamic";
 
 interface CategoryPageProps {
@@ -22,9 +24,46 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     };
   }
 
+  const title = category.seoTitle || `${category.name} | Apex Store`;
+  const description =
+    category.seoDescription ||
+    category.description ||
+    `Browse our curated collection of ${category.name} items.`;
+  const canonicalUrl = getAbsoluteUrl(`/category/${category.slug}`);
+  const ogImage = category.imageUrl
+    ? category.imageUrl.startsWith("http")
+      ? category.imageUrl
+      : getAbsoluteUrl(category.imageUrl)
+    : undefined;
+
   return {
-    title: category.seoTitle || `${category.name} - Products & Collection`,
-    description: category.seoDescription || category.description || `Browse our dynamic ${category.name} collection.`,
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      type: "website",
+      images: ogImage
+        ? [
+            {
+              url: ogImage,
+              width: 1200,
+              height: 630,
+              alt: category.name,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImage ? [ogImage] : undefined,
+    },
   };
 }
 
@@ -47,8 +86,27 @@ export default async function CategoryPage({ params }: CategoryPageProps): Promi
 
   const children = allActive.filter((c) => c.parentId === category.id);
 
+  // Structured Data (JSON-LD)
+  const categoryJsonLd = generateCategoryJsonLd(category, categoryProducts);
+  const breadcrumbItems = [
+    { name: "Home", url: "/" },
+    ...(parent ? [{ name: parent.name, url: `/category/${parent.slug}` }] : []),
+    { name: category.name, url: `/category/${category.slug}` },
+  ];
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-12">
+      {/* Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(categoryJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       {/* Breadcrumb Navigation */}
       <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/50">
         <Link href="/" className="hover:text-white transition-colors">

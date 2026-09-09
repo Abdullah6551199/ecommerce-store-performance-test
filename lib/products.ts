@@ -769,137 +769,198 @@ export async function duplicateProduct(id: string): Promise<ProductWithImagesAnd
   return duplicated;
 }
 
+export interface AdvancedSearchParams {
+  query?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  category?: string; // slug or ID
+  brand?: string;
+  tags?: string[];
+  inStock?: boolean;
+  sort?: "price_asc" | "price_desc" | "newest" | "popular" | string;
+  limit?: number;
+  offset?: number;
+  publishedOnly?: boolean;
+}
+
+export interface SearchFacets {
+  brands: Array<{ name: string; count: number }>;
+  categories: Array<{ id: string; name: string; slug: string; count: number }>;
+  tags: Array<{ name: string; count: number }>;
+  priceRange: { min: number; max: number };
+}
+
+export interface AdvancedSearchResult {
+  products: ProductWithImagesAndCategory[];
+  total: number;
+  facets: SearchFacets;
+}
+
 /**
- * Search products across name, SKU, brand, tags, and category name
+ * Advanced Search with multi-facet filters, sorting, and dynamic facet counts
+ */
+export async function searchProductsAdvanced(
+  params: AdvancedSearchParams
+): Promise<AdvancedSearchResult> {
+  const publishedOnly = params.publishedOnly !== false;
+  const allProducts = await listProducts({
+    status: publishedOnly ? "published" : undefined,
+  });
+
+  // 1. Calculate global facets across all published products
+  const brandCountMap = new Map<string, number>();
+  const categoryMap = new Map<string, { id: string; name: string; slug: string; count: number }>();
+  const tagCountMap = new Map<string, number>();
+  let globalMinPrice = Infinity;
+  let globalMaxPrice = 0;
+
+  for (const p of allProducts) {
+    const effPrice = p.salePrice && p.salePrice < p.price ? p.salePrice : p.price;
+    if (effPrice < globalMinPrice) globalMinPrice = effPrice;
+    if (effPrice > globalMaxPrice) globalMaxPrice = effPrice;
+
+    if (p.brand) {
+      brandCountMap.set(p.brand, (brandCountMap.get(p.brand) || 0) + 1);
+    }
+
+    if (p.categoryId && p.categoryName && p.categorySlug) {
+      const existing = categoryMap.get(p.categoryId) || {
+        id: p.categoryId,
+        name: p.categoryName,
+        slug: p.categorySlug,
+        count: 0,
+      };
+      existing.count += 1;
+      categoryMap.set(p.categoryId, existing);
+    }
+
+    if (Array.isArray(p.tags)) {
+      for (const t of p.tags) {
+        if (t) tagCountMap.set(t, (tagCountMap.get(t) || 0) + 1);
+      }
+    }
+  }
+
+  const facets: SearchFacets = {
+    brands: Array.from(brandCountMap.entries()).map(([name, count]) => ({ name, count })),
+    categories: Array.from(categoryMap.values()),
+    tags: Array.from(tagCountMap.entries()).map(([name, count]) => ({ name, count })),
+    priceRange: {
+      min: globalMinPrice === Infinity ? 0 : Math.floor(globalMinPrice),
+      max: globalMaxPrice === 0 ? 1000 : Math.ceil(globalMaxPrice),
+    },
+  };
+
+  // 2. Filter products based on search parameters
+  let filtered = allProducts;
+
+  // Text search filter
+  if (params.query && params.query.trim()) {
+    const q = params.query.trim().toLowerCase();
+    filtered = filtered.filter((p) => {
+      const matchName = p.name.toLowerCase().includes(q);
+      const matchSku = p.sku.toLowerCase().includes(q);
+      const matchBrand = Boolean(p.brand && p.brand.toLowerCase().includes(q));
+      const matchDesc = Boolean(p.description && p.description.toLowerCase().includes(q));
+      const matchShortDesc = Boolean(p.shortDescription && p.shortDescription.toLowerCase().includes(q));
+      const matchCat = Boolean(p.categoryName && p.categoryName.toLowerCase().includes(q));
+      const matchTags = Array.isArray(p.tags) && p.tags.some((t) => t.toLowerCase().includes(q));
+      return matchName || matchSku || matchBrand || matchDesc || matchShortDesc || matchCat || matchTags;
+    });
+  }
+
+  // Category filter (slug or id)
+  if (params.category && params.category.trim()) {
+    const cat = params.category.trim().toLowerCase();
+    filtered = filtered.filter(
+      (p) =>
+        (p.categorySlug && p.categorySlug.toLowerCase() === cat) ||
+        (p.categoryId && p.categoryId.toLowerCase() === cat)
+    );
+  }
+
+  // Brand filter
+  if (params.brand && params.brand.trim()) {
+    const b = params.brand.trim().toLowerCase();
+    filtered = filtered.filter((p) => p.brand && p.brand.toLowerCase() === b);
+  }
+
+  // Price range filters
+  if (typeof params.minPrice === "number" && !isNaN(params.minPrice)) {
+    filtered = filtered.filter((p) => {
+      const effPrice = p.salePrice && p.salePrice < p.price ? p.salePrice : p.price;
+      return effPrice >= params.minPrice!;
+    });
+  }
+  if (typeof params.maxPrice === "number" && !isNaN(params.maxPrice)) {
+    filtered = filtered.filter((p) => {
+      const effPrice = p.salePrice && p.salePrice < p.price ? p.salePrice : p.price;
+      return effPrice <= params.maxPrice!;
+    });
+  }
+
+  // Tags filter
+  if (params.tags && params.tags.length > 0) {
+    const filterTags = params.tags.map((t) => t.toLowerCase().trim());
+    filtered = filtered.filter(
+      (p) => Array.isArray(p.tags) && p.tags.some((pt) => filterTags.includes(pt.toLowerCase().trim()))
+    );
+  }
+
+  // In-stock availability filter
+  if (params.inStock) {
+    filtered = filtered.filter((p) => {
+      if (p.stockStatus === "out_of_stock") return false;
+      if (p.trackInventory && p.stockQuantity <= 0 && !p.allowBackorders) return false;
+      return true;
+    });
+  }
+
+  // 3. Sorting
+  const sort = params.sort || "newest";
+  filtered = [...filtered].sort((a, b) => {
+    const priceA = a.salePrice && a.salePrice < a.price ? a.salePrice : a.price;
+    const priceB = b.salePrice && b.salePrice < b.price ? b.salePrice : b.price;
+
+    switch (sort) {
+      case "price_asc":
+        return priceA - priceB;
+      case "price_desc":
+        return priceB - priceA;
+      case "popular":
+        // Products with more variants or higher stock priority
+        return (b.stockQuantity || 0) - (a.stockQuantity || 0);
+      case "newest":
+      default:
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+  });
+
+  const total = filtered.length;
+  const offset = params.offset || 0;
+  const limit = params.limit || 40;
+  const paged = filtered.slice(offset, offset + limit);
+
+  return {
+    products: paged,
+    total,
+    facets,
+  };
+}
+
+/**
+ * Basic Search products across name, SKU, brand, tags, and category name (backward compatible)
  */
 export async function searchProducts(
   rawQuery: string,
   options?: { limit?: number; publishedOnly?: boolean }
 ): Promise<ProductWithImagesAndCategory[]> {
-  const q = rawQuery.trim();
-  if (!q) return [];
-
-  const limit = options?.limit || 20;
-  const db = getDb();
-
-  if (db) {
-    try {
-      const searchPattern = `%${q}%`;
-      const query = db
-        .select({
-          product: products,
-          categoryName: categories.name,
-          categorySlug: categories.slug,
-        })
-        .from(products)
-        .leftJoin(categories, eq(products.categoryId, categories.id))
-        .where(
-          and(
-            options?.publishedOnly ? eq(products.status, "published") : sql`1=1`,
-            or(
-              like(products.name, searchPattern),
-              like(products.sku, searchPattern),
-              like(products.brand, searchPattern),
-              like(products.description, searchPattern),
-              like(categories.name, searchPattern)
-            )
-          )
-        )
-        .limit(limit);
-
-      const rows = await query;
-      if (rows.length === 0) return [];
-
-      const productIds = rows.map((r) => r.product.id);
-      const imagesRows = await db
-        .select()
-        .from(productImages)
-        .where(inArray(productImages.productId, productIds))
-        .orderBy(asc(productImages.sortOrder));
-
-      const imageMap = new Map<string, ProductImageRecord[]>();
-      for (const img of imagesRows) {
-        if (!imageMap.has(img.productId)) {
-          imageMap.set(img.productId, []);
-        }
-        imageMap.get(img.productId)!.push(img as ProductImageRecord);
-      }
-
-      // Fetch variants for all search matched products in batch
-      const variantsRows = await db
-        .select()
-        .from(productVariants)
-        .where(inArray(productVariants.productId, productIds))
-        .orderBy(desc(productVariants.isDefault), asc(productVariants.sku));
-
-      const variantMap = new Map<string, ProductVariantRecord[]>();
-      for (const v of variantsRows) {
-        if (!variantMap.has(v.productId)) {
-          variantMap.set(v.productId, []);
-        }
-        let opts: Record<string, string> = {};
-        if (v.options) {
-          try {
-            opts = typeof v.options === "string" ? JSON.parse(v.options) : v.options;
-          } catch {
-            opts = {};
-          }
-        }
-        let dims = null;
-        if (v.dimensions) {
-          try {
-            dims = typeof v.dimensions === "string" ? JSON.parse(v.dimensions) : v.dimensions;
-          } catch {
-            dims = null;
-          }
-        }
-        variantMap.get(v.productId)!.push({
-          id: v.id,
-          productId: v.productId,
-          sku: v.sku || "",
-          price: Number(v.price),
-          salePrice: v.salePrice !== null && v.salePrice !== undefined ? Number(v.salePrice) : null,
-          stock: Number(v.stock) || 0,
-          imageUrl: v.imageUrl || null,
-          options: opts,
-          weight: v.weight ? Number(v.weight) : null,
-          dimensions: dims,
-          isDefault: Boolean(v.isDefault),
-        });
-      }
-
-      return rows.map((row) =>
-        formatProduct(
-          row.product as ProductRecord,
-          imageMap.get(row.product.id) || [],
-          row.categoryName ? { name: row.categoryName, slug: row.categorySlug || "" } : null,
-          variantMap.get(row.product.id) || []
-        )
-      );
-    } catch (err) {
-      console.warn("[Products] searchProducts D1 failed, using memory:", err);
-    }
-  }
-
-  // Memory search fallback
-  const lower = q.toLowerCase();
-  const matched = memoryProducts
-    .filter((p) => {
-      if (options?.publishedOnly && p.status !== "published") return false;
-      return (
-        p.name.toLowerCase().includes(lower) ||
-        p.sku.toLowerCase().includes(lower) ||
-        (p.brand && p.brand.toLowerCase().includes(lower)) ||
-        (p.description && p.description.toLowerCase().includes(lower)) ||
-        (p.tags && p.tags.some((t) => t.toLowerCase().includes(lower)))
-      );
-    })
-    .slice(0, limit);
-
-  return matched.map((p) => {
-    const imgs = memoryProductImages.filter((img) => img.productId === p.id);
-    return formatProduct(p, imgs, null);
+  const res = await searchProductsAdvanced({
+    query: rawQuery,
+    limit: options?.limit || 20,
+    publishedOnly: options?.publishedOnly !== false,
   });
+  return res.products;
 }
 
 /**

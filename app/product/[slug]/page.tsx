@@ -6,6 +6,8 @@ import { getProductBySlug, getRelatedProducts } from "@/lib/products";
 import ProductShowcase from "@/components/ProductShowcase";
 import ProductCard from "@/components/ProductCard";
 
+import { getAbsoluteUrl, generateProductJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
+
 export const dynamic = "force-dynamic";
 
 interface ProductPageProps {
@@ -22,9 +24,47 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     };
   }
 
+  const title = product.seoTitle || `${product.name} | Apex Store`;
+  const description =
+    product.seoDescription ||
+    product.shortDescription ||
+    product.description ||
+    `Buy ${product.name} at the best price with instant shipping.`;
+  const canonicalUrl = getAbsoluteUrl(`/product/${product.slug}`);
+  const mainImage = product.mainImage?.startsWith("http")
+    ? product.mainImage
+    : product.mainImage
+    ? getAbsoluteUrl(product.mainImage)
+    : undefined;
+
   return {
-    title: product.seoTitle || `${product.name} | Apex Store`,
-    description: product.seoDescription || product.shortDescription || product.description || `Buy ${product.name} at the best price.`,
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      type: "website",
+      images: mainImage
+        ? [
+            {
+              url: mainImage,
+              width: 800,
+              height: 800,
+              alt: product.name,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: mainImage ? [mainImage] : undefined,
+    },
   };
 }
 
@@ -38,8 +78,29 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
 
   const relatedProducts = await getRelatedProducts(product.id, product.categoryId, 4);
 
+  // Structured Data (JSON-LD)
+  const productJsonLd = generateProductJsonLd(product);
+  const breadcrumbItems = [
+    { name: "Home", url: "/" },
+    ...(product.categorySlug && product.categoryName
+      ? [{ name: product.categoryName, url: `/category/${product.categorySlug}` }]
+      : [{ name: "Catalog", url: "/search" }]),
+    { name: product.name, url: `/product/${product.slug}` },
+  ];
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-16">
+      {/* Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       {/* Breadcrumb Navigation */}
       <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs text-white/50">
         <Link href="/" className="hover:text-white transition-colors">

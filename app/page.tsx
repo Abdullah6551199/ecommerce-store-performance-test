@@ -4,14 +4,42 @@ import { getActiveCategories } from "@/lib/categories";
 import { getFeaturedProducts } from "@/lib/products";
 import { renderHomepageSection } from "@/components/homepage/HomepageSections";
 
+import type { Metadata } from "next";
+import { getStoreSettings } from "@/lib/settings";
+import { getBaseUrl } from "@/lib/seo";
+
 export const dynamic = "force-dynamic";
 
-/**
- * Dynamic Storefront Homepage (Server Component)
- * Driven 100% by Cloudflare D1 `homepage_sections`, `categories`, and `products`.
- * Supports hero, categories, featured_products, promo_banner, brand_story,
- * testimonials, newsletter, and custom HTML sections.
- */
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getStoreSettings();
+  const baseUrl = getBaseUrl();
+  const title = settings.storeName
+    ? `${settings.storeName} | Premium E-Commerce Experience`
+    : "Apex Store | Premium E-Commerce Experience";
+  const description =
+    settings.description ||
+    "Discover the next-generation digital storefront powered by Cloudflare Workers and Next.js.";
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: baseUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: baseUrl,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
+
 export default async function HomePage(): Promise<React.JSX.Element> {
   // Query active sections ordered by sortOrder
   let sections = await listHomepageSections({ activeOnly: true });

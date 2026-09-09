@@ -8,22 +8,56 @@ import { CartProvider } from "@/components/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import "./globals.css";
 
+import { getBaseUrl } from "@/lib/seo";
+
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, theme] = await Promise.all([getStoreSettings(), getThemeSettings()]);
+  const baseUrl = getBaseUrl();
+  const storeName = settings.storeName || siteConfig.name;
+  const storeDescription = settings.description || siteConfig.description;
+
   const icons: Metadata["icons"] = theme.other.favicon
     ? [{ rel: "icon", url: theme.other.favicon }]
     : undefined;
 
+  const ogImage = theme.other.storeLogo || "/og.png";
+
   return {
     title: {
-      default: settings.storeName || siteConfig.name,
-      template: `%s | ${settings.storeName || siteConfig.name}`,
+      default: storeName,
+      template: `%s | ${storeName}`,
     },
-    description: settings.description || siteConfig.description,
-    metadataBase: new URL(siteConfig.url),
+    description: storeDescription,
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: baseUrl,
+    },
+    openGraph: {
+      title: storeName,
+      description: storeDescription,
+      url: baseUrl,
+      siteName: storeName,
+      images: [
+        {
+          url: ogImage.startsWith("http") ? ogImage : `${baseUrl}${ogImage}`,
+          width: 1200,
+          height: 630,
+          alt: storeName,
+        },
+      ],
+      type: "website",
+      locale: "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: storeName,
+      description: storeDescription,
+      images: [ogImage.startsWith("http") ? ogImage : `${baseUrl}${ogImage}`],
+    },
     icons,
   };
 }
+
 
 export const viewport: Viewport = {
   themeColor: [

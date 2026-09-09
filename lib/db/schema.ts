@@ -325,6 +325,81 @@ export const cartItemsRelations = relations(cartItems, ({ one }) => ({
   }),
 }));
 
+// 15. Orders Table
+export const orders = sqliteTable("orders", {
+  id: text("id").primaryKey(),
+  customerName: text("customer_name").notNull(),
+  phone: text("phone").notNull(),
+  email: text("email"),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  notes: text("notes"),
+  subtotal: real("subtotal").notNull(),
+  shipping: real("shipping").notNull(),
+  total: real("total").notNull(),
+  paymentMethod: text("payment_method").default("cod").notNull(),
+  status: text("status", {
+    enum: [
+      "pending",
+      "confirmed",
+      "processing",
+      "shipped",
+      "delivered",
+      "cancelled",
+      "returned",
+    ],
+  })
+    .default("pending")
+    .notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 16. Order Items Table
+export const orderItems = sqliteTable("order_items", {
+  id: text("id").primaryKey(),
+  orderId: text("order_id")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  productId: text("product_id")
+    .notNull()
+    .references(() => products.id),
+  variantId: text("variant_id").references(() => productVariants.id, {
+    onDelete: "set null",
+  }),
+  productName: text("product_name").notNull(),
+  variantName: text("variant_name"),
+  quantity: integer("quantity").notNull(),
+  unitPrice: real("unit_price").notNull(),
+  lineTotal: real("line_total").notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export const ordersRelations = relations(orders, ({ many }) => ({
+  items: many(orderItems),
+}));
+
+export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderItems.orderId],
+    references: [orders.id],
+  }),
+  product: one(products, {
+    fields: [orderItems.productId],
+    references: [products.id],
+  }),
+  variant: one(productVariants, {
+    fields: [orderItems.variantId],
+    references: [productVariants.id],
+  }),
+}));
+
 // Export inferred types for each table
 export type CategoryRecord = typeof categories.$inferSelect;
 export type NewCategoryRecord = typeof categories.$inferInsert;
@@ -367,3 +442,10 @@ export type NewCartRecord = typeof carts.$inferInsert;
 
 export type CartItemRecord = typeof cartItems.$inferSelect;
 export type NewCartItemRecord = typeof cartItems.$inferInsert;
+
+export type OrderRecord = typeof orders.$inferSelect;
+export type NewOrderRecord = typeof orders.$inferInsert;
+
+export type OrderItemRecord = typeof orderItems.$inferSelect;
+export type NewOrderItemRecord = typeof orderItems.$inferInsert;
+

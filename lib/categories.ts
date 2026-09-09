@@ -46,7 +46,19 @@ export const categorySchema = z.object({
   imageUrl: z
     .string()
     .trim()
-    .url("Image URL must be a valid URL")
+    .refine(
+      (val) => {
+        if (!val) return true;
+        if (val.startsWith("/")) return true;
+        try {
+          const url = new URL(val);
+          return url.protocol === "http:" || url.protocol === "https:";
+        } catch {
+          return false;
+        }
+      },
+      { message: "Image URL must be a valid URL or relative media path (e.g., /api/media/...)" }
+    )
     .optional()
     .nullable()
     .or(z.literal("")),

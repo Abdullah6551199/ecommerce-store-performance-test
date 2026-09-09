@@ -7,6 +7,7 @@ import { getProductsByCategory } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 
 import { getAbsoluteUrl, generateCategoryJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -159,7 +160,7 @@ export default async function CategoryPage({ params }: CategoryPageProps): Promi
             <div className="relative h-48 w-full sm:w-64 lg:h-56 shrink-0 overflow-hidden rounded-2xl border border-white/15 shadow-xl">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={category.imageUrl}
+                src={normalizeImageUrl(category.imageUrl)}
                 alt={category.name}
                 className="h-full w-full object-cover"
               />

@@ -1,4 +1,3 @@
-import { siteConfig } from "@/config/site";
 import type { ProductWithImagesAndCategory } from "./products";
 import type { CategoryRecord } from "./categories";
 

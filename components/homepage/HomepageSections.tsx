@@ -509,7 +509,7 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-        {testimonials.map((t: any, idx: number) => (
+        {(testimonials as Array<{ quote?: string; author?: string; role?: string; avatar?: string; rating?: number }>).map((t, idx: number) => (
           <div
             key={idx}
             className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/5 p-6 hover:border-white/20 transition-all"

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, asc, desc, and, or, sql, isNull } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { getDb, categories } from "./db";
 
 /**
@@ -187,7 +187,6 @@ export async function listCategories(options?: {
   const db = getDb();
   if (db) {
     try {
-      let query = db.select().from(categories);
       if (options?.status) {
         const rows = await db
           .select()

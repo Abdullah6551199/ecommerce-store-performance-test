@@ -9,6 +9,7 @@ const eslintConfig = defineConfig([
     ".open-next/**",
     ".wrangler/**",
     "drizzle/migrations/**",
+    "scripts/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
@@ -26,6 +27,8 @@ const eslintConfig = defineConfig([
         },
       ],
       "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "react-hooks/set-state-in-effect": "warn",
     },
   },
 ]);

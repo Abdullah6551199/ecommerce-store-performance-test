@@ -119,7 +119,7 @@ export async function getOrCreateCart(
   }
 
   // Memory fallback
-  let existing = memoryCarts.find(
+  const existing = memoryCarts.find(
     (c) =>
       c.status === "active" &&
       ((userId && c.userId === userId) || (sessionId && c.sessionId === sessionId))

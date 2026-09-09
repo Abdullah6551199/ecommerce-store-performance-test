@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, and, desc, asc, inArray } from "drizzle-orm";
+import { eq, desc, asc, inArray } from "drizzle-orm";
 import { getDb, productVariants, products, attributes, attributeValues } from "./db";
 import { generateSlug } from "./categories";
 
@@ -229,7 +229,7 @@ export async function saveProductVariants(
 
   // 3. Ensure exactly one default variant
   let hasDefault = false;
-  const processedVariants: ProductVariantRecord[] = variantsInput.map((v, idx) => {
+  const processedVariants: ProductVariantRecord[] = variantsInput.map((v) => {
     const isDef = Boolean(v.isDefault);
     let resolvedIsDefault = false;
 
@@ -469,7 +469,7 @@ export async function createOrUpdateAttribute(
         .where(eq(attributes.slug, slug))
         .limit(1);
 
-      let attrId = existing.length > 0 ? existing[0].id : crypto.randomUUID();
+      const attrId = existing.length > 0 ? existing[0].id : crypto.randomUUID();
 
       if (existing.length === 0) {
         await db.insert(attributes).values({

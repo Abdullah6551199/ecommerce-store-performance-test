@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { eq, desc, asc, and, or, sql, like, inArray } from "drizzle-orm";
+import { eq, desc, asc, and, inArray } from "drizzle-orm";
 import { getDb, products, productImages, productVariants, categories } from "./db";
-import { generateSlug } from "./categories";
 import { getVariantsByProductId, saveProductVariants, type ProductVariantRecord } from "./variants";
 
 /**
@@ -168,7 +167,7 @@ export async function listProducts(options?: {
 
   if (db) {
     try {
-      let conditions = [];
+      const conditions = [];
       if (options?.categoryId) {
         conditions.push(eq(products.categoryId, options.categoryId));
       }
@@ -176,7 +175,7 @@ export async function listProducts(options?: {
         conditions.push(eq(products.status, options.status));
       }
 
-      let query = db
+      const query = db
         .select({
           product: products,
           categoryName: categories.name,

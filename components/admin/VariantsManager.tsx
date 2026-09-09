@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import type { ProductVariantRecord, ProductVariantInput } from "@/lib/variants";
 
 interface VariantsManagerProps {
@@ -28,13 +28,42 @@ export default function VariantsManager({
   onVariantsChanged,
   onSaved,
 }: VariantsManagerProps): React.JSX.Element {
-  // Attributes State
-  const [attributesList, setAttributesList] = useState<AttributeState[]>([]);
+  // Attributes State initialized from initialVariants
+  const [attributesList, setAttributesList] = useState<AttributeState[]>(() => {
+    if (!initialVariants || initialVariants.length === 0) return [];
+    const attrMap: Record<string, Set<string>> = {};
+    initialVariants.forEach((v) => {
+      if (v.options) {
+        Object.entries(v.options).forEach(([k, val]) => {
+          if (!attrMap[k]) attrMap[k] = new Set();
+          attrMap[k].add(val);
+        });
+      }
+    });
+    return Object.entries(attrMap).map(([k, set]) => ({
+      name: k,
+      values: Array.from(set),
+      currentInput: "",
+    }));
+  });
   const [newAttrName, setNewAttrName] = useState("");
 
-  // Variants State
-  const [variants, setVariants] = useState<ProductVariantInput[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // Variants State initialized from initialVariants
+  const [variants, setVariants] = useState<ProductVariantInput[]>(() => {
+    if (!initialVariants || initialVariants.length === 0) return [];
+    return initialVariants.map((v) => ({
+      id: v.id,
+      sku: v.sku,
+      price: v.price || undefined,
+      salePrice: v.salePrice || undefined,
+      stock: v.stock,
+      imageUrl: v.imageUrl || undefined,
+      options: v.options,
+      weight: v.weight || undefined,
+      dimensions: v.dimensions || undefined,
+      isDefault: v.isDefault,
+    }));
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
@@ -53,52 +82,15 @@ export default function VariantsManager({
   const [bulkPrice, setBulkPrice] = useState("");
   const [bulkStock, setBulkStock] = useState("");
 
-  // Initialize from initialVariants or DB fetch
+  const onVariantsChangedRef = useRef(onVariantsChanged);
   useEffect(() => {
-    if (initialVariants && initialVariants.length > 0) {
-      setVariants(
-        initialVariants.map((v) => ({
-          id: v.id,
-          sku: v.sku,
-          price: v.price || undefined,
-          salePrice: v.salePrice || undefined,
-          stock: v.stock,
-          imageUrl: v.imageUrl || undefined,
-          options: v.options,
-          weight: v.weight || undefined,
-          dimensions: v.dimensions || undefined,
-          isDefault: v.isDefault,
-        }))
-      );
+    onVariantsChangedRef.current = onVariantsChanged;
+  }, [onVariantsChanged]);
 
-      // Reconstruct attributes from variant options
-      const attrMap: Record<string, Set<string>> = {};
-      initialVariants.forEach((v) => {
-        if (v.options) {
-          Object.entries(v.options).forEach(([k, val]) => {
-            if (!attrMap[k]) attrMap[k] = new Set();
-            attrMap[k].add(val);
-          });
-        }
-      });
-
-      const derivedAttrs: AttributeState[] = Object.entries(attrMap).map(([k, set]) => ({
-        name: k,
-        values: Array.from(set),
-        currentInput: "",
-      }));
-      if (derivedAttrs.length > 0) {
-        setAttributesList(derivedAttrs);
-      }
-    } else if (productId) {
-      fetchVariants();
-    }
-  }, [productId, initialVariants]);
-
-  const fetchVariants = async () => {
+  // Fetch variants from DB when productId is given but no initialVariants
+  const fetchVariants = useCallback(async () => {
     if (!productId) return;
     try {
-      setIsLoading(true);
       const res = await fetch(`/api/admin/products/${productId}/variants`);
       const data = (await res.json()) as { success: boolean; data?: ProductVariantRecord[]; error?: string };
 
@@ -119,9 +111,10 @@ export default function VariantsManager({
         );
 
         // Reconstruct attributes if none currently set
-        if (attributesList.length === 0) {
+        setAttributesList((prev) => {
+          if (prev.length > 0) return prev;
           const attrMap: Record<string, Set<string>> = {};
-          data.data.forEach((v) => {
+          data.data?.forEach((v) => {
             if (v.options) {
               Object.entries(v.options).forEach(([k, val]) => {
                 if (!attrMap[k]) attrMap[k] = new Set();
@@ -129,29 +122,29 @@ export default function VariantsManager({
               });
             }
           });
-          const derivedAttrs: AttributeState[] = Object.entries(attrMap).map(([k, set]) => ({
+          return Object.entries(attrMap).map(([k, set]) => ({
             name: k,
             values: Array.from(set),
             currentInput: "",
           }));
-          if (derivedAttrs.length > 0) {
-            setAttributesList(derivedAttrs);
-          }
-        }
+        });
       }
     } catch (err) {
       console.warn("Failed to load variants:", err);
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [productId]);
+
+  useEffect(() => {
+    if (productId && (!initialVariants || initialVariants.length === 0)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchVariants();
+    }
+  }, [productId, initialVariants, fetchVariants]);
 
   // Sync with parent when variants change
   useEffect(() => {
-    if (onVariantsChanged) {
-      onVariantsChanged(variants);
-    }
-  }, [variants, onVariantsChanged]);
+    onVariantsChangedRef.current?.(variants);
+  }, [variants]);
 
   // Attribute Management Handlers
   const handleAddAttribute = (nameToAdd: string) => {

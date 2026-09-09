@@ -7,7 +7,6 @@ import {
   products,
   productVariants,
   carts,
-  cartItems,
   type OrderRecord,
   type OrderItemRecord,
 } from "./db";

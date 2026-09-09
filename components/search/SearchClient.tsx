@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition, useRef, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import type { ProductWithImagesAndCategory, SearchFacets, AdvancedSearchParams } from "@/lib/products";
@@ -19,8 +18,6 @@ export default function SearchClient({
   initialFacets,
   initialParams,
 }: SearchClientProps): React.JSX.Element {
-  const router = useRouter();
-  const searchParams = useSearchParams();
 
   // Local state initialized from initialParams
   const [query, setQuery] = useState(initialParams.query || "");
@@ -45,7 +42,6 @@ export default function SearchClient({
 
   // Debounce ref for query typing
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const isFirstMount = useRef(true);
 
   // Function to build query string
   const buildQueryString = useCallback(

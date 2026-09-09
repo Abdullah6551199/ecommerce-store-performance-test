@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
+import { normalizeImageUrl } from "@/lib/utils";
 import HeaderSearch from "@/components/HeaderSearch";
 import CartNavButton from "@/components/CartNavButton";
 import MobileNav from "@/components/MobileNav";
@@ -44,10 +46,12 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
           {/* Logo Area (Server-rendered) */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group">
             {settings.logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={settings.logoUrl}
+              <Image
+                src={normalizeImageUrl(settings.logoUrl, { width: 160, quality: 80 })}
                 alt={settings.storeName}
+                width={120}
+                height={40}
+                priority
                 className="h-10 w-auto max-h-10 object-contain rounded-lg"
               />
             ) : (

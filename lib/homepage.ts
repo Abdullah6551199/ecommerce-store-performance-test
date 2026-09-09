@@ -183,10 +183,10 @@ export const listHomepageSections = cache(async (options?: {
   const db = getDb();
   if (db) {
     try {
-      const rows = await db
-        .select()
-        .from(homepageSections)
-        .orderBy(asc(homepageSections.sortOrder));
+      const query = db.select().from(homepageSections);
+      const rows = options?.activeOnly
+        ? await query.where(eq(homepageSections.isActive, true)).orderBy(asc(homepageSections.sortOrder))
+        : await query.orderBy(asc(homepageSections.sortOrder));
 
       if (rows && rows.length > 0) {
         const parsed: HomepageSectionRecord[] = rows.map((r) => ({
@@ -201,9 +201,6 @@ export const listHomepageSections = cache(async (options?: {
           updatedAt: r.updatedAt,
         }));
 
-        if (options?.activeOnly) {
-          return parsed.filter((s) => s.isActive);
-        }
         return parsed;
       }
     } catch (err) {

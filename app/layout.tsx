@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { siteConfig } from "@/config/site";
@@ -7,6 +8,13 @@ import { getThemeSettings, generateThemeCss } from "@/lib/theme";
 import { CartProvider } from "@/components/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "700"],
+  variable: "--font-inter",
+});
 
 import { getBaseUrl } from "@/lib/seo";
 
@@ -85,14 +93,16 @@ export default async function RootLayout({
   const themeCss = generateThemeCss(theme);
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${inter.variable}`}>
       <head>
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <style
           id="apex-theme-vars"
           dangerouslySetInnerHTML={{ __html: themeCss }}
         />
       </head>
-      <body className="min-h-screen flex flex-col antialiased selection:bg-[#FEF500] selection:text-black">
+      <body className={`${inter.className} min-h-screen flex flex-col antialiased selection:bg-[#FEF500] selection:text-black`}>
         <CartProvider>
           {/* Main Background Wrapper applying the dynamic Brand Gradient */}
           <div className="relative flex min-h-screen flex-col bg-brand-gradient">

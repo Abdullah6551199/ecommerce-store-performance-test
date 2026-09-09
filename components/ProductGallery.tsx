@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import Image from "next/image";
 import { normalizeImageUrl } from "@/lib/utils";
 import type { ProductImageRecord } from "@/lib/products";
 import type { ProductVariantRecord } from "@/lib/variants";
@@ -15,6 +16,7 @@ interface ProductGalleryProps {
 /**
  * Isolated Client Island for Product Image Gallery.
  * Handles thumbnail selection, variant photo viewing, and interactive zoom.
+ * Main image is tagged with priority/preload for instant LCP on product pages.
  */
 export default function ProductGallery({
   mainImage,
@@ -25,18 +27,18 @@ export default function ProductGallery({
   const allImageUrls = useMemo(() => {
     const urls: string[] = [];
     if (mainImage) {
-      const norm = normalizeImageUrl(mainImage);
+      const norm = normalizeImageUrl(mainImage, { width: 800, quality: 75 });
       if (norm) urls.push(norm);
     }
     images.forEach((img) => {
-      const norm = normalizeImageUrl(img.imageUrl);
+      const norm = normalizeImageUrl(img.imageUrl, { width: 800, quality: 75 });
       if (norm && !urls.includes(norm)) {
         urls.push(norm);
       }
     });
     variants.forEach((v) => {
       if (v.imageUrl) {
-        const norm = normalizeImageUrl(v.imageUrl);
+        const norm = normalizeImageUrl(v.imageUrl, { width: 800, quality: 75 });
         if (norm && !urls.includes(norm)) {
           urls.push(norm);
         }
@@ -49,13 +51,15 @@ export default function ProductGallery({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Active Featured Image Viewer */}
+      {/* Active Featured Image Viewer (LCP target) */}
       <div className="relative aspect-square w-full overflow-hidden rounded-3xl border border-white/15 bg-black/50 shadow-2xl group">
         {activeImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={activeImage}
             alt={productName}
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -91,10 +95,12 @@ export default function ProductGallery({
                     : "border-white/10 opacity-70 hover:opacity-100 hover:border-white/30"
                 }`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={url}
                   alt={`${productName} thumbnail ${idx + 1}`}
+                  fill
+                  sizes="80px"
+                  loading="lazy"
                   className="h-full w-full object-cover"
                 />
               </button>

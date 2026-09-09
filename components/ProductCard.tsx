@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { ProductWithImagesAndCategory, CatalogProductItem } from "@/lib/products";
 import { normalizeImageUrl } from "@/lib/utils";
 import QuickAddToCart from "@/components/QuickAddToCart";
@@ -40,12 +41,12 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
         className="relative block aspect-[4/4] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40"
       >
         {resolvedImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={resolvedImage}
             alt={product.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             loading="lazy"
-            decoding="async"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (

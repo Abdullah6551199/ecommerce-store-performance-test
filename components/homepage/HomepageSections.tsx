@@ -1,10 +1,12 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { HomepageSectionRecord } from "@/lib/homepage";
 import { CategoryRecord } from "@/lib/categories";
 import { ProductWithImagesAndCategory } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import NewsletterForm from "./NewsletterForm";
+import { normalizeImageUrl } from "@/lib/utils";
 
 /**
  * 1. Hero Showcase Section
@@ -85,13 +87,16 @@ export function HeroSection({ section }: { section: HomepageSectionRecord }): Re
           </div>
         </div>
 
-        {/* Optional hero image showcase */}
+        {/* Optional hero image showcase (LCP priority) */}
         {imageUrl && (
           <div className="lg:col-span-5 relative">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-2xl">
-              <img
-                src={imageUrl}
+              <Image
+                src={normalizeImageUrl(imageUrl, { hero: true, width: 1600, quality: 70 })}
                 alt={content?.heading || "Hero Showcase"}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 42vw"
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -181,9 +186,12 @@ export function CategoriesSection({
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40">
                 {category.imageUrl ? (
-                  <img
-                    src={category.imageUrl}
+                  <Image
+                    src={normalizeImageUrl(category.imageUrl, { width: 600, quality: 75 })}
                     alt={category.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
@@ -376,9 +384,12 @@ export function PromoBannerSection({ section }: { section: HomepageSectionRecord
         {imageUrl && (
           <div className="lg:col-span-5 relative">
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-xl">
-              <img
-                src={imageUrl}
+              <Image
+                src={normalizeImageUrl(imageUrl, { width: 1200, quality: 75 })}
                 alt={content?.heading || "Promotional Banner"}
+                fill
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                loading="lazy"
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
@@ -443,9 +454,12 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
         {imageUrl && (
           <div className="lg:col-span-5 relative">
             <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-xl">
-              <img
-                src={imageUrl}
+              <Image
+                src={normalizeImageUrl(imageUrl, { width: 1200, quality: 75 })}
                 alt={content?.heading || "Brand Story"}
+                fill
+                sizes="(max-width: 1024px) 100vw, 42vw"
+                loading="lazy"
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -532,9 +546,12 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
 
             <div className="mt-6 flex items-center gap-3 pt-4 border-t border-white/10">
               {t.avatar ? (
-                <img
-                  src={t.avatar}
-                  alt={t.author}
+                <Image
+                  src={normalizeImageUrl(t.avatar, { width: 80, quality: 80 })}
+                  alt={t.author || "Testimonial Avatar"}
+                  width={40}
+                  height={40}
+                  loading="lazy"
                   className="h-10 w-10 rounded-full object-cover border border-white/20"
                 />
               ) : (
@@ -624,8 +641,15 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
       {content?.subheading && <p className="text-xs sm:text-sm text-white/60">{content.subheading}</p>}
 
       {imageUrl && (
-        <div className="overflow-hidden rounded-xl max-h-96">
-          <img src={imageUrl} alt={title} className="w-full object-cover" />
+        <div className="relative overflow-hidden rounded-xl h-64 sm:h-96 w-full">
+          <Image
+            src={normalizeImageUrl(imageUrl, { width: 1200, quality: 75 })}
+            alt={title}
+            fill
+            sizes="100vw"
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
         </div>
       )}
 

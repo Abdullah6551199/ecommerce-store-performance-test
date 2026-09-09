@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
+import { normalizeImageUrl } from "@/lib/utils";
 
 interface FooterProps {
   settings?: StoreSettings;
@@ -27,9 +29,12 @@ export default function Footer({ settings = DEFAULT_STORE_SETTINGS }: FooterProp
           <div className="md:col-span-2 space-y-5">
             <Link href="/" className="flex items-center gap-3">
               {settings.logoUrl ? (
-                <img
-                  src={settings.logoUrl}
+                <Image
+                  src={normalizeImageUrl(settings.logoUrl, { width: 160, quality: 80 })}
                   alt={settings.storeName}
+                  width={120}
+                  height={36}
+                  loading="lazy"
                   className="h-9 w-auto max-h-9 object-contain rounded-lg"
                 />
               ) : (

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartContext";
 import { normalizeImageUrl } from "@/lib/utils";
@@ -402,13 +403,15 @@ export default function CheckoutPage(): React.JSX.Element {
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-3 items-center">
                     <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/40">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={normalizeImageUrl(item.imageUrl)}
+                      <Image
+                        src={normalizeImageUrl(item.imageUrl, { width: 112, quality: 75 })}
                         alt={item.productName}
+                        fill
+                        sizes="56px"
+                        loading="lazy"
                         className="h-full w-full object-cover"
                       />
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#18C729] text-[9px] font-black text-black">
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#18C729] text-[9px] font-black text-black z-10">
                         {item.quantity}
                       </span>
                     </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCategoryBySlug, getCategoryById, listCategories } from "@/lib/categories";
@@ -167,10 +168,12 @@ export default async function CategoryPage({ params }: CategoryPageProps): Promi
           {/* Category Image Preview if available */}
           {category.imageUrl && (
             <div className="relative h-48 w-full sm:w-64 lg:h-56 shrink-0 overflow-hidden rounded-2xl border border-white/15 shadow-xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={normalizeImageUrl(category.imageUrl)}
+              <Image
+                src={normalizeImageUrl(category.imageUrl, { width: 800, quality: 75 })}
                 alt={category.name}
+                fill
+                priority
+                sizes="(max-width: 640px) 100vw, 256px"
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />

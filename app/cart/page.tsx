@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useCart } from "@/components/CartContext";
 import { normalizeImageUrl } from "@/lib/utils";
 
@@ -103,10 +104,12 @@ export default function CartPage(): React.JSX.Element {
                   <div key={item.id} className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:bg-white/[0.02] transition-colors">
                     <div className="flex items-center gap-4 min-w-0">
                       <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={normalizeImageUrl(item.imageUrl)}
+                        <Image
+                          src={normalizeImageUrl(item.imageUrl, { width: 200, quality: 75 })}
                           alt={item.productName}
+                          fill
+                          sizes="96px"
+                          loading="lazy"
                           className="h-full w-full object-cover"
                         />
                       </div>

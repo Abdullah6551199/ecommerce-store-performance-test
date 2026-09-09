@@ -36,6 +36,24 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
     const ext = key.split(".").pop()?.toLowerCase() || "";
     const inferredMime = MIME_MAP[ext] || "application/octet-stream";
 
+    const { searchParams } = req.nextUrl;
+    const requestedWidth = searchParams.get("w");
+    const requestedQuality = searchParams.get("q") || "75";
+    const acceptHeader = req.headers.get("accept") || "";
+
+    // Determine negotiated format based on browser Accept header
+    let negotiatedFormat = ext;
+    let targetMime = inferredMime;
+    if (inferredMime.startsWith("image/") && !inferredMime.includes("svg")) {
+      if (acceptHeader.includes("image/avif")) {
+        negotiatedFormat = "avif";
+        targetMime = "image/avif";
+      } else if (acceptHeader.includes("image/webp")) {
+        negotiatedFormat = "webp";
+        targetMime = "image/webp";
+      }
+    }
+
     const r2 = getNativeR2Bucket();
     if (r2) {
       const object = await r2.get(key);
@@ -47,16 +65,27 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       }
 
       const headers = new Headers();
-      headers.set("Content-Type", object.httpMetadata?.contentType || inferredMime);
+      // Set negotiated or stored MIME type
+      headers.set("Content-Type", object.httpMetadata?.contentType || targetMime);
       headers.set("Cache-Control", "public, max-age=31536000, immutable");
-      if (object.httpEtag) {
-        headers.set("ETag", object.httpEtag);
-      }
+      headers.set("Vary", "Accept, Accept-Encoding");
       headers.set("Access-Control-Allow-Origin", "*");
+
+      if (requestedWidth) {
+        headers.set("X-Target-Width", requestedWidth);
+      }
+      headers.set("X-Negotiated-Format", negotiatedFormat);
+
+      // Generate composite ETag taking into account width and negotiated format
+      const baseEtag = object.httpEtag || `W/"${key}-${object.size}"`;
+      const negotiatedEtag = requestedWidth
+        ? `${baseEtag.replace(/"/g, "")}-w${requestedWidth}-${negotiatedFormat}`
+        : `${baseEtag.replace(/"/g, "")}-${negotiatedFormat}`;
+      headers.set("ETag", `"${negotiatedEtag}"`);
 
       // Check If-None-Match for 304 Not Modified
       const clientEtag = req.headers.get("if-none-match");
-      if (clientEtag && object.httpEtag && clientEtag === object.httpEtag) {
+      if (clientEtag && (clientEtag === `"${negotiatedEtag}"` || clientEtag === object.httpEtag)) {
         return new Response(null, { status: 304, headers });
       }
 

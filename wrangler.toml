@@ -1,5 +1,5 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "ecommerce-store-v2"
+name = "ecommerce-store-perf-test"
 main = ".open-next/worker.js"
 compatibility_date = "2025-02-01"
 compatibility_flags = ["nodejs_compat"]
@@ -10,17 +10,17 @@ binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "ecommerce-db"
-database_id = "c9359eb2-a5dc-4eff-98f9-bac8118cb3dd"
+database_name = "ecommerce-perf-db"
+database_id = "3a60804b-1009-4451-972b-87cec6d46bcb"
 migrations_dir = "drizzle/migrations"
 
 [[r2_buckets]]
 binding = "R2"
-bucket_name = "ecommerce-store-assets"
+bucket_name = "ecommerce-perf-assets"
 
 [vars]
-NEXT_PUBLIC_APP_URL = "https://ecommerce-store-v2.zia291930.workers.dev"
-SESSION_SECRET = "d6a39f5011387e0657e7a515cc23681312c5c3c6a83eec464660ca00d935fd7c"
-JWT_SECRET = "d6a39f5011387e0657e7a515cc23681312c5c3c6a83eec464660ca00d935fd7c"
-ADMIN_SECRET = "admin_secret_key_store_stage2"
+NEXT_PUBLIC_APP_URL = "https://ecommerce-store-perf-test.zia291930.workers.dev"
+SESSION_SECRET = "8b051f18ed04fdbfc3aa401da65480ff4cb3b96a5e2082390693b2368a3f06e8"
+JWT_SECRET = "8b051f18ed04fdbfc3aa401da65480ff4cb3b96a5e2082390693b2368a3f06e8"
+ADMIN_SECRET = "admin_perf_test_secret_2026"
 ADMIN_EMAIL = "admin@apexstore.com"

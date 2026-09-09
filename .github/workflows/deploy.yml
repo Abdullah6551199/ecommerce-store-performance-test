@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: Build & Deploy to Cloudflare Workers (ecommerce-store-v2)
+    name: Build & Deploy to Cloudflare Workers (ecommerce-store-perf-test)
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +28,7 @@ jobs:
         run: npm run build:worker
         env:
           NODE_ENV: production
-          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://ecommerce-store-v2.zia291930.workers.dev' }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://ecommerce-store-perf-test.zia291930.workers.dev' }}
 
       - name: Deploy to Cloudflare Workers
         run: npx opennextjs-cloudflare deploy

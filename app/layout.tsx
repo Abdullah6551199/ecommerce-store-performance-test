@@ -1,13 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { siteConfig } from "@/config/site";
 import { getStoreSettings } from "@/lib/settings";
 import { getThemeSettings, generateThemeCss } from "@/lib/theme";
 import { CartProvider } from "@/components/CartContext";
-import CartDrawer from "@/components/CartDrawer";
 import "./globals.css";
+
+const CartDrawer = dynamic(() => import("@/components/CartDrawer"));
+
 
 const inter = Inter({
   subsets: ["latin"],

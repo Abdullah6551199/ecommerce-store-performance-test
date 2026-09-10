@@ -44,6 +44,7 @@ export default function MobileNav({ navLinks }: MobileNavProps): React.JSX.Eleme
           ))}
           <Link
             href="/admin/products"
+            prefetch={false}
             onClick={() => setMobileMenuOpen(false)}
             className="block py-1.5 text-xs font-semibold text-[#FEF500]"
           >

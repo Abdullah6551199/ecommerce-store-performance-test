@@ -156,6 +156,7 @@ export default function Footer({ settings = DEFAULT_STORE_SETTINGS }: FooterProp
                   <li key={`${link.url}-${linkIdx}`}>
                     <Link
                       href={link.url}
+                      prefetch={false}
                       className="text-white/60 hover:text-[#18C729] transition-colors"
                     >
                       {link.label}

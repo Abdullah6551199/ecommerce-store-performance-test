@@ -1,11 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
 import { normalizeImageUrl } from "@/lib/utils";
 import HeaderSearch from "@/components/HeaderSearch";
 import CartNavButton from "@/components/CartNavButton";
-import MobileNav from "@/components/MobileNav";
+
+const MobileNav = dynamic(() => import("@/components/MobileNav"));
 
 interface HeaderProps {
   settings?: StoreSettings;
@@ -97,6 +99,7 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
               ))}
               <Link
                 href="/admin/products"
+                prefetch={false}
                 className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-[#FEF500] hover:bg-white/10 transition-colors"
               >
                 Admin
@@ -106,6 +109,7 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
             {/* Account Icon (Server-rendered) */}
             <Link
               href="/admin/login"
+              prefetch={false}
               className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white hover:border-[#18C729]/40 transition-all"
               title="Account / Admin Login"
               aria-label="Account"

@@ -38,6 +38,7 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
       {/* Product Image Link Container */}
       <Link
         href={`/product/${product.slug}`}
+        prefetch={false}
         className="relative block aspect-[4/4] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40"
       >
         {resolvedImage ? (
@@ -103,7 +104,7 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
             </span>
           )}
           <h3 className="mt-0.5 text-sm font-bold text-white group-hover:text-[#18C729] transition-colors line-clamp-1">
-            <Link href={`/product/${product.slug}`}>{product.name}</Link>
+            <Link href={`/product/${product.slug}`} prefetch={false}>{product.name}</Link>
           </h3>
           {product.shortDescription && (
             <p className="mt-1 text-xs text-white/50 line-clamp-2">

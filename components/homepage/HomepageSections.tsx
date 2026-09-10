@@ -1,12 +1,15 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { HomepageSectionRecord } from "@/lib/homepage";
 import { CategoryRecord } from "@/lib/categories";
 import { ProductWithImagesAndCategory } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
-import NewsletterForm from "./NewsletterForm";
 import { normalizeImageUrl } from "@/lib/utils";
+
+const NewsletterForm = dynamic(() => import("./NewsletterForm"), { ssr: true });
+
 
 /**
  * 1. Hero Showcase Section

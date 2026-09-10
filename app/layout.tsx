@@ -9,7 +9,7 @@ import { getThemeSettings, generateThemeCss } from "@/lib/theme";
 import { CartProvider } from "@/components/CartContext";
 import "./globals.css";
 
-const CartDrawer = dynamic(() => import("@/components/CartDrawer"));
+import CartDrawerContainer from "@/components/CartDrawerContainer";
 
 
 const inter = Inter({
@@ -119,8 +119,8 @@ export default async function RootLayout({
               <Footer settings={mergedSettings} />
             </div>
           </div>
-          {/* Global Cart Slide-Over Drawer */}
-          <CartDrawer />
+          {/* Global Cart Slide-Over Drawer (Loaded on demand) */}
+          <CartDrawerContainer />
         </CartProvider>
       </body>
     </html>

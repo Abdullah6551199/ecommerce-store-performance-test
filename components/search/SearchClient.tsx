@@ -260,8 +260,9 @@ export default function SearchClient({
                   setQuery("");
                   applyFilters({ query: "" });
                 }}
-                className="absolute right-3.5 top-5 text-white/40 hover:text-white"
+                className="absolute right-2 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-white/40 hover:text-white transition-colors"
                 title="Clear input"
+                aria-label="Clear search input"
               >
                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path
@@ -301,7 +302,7 @@ export default function SearchClient({
           } space-y-6 rounded-3xl border border-white/10 bg-[#0c140f]/90 p-6 backdrop-blur-md shadow-xl lg:sticky lg:top-24`}
         >
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-white">Filters</h3>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-white">Filters</h2>
             {activeFiltersCount > 0 && (
               <button
                 type="button"
@@ -320,6 +321,7 @@ export default function SearchClient({
             </label>
             <select
               id="sort-select"
+              aria-label="Sort By"
               value={sort}
               onChange={(e) => handleSortChange(e.target.value)}
               className="w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
@@ -350,7 +352,7 @@ export default function SearchClient({
           {/* Price Range Filter */}
           <div className="space-y-3 pt-2 border-t border-white/10">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-white/70">Price Range</h4>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-white/70">Price Range</h3>
               {(minPrice || maxPrice) && (
                 <button
                   type="button"
@@ -405,10 +407,11 @@ export default function SearchClient({
           </div>
 
           {/* Category Filter */}
+          {/* Category Filter */}
           {facets.categories && facets.categories.length > 0 && (
             <div className="space-y-3 pt-2 border-t border-white/10">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-white/70">Category</h4>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-white/70">Category</h3>
                 {category && (
                   <button
                     type="button"
@@ -448,7 +451,7 @@ export default function SearchClient({
           {facets.brands && facets.brands.length > 0 && (
             <div className="space-y-3 pt-2 border-t border-white/10">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-white/70">Brand</h4>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-white/70">Brand</h3>
                 {brand && (
                   <button
                     type="button"
@@ -488,7 +491,7 @@ export default function SearchClient({
           {facets.tags && facets.tags.length > 0 && (
             <div className="space-y-3 pt-2 border-t border-white/10">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-white/70">Tags</h4>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-white/70">Tags</h3>
                 {selectedTags.length > 0 && (
                   <button
                     type="button"
@@ -528,6 +531,7 @@ export default function SearchClient({
 
         {/* Results Section */}
         <section className="lg:col-span-3 space-y-6">
+          <h2 className="sr-only">Search Results</h2>
           {/* Active Filter Chips & Results Count Bar */}
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
             <div className="flex items-center gap-2">
@@ -547,8 +551,10 @@ export default function SearchClient({
 
             {/* Desktop Sort Dropdown */}
             <div className="hidden sm:flex items-center gap-2 text-xs">
-              <span className="text-white/50">Sort by:</span>
+              <label htmlFor="desktop-sort-select" className="text-white/50">Sort by:</label>
               <select
+                id="desktop-sort-select"
+                aria-label="Sort search results by"
                 value={sort}
                 onChange={(e) => handleSortChange(e.target.value)}
                 className="rounded-xl border border-white/15 bg-[#0c140f] px-3 py-1.5 text-xs text-white focus:border-[#18C729] focus:outline-none"

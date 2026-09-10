@@ -119,14 +119,26 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     { name: category.name, url: `/category/${category.slug}` },
   ];
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
+  const categoryBannerUrl = category.imageUrl
+    ? normalizeImageUrl(category.imageUrl, { width: 600, quality: 75 })
+    : null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-12">
-      {/* Schema.org Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(categoryJsonLd) }}
-      />
+    <>
+      {categoryBannerUrl && (
+        <link
+          rel="preload"
+          as="image"
+          href={categoryBannerUrl}
+          fetchPriority="high"
+        />
+      )}
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-12">
+        {/* Schema.org Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(categoryJsonLd) }}
+        />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
@@ -183,10 +195,11 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           {category.imageUrl && (
             <div className="relative h-48 w-full sm:w-64 lg:h-56 shrink-0 overflow-hidden rounded-2xl border border-white/15 shadow-xl">
               <Image
-                src={normalizeImageUrl(category.imageUrl, { width: 800, quality: 75 })}
+                src={categoryBannerUrl || normalizeImageUrl(category.imageUrl, { width: 600, quality: 75 })}
                 alt={category.name}
                 fill
                 priority
+                fetchPriority="high"
                 sizes="(max-width: 640px) 100vw, 256px"
                 className="h-full w-full object-cover"
               />
@@ -269,8 +282,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         ) : (
           <>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {categoryProducts.map((prod) => (
-                <ProductCard key={prod.id} product={prod} />
+              {categoryProducts.map((prod, idx) => (
+                <ProductCard key={prod.id} product={prod} isPriority={idx < 2} />
               ))}
             </div>
 
@@ -331,7 +344,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             )}
           </>
         )}
-      </section>
-    </div>
+        </section>
+      </div>
+    </>
   );
 }

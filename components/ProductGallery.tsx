@@ -59,6 +59,7 @@ export default function ProductGallery({
             alt={productName}
             fill
             priority
+            fetchPriority="high"
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />

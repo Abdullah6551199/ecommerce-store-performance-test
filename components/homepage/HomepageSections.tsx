@@ -95,11 +95,12 @@ export function HeroSection({ section }: { section: HomepageSectionRecord }): Re
           <div className="lg:col-span-5 relative">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-2xl">
               <Image
-                src={normalizeImageUrl(imageUrl, { hero: true, width: 1600, quality: 70 })}
+                src={normalizeImageUrl(imageUrl, { hero: true, width: 1000, quality: 75 })}
                 alt={content?.heading || "Hero Showcase"}
                 fill
                 priority
-                sizes="(max-width: 1024px) 100vw, 42vw"
+                fetchPriority="high"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 42vw"
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -312,8 +313,8 @@ export function FeaturedProductsSection({
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {displayedProducts.map((prod) => (
-            <ProductCard key={prod.id} product={prod} />
+          {displayedProducts.map((prod, idx) => (
+            <ProductCard key={prod.id} product={prod} isPriority={idx < 2} />
           ))}
         </div>
       )}

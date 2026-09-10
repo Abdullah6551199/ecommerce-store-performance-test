@@ -7,6 +7,7 @@ import ProductShowcase from "@/components/ProductShowcase";
 import ProductCard from "@/components/ProductCard";
 
 import { getAbsoluteUrl, generateProductJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export const revalidate = 300;
 
@@ -97,9 +98,21 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
     { name: product.name, url: `/product/${product.slug}` },
   ];
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
+  const productMainImageUrl = product.mainImage
+    ? normalizeImageUrl(product.mainImage, { width: 800, quality: 75 })
+    : null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-16">
+    <>
+      {productMainImageUrl && (
+        <link
+          rel="preload"
+          as="image"
+          href={productMainImageUrl}
+          fetchPriority="high"
+        />
+      )}
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-16">
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
@@ -177,6 +190,7 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
           </div>
         </section>
       )}
-    </div>
+      </div>
+    </>
   );
 }

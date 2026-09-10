@@ -712,8 +712,8 @@ export default function SearchClient({
                   isLoading ? "opacity-60" : "opacity-100"
                 }`}
               >
-                {products.map((prod) => (
-                  <ProductCard key={prod.id} product={prod} />
+                {products.map((prod, idx) => (
+                  <ProductCard key={prod.id} product={prod} isPriority={idx < 2} />
                 ))}
               </div>
 

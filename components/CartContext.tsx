@@ -143,6 +143,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }, 2500);
   }, []);
 
+  // Hydrate initial cart from sessionStorage to eliminate cold-start fetch delay
+  useEffect(() => {
+    try {
+      const cached = sessionStorage.getItem("apex_cart_summary");
+      if (cached) {
+        setCart(JSON.parse(cached));
+        setIsLoading(false);
+      }
+    } catch {
+      // Storage access blocked or unavailable
+    }
+  }, []);
+
   const refreshCart = useCallback(async () => {
     try {
       const res = await fetch("/api/cart", {
@@ -153,6 +166,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const json = (await res.json()) as CartApiResponse;
         if (json.success && json.data) {
           setCart(json.data);
+          try {
+            sessionStorage.setItem("apex_cart_summary", JSON.stringify(json.data));
+          } catch {
+            // Ignore quota errors
+          }
         }
       }
     } catch (err) {
@@ -162,13 +180,43 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Defer initial cart sync until the browser is idle to avoid competing with LCP image download
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let timer: NodeJS.Timeout | number;
+    if ("requestIdleCallback" in window) {
+      const handle = (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
+        () => {
+          refreshCart();
+        },
+        { timeout: 2500 }
+      );
+      return () => {
+        if ("cancelIdleCallback" in window) {
+          (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(handle);
+        }
+      };
+    } else {
+      timer = setTimeout(() => {
+        refreshCart();
+      }, 1800);
+      return () => clearTimeout(timer);
+    }
+  }, [refreshCart]);
+
+  const openDrawer = useCallback(() => {
+    setIsDrawerOpen(true);
     refreshCart();
   }, [refreshCart]);
 
-  const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
-  const toggleDrawer = useCallback(() => setIsDrawerOpen((prev) => !prev), []);
+  const toggleDrawer = useCallback(() => {
+    setIsDrawerOpen((prev) => {
+      if (!prev) refreshCart();
+      return !prev;
+    });
+  }, [refreshCart]);
 
   const addItem = useCallback(
     async (

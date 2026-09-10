@@ -8,6 +8,8 @@ import type { Metadata } from "next";
 import { getStoreSettings } from "@/lib/settings";
 import { getBaseUrl } from "@/lib/seo";
 
+import { normalizeImageUrl } from "@/lib/utils";
+
 export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -54,16 +56,32 @@ export default async function HomePage(): Promise<React.JSX.Element> {
     getFeaturedProducts(8),
   ]);
 
+  // Identify LCP hero image for high-priority preloading
+  const heroSection = sections.find((s) => s.type === "hero" && s.imageUrl);
+  const heroImageUrl = heroSection?.imageUrl
+    ? normalizeImageUrl(heroSection.imageUrl, { hero: true, width: 1000, quality: 75 })
+    : null;
+
   return (
-    <div
-      className="mx-auto px-4 py-10 sm:px-6 lg:px-8 space-y-24"
-      style={{ maxWidth: "var(--container-max-width, 1280px)" }}
-    >
+    <>
+      {heroImageUrl && (
+        <link
+          rel="preload"
+          as="image"
+          href={heroImageUrl}
+          fetchPriority="high"
+        />
+      )}
+      <div
+        className="mx-auto px-4 py-10 sm:px-6 lg:px-8 space-y-24"
+        style={{ maxWidth: "var(--container-max-width, 1280px)" }}
+      >
       {sections.map((section) => (
         <React.Fragment key={section.id}>
           {renderHomepageSection(section, categories, featuredProducts)}
         </React.Fragment>
       ))}
-    </div>
+      </div>
+    </>
   );
 }

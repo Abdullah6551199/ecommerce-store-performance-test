@@ -7,6 +7,7 @@ import QuickAddToCart from "@/components/QuickAddToCart";
 
 interface ProductCardProps {
   product: ProductWithImagesAndCategory | CatalogProductItem;
+  isPriority?: boolean;
 }
 
 /**
@@ -14,7 +15,7 @@ interface ProductCardProps {
  * All markup, imagery, badges, and layout are rendered at the server/edge.
  * Interactive cart mutation is delegated to the <QuickAddToCart /> client island.
  */
-export default function ProductCard({ product }: ProductCardProps): React.JSX.Element {
+export default function ProductCard({ product, isPriority = false }: ProductCardProps): React.JSX.Element {
   const hasSale = Boolean(product.salePrice && product.salePrice < product.price);
   const discountPercent = hasSale
     ? Math.round(((product.price - (product.salePrice || 0)) / product.price) * 100)
@@ -46,8 +47,9 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
             src={resolvedImage}
             alt={product.name}
             fill
+            priority={isPriority}
+            {...(isPriority ? { fetchPriority: "high" as const } : { loading: "lazy" as const })}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (

@@ -143,13 +143,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }, 2500);
   }, []);
 
-  // Hydrate initial cart from sessionStorage to eliminate cold-start fetch delay
+  // Hydrate initial cart from sessionStorage non-blockingly to eliminate cold-start fetch delay
   useEffect(() => {
     try {
       const cached = sessionStorage.getItem("apex_cart_summary");
       if (cached) {
-        setCart(JSON.parse(cached));
-        setIsLoading(false);
+        const parsed = JSON.parse(cached);
+        React.startTransition(() => {
+          setCart(parsed);
+          setIsLoading(false);
+        });
       }
     } catch {
       // Storage access blocked or unavailable
@@ -165,9 +168,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const json = (await res.json()) as CartApiResponse;
         if (json.success && json.data) {
-          setCart(json.data);
+          const nextData = json.data;
+          React.startTransition(() => {
+            setCart(nextData);
+          });
           try {
-            sessionStorage.setItem("apex_cart_summary", JSON.stringify(json.data));
+            sessionStorage.setItem("apex_cart_summary", JSON.stringify(nextData));
           } catch {
             // Ignore quota errors
           }
@@ -176,7 +182,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } catch (err) {
       console.error("[CartContext] Failed to load cart:", err);
     } finally {
-      setIsLoading(false);
+      React.startTransition(() => {
+        setIsLoading(false);
+      });
     }
   }, []);
 

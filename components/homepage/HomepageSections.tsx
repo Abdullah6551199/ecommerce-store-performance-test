@@ -2,9 +2,9 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { HomepageSectionRecord } from "@/lib/homepage";
-import { CategoryRecord } from "@/lib/categories";
-import { ProductWithImagesAndCategory } from "@/lib/products";
+import type { HomepageSectionRecord } from "@/lib/homepage";
+import type { CategoryRecord } from "@/lib/categories";
+import type { ProductWithImagesAndCategory } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import { normalizeImageUrl } from "@/lib/utils";
 
@@ -95,12 +95,12 @@ export function HeroSection({ section }: { section: HomepageSectionRecord }): Re
           <div className="lg:col-span-5 relative">
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-2xl">
               <Image
-                src={normalizeImageUrl(imageUrl, { hero: true, width: 700, quality: 72 })}
+                src={normalizeImageUrl(imageUrl, { hero: true, width: 700, quality: 70 })}
                 alt={content?.heading || "Hero Showcase"}
                 fill
                 priority
                 fetchPriority="high"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 42vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 42vw"
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

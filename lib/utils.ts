@@ -47,8 +47,8 @@ export function normalizeImageUrl(
   if (trimmed.includes("images.unsplash.com")) {
     try {
       const parsed = new URL(trimmed);
-      const targetWidth = options?.width || (options?.hero ? 900 : 800);
-      const targetQuality = options?.quality || (options?.hero ? 72 : 75);
+      const targetWidth = options?.width || (options?.hero ? 700 : 800);
+      const targetQuality = options?.quality || (options?.hero ? 70 : 75);
 
       parsed.searchParams.set("auto", "format");
       parsed.searchParams.set("fit", "crop");
@@ -58,8 +58,8 @@ export function normalizeImageUrl(
       return parsed.toString();
     } catch {
       // Fallback if URL parsing fails
-      const targetWidth = options?.width || (options?.hero ? 900 : 800);
-      const targetQuality = options?.quality || (options?.hero ? 72 : 75);
+      const targetWidth = options?.width || (options?.hero ? 700 : 800);
+      const targetQuality = options?.quality || (options?.hero ? 70 : 75);
       const cleanUrl = trimmed.split("?")[0];
       return `${cleanUrl}?auto=format&fit=crop&w=${targetWidth}&q=${targetQuality}`;
     }

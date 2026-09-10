@@ -110,7 +110,7 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
             <Link
               href="/admin/login"
               prefetch={false}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white hover:border-[#18C729]/40 transition-all"
+              className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 hover:text-white hover:border-[#18C729]/40 transition-all"
               title="Account / Admin Login"
               aria-label="Account"
             >

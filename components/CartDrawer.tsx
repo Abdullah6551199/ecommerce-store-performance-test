@@ -70,24 +70,16 @@ export default function CartDrawer(): React.JSX.Element {
         isDrawerOpen ? "visible" : "invisible"
       }`}
     >
-      {/* Subtle non-blocking backdrop indicator - light transparent shade that clicks to close */}
-      <div
-        onClick={closeDrawer}
-        className={`fixed inset-0 bg-black/30 pointer-events-auto transition-opacity duration-300 ${
-          isDrawerOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-      />
-
-      {/* Slide-in compact drawer panel (max width 400px) */}
+      {/* Slide-in floating drawer panel (320px maximum, store behind remains interactive) */}
       <div
         ref={drawerRef}
-        className={`fixed top-0 right-0 bottom-0 w-full sm:w-[400px] max-w-[420px] bg-[#09100c] border-l border-white/15 shadow-[-12px_0_40px_rgba(0,0,0,0.85)] flex flex-col justify-between pointer-events-auto transform transition-transform duration-300 ease-out z-10 ${
+        className={`fixed top-0 right-0 bottom-0 w-full sm:w-[320px] max-w-[320px] bg-[#09100c] border-l border-white/15 shadow-[-12px_0_40px_rgba(0,0,0,0.85)] flex flex-col justify-between pointer-events-auto transform transition-transform duration-300 ease-out z-50 ${
           isDrawerOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-black/40">
-          <div className="flex items-center gap-2.5">
+        <div className="flex items-center justify-between px-4 py-3.5 border-b border-white/10 bg-black/40">
+          <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#18C729]/15 text-[#18C729]">
               <svg
                 className="h-4 w-4"
@@ -113,20 +105,17 @@ export default function CartDrawer(): React.JSX.Element {
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={closeDrawer}
-              className="flex h-8 px-2.5 items-center justify-center gap-1 rounded-lg border border-white/10 text-xs font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-              aria-label="Continue shopping and close cart"
-              title="Continue Shopping"
-            >
-              <span>Keep Browsing</span>
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={closeDrawer}
+            className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Close cart drawer"
+            title="Close Cart"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         {/* Free Shipping Progress Bar */}
@@ -187,9 +176,9 @@ export default function CartDrawer(): React.JSX.Element {
               <button
                 type="button"
                 onClick={closeDrawer}
-                className="rounded-xl bg-gradient-to-r from-[#18C729] to-[#12a822] px-5 py-2 text-xs font-bold text-black hover:brightness-110 transition-all shadow-md shadow-[#18C729]/20"
+                className="rounded-xl bg-gradient-to-r from-[#18C729] to-[#12a822] px-6 py-2.5 min-h-[44px] inline-flex items-center justify-center text-xs font-bold text-black hover:brightness-110 transition-all shadow-md shadow-[#18C729]/20"
               >
-                Continue Shopping
+                Browse Catalog
               </button>
             </div>
           ) : (
@@ -225,11 +214,12 @@ export default function CartDrawer(): React.JSX.Element {
                       <button
                         type="button"
                         onClick={() => removeItem(item.id)}
-                        className="text-white/40 hover:text-red-400 p-0.5 transition-colors"
+                        className="text-white/40 hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors -mr-2 -mt-2"
                         title="Remove item"
+                        aria-label={`Remove ${item.productName}`}
                       >
                         <svg
-                          className="h-3.5 w-3.5"
+                          className="h-4 w-4"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -260,21 +250,23 @@ export default function CartDrawer(): React.JSX.Element {
 
                   {/* Quantity Selector & Price */}
                   <div className="flex items-center justify-between pt-1.5 mt-1 border-t border-white/5">
-                    <div className="flex items-center rounded-lg border border-white/15 bg-black/30">
+                    <div className="flex items-center rounded-xl border border-white/15 bg-black/30">
                       <button
                         type="button"
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="flex h-6 w-6 items-center justify-center text-xs text-white/70 hover:bg-white/10 hover:text-white rounded-l-lg transition-colors"
+                        className="flex min-h-[44px] min-w-[36px] items-center justify-center text-sm font-bold text-white/70 hover:bg-white/10 hover:text-white rounded-l-xl transition-colors"
+                        aria-label="Decrease quantity"
                       >
                         -
                       </button>
-                      <span className="w-6 text-center text-xs font-bold text-white">
+                      <span className="min-w-[28px] text-center text-xs font-bold text-white">
                         {item.quantity}
                       </span>
                       <button
                         type="button"
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="flex h-6 w-6 items-center justify-center text-xs text-white/70 hover:bg-white/10 hover:text-white rounded-r-lg transition-colors"
+                        className="flex min-h-[44px] min-w-[36px] items-center justify-center text-sm font-bold text-white/70 hover:bg-white/10 hover:text-white rounded-r-xl transition-colors"
+                        aria-label="Increase quantity"
                       >
                         +
                       </button>
@@ -321,7 +313,7 @@ export default function CartDrawer(): React.JSX.Element {
               <Link
                 href="/checkout"
                 onClick={closeDrawer}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#18C729] to-[#12a822] py-3 text-xs font-bold text-black hover:brightness-110 shadow-lg shadow-[#18C729]/20 transition-all cursor-pointer"
+                className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#18C729] to-[#12a822] py-3 text-xs font-bold text-black hover:brightness-110 shadow-lg shadow-[#18C729]/20 transition-all cursor-pointer"
               >
                 <span>Proceed to Checkout</span>
                 <svg
@@ -335,23 +327,14 @@ export default function CartDrawer(): React.JSX.Element {
                 </svg>
               </Link>
 
-              {/* View Cart & Continue Shopping buttons */}
-              <div className="grid grid-cols-2 gap-2">
-                <Link
-                  href="/cart"
-                  onClick={closeDrawer}
-                  className="inline-flex items-center justify-center rounded-lg border border-white/15 bg-white/5 py-2 text-[11px] font-semibold text-white hover:bg-white/10 transition-all"
-                >
-                  Full Cart
-                </Link>
-                <button
-                  type="button"
-                  onClick={closeDrawer}
-                  className="inline-flex items-center justify-center rounded-lg border border-white/10 bg-transparent py-2 text-[11px] font-semibold text-white/70 hover:text-white hover:bg-white/5 transition-all"
-                >
-                  Keep Shopping
-                </button>
-              </div>
+              {/* View Full Cart */}
+              <Link
+                href="/cart"
+                onClick={closeDrawer}
+                className="w-full min-h-[44px] inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 py-2.5 text-xs font-semibold text-white hover:bg-white/10 transition-all"
+              >
+                View Full Cart
+              </Link>
             </div>
 
             <p className="text-center text-[9px] text-white/40">

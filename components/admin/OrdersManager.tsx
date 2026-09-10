@@ -40,7 +40,13 @@ export default function OrdersManager(): React.JSX.Element {
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [updateFeedback, setUpdateFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  const fetchOrders = useCallback(async () => {
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const PAGE_SIZE = 20;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+
+  const fetchOrders = useCallback(async (pageToFetch = currentPage) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -48,6 +54,8 @@ export default function OrdersManager(): React.JSX.Element {
       const params = new URLSearchParams();
       if (statusFilter !== "all") params.set("status", statusFilter);
       if (searchQuery.trim()) params.set("search", searchQuery.trim());
+      params.set("limit", String(PAGE_SIZE));
+      params.set("offset", String((pageToFetch - 1) * PAGE_SIZE));
 
       const res = await fetch(`/api/admin/orders?${params.toString()}`);
       const json = (await res.json()) as {
@@ -61,16 +69,21 @@ export default function OrdersManager(): React.JSX.Element {
       }
 
       setOrdersList(json.data?.orders || []);
+      setTotalCount(json.data?.totalCount || 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error loading orders");
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, searchQuery]);
+  }, [statusFilter, searchQuery, currentPage, PAGE_SIZE]);
 
   useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
+    fetchOrders(currentPage);
+  }, [fetchOrders, currentPage]);
+
+  const handleFilterChange = () => {
+    setCurrentPage(1);
+  };
 
   // Open Details Modal
   const handleOpenDetails = async (orderId: string) => {
@@ -226,7 +239,10 @@ export default function OrdersManager(): React.JSX.Element {
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
             placeholder="Search by customer name, phone, city, order ID..."
             className="w-full rounded-xl border border-white/15 bg-black/40 pl-9 pr-4 py-2 text-xs text-white placeholder-white/40 focus:border-[#18C729] focus:outline-none transition-colors"
           />
@@ -246,7 +262,10 @@ export default function OrdersManager(): React.JSX.Element {
             <button
               key={st}
               type="button"
-              onClick={() => setStatusFilter(st)}
+              onClick={() => {
+                setStatusFilter(st);
+                setCurrentPage(1);
+              }}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
                 statusFilter === st
                   ? "bg-[#18C729] text-black shadow-md shadow-[#18C729]/20"
@@ -384,6 +403,54 @@ export default function OrdersManager(): React.JSX.Element {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t border-white/10 bg-[#060b08]">
+            <p className="text-xs text-white/50">
+              Showing <span className="text-white font-medium">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
+              <span className="text-white font-medium">{Math.min(currentPage * PAGE_SIZE, totalCount)}</span> of{" "}
+              <span className="text-white font-medium">{totalCount}</span> orders
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={currentPage <= 1 || isLoading}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                ← Previous
+              </button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pNum) => (
+                  <button
+                    key={pNum}
+                    type="button"
+                    disabled={isLoading}
+                    onClick={() => setCurrentPage(pNum)}
+                    className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
+                      pNum === currentPage
+                        ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
+                        : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {pNum}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                disabled={currentPage >= totalPages || isLoading}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Details & Status Modal */}

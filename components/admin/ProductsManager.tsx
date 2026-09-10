@@ -17,6 +17,8 @@ export default function ProductsManager(): React.JSX.Element {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 20;
 
   // Modals
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -76,6 +78,13 @@ export default function ProductsManager(): React.JSX.Element {
       return matchesSearch && matchesCat && matchesStatus;
     });
   }, [productsList, searchQuery, categoryFilter, statusFilter]);
+
+  const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE) || 1;
+
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredProducts.slice(start, start + PAGE_SIZE);
+  }, [filteredProducts, currentPage]);
 
   // Statistics
   const stats = useMemo(() => {
@@ -251,7 +260,10 @@ export default function ProductsManager(): React.JSX.Element {
             type="text"
             placeholder="Search by product name, SKU, or brand..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
             className="w-full rounded-xl border border-white/10 bg-white/5 pl-9 pr-4 py-2 text-xs text-white placeholder-white/40 focus:border-[#18C729] focus:outline-none"
           />
           <svg className="absolute left-3 top-2.5 h-4 w-4 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -262,7 +274,10 @@ export default function ProductsManager(): React.JSX.Element {
         <div className="flex flex-wrap items-center gap-2.5">
           <select
             value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+            onChange={(e) => {
+              setCategoryFilter(e.target.value);
+              setCurrentPage(1);
+            }}
             className="rounded-xl border border-white/10 bg-[#0a110c] px-3 py-1.5 text-xs text-white focus:border-[#18C729] focus:outline-none"
           >
             <option value="all">All Categories</option>
@@ -275,7 +290,10 @@ export default function ProductsManager(): React.JSX.Element {
 
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setCurrentPage(1);
+            }}
             className="rounded-xl border border-white/10 bg-[#0a110c] px-3 py-1.5 text-xs text-white focus:border-[#18C729] focus:outline-none"
           >
             <option value="all">All Statuses</option>
@@ -343,7 +361,8 @@ export default function ProductsManager(): React.JSX.Element {
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+            <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-white/10 bg-white/[0.02] text-white/60">
@@ -357,7 +376,7 @@ export default function ProductsManager(): React.JSX.Element {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {filteredProducts.map((prod) => {
+                {paginatedProducts.map((prod) => {
                   const hasSale = Boolean(prod.salePrice && prod.salePrice < prod.price);
                   const isOutOfStock =
                     prod.stockStatus === "out_of_stock" ||
@@ -528,6 +547,57 @@ export default function ProductsManager(): React.JSX.Element {
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Controls */}
+          {filteredProducts.length > PAGE_SIZE && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 px-6 py-4 bg-white/[0.01]">
+              <div className="text-xs text-white/60">
+                Showing <span className="font-semibold text-white">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
+                <span className="font-semibold text-white">
+                  {Math.min(currentPage * PAGE_SIZE, filteredProducts.length)}
+                </span>{" "}
+                of <span className="font-semibold text-white">{filteredProducts.length}</span> products
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  disabled={currentPage <= 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  ← Previous
+                </button>
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pNum) => (
+                    <button
+                      key={pNum}
+                      type="button"
+                      onClick={() => setCurrentPage(pNum)}
+                      className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
+                        pNum === currentPage
+                          ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
+                          : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      {pNum}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+          )}
+        </>
         )}
       </div>
 

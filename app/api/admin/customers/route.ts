@@ -20,9 +20,10 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search") || undefined;
-    const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : undefined;
+    const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 20;
+    const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
 
-    const result = await getCustomers({ search, limit });
+    const result = await getCustomers({ search, limit, page });
 
     return NextResponse.json({
       success: true,

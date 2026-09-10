@@ -100,7 +100,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps): Pro
     tags,
     inStock,
     sort,
-    limit: 40,
+    limit: 12,
     offset: 0,
     publishedOnly: true,
   };

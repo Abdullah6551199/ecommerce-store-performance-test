@@ -1,4 +1,4 @@
-import { eq, and, sql, desc, or } from "drizzle-orm";
+import { eq, and, sql, desc, or, inArray } from "drizzle-orm";
 import { getDb, carts, cartItems, products, productImages, productVariants, type CartRecord, type CartItemRecord } from "./db";
 import { normalizeImageUrl } from "./utils";
 import { memoryProducts, memoryProductImages } from "./products";
@@ -196,41 +196,83 @@ export async function getCartWithItems(cartIdOrSessionId: string): Promise<CartS
       .where(eq(cartItems.cartId, cart.id))
       .orderBy(desc(cartItems.createdAt));
 
+    if (rawItems.length === 0) {
+      return {
+        id: cart.id,
+        userId: cart.userId,
+        sessionId: cart.sessionId,
+        items: [],
+        itemCount: 0,
+        subtotal: 0,
+        shipping: 0,
+        freeShippingThreshold,
+        freeShippingRemaining: freeShippingThreshold,
+        total: 0,
+      };
+    }
+
+    // Collect distinct IDs for batch querying (eliminates N+1 queries)
+    const productIds = Array.from(new Set(rawItems.map((i) => i.productId)));
+    const variantIds = Array.from(
+      new Set(rawItems.map((i) => i.variantId).filter((v): v is string => Boolean(v)))
+    );
+
+    // Parallel batch queries
+    const [prodsRows, variantsRows, mainImagesRows] = await Promise.all([
+      db
+        .select({
+          id: products.id,
+          name: products.name,
+          slug: products.slug,
+          sku: products.sku,
+          stockQuantity: products.stockQuantity,
+          stockStatus: products.stockStatus,
+        })
+        .from(products)
+        .where(inArray(products.id, productIds)),
+      variantIds.length > 0
+        ? db.select().from(productVariants).where(inArray(productVariants.id, variantIds))
+        : Promise.resolve([]),
+      db
+        .select({
+          productId: productImages.productId,
+          imageUrl: productImages.imageUrl,
+          isMain: productImages.isMain,
+        })
+        .from(productImages)
+        .where(inArray(productImages.productId, productIds)),
+    ]);
+
+    const prodMap = new Map(prodsRows.map((p) => [p.id, p]));
+    const variantMap = new Map(variantsRows.map((v) => [v.id, v]));
+    const mainImageMap = new Map<string, string>();
+    for (const img of mainImagesRows) {
+      if (!mainImageMap.has(img.productId) || img.isMain) {
+        mainImageMap.set(img.productId, img.imageUrl);
+      }
+    }
+
     const items: CartItemDetail[] = [];
 
     for (const item of rawItems) {
-      // Fetch product info
-      const [prod] = await db.select().from(products).where(eq(products.id, item.productId));
+      const prod = prodMap.get(item.productId);
       if (!prod) continue;
 
-      // Fetch variant info if applicable
       let variantOptions: Record<string, string> | null = null;
       let variantSku: string = prod.sku || "";
       let variantImage: string | null = null;
 
       if (item.variantId) {
-        const [variant] = await db
-          .select()
-          .from(productVariants)
-          .where(eq(productVariants.id, item.variantId));
+        const variant = variantMap.get(item.variantId);
         if (variant) {
-          variantOptions = variant.options || null;
+          variantOptions =
+            (typeof variant.options === "string" ? JSON.parse(variant.options) : variant.options) || null;
           if (variant.sku) variantSku = variant.sku;
           if (variant.imageUrl) variantImage = variant.imageUrl;
         }
       }
 
-      // Fetch main image if no variant image
-      let finalImage = variantImage;
-      if (!finalImage) {
-        const [mainImg] = await db
-          .select()
-          .from(productImages)
-          .where(and(eq(productImages.productId, item.productId), eq(productImages.isMain, true)))
-          .limit(1);
-        finalImage = mainImg?.imageUrl || "/file.svg";
-      }
-
+      const finalImage = variantImage || mainImageMap.get(item.productId) || "/file.svg";
       const lineTotal = Math.round(item.unitPrice * item.quantity * 100) / 100;
 
       items.push({

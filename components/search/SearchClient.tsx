@@ -32,10 +32,15 @@ export default function SearchClient({
   const [selectedTags, setSelectedTags] = useState<string[]>(initialParams.tags || []);
   const [inStock, setInStock] = useState<boolean>(Boolean(initialParams.inStock));
   const [sort, setSort] = useState<string>(initialParams.sort || "newest");
+  const [currentPage, setCurrentPage] = useState<number>(
+    initialParams.offset ? Math.floor(initialParams.offset / (initialParams.limit || 12)) + 1 : 1
+  );
+  const PAGE_SIZE = initialParams.limit || 12;
 
   // Products and facets state
   const [products, setProducts] = useState<ProductWithImagesAndCategory[]>(initialProducts);
   const [total, setTotal] = useState<number>(initialTotal);
+  const totalPages = Math.ceil(total / PAGE_SIZE) || 1;
   const [facets, setFacets] = useState<SearchFacets>(initialFacets);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -54,6 +59,7 @@ export default function SearchClient({
       tags: string[];
       inStock: boolean;
       sort: string;
+      page: number;
     }>) => {
       const q = overrides?.query !== undefined ? overrides.query : query;
       const cat = overrides?.category !== undefined ? overrides.category : category;
@@ -63,6 +69,7 @@ export default function SearchClient({
       const t = overrides?.tags !== undefined ? overrides.tags : selectedTags;
       const stk = overrides?.inStock !== undefined ? overrides.inStock : inStock;
       const s = overrides?.sort !== undefined ? overrides.sort : sort;
+      const p = overrides?.page !== undefined ? overrides.page : currentPage;
 
       const sp = new URLSearchParams();
       if (q.trim()) sp.set("q", q.trim());
@@ -73,10 +80,12 @@ export default function SearchClient({
       if (t.length > 0) sp.set("tags", t.join(","));
       if (stk) sp.set("inStock", "true");
       if (s && s !== "newest") sp.set("sort", s);
+      if (p > 1) sp.set("page", String(p));
+      sp.set("limit", String(PAGE_SIZE));
 
       return sp.toString();
     },
-    [query, category, brand, minPrice, maxPrice, selectedTags, inStock, sort]
+    [query, category, brand, minPrice, maxPrice, selectedTags, inStock, sort, currentPage, PAGE_SIZE]
   );
 
   // Fetch filtered results from API
@@ -116,8 +125,11 @@ export default function SearchClient({
       tags: string[];
       inStock: boolean;
       sort: string;
+      page: number;
     }>) => {
-      const qs = buildQueryString(overrides);
+      const pageToUse = overrides?.page !== undefined ? overrides.page : 1;
+      setCurrentPage(pageToUse);
+      const qs = buildQueryString({ ...overrides, page: pageToUse });
       const newUrl = qs ? `/search?${qs}` : "/search";
       window.history.replaceState(null, "", newUrl);
       fetchResults(qs);
@@ -694,15 +706,75 @@ export default function SearchClient({
               </div>
             </div>
           ) : (
-            <div
-              className={`grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 transition-opacity duration-200 ${
-                isLoading ? "opacity-60" : "opacity-100"
-              }`}
-            >
-              {products.map((prod) => (
-                <ProductCard key={prod.id} product={prod} />
-              ))}
-            </div>
+            <>
+              <div
+                className={`grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 transition-opacity duration-200 ${
+                  isLoading ? "opacity-60" : "opacity-100"
+                }`}
+              >
+                {products.map((prod) => (
+                  <ProductCard key={prod.id} product={prod} />
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/10 mt-8">
+                  <p className="text-xs text-white/50">
+                    Showing <span className="text-white font-medium">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
+                    <span className="text-white font-medium">{Math.min(currentPage * PAGE_SIZE, total)}</span> of{" "}
+                    <span className="text-white font-medium">{total}</span> items
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={currentPage <= 1 || isLoading}
+                      onClick={() => {
+                        const prev = currentPage - 1;
+                        applyFilters({ page: prev });
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      ← Previous
+                    </button>
+
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pNum) => (
+                        <button
+                          key={pNum}
+                          type="button"
+                          disabled={isLoading}
+                          onClick={() => {
+                            applyFilters({ page: pNum });
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                          className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
+                            pNum === currentPage
+                              ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
+                              : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                          }`}
+                        >
+                          {pNum}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      disabled={currentPage >= totalPages || isLoading}
+                      onClick={() => {
+                        const next = currentPage + 1;
+                        applyFilters({ page: next });
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      Next →
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </section>
       </div>

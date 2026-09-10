@@ -24,6 +24,9 @@ export interface CustomersSummary {
 export interface GetCustomersResult {
   customers: CustomerRecord[];
   summary: CustomersSummary;
+  total: number;
+  totalPages: number;
+  page: number;
 }
 
 /**
@@ -39,11 +42,12 @@ function normalizeCustomerKey(email?: string | null, phone?: string | null): str
 }
 
 /**
- * Retrieves and aggregates customer profiles dynamically from orders in D1
+ * Retrieves and aggregates customer profiles dynamically from orders in D1 with pagination
  */
 export async function getCustomers(options?: {
   search?: string;
   limit?: number;
+  page?: number;
 }): Promise<GetCustomersResult> {
   const db = getDb();
   let allOrders: Array<{
@@ -125,23 +129,29 @@ export async function getCustomers(options?: {
   // Sort by latest order date descending
   customerList.sort((a, b) => new Date(b.lastOrderDate).getTime() - new Date(a.lastOrderDate).getTime());
 
-  if (options?.limit && options.limit > 0) {
-    customerList = customerList.slice(0, options.limit);
-  }
-
-  // Calculate summary metrics
+  // Calculate global summary metrics before pagination
   const totalRevenue = customerList.reduce((acc, c) => acc + c.totalSpent, 0);
   const totalOrdersCount = customerList.reduce((acc, c) => acc + c.totalOrders, 0);
   const averageOrderValue =
     totalOrdersCount > 0 ? Number((totalRevenue / totalOrdersCount).toFixed(2)) : 0;
 
+  const total = customerList.length;
+  const limit = options?.limit && options.limit > 0 ? options.limit : 20;
+  const page = options?.page && options.page > 0 ? options.page : 1;
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const offset = (page - 1) * limit;
+  const paginatedList = customerList.slice(offset, offset + limit);
+
   return {
-    customers: customerList,
+    customers: paginatedList,
     summary: {
-      totalCustomers: customerList.length,
+      totalCustomers: total,
       totalOrders: totalOrdersCount,
       totalRevenue: Number(totalRevenue.toFixed(2)),
       averageOrderValue,
     },
+    total,
+    totalPages,
+    page,
   };
 }

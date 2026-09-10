@@ -42,8 +42,10 @@ export async function GET(req: NextRequest) {
         ? sortRaw
         : undefined;
 
-    const limit = limitRaw && !isNaN(Number(limitRaw)) ? Number(limitRaw) : 40;
-    const offset = offsetRaw && !isNaN(Number(offsetRaw)) ? Number(offsetRaw) : 0;
+    const pageRaw = searchParams.get("page");
+    const limit = limitRaw && !isNaN(Number(limitRaw)) ? Number(limitRaw) : 12;
+    const page = pageRaw && !isNaN(Number(pageRaw)) ? Math.max(1, Number(pageRaw)) : 1;
+    const offset = offsetRaw && !isNaN(Number(offsetRaw)) ? Number(offsetRaw) : (page - 1) * limit;
 
     const params: AdvancedSearchParams = {
       query,

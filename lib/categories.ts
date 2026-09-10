@@ -226,8 +226,9 @@ export const getActiveCategories = cache(async (): Promise<CategoryRecord[]> => 
 
 /**
  * Retrieve category by ID
+ * Wrapped with React.cache() to deduplicate queries within a single request.
  */
-export async function getCategoryById(id: string): Promise<CategoryRecord | null> {
+export const getCategoryById = cache(async (id: string): Promise<CategoryRecord | null> => {
   const db = getDb();
   if (db) {
     try {
@@ -243,7 +244,7 @@ export async function getCategoryById(id: string): Promise<CategoryRecord | null
   }
 
   return memoryCategories.find((c) => c.id === id) || null;
-}
+});
 
 /**
  * Retrieve category by Slug
@@ -265,6 +266,28 @@ export const getCategoryBySlug = cache(async (slug: string): Promise<CategoryRec
   }
 
   return memoryCategories.find((c) => c.slug === slug) || null;
+});
+
+/**
+ * Retrieve category with parent and direct children in a single unified deduplicated request
+ */
+export const getCategoryWithHierarchy = cache(async (slug: string): Promise<{
+  category: CategoryRecord | null;
+  parent: CategoryRecord | null;
+  children: CategoryRecord[];
+}> => {
+  const category = await getCategoryBySlug(slug);
+  if (!category) {
+    return { category: null, parent: null, children: [] };
+  }
+
+  const [parent, activeCategories] = await Promise.all([
+    category.parentId ? getCategoryById(category.parentId) : Promise.resolve(null),
+    getActiveCategories(),
+  ]);
+
+  const children = activeCategories.filter((c) => c.parentId === category.id);
+  return { category, parent, children };
 });
 
 /**

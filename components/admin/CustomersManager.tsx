@@ -17,17 +17,31 @@ export default function CustomersManager(): React.JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const fetchCustomers = useCallback(async (searchQuery = "") => {
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const PAGE_SIZE = 20;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+
+  const fetchCustomers = useCallback(async (searchQuery = "", pageToFetch = currentPage) => {
     try {
       setIsLoading(true);
       setError(null);
-      const url = searchQuery
-        ? `/api/admin/customers?search=${encodeURIComponent(searchQuery)}`
-        : "/api/admin/customers";
-      const res = await fetch(url);
+      const params = new URLSearchParams();
+      if (searchQuery.trim()) params.set("search", searchQuery.trim());
+      params.set("limit", String(PAGE_SIZE));
+      params.set("page", String(pageToFetch));
+
+      const res = await fetch(`/api/admin/customers?${params.toString()}`);
       const json = (await res.json()) as {
         success: boolean;
-        data?: { customers: CustomerRecord[]; summary: CustomersSummary };
+        data?: {
+          customers: CustomerRecord[];
+          summary: CustomersSummary;
+          total?: number;
+          totalPages?: number;
+          page?: number;
+        };
         error?: string;
       };
 
@@ -37,6 +51,7 @@ export default function CustomersManager(): React.JSX.Element {
 
       if (json.data) {
         setCustomers(json.data.customers || []);
+        setTotalCount(json.data.total || json.data.customers.length);
         if (!searchQuery) {
           setSummary(json.data.summary);
         }
@@ -46,14 +61,14 @@ export default function CustomersManager(): React.JSX.Element {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [currentPage, PAGE_SIZE]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchCustomers(search);
+      fetchCustomers(search, currentPage);
     }, 300);
     return () => clearTimeout(timer);
-  }, [search, fetchCustomers]);
+  }, [search, currentPage, fetchCustomers]);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -365,6 +380,54 @@ export default function CustomersManager(): React.JSX.Element {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t border-white/10 bg-[#060b08]">
+            <p className="text-xs text-white/50">
+              Showing <span className="text-white font-medium">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
+              <span className="text-white font-medium">{Math.min(currentPage * PAGE_SIZE, totalCount)}</span> of{" "}
+              <span className="text-white font-medium">{totalCount}</span> customers
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={currentPage <= 1 || isLoading}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                ← Previous
+              </button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pNum) => (
+                  <button
+                    key={pNum}
+                    type="button"
+                    disabled={isLoading}
+                    onClick={() => setCurrentPage(pNum)}
+                    className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
+                      pNum === currentPage
+                        ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
+                        : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {pNum}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                disabled={currentPage >= totalPages || isLoading}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

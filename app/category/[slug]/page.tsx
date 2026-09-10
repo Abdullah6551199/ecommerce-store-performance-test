@@ -3,8 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getCategoryBySlug, getCategoryById, listCategories } from "@/lib/categories";
-import { getProductsByCategory } from "@/lib/products";
+import { getCategoryBySlug, getCategoryWithHierarchy } from "@/lib/categories";
+import { getProductsByCategoryPaginated } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 
 import { getAbsoluteUrl, generateCategoryJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
@@ -14,7 +14,8 @@ export const revalidate = 300;
 
 export async function generateStaticParams() {
   try {
-    const cats = await listCategories({ status: "active" });
+    const { getActiveCategories } = await import("@/lib/categories");
+    const cats = await getActiveCategories();
     return cats.map((c) => ({ slug: c.slug }));
   } catch {
     return [];
@@ -23,6 +24,7 @@ export async function generateStaticParams() {
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ page?: string }>;
 }
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
@@ -78,24 +80,25 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   };
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps): Promise<React.JSX.Element> {
+export default async function CategoryPage({ params, searchParams }: CategoryPageProps): Promise<React.JSX.Element> {
   const { slug } = await params;
-  const category = await getCategoryBySlug(slug);
+  const sp = searchParams ? await searchParams : {};
+  const currentPage = sp.page ? Math.max(1, parseInt(sp.page, 10) || 1) : 1;
+  const PAGE_SIZE = 12;
+
+  // Fetch category, parent, and direct children via unified cached hierarchy
+  const { category, parent, children } = await getCategoryWithHierarchy(slug);
 
   if (!category || category.status !== "active") {
     notFound();
   }
 
-  // Fetch parent if applicable
-  const parent = category.parentId ? await getCategoryById(category.parentId) : null;
-
-  // Fetch child subcategories if any
-  const [allActive, categoryProducts] = await Promise.all([
-    listCategories({ status: "active" }),
-    getProductsByCategory(category.id),
-  ]);
-
-  const children = allActive.filter((c) => c.parentId === category.id);
+  // Fetch paginated products directly for this category
+  const { products: categoryProducts, total, totalPages, page } = await getProductsByCategoryPaginated(
+    category.id,
+    currentPage,
+    PAGE_SIZE
+  );
 
   // Structured Data (JSON-LD)
   const categoryJsonLd = generateCategoryJsonLd(category, categoryProducts);
@@ -228,7 +231,7 @@ export default async function CategoryPage({ params }: CategoryPageProps): Promi
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <h2 className="text-xl font-bold text-white">Products in {category.name}</h2>
           <span className="rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-xs font-mono text-[#18C729]">
-            {categoryProducts.length} Items
+            {total} Items
           </span>
         </div>
 
@@ -253,11 +256,69 @@ export default async function CategoryPage({ params }: CategoryPageProps): Promi
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {categoryProducts.map((prod) => (
-              <ProductCard key={prod.id} product={prod} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {categoryProducts.map((prod) => (
+                <ProductCard key={prod.id} product={prod} />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/10">
+                <p className="text-xs text-white/50">
+                  Showing <span className="text-white font-medium">{(page - 1) * PAGE_SIZE + 1}</span> to{" "}
+                  <span className="text-white font-medium">{Math.min(page * PAGE_SIZE, total)}</span> of{" "}
+                  <span className="text-white font-medium">{total}</span> products
+                </p>
+                <div className="flex items-center gap-2">
+                  {page > 1 ? (
+                    <Link
+                      href={`/category/${category.slug}?page=${page - 1}`}
+                      prefetch={false}
+                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all"
+                    >
+                      ← Previous
+                    </Link>
+                  ) : (
+                    <span className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-white/20 cursor-not-allowed">
+                      ← Previous
+                    </span>
+                  )}
+
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pNum) => (
+                      <Link
+                        key={pNum}
+                        href={`/category/${category.slug}?page=${pNum}`}
+                        prefetch={false}
+                        className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
+                          pNum === page
+                            ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
+                            : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                        }`}
+                      >
+                        {pNum}
+                      </Link>
+                    ))}
+                  </div>
+
+                  {page < totalPages ? (
+                    <Link
+                      href={`/category/${category.slug}?page=${page + 1}`}
+                      prefetch={false}
+                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all"
+                    >
+                      Next →
+                    </Link>
+                  ) : (
+                    <span className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-white/20 cursor-not-allowed">
+                      Next →
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </section>
     </div>

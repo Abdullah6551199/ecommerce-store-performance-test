@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, desc, and, sql, like, or } from "drizzle-orm";
+import { eq, desc, and, sql, like, or, inArray } from "drizzle-orm";
 import {
   getDb,
   orders,
@@ -109,47 +109,49 @@ export async function createOrderFromCart(
     lineTotal: number;
   }[] = [];
 
+  // Batch fetch products and variants to eliminate N+1 queries
+  let prodMap = new Map<string, any>();
+  let varMap = new Map<string, any>();
+
+  if (db) {
+    const productIds = Array.from(new Set(cartSummary.items.map((i) => i.productId)));
+    const variantIds = Array.from(
+      new Set(cartSummary.items.map((i) => i.variantId).filter((v): v is string => Boolean(v)))
+    );
+
+    const [prodRows, varRows] = await Promise.all([
+      db.select().from(products).where(inArray(products.id, productIds)),
+      variantIds.length > 0
+        ? db.select().from(productVariants).where(inArray(productVariants.id, variantIds))
+        : Promise.resolve([]),
+    ]);
+
+    prodMap = new Map(prodRows.map((p) => [p.id, p]));
+    varMap = new Map(varRows.map((v) => [v.id, v]));
+  }
+
   for (const item of cartSummary.items) {
     let authoritativeUnitPrice = item.unitPrice;
     let productName = item.productName;
     let variantName = item.variantOptions ? Object.values(item.variantOptions).join(" / ") : null;
 
     if (db) {
-      // Look up product in D1
-      const prodRows = await db
-        .select()
-        .from(products)
-        .where(eq(products.id, item.productId))
-        .limit(1);
-
-      if (prodRows.length === 0) {
+      const prod = prodMap.get(item.productId);
+      if (!prod) {
         throw new Error(`Product "${item.productName}" is no longer available.`);
       }
 
-      const prod = prodRows[0];
       if (prod.status !== "published" || prod.stockStatus === "out_of_stock") {
         throw new Error(`Product "${prod.name}" is currently unavailable for purchase.`);
       }
       productName = prod.name;
 
       if (item.variantId) {
-        // Look up variant in D1
-        const varRows = await db
-          .select()
-          .from(productVariants)
-          .where(
-            and(
-              eq(productVariants.id, item.variantId),
-              eq(productVariants.productId, item.productId)
-            )
-          )
-          .limit(1);
-
-        if (varRows.length === 0) {
+        const variant = varMap.get(item.variantId);
+        if (!variant || variant.productId !== item.productId) {
           throw new Error(`Selected variant for "${prod.name}" is no longer available.`);
         }
 
-        const variant = varRows[0];
         // Check stock
         if (prod.trackInventory && variant.stock < item.quantity) {
           throw new Error(
@@ -296,18 +298,12 @@ export async function createOrderFromCart(
 export async function getStorefrontOrder(orderId: string): Promise<OrderWithItems | null> {
   const db = getDb();
   if (db) {
-    const orderRows = await db
-      .select()
-      .from(orders)
-      .where(eq(orders.id, orderId))
-      .limit(1);
+    const [orderRows, itemsRows] = await Promise.all([
+      db.select().from(orders).where(eq(orders.id, orderId)).limit(1),
+      db.select().from(orderItems).where(eq(orderItems.orderId, orderId)),
+    ]);
 
     if (orderRows.length === 0) return null;
-
-    const itemsRows = await db
-      .select()
-      .from(orderItems)
-      .where(eq(orderItems.orderId, orderId));
 
     return {
       ...orderRows[0],
@@ -337,7 +333,7 @@ export async function getAllAdminOrders(options?: {
   totalCount: number;
 }> {
   const db = getDb();
-  const limit = options?.limit ?? 50;
+  const limit = options?.limit ?? 20;
   const offset = options?.offset ?? 0;
   const statusFilter = options?.status && options.status !== "all" ? options.status : null;
   const searchFilter = options?.search?.trim() ? options.search.trim().toLowerCase() : null;
@@ -378,7 +374,7 @@ export async function getAllAdminOrders(options?: {
 
     const totalCount = Number(countResult[0]?.count || 0);
 
-    // Fetch item counts per order
+    // Fetch item counts ONLY for the current page's orders (avoids full table scan)
     const orderIds = rows.map((r) => r.id);
     const itemCountsMap = new Map<string, number>();
 
@@ -389,6 +385,7 @@ export async function getAllAdminOrders(options?: {
           totalQty: sql<number>`sum(${orderItems.quantity})`,
         })
         .from(orderItems)
+        .where(inArray(orderItems.orderId, orderIds))
         .groupBy(orderItems.orderId);
 
       for (const it of items) {

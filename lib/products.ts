@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { z } from "zod";
-import { eq, desc, asc, and, inArray } from "drizzle-orm";
+import { eq, ne, desc, asc, and, inArray, sql } from "drizzle-orm";
 import { getDb, products, productImages, productVariants, categories } from "./db";
 import { getVariantsByProductId, saveProductVariants, type ProductVariantRecord } from "./variants";
 
@@ -183,6 +183,7 @@ export async function listProducts(options?: {
   categoryId?: string;
   status?: "draft" | "published" | "archived";
   limit?: number;
+  offset?: number;
 }): Promise<ProductWithImagesAndCategory[]> {
   const db = getDb();
 
@@ -196,7 +197,7 @@ export async function listProducts(options?: {
         conditions.push(eq(products.status, options.status));
       }
 
-      const query = db
+      let query = db
         .select({
           product: products,
           categoryName: categories.name,
@@ -205,9 +206,13 @@ export async function listProducts(options?: {
         .from(products)
         .leftJoin(categories, eq(products.categoryId, categories.id));
 
-      const rows = conditions.length > 0
-        ? await query.where(and(...conditions)).orderBy(desc(products.createdAt))
-        : await query.orderBy(desc(products.createdAt));
+      const filteredQuery = conditions.length > 0
+        ? query.where(and(...conditions)).orderBy(desc(products.createdAt))
+        : query.orderBy(desc(products.createdAt));
+
+      const rows = options?.limit
+        ? await filteredQuery.limit(options.limit).offset(options.offset || 0)
+        : await filteredQuery;
 
       if (rows.length === 0) return [];
 
@@ -371,20 +376,22 @@ export const getProductBySlug = cache(async (slug: string): Promise<ProductWithI
 
       if (rows.length === 0) return null;
 
-      const imgs = await db
-        .select({
-          id: productImages.id,
-          productId: productImages.productId,
-          imageUrl: productImages.imageUrl,
-          altText: productImages.altText,
-          sortOrder: productImages.sortOrder,
-          isMain: productImages.isMain,
-        })
-        .from(productImages)
-        .where(eq(productImages.productId, rows[0].product.id))
-        .orderBy(asc(productImages.sortOrder));
-
-      const variants = await getVariantsByProductId(rows[0].product.id);
+      // Concurrently fetch images and variants
+      const [imgs, variants] = await Promise.all([
+        db
+          .select({
+            id: productImages.id,
+            productId: productImages.productId,
+            imageUrl: productImages.imageUrl,
+            altText: productImages.altText,
+            sortOrder: productImages.sortOrder,
+            isMain: productImages.isMain,
+          })
+          .from(productImages)
+          .where(eq(productImages.productId, rows[0].product.id))
+          .orderBy(asc(productImages.sortOrder)),
+        getVariantsByProductId(rows[0].product.id),
+      ]);
 
       return formatProduct(
         rows[0].product as ProductRecord,
@@ -831,9 +838,11 @@ export async function searchProductsAdvanced(
   params: AdvancedSearchParams
 ): Promise<AdvancedSearchResult> {
   const publishedOnly = params.publishedOnly !== false;
-  const allProducts = await listProducts({
+  // Use lightweight catalog query without heavy variants/secondary images
+  const allProducts = (await listCatalogProducts({
     status: publishedOnly ? "published" : undefined,
-  });
+    limit: 1000,
+  })) as unknown as ProductWithImagesAndCategory[];
 
   // 1. Calculate global facets across all published products
   const brandCountMap = new Map<string, number>();
@@ -966,7 +975,7 @@ export async function searchProductsAdvanced(
 
   const total = filtered.length;
   const offset = params.offset || 0;
-  const limit = params.limit || 40;
+  const limit = params.limit || 12;
   const paged = filtered.slice(offset, offset + limit);
 
   return {
@@ -1001,6 +1010,7 @@ export async function listCatalogProducts(options?: {
   categoryId?: string;
   status?: "draft" | "published" | "archived";
   limit?: number;
+  offset?: number;
 }): Promise<CatalogProductItem[]> {
   const db = getDb();
 
@@ -1035,9 +1045,12 @@ export async function listCatalogProducts(options?: {
         .from(products)
         .leftJoin(categories, eq(products.categoryId, categories.id));
 
+      const limit = options?.limit || 100;
+      const offset = options?.offset || 0;
+
       const rows = conditions.length > 0
-        ? await query.where(and(...conditions)).orderBy(desc(products.createdAt)).limit(options?.limit || 100)
-        : await query.orderBy(desc(products.createdAt)).limit(options?.limit || 100);
+        ? await query.where(and(...conditions)).orderBy(desc(products.createdAt)).limit(limit).offset(offset)
+        : await query.orderBy(desc(products.createdAt)).limit(limit).offset(offset);
 
       if (rows.length === 0) return [];
 
@@ -1095,9 +1108,9 @@ export async function listCatalogProducts(options?: {
   if (options?.status) {
     items = items.filter((p) => p.status === options.status);
   }
-  if (options?.limit) {
-    items = items.slice(0, options.limit);
-  }
+  const offset = options?.offset || 0;
+  const limit = options?.limit || 100;
+  items = items.slice(offset, offset + limit);
 
   return items.map((p) => {
     const mainImg =
@@ -1144,18 +1157,164 @@ export async function getProductsByCategory(
 }
 
 /**
+ * Paginated published products for category page
+ */
+export async function getProductsByCategoryPaginated(
+  categoryId: string,
+  page = 1,
+  pageSize = 12
+): Promise<{
+  products: ProductWithImagesAndCategory[];
+  total: number;
+  totalPages: number;
+  page: number;
+}> {
+  const db = getDb();
+  const offset = Math.max(0, (page - 1) * pageSize);
+
+  if (db) {
+    try {
+      const conditions = [
+        eq(products.categoryId, categoryId),
+        eq(products.status, "published"),
+      ];
+
+      const [countRes, prods] = await Promise.all([
+        db
+          .select({ count: sql<number>`count(*)` })
+          .from(products)
+          .where(and(...conditions)),
+        listCatalogProducts({
+          categoryId,
+          status: "published",
+          limit: pageSize,
+          offset,
+        }),
+      ]);
+
+      const total = Number(countRes[0]?.count || 0);
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+      return {
+        products: prods as unknown as ProductWithImagesAndCategory[],
+        total,
+        totalPages,
+        page,
+      };
+    } catch (err) {
+      console.warn("[Products] getProductsByCategoryPaginated failed in D1:", err);
+    }
+  }
+
+  // Memory fallback
+  const items = memoryProducts.filter(
+    (p) => p.categoryId === categoryId && p.status === "published"
+  );
+  const total = items.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const paged = items.slice(offset, offset + pageSize).map((p) => {
+    const imgs = memoryProductImages.filter((img) => img.productId === p.id);
+    return formatProduct(p, imgs, null);
+  });
+
+  return {
+    products: paged,
+    total,
+    totalPages,
+    page,
+  };
+}
+
+/**
  * Get related products for product details page (same category, excluding current product)
+ * Optimized to directly query D1 with LIMIT 4 and exclude current productId.
  */
 export async function getRelatedProducts(
   productId: string,
   categoryId: string | null,
   limit = 4
 ): Promise<ProductWithImagesAndCategory[]> {
-  if (!categoryId) {
-    const all = await getFeaturedProducts(limit + 1);
-    return all.filter((p) => p.id !== productId).slice(0, limit);
+  const db = getDb();
+  if (db) {
+    try {
+      const conditions = [
+        eq(products.status, "published"),
+        ne(products.id, productId),
+      ];
+      if (categoryId) {
+        conditions.push(eq(products.categoryId, categoryId));
+      }
+
+      const rows = await db
+        .select({
+          id: products.id,
+          name: products.name,
+          slug: products.slug,
+          price: products.price,
+          salePrice: products.salePrice,
+          brand: products.brand,
+          stockStatus: products.stockStatus,
+          stockQuantity: products.stockQuantity,
+          trackInventory: products.trackInventory,
+          allowBackorders: products.allowBackorders,
+          lowStockThreshold: products.lowStockThreshold,
+          shortDescription: products.shortDescription,
+          categoryId: products.categoryId,
+          categoryName: categories.name,
+          categorySlug: categories.slug,
+        })
+        .from(products)
+        .leftJoin(categories, eq(products.categoryId, categories.id))
+        .where(and(...conditions))
+        .orderBy(desc(products.createdAt))
+        .limit(limit);
+
+      if (rows.length === 0) return [];
+
+      const productIds = rows.map((r) => r.id);
+      const mainImages = await db
+        .select({
+          productId: productImages.productId,
+          imageUrl: productImages.imageUrl,
+          isMain: productImages.isMain,
+        })
+        .from(productImages)
+        .where(inArray(productImages.productId, productIds))
+        .orderBy(asc(productImages.sortOrder));
+
+      const mainImageMap = new Map<string, string>();
+      for (const img of mainImages) {
+        if (!mainImageMap.has(img.productId) || img.isMain) {
+          mainImageMap.set(img.productId, img.imageUrl);
+        }
+      }
+
+      return rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        slug: r.slug,
+        price: Number(r.price),
+        salePrice: r.salePrice !== null && r.salePrice !== undefined ? Number(r.salePrice) : null,
+        brand: r.brand || null,
+        stockStatus: r.stockStatus,
+        stockQuantity: Number(r.stockQuantity) || 0,
+        trackInventory: Boolean(r.trackInventory),
+        allowBackorders: Boolean(r.allowBackorders),
+        lowStockThreshold: Number(r.lowStockThreshold) || 5,
+        mainImage: mainImageMap.get(r.id) || null,
+        categoryName: r.categoryName || null,
+        categorySlug: r.categorySlug || null,
+        shortDescription: r.shortDescription || null,
+        images: mainImageMap.has(r.id)
+          ? [{ id: `img-${r.id}`, productId: r.id, imageUrl: mainImageMap.get(r.id)!, altText: r.name, sortOrder: 0, isMain: true }]
+          : [],
+        variants: [],
+      })) as unknown as ProductWithImagesAndCategory[];
+    } catch (err) {
+      console.warn("[Products] D1 getRelatedProducts failed, falling back:", err);
+    }
   }
 
-  const catProducts = await getProductsByCategory(categoryId, limit + 1);
-  return catProducts.filter((p) => p.id !== productId).slice(0, limit);
+  const all = await getFeaturedProducts(limit + 1);
+  return all.filter((p) => p.id !== productId).slice(0, limit);
 }

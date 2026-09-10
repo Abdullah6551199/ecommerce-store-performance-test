@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { searchProductsAdvanced, type AdvancedSearchParams } from "@/lib/products";
 import SearchClient from "@/components/search/SearchClient";
 import { getAbsoluteUrl } from "@/lib/seo";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export const revalidate = 60;
 
@@ -106,15 +107,28 @@ export default async function SearchPage({ searchParams }: SearchPageProps): Pro
   };
 
   const results = await searchProductsAdvanced(advancedParams);
+  const firstProductImage = results.products[0]?.mainImage
+    ? normalizeImageUrl(results.products[0].mainImage, { width: 640, quality: 75 })
+    : null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <SearchClient
-        initialProducts={results.products}
-        initialTotal={results.total}
-        initialFacets={results.facets}
-        initialParams={advancedParams}
-      />
-    </div>
+    <>
+      {firstProductImage && (
+        <link
+          rel="preload"
+          as="image"
+          href={firstProductImage}
+          fetchPriority="high"
+        />
+      )}
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <SearchClient
+          initialProducts={results.products}
+          initialTotal={results.total}
+          initialFacets={results.facets}
+          initialParams={advancedParams}
+        />
+      </div>
+    </>
   );
 }

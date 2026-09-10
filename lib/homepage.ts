@@ -172,6 +172,10 @@ let memorySections: HomepageSectionRecord[] = DEFAULT_HOMEPAGE_SECTIONS.map((sec
   updatedAt: new Date().toISOString(),
 }));
 
+let cachedActiveSections: HomepageSectionRecord[] | null = null;
+let lastActiveSectionsFetchTime = 0;
+const HOMEPAGE_SECTIONS_CACHE_TTL_MS = 60000;
+
 /**
  * List all homepage sections, optionally filtering to active only.
  * Always ordered by sortOrder ascending.
@@ -180,6 +184,14 @@ let memorySections: HomepageSectionRecord[] = DEFAULT_HOMEPAGE_SECTIONS.map((sec
 export const listHomepageSections = cache(async (options?: {
   activeOnly?: boolean;
 }): Promise<HomepageSectionRecord[]> => {
+  if (
+    options?.activeOnly &&
+    cachedActiveSections &&
+    Date.now() - lastActiveSectionsFetchTime < HOMEPAGE_SECTIONS_CACHE_TTL_MS
+  ) {
+    return cachedActiveSections;
+  }
+
   const db = getDb();
   if (db) {
     try {
@@ -200,6 +212,11 @@ export const listHomepageSections = cache(async (options?: {
           createdAt: r.createdAt,
           updatedAt: r.updatedAt,
         }));
+
+        if (options?.activeOnly) {
+          cachedActiveSections = parsed;
+          lastActiveSectionsFetchTime = Date.now();
+        }
 
         return parsed;
       }
@@ -342,6 +359,8 @@ export async function updateHomepageSection(
     }
   }
 
+  cachedActiveSections = null;
+  lastActiveSectionsFetchTime = 0;
   return updated;
 }
 

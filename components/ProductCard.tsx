@@ -27,7 +27,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
   const isLowStock =
     !isOutOfStock && product.trackInventory && product.stockQuantity <= product.lowStockThreshold;
 
-  const resolvedImage = normalizeImageUrl(product.mainImage);
+  const resolvedImage = normalizeImageUrl(product.mainImage, { width: 640, quality: 75 });
   const hasVariants = Boolean(product.variants && product.variants.length > 1);
   const defaultVariantId = product.variants?.[0]?.id || null;
 

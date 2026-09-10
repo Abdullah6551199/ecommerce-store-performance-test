@@ -713,7 +713,7 @@ export default function SearchClient({
                 }`}
               >
                 {products.map((prod, idx) => (
-                  <ProductCard key={prod.id} product={prod} isPriority={idx < 2} />
+                  <ProductCard key={prod.id} product={prod} isPriority={idx === 0} />
                 ))}
               </div>
 

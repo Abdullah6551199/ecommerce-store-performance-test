@@ -99,7 +99,7 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
   ];
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
   const productMainImageUrl = product.mainImage
-    ? normalizeImageUrl(product.mainImage, { width: 800, quality: 75 })
+    ? normalizeImageUrl(product.mainImage, { width: 700, quality: 75 })
     : null;
 
   return (

@@ -120,7 +120,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   ];
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
   const categoryBannerUrl = category.imageUrl
-    ? normalizeImageUrl(category.imageUrl, { width: 600, quality: 75 })
+    ? normalizeImageUrl(category.imageUrl, { width: 500, quality: 75 })
     : null;
 
   return (
@@ -195,7 +195,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           {category.imageUrl && (
             <div className="relative h-48 w-full sm:w-64 lg:h-56 shrink-0 overflow-hidden rounded-2xl border border-white/15 shadow-xl">
               <Image
-                src={categoryBannerUrl || normalizeImageUrl(category.imageUrl, { width: 600, quality: 75 })}
+                src={categoryBannerUrl || normalizeImageUrl(category.imageUrl, { width: 500, quality: 75 })}
                 alt={category.name}
                 fill
                 priority
@@ -283,7 +283,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
           <>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {categoryProducts.map((prod, idx) => (
-                <ProductCard key={prod.id} product={prod} isPriority={idx < 2} />
+                <ProductCard key={prod.id} product={prod} isPriority={!category.imageUrl && idx === 0} />
               ))}
             </div>
 

@@ -27,7 +27,7 @@ export default function ProductGallery({
   const allImageUrls = useMemo(() => {
     const urls: string[] = [];
     if (mainImage) {
-      const norm = normalizeImageUrl(mainImage, { width: 800, quality: 75 });
+      const norm = normalizeImageUrl(mainImage, { width: 700, quality: 75 });
       if (norm) urls.push(norm);
     }
     images.forEach((img) => {

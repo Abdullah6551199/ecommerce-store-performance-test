@@ -90,12 +90,18 @@ const SETTINGS_KEY = "store_settings";
 
 // In-memory cache / fallback for static generation or non-D1 dev runtimes
 let memorySettings: StoreSettings = { ...DEFAULT_STORE_SETTINGS };
+let lastSettingsFetchTime = 0;
+const SETTINGS_CACHE_TTL_MS = 60000; // 60s in-memory TTL
 
 /**
  * Retrieve global store settings from Cloudflare D1 or fallback memory
  * Wrapped with React.cache() to deduplicate queries within a single request.
  */
 export const getStoreSettings = cache(async (): Promise<StoreSettings> => {
+  if (lastSettingsFetchTime > 0 && Date.now() - lastSettingsFetchTime < SETTINGS_CACHE_TTL_MS) {
+    return memorySettings;
+  }
+
   const db = getDb();
   if (db) {
     try {
@@ -126,6 +132,7 @@ export const getStoreSettings = cache(async (): Promise<StoreSettings> => {
             : DEFAULT_STORE_SETTINGS.footerLinks,
         };
         memorySettings = merged;
+        lastSettingsFetchTime = Date.now();
         return merged;
       }
     } catch (err) {
@@ -155,6 +162,7 @@ export async function updateStoreSettings(
   };
 
   memorySettings = updated;
+  lastSettingsFetchTime = 0;
 
   const db = getDb();
   if (db) {

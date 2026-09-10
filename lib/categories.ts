@@ -216,12 +216,25 @@ export async function listCategories(options?: {
   });
 }
 
+let cachedActiveCategories: CategoryRecord[] | null = null;
+let lastActiveCategoriesFetchTime = 0;
+const CATEGORIES_CACHE_TTL_MS = 60000;
+
 /**
  * Retrieve active categories for storefront display
  * Wrapped with React.cache() to deduplicate queries within a single request.
  */
 export const getActiveCategories = cache(async (): Promise<CategoryRecord[]> => {
-  return listCategories({ status: "active" });
+  if (
+    cachedActiveCategories &&
+    Date.now() - lastActiveCategoriesFetchTime < CATEGORIES_CACHE_TTL_MS
+  ) {
+    return cachedActiveCategories;
+  }
+  const result = await listCategories({ status: "active" });
+  cachedActiveCategories = result;
+  lastActiveCategoriesFetchTime = Date.now();
+  return result;
 });
 
 /**
@@ -332,6 +345,8 @@ export async function createCategory(input: CategoryInput): Promise<CategoryReco
 
   // Update memory store as well
   memoryCategories.push(record);
+  cachedActiveCategories = null;
+  lastActiveCategoriesFetchTime = 0;
   return record;
 }
 
@@ -387,6 +402,8 @@ export async function updateCategory(
     memoryCategories.push(updatedRecord);
   }
 
+  cachedActiveCategories = null;
+  lastActiveCategoriesFetchTime = 0;
   return updatedRecord;
 }
 

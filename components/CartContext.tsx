@@ -1,13 +1,42 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import type { CartSummary, CartItemDetail } from "@/lib/cart";
+
+export const LOCAL_STORAGE_CART_KEY = "apex_cart_v1";
+
+export interface StoredCartItem {
+  productId: string;
+  variantId: string | null;
+  quantity: number;
+  name: string;
+  slug: string;
+  price: number;
+  salePrice: number | null;
+  imageUrl: string;
+  stockQuantity: number; // snapshot for soft check
+  options: Record<string, string> | null;
+}
+
+export interface StoredCart {
+  items: StoredCartItem[];
+  updatedAt: string;
+}
 
 export interface AddItemOptions {
   productName?: string;
   productSlug?: string;
   imageUrl?: string | null;
   price?: number;
+  salePrice?: number | null;
+  stockQuantity?: number;
   variantOptions?: Record<string, string> | null;
   openOnSuccess?: boolean;
 }
@@ -39,29 +68,57 @@ interface CartContextType {
   ) => Promise<boolean>;
   updateQuantity: (cartItemId: string, quantity: number) => Promise<boolean>;
   removeItem: (cartItemId: string) => Promise<boolean>;
+  clearCart: () => void;
   refreshCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-interface CartApiResponse {
-  success: boolean;
-  data?: CartSummary;
-  error?: string;
-}
-
-function recomputeCartSummary(items: CartItemDetail[], existingCart: CartSummary | null): CartSummary {
-  const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotal = items.reduce((acc, item) => acc + item.lineTotal, 0);
-  const freeShippingThreshold = existingCart?.freeShippingThreshold || 100;
-  const freeShippingRemaining = Math.max(0, freeShippingThreshold - subtotal);
-  const shipping = subtotal >= freeShippingThreshold || items.length === 0 ? 0 : (existingCart?.shipping ?? 15);
-  const total = subtotal + shipping;
+function buildCartItemDetail(item: StoredCartItem): CartItemDetail {
+  const effectivePrice = Number(item.salePrice ?? item.price);
+  const lineTotal = Number((effectivePrice * item.quantity).toFixed(2));
+  const id = `${item.productId}_${item.variantId || "default"}`;
 
   return {
-    id: existingCart?.id || "optimistic-cart",
-    userId: existingCart?.userId || null,
-    sessionId: existingCart?.sessionId || null,
+    id,
+    cartId: LOCAL_STORAGE_CART_KEY,
+    productId: item.productId,
+    variantId: item.variantId,
+    productName: item.name,
+    productSlug: item.slug,
+    sku: item.variantId ? item.variantId.slice(0, 8).toUpperCase() : "",
+    imageUrl: item.imageUrl || "",
+    variantOptions: item.options,
+    quantity: item.quantity,
+    unitPrice: effectivePrice,
+    lineTotal,
+    stockQuantity: item.stockQuantity,
+    stockStatus: item.stockQuantity > 0 ? "in_stock" : "out_of_stock",
+  };
+}
+
+function computeCartSummary(storedItems: StoredCartItem[]): {
+  cart: CartSummary;
+  items: CartItemDetail[];
+  itemCount: number;
+  subtotal: number;
+  total: number;
+} {
+  const items = storedItems.map(buildCartItemDetail);
+  const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
+  const subtotal = Number(
+    items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+  );
+  const freeShippingThreshold = 100;
+  const freeShippingRemaining = Math.max(0, freeShippingThreshold - subtotal);
+  const shipping =
+    subtotal >= freeShippingThreshold || items.length === 0 ? 0 : 15;
+  const total = Number((subtotal + shipping).toFixed(2));
+
+  const cart: CartSummary = {
+    id: LOCAL_STORAGE_CART_KEY,
+    userId: null,
+    sessionId: null,
     items,
     itemCount,
     subtotal,
@@ -70,6 +127,30 @@ function recomputeCartSummary(items: CartItemDetail[], existingCart: CartSummary
     freeShippingRemaining,
     total,
   };
+
+  return { cart, items, itemCount, subtotal, total };
+}
+
+/**
+ * Fire-and-forget silent background sync for analytics and abandoned cart recovery.
+ * Never throws, never blocks the UI, never presents errors to the shopper.
+ */
+function silentBackgroundSync(items: StoredCartItem[]) {
+  if (typeof window === "undefined") return;
+  try {
+    const payload: StoredCart = {
+      items,
+      updatedAt: new Date().toISOString(),
+    };
+    fetch("/api/cart/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    // Non-blocking catch
+  }
 }
 
 function CartToastNotification({
@@ -102,12 +183,28 @@ function CartToastNotification({
           }`}
         >
           {isSuccess ? (
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           ) : (
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
             </svg>
           )}
         </div>
@@ -120,7 +217,13 @@ function CartToastNotification({
           className="text-white/40 hover:text-white transition-colors p-1"
           aria-label="Dismiss notification"
         >
-          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg
+            className="h-3.5 w-3.5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -130,101 +233,85 @@ function CartToastNotification({
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [cart, setCart] = useState<CartSummary | null>(null);
+  const [storedItems, setStoredItems] = useState<StoredCartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toast, setToast] = useState<CartToastState | null>(null);
 
-  const showToast = useCallback((message: string, type: "success" | "error" = "success") => {
-    const id = Date.now();
-    setToast({ id, message, type });
-    setTimeout(() => {
-      setToast((current) => (current?.id === id ? null : current));
-    }, 2500);
-  }, []);
+  const showToast = useCallback(
+    (message: string, type: "success" | "error" = "success") => {
+      const id = Date.now();
+      setToast({ id, message, type });
+      setTimeout(() => {
+        setToast((current) => (current?.id === id ? null : current));
+      }, 2500);
+    },
+    []
+  );
 
-  // Hydrate initial cart from sessionStorage non-blockingly to eliminate cold-start fetch delay
+  // Synchronous, instant hydration from localStorage on mount (0ms cold-start)
   useEffect(() => {
     try {
-      const cached = sessionStorage.getItem("apex_cart_summary");
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        React.startTransition(() => {
-          setCart(parsed);
-          setIsLoading(false);
-        });
-      }
-    } catch {
-      // Storage access blocked or unavailable
-    }
-  }, []);
-
-  const refreshCart = useCallback(async () => {
-    try {
-      const res = await fetch("/api/cart", {
-        headers: { Accept: "application/json" },
-        credentials: "include",
-      });
-      if (res.ok) {
-        const json = (await res.json()) as CartApiResponse;
-        if (json.success && json.data) {
-          const nextData = json.data;
-          React.startTransition(() => {
-            setCart(nextData);
-          });
-          try {
-            sessionStorage.setItem("apex_cart_summary", JSON.stringify(nextData));
-          } catch {
-            // Ignore quota errors
+      if (typeof window !== "undefined") {
+        const raw = localStorage.getItem(LOCAL_STORAGE_CART_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw) as StoredCart;
+          if (parsed && Array.isArray(parsed.items)) {
+            setStoredItems(parsed.items);
           }
         }
       }
     } catch (err) {
-      console.error("[CartContext] Failed to load cart:", err);
+      console.warn("[CartContext] LocalStorage read unavailable:", err);
     } finally {
-      React.startTransition(() => {
-        setIsLoading(false);
-      });
+      setIsLoading(false);
     }
   }, []);
 
-  // Defer initial cart sync until the browser is idle to avoid competing with LCP image download
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    let timer: NodeJS.Timeout | number;
-    if ("requestIdleCallback" in window) {
-      const handle = (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
-        () => {
-          refreshCart();
-        },
-        { timeout: 2500 }
-      );
-      return () => {
-        if ("cancelIdleCallback" in window) {
-          (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(handle);
-        }
-      };
-    } else {
-      timer = setTimeout(() => {
-        refreshCart();
-      }, 1800);
-      return () => clearTimeout(timer);
+  // Helper to persist to localStorage synchronously
+  const persistItems = useCallback((items: StoredCartItem[]) => {
+    setStoredItems(items);
+    if (typeof window !== "undefined") {
+      try {
+        const payload: StoredCart = {
+          items,
+          updatedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(LOCAL_STORAGE_CART_KEY, JSON.stringify(payload));
+      } catch (err) {
+        console.warn("[CartContext] LocalStorage write error:", err);
+      }
     }
-  }, [refreshCart]);
+    silentBackgroundSync(items);
+  }, []);
 
-  const openDrawer = useCallback(() => {
-    setIsDrawerOpen(true);
-    refreshCart();
-  }, [refreshCart]);
-
+  const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
-  const toggleDrawer = useCallback(() => {
-    setIsDrawerOpen((prev) => {
-      if (!prev) refreshCart();
-      return !prev;
-    });
-  }, [refreshCart]);
+  const toggleDrawer = useCallback(() => setIsDrawerOpen((prev) => !prev), []);
+
+  const clearCart = useCallback(() => {
+    persistItems([]);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem(LOCAL_STORAGE_CART_KEY);
+      } catch {}
+    }
+  }, [persistItems]);
+
+  const refreshCart = useCallback(async () => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = localStorage.getItem(LOCAL_STORAGE_CART_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as StoredCart;
+        if (Array.isArray(parsed?.items)) {
+          setStoredItems(parsed.items);
+        }
+      } else {
+        setStoredItems([]);
+      }
+    } catch {}
+  }, []);
 
   const addItem = useCallback(
     async (
@@ -232,174 +319,133 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       variantId?: string | null,
       quantity = 1,
       openOnSuccessOrOptions?: boolean | AddItemOptions
-    ) => {
+    ): Promise<boolean> => {
       const options: AddItemOptions =
         typeof openOnSuccessOrOptions === "boolean"
           ? { openOnSuccess: openOnSuccessOrOptions }
           : openOnSuccessOrOptions || {};
       const openOnSuccess = options.openOnSuccess !== false;
 
-      // 1. Snapshot previous state for rollback
-      const previousCart = cart;
+      const snapshotStock = options.stockQuantity ?? 99;
 
-      // 2. Optimistically update local cart immediately (< 5ms)
-      const currentItems = cart?.items ? [...cart.items] : [];
-      const existingIdx = currentItems.findIndex(
-        (it) => it.productId === productId && (it.variantId || null) === (variantId || null)
-      );
-
-      if (existingIdx >= 0) {
-        const existing = currentItems[existingIdx];
-        const newQty = existing.quantity + quantity;
-        currentItems[existingIdx] = {
-          ...existing,
-          quantity: newQty,
-          lineTotal: Number((existing.unitPrice * newQty).toFixed(2)),
-        };
-      } else {
-        const unitPrice = options.price || 0;
-        currentItems.push({
-          id: `opt-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-          cartId: cart?.id || "opt-cart",
-          productId,
-          variantId: variantId || null,
-          productName: options.productName || "Product",
-          productSlug: options.productSlug || "",
-          sku: "",
-          imageUrl: options.imageUrl || "",
-          variantOptions: options.variantOptions || null,
-          quantity,
-          unitPrice,
-          lineTotal: Number((unitPrice * quantity).toFixed(2)),
-          stockQuantity: 99,
-          stockStatus: "in_stock",
-        });
+      // PART 2: Client-side Soft Stock Check
+      if (snapshotStock <= 0) {
+        showToast("This item is currently out of stock.", "error");
+        return false;
       }
 
-      const optimisticCart = recomputeCartSummary(currentItems, cart);
-      setCart(optimisticCart);
+      const normalizedVariantId = variantId || null;
+      const existingIdx = storedItems.findIndex(
+        (it) =>
+          it.productId === productId &&
+          (it.variantId || null) === normalizedVariantId
+      );
+
+      let newItems: StoredCartItem[];
+
+      if (existingIdx >= 0) {
+        const existing = storedItems[existingIdx];
+        const newQty = existing.quantity + quantity;
+
+        // Soft stock check against item limit
+        const limit = Math.min(existing.stockQuantity || 99, snapshotStock);
+        if (newQty > limit) {
+          showToast(`Only ${limit} units available in stock.`, "error");
+          return false;
+        }
+
+        newItems = [...storedItems];
+        newItems[existingIdx] = {
+          ...existing,
+          quantity: newQty,
+          stockQuantity: snapshotStock,
+          price: options.price !== undefined ? options.price : existing.price,
+          salePrice:
+            options.salePrice !== undefined
+              ? options.salePrice
+              : existing.salePrice,
+        };
+      } else {
+        if (quantity > snapshotStock) {
+          showToast(`Only ${snapshotStock} units available in stock.`, "error");
+          return false;
+        }
+
+        const newItem: StoredCartItem = {
+          productId,
+          variantId: normalizedVariantId,
+          quantity,
+          name: options.productName || "Product",
+          slug: options.productSlug || "",
+          price: options.price ?? 0,
+          salePrice: options.salePrice ?? null,
+          imageUrl: options.imageUrl || "",
+          stockQuantity: snapshotStock,
+          options: options.variantOptions || null,
+        };
+        newItems = [...storedItems, newItem];
+      }
+
+      // Synchronous instant update (0ms, zero D1 hits)
+      persistItems(newItems);
       showToast("Added to cart", "success");
 
       if (openOnSuccess) {
         setIsDrawerOpen(true);
       }
 
-      // 3. Dispatch background network request
-      try {
-        const res = await fetch("/api/cart/add", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ productId, variantId, quantity }),
-        });
-        const json = (await res.json()) as CartApiResponse;
-        if (res.ok && json.success && json.data) {
-          setCart(json.data);
-          return true;
-        } else {
-          // Revert on error
-          console.error("[CartContext] Server rejected add:", json.error);
-          setCart(previousCart);
-          showToast("Failed to add item. Please try again.", "error");
-          return false;
-        }
-      } catch (err) {
-        // Revert on network failure
-        console.error("[CartContext] Network error adding item:", err);
-        setCart(previousCart);
-        showToast("Failed to add item. Please try again.", "error");
-        return false;
-      }
+      return true;
     },
-    [cart, showToast]
+    [storedItems, showToast, persistItems]
   );
 
   const updateQuantity = useCallback(
-    async (cartItemId: string, quantity: number) => {
-      const previousCart = cart;
+    async (cartItemId: string, quantity: number): Promise<boolean> => {
+      let newItems: StoredCartItem[];
 
-      const currentItems = cart?.items
-        ? cart.items
-            .map((it) => {
-              if (it.id === cartItemId) {
-                if (quantity <= 0) return null;
-                return {
-                  ...it,
-                  quantity,
-                  lineTotal: Number((it.unitPrice * quantity).toFixed(2)),
-                };
-              }
+      if (quantity <= 0) {
+        newItems = storedItems.filter(
+          (it) => `${it.productId}_${it.variantId || "default"}` !== cartItemId
+        );
+      } else {
+        newItems = storedItems.map((it) => {
+          const itemId = `${it.productId}_${it.variantId || "default"}`;
+          if (itemId === cartItemId) {
+            // Soft stock check
+            if (it.stockQuantity > 0 && quantity > it.stockQuantity) {
+              showToast(`Only ${it.stockQuantity} available in stock.`, "error");
               return it;
-            })
-            .filter((it): it is CartItemDetail => it !== null)
-        : [];
-
-      const optimisticCart = recomputeCartSummary(currentItems, cart);
-      setCart(optimisticCart);
-
-      try {
-        const res = await fetch("/api/cart/update", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ cartItemId, quantity }),
+            }
+            return {
+              ...it,
+              quantity,
+            };
+          }
+          return it;
         });
-        const json = (await res.json()) as CartApiResponse;
-        if (res.ok && json.success && json.data) {
-          setCart(json.data);
-          return true;
-        } else {
-          setCart(previousCart);
-          showToast("Failed to update cart. Please try again.", "error");
-          return false;
-        }
-      } catch (err) {
-        setCart(previousCart);
-        showToast("Failed to update cart. Please try again.", "error");
-        return false;
       }
+
+      persistItems(newItems);
+      return true;
     },
-    [cart, showToast]
+    [storedItems, showToast, persistItems]
   );
 
   const removeItem = useCallback(
-    async (cartItemId: string) => {
-      const previousCart = cart;
-
-      const currentItems = cart?.items
-        ? cart.items.filter((it) => it.id !== cartItemId)
-        : [];
-
-      const optimisticCart = recomputeCartSummary(currentItems, cart);
-      setCart(optimisticCart);
-
-      try {
-        const res = await fetch(`/api/cart/remove?cartItemId=${encodeURIComponent(cartItemId)}`, {
-          method: "DELETE",
-          credentials: "include",
-        });
-        const json = (await res.json()) as CartApiResponse;
-        if (res.ok && json.success && json.data) {
-          setCart(json.data);
-          return true;
-        } else {
-          setCart(previousCart);
-          showToast("Failed to remove item. Please try again.", "error");
-          return false;
-        }
-      } catch (err) {
-        setCart(previousCart);
-        showToast("Failed to remove item. Please try again.", "error");
-        return false;
-      }
+    async (cartItemId: string): Promise<boolean> => {
+      const newItems = storedItems.filter(
+        (it) => `${it.productId}_${it.variantId || "default"}` !== cartItemId
+      );
+      persistItems(newItems);
+      return true;
     },
-    [cart, showToast]
+    [storedItems, persistItems]
   );
 
-  const items = cart?.items || [];
-  const itemCount = cart?.itemCount || 0;
-  const subtotal = cart?.subtotal || 0;
-  const total = cart?.total || 0;
+  const { cart, items, itemCount, subtotal, total } = useMemo(
+    () => computeCartSummary(storedItems),
+    [storedItems]
+  );
 
   return (
     <CartContext.Provider
@@ -419,6 +465,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         addItem,
         updateQuantity,
         removeItem,
+        clearCart,
         refreshCart,
       }}
     >
@@ -435,4 +482,3 @@ export function useCart() {
   }
   return context;
 }
-

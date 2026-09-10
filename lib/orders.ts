@@ -16,6 +16,12 @@ import { getCartWithItems, clearCart, getOrCreateCart, memoryCarts, type CartSum
 import { memoryProducts } from "./products";
 
 // Validation Schemas
+export const orderItemInputSchema = z.object({
+  productId: z.string().min(1),
+  variantId: z.string().nullable().optional(),
+  quantity: z.number().int().min(1),
+});
+
 export const createOrderSchema = z.object({
   customerName: z
     .string()
@@ -39,6 +45,7 @@ export const createOrderSchema = z.object({
   city: z.string().trim().min(2, "City is required"),
   notes: z.string().trim().optional(),
   paymentMethod: z.literal("cod").default("cod"),
+  items: z.array(orderItemInputSchema).optional(),
 });
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
@@ -68,8 +75,9 @@ const memoryOrders: OrderRecord[] = [];
 const memoryOrderItems: OrderItemRecord[] = [];
 
 /**
- * Creates an order directly from the current user or guest cart.
+ * Creates an order directly from the current client cart or guest cart.
  * Strictly performs server-side price recalculation and stock validation against D1.
+ * Client-submitted prices are completely ignored; D1 is the single source of truth.
  */
 export async function createOrderFromCart(
   input: CreateOrderInput,
@@ -79,16 +87,51 @@ export async function createOrderFromCart(
   // Validate schema
   const validated = createOrderSchema.parse(input);
 
-  // 1. Authoritatively resolve the current user or guest cart
-  let cartSummary: CartSummary | null = null;
-  if (cartSessionId || userId) {
-    const cart = await getOrCreateCart(cartSessionId, userId);
-    cartSummary = await getCartWithItems(cart.id);
+  // 1. Authoritatively resolve items to process: from client payload if provided, otherwise from D1 cart
+  let rawItems: {
+    productId: string;
+    variantId: string | null;
+    quantity: number;
+  }[] = [];
+  let legacyCartIdToClear: string | null = null;
+
+  if (validated.items && validated.items.length > 0) {
+    // Consolidate duplicate item entries if any
+    const consolidatedMap = new Map<string, { productId: string; variantId: string | null; quantity: number }>();
+    for (const it of validated.items) {
+      const key = `${it.productId}_${it.variantId || "default"}`;
+      const existing = consolidatedMap.get(key);
+      if (existing) {
+        existing.quantity += it.quantity;
+      } else {
+        consolidatedMap.set(key, {
+          productId: it.productId,
+          variantId: it.variantId || null,
+          quantity: it.quantity,
+        });
+      }
+    }
+    rawItems = Array.from(consolidatedMap.values());
   } else {
-    cartSummary = await getCartWithItems("");
+    // Legacy server-cart resolution fallback
+    let cartSummary: CartSummary | null = null;
+    if (cartSessionId || userId) {
+      const cart = await getOrCreateCart(cartSessionId, userId);
+      cartSummary = await getCartWithItems(cart.id);
+      legacyCartIdToClear = cart.id;
+    } else {
+      cartSummary = await getCartWithItems("");
+    }
+    if (cartSummary && cartSummary.items.length > 0) {
+      rawItems = cartSummary.items.map((i) => ({
+        productId: i.productId,
+        variantId: i.variantId,
+        quantity: i.quantity,
+      }));
+    }
   }
 
-  if (!cartSummary || cartSummary.items.length === 0) {
+  if (rawItems.length === 0) {
     throw new Error("Your cart is empty. Please add items before checking out.");
   }
 
@@ -96,7 +139,7 @@ export async function createOrderFromCart(
   const orderId = crypto.randomUUID();
   const now = new Date().toISOString();
 
-  // 2. Server-side price recalculation and stock validation
+  // 2. Server-side price recalculation and stock validation against D1
   let calculatedSubtotal = 0;
   const verifiedItems: {
     id: string;
@@ -113,12 +156,12 @@ export async function createOrderFromCart(
   let prodMap = new Map<string, any>();
   let varMap = new Map<string, any>();
 
-  if (db) {
-    const productIds = Array.from(new Set(cartSummary.items.map((i) => i.productId)));
-    const variantIds = Array.from(
-      new Set(cartSummary.items.map((i) => i.variantId).filter((v): v is string => Boolean(v)))
-    );
+  const productIds = Array.from(new Set(rawItems.map((i) => i.productId)));
+  const variantIds = Array.from(
+    new Set(rawItems.map((i) => i.variantId).filter((v): v is string => Boolean(v)))
+  );
 
+  if (db) {
     const [prodRows, varRows] = await Promise.all([
       db.select().from(products).where(inArray(products.id, productIds)),
       variantIds.length > 0
@@ -128,55 +171,57 @@ export async function createOrderFromCart(
 
     prodMap = new Map(prodRows.map((p) => [p.id, p]));
     varMap = new Map(varRows.map((v) => [v.id, v]));
+  } else {
+    for (const pid of productIds) {
+      const p = memoryProducts.find((mp) => mp.id === pid);
+      if (p) prodMap.set(pid, p);
+    }
   }
 
-  for (const item of cartSummary.items) {
-    let authoritativeUnitPrice = item.unitPrice;
-    let productName = item.productName;
-    let variantName = item.variantOptions ? Object.values(item.variantOptions).join(" / ") : null;
+  for (const item of rawItems) {
+    const prod = prodMap.get(item.productId);
+    if (!prod) {
+      throw new Error(`Product is no longer available.`);
+    }
 
-    if (db) {
-      const prod = prodMap.get(item.productId);
-      if (!prod) {
-        throw new Error(`Product "${item.productName}" is no longer available.`);
+    if (prod.status !== "published" || prod.stockStatus === "out_of_stock") {
+      throw new Error(`Product "${prod.name}" is currently unavailable for purchase.`);
+    }
+
+    let authoritativeUnitPrice = Number(prod.salePrice ?? prod.price);
+    let productName = prod.name;
+    let variantName: string | null = null;
+
+    if (item.variantId) {
+      const variant = varMap.get(item.variantId);
+      if (!variant || variant.productId !== item.productId) {
+        throw new Error(`Selected variant for "${prod.name}" is no longer available.`);
       }
 
-      if (prod.status !== "published" || prod.stockStatus === "out_of_stock") {
-        throw new Error(`Product "${prod.name}" is currently unavailable for purchase.`);
+      // Check stock
+      if (prod.trackInventory && variant.stock < item.quantity) {
+        throw new Error(
+          `Insufficient stock for "${prod.name}". Available stock: ${variant.stock}`
+        );
       }
-      productName = prod.name;
 
-      if (item.variantId) {
-        const variant = varMap.get(item.variantId);
-        if (!variant || variant.productId !== item.productId) {
-          throw new Error(`Selected variant for "${prod.name}" is no longer available.`);
+      authoritativeUnitPrice = Number(variant.salePrice ?? variant.price);
+      if (variant.options) {
+        try {
+          const opts = typeof variant.options === "string" ? JSON.parse(variant.options) : variant.options;
+          variantName = Object.values(opts).join(" / ");
+        } catch {
+          variantName = null;
         }
-
-        // Check stock
-        if (prod.trackInventory && variant.stock < item.quantity) {
-          throw new Error(
-            `Insufficient stock for "${prod.name}". Available stock: ${variant.stock}`
-          );
-        }
-
-        authoritativeUnitPrice = Number(variant.salePrice ?? variant.price);
-        if (variant.options) {
-          try {
-            const opts = typeof variant.options === "string" ? JSON.parse(variant.options) : variant.options;
-            variantName = Object.values(opts).join(" / ");
-          } catch {
-            variantName = null;
-          }
-        }
-      } else {
-        // Base product stock check
-        if (prod.trackInventory && prod.stockQuantity < item.quantity) {
-          throw new Error(
-            `Insufficient stock for "${prod.name}". Available stock: ${prod.stockQuantity}`
-          );
-        }
-        authoritativeUnitPrice = Number(prod.salePrice ?? prod.price);
       }
+    } else {
+      // Base product stock check
+      if (prod.trackInventory && prod.stockQuantity < item.quantity) {
+        throw new Error(
+          `Insufficient stock for "${prod.name}". Available stock: ${prod.stockQuantity}`
+        );
+      }
+      authoritativeUnitPrice = Number(prod.salePrice ?? prod.price);
     }
 
     const lineTotal = Math.round(authoritativeUnitPrice * item.quantity * 100) / 100;
@@ -262,21 +307,24 @@ export async function createOrderFromCart(
       }
     }
 
-    // 6. Clear cart items and mark cart as converted
-    await clearCart(cartSummary.id);
-    await db
-      .update(carts)
-      .set({ status: "converted", updatedAt: now })
-      .where(eq(carts.id, cartSummary.id));
+    // 6. Clear legacy cart items if present
+    if (legacyCartIdToClear) {
+      try {
+        await clearCart(legacyCartIdToClear);
+        await db
+          .update(carts)
+          .set({ status: "converted", updatedAt: now })
+          .where(eq(carts.id, legacyCartIdToClear));
+      } catch {}
+    }
   } else {
     // In-memory fallback
     memoryOrders.unshift(orderRecord);
     memoryOrderItems.push(...createdOrderItems);
-    await clearCart(cartSummary.id);
-    const memCart = memoryCarts.find((c) => c.id === cartSummary.id || c.sessionId === cartSummary.sessionId);
-    if (memCart) {
-      memCart.status = "converted";
-      memCart.updatedAt = now;
+    if (legacyCartIdToClear) {
+      try {
+        await clearCart(legacyCartIdToClear);
+      } catch {}
     }
     for (const item of verifiedItems) {
       const p = memoryProducts.find((mp) => mp.id === item.productId);

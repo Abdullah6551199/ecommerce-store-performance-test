@@ -12,6 +12,7 @@ interface QuickAddToCartProps {
   productName?: string;
   price?: number;
   imageUrl?: string | null;
+  stockQuantity?: number;
 }
 
 /**
@@ -28,6 +29,7 @@ export default function QuickAddToCart({
   productName,
   price,
   imageUrl,
+  stockQuantity,
 }: QuickAddToCartProps): React.JSX.Element {
   const { addItem } = useCart();
   const [addedNotice, setAddedNotice] = useState(false);
@@ -46,12 +48,13 @@ export default function QuickAddToCart({
     setAddedNotice(true);
     setTimeout(() => setAddedNotice(false), 1600);
 
-    // 2. Dispatch optimistic add to context and background request
+    // 2. Dispatch pure client-side add to context (0ms, zero D1 hits)
     void addItem(productId, defaultVariantId, 1, {
       productName,
       productSlug,
       price,
       imageUrl,
+      stockQuantity: stockQuantity ?? 99,
       openOnSuccess: true,
     });
   };

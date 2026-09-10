@@ -139,7 +139,9 @@ export default function ProductPurchaseSection({
 
     void addItem(productId, activeVariant?.id || null, quantity, {
       productName,
-      price: hasSale ? Number(currentSalePrice) : Number(currentPrice),
+      price: Number(currentPrice),
+      salePrice: hasSale ? Number(currentSalePrice) : null,
+      stockQuantity: remainingStock,
       variantOptions: activeVariant?.options || null,
       openOnSuccess: true,
     });

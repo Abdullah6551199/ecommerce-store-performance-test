@@ -11,7 +11,7 @@ import { normalizeImageUrl } from "@/lib/utils";
 
 export default function CheckoutPage(): React.JSX.Element {
   const router = useRouter();
-  const { cart, items, subtotal, total, isLoading, refreshCart } = useCart();
+  const { cart, items, subtotal, total, isLoading, clearCart } = useCart();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -94,7 +94,11 @@ export default function CheckoutPage(): React.JSX.Element {
         body: JSON.stringify({
           ...formData,
           paymentMethod: "cod",
-          cartSessionId: cart?.sessionId || cart?.id || undefined,
+          items: items.map((i) => ({
+            productId: i.productId,
+            variantId: i.variantId || null,
+            quantity: i.quantity,
+          })),
         }),
       });
 
@@ -108,8 +112,8 @@ export default function CheckoutPage(): React.JSX.Element {
         throw new Error(json.error || "Failed to place order. Please check your details.");
       }
 
-      // Refresh cart context to immediately reflect cleared items
-      await refreshCart();
+      // Clear client-side cart completely from localStorage and React state
+      clearCart();
 
       // Navigate to order confirmation
       const orderId = json.data?.orderId;

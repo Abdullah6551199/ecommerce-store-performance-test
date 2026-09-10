@@ -235,18 +235,15 @@ export default function CartPage(): React.JSX.Element {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    alert("Ready for Stage 10 Checkout Integration!");
-                  }}
+                <Link
+                  href="/checkout"
                   className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#18C729] to-[#12a822] py-4 text-sm font-bold text-black hover:brightness-110 shadow-xl shadow-[#18C729]/25 transition-all cursor-pointer"
                 >
                   <span>Proceed to Checkout</span>
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
-                </button>
+                </Link>
 
                 <div className="pt-4 border-t border-white/5 space-y-2 text-[11px] text-white/50">
                   <div className="flex items-center gap-2">

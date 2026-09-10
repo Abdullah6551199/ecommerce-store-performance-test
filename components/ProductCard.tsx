@@ -146,6 +146,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
             productName={product.name}
             price={hasSale ? Number(product.salePrice) : Number(product.price)}
             imageUrl={resolvedImage}
+            stockQuantity={product.stockQuantity ?? (isOutOfStock ? 0 : 99)}
           />
         </div>
       </div>

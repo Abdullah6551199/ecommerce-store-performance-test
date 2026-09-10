@@ -141,6 +141,9 @@ export default function ProductCard({ product }: ProductCardProps): React.JSX.El
             isOutOfStock={isOutOfStock}
             defaultVariantId={defaultVariantId}
             hasMultipleVariants={hasVariants}
+            productName={product.name}
+            price={hasSale ? Number(product.salePrice) : Number(product.price)}
+            imageUrl={resolvedImage}
           />
         </div>
       </div>

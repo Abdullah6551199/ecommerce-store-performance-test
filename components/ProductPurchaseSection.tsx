@@ -39,7 +39,6 @@ export default function ProductPurchaseSection({
   variants = [],
 }: ProductPurchaseSectionProps): React.JSX.Element {
   const { addItem } = useCart();
-  const [isAdding, setIsAdding] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [addedNotice, setAddedNotice] = useState(false);
   const [cartPayloadSummary, setCartPayloadSummary] = useState<string | null>(null);
@@ -124,27 +123,26 @@ export default function ProductPurchaseSection({
     }));
   };
 
-  const handleAddToCart = async () => {
-    if (isOutOfStock || isAdding) return;
+  const handleAddToCart = () => {
+    if (isOutOfStock) return;
 
-    setIsAdding(true);
-    try {
-      const success = await addItem(productId, activeVariant?.id || null, quantity, true);
-      if (success) {
-        setCartPayloadSummary(
-          activeVariant
-            ? `${productName} (${Object.values(activeVariant.options).join(", ")})`
-            : productName
-        );
-        setAddedNotice(true);
-        setTimeout(() => {
-          setAddedNotice(false);
-          setCartPayloadSummary(null);
-        }, 3000);
-      }
-    } finally {
-      setIsAdding(false);
-    }
+    setCartPayloadSummary(
+      activeVariant
+        ? `${productName} (${Object.values(activeVariant.options).join(", ")})`
+        : productName
+    );
+    setAddedNotice(true);
+    setTimeout(() => {
+      setAddedNotice(false);
+      setCartPayloadSummary(null);
+    }, 2500);
+
+    void addItem(productId, activeVariant?.id || null, quantity, {
+      productName,
+      price: hasSale ? Number(currentSalePrice) : Number(currentPrice),
+      variantOptions: activeVariant?.options || null,
+      openOnSuccess: true,
+    });
   };
 
   return (
@@ -306,21 +304,16 @@ export default function ProductPurchaseSection({
           <button
             type="button"
             onClick={handleAddToCart}
-            disabled={isOutOfStock || isAdding}
+            disabled={isOutOfStock}
             className={`flex-1 inline-flex items-center justify-center gap-2 rounded-2xl py-3.5 px-8 text-sm font-bold transition-all shadow-xl cursor-pointer ${
-              isOutOfStock || isAdding
+              isOutOfStock
                 ? "bg-white/10 text-white/40 cursor-not-allowed border border-white/10"
                 : addedNotice
                 ? "bg-[#18C729] text-black shadow-[#18C729]/30 scale-[1.02]"
                 : "bg-gradient-to-r from-[#18C729] to-[#12a822] text-black shadow-[#18C729]/25 hover:brightness-110 active:scale-[0.98]"
             }`}
           >
-            {isAdding ? (
-              <>
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
-                <span>Adding to Cart...</span>
-              </>
-            ) : addedNotice ? (
+            {addedNotice ? (
               <>
                 <svg className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />

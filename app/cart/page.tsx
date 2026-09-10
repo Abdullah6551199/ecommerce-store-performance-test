@@ -17,9 +17,20 @@ export default function CartPage(): React.JSX.Element {
 
   if (isLoading) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#18C729] border-t-transparent mb-4" />
-        <p className="text-xs text-white/50">Loading your shopping cart...</p>
+      <div className="min-h-screen bg-[#070d09] text-white py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto animate-pulse space-y-6">
+          <div className="h-4 w-32 bg-white/10 rounded-md" />
+          <div className="h-8 w-56 bg-white/10 rounded-lg" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+            <div className="lg:col-span-8 space-y-4">
+              <div className="h-24 bg-white/5 rounded-3xl border border-white/10" />
+              <div className="h-32 bg-white/5 rounded-3xl border border-white/10" />
+            </div>
+            <div className="lg:col-span-4">
+              <div className="h-64 bg-white/5 rounded-3xl border border-white/10" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

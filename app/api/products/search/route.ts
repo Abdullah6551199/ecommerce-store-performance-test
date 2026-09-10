@@ -1,23 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchProductsAdvanced, type AdvancedSearchParams } from "@/lib/products";
+import { matchEdgeCache, putEdgeCache } from "@/lib/edge-cache";
 
 export const dynamic = "force-dynamic";
 
 /**
  * GET /api/products/search
- * Public search endpoint supporting text search, facets, filtering, and sorting:
- * - q: text search query
- * - minPrice, maxPrice: price range numbers
- * - category: category slug or id
- * - brand: brand name
- * - tags: comma-separated list of tags
- * - inStock: boolean ("true" / "false")
- * - sort: "price_asc" | "price_desc" | "newest" | "popular"
- * - limit: number (default 40)
- * - offset: number (default 0)
+ * Public search endpoint supporting text search, facets, filtering, and sorting.
+ * Cached at Cloudflare edge for 60s with stale-while-revalidate.
  */
 export async function GET(req: NextRequest) {
   try {
+    const cachedEdgeRes = await matchEdgeCache(req);
+    if (cachedEdgeRes) {
+      return cachedEdgeRes;
+    }
+
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q") || "";
     const minPriceRaw = searchParams.get("minPrice");
@@ -63,7 +61,7 @@ export async function GET(req: NextRequest) {
 
     const result = await searchProductsAdvanced(params);
 
-    return NextResponse.json(
+    const res = NextResponse.json(
       {
         success: true,
         data: result.products,
@@ -84,9 +82,16 @@ export async function GET(req: NextRequest) {
       {
         headers: {
           "Cache-Control": "public, s-maxage=60, stale-while-revalidate=600",
+          "CDN-Cache-Control": "public, max-age=60, stale-while-revalidate=600",
+          "Cloudflare-CDN-Cache-Control": "public, max-age=60, stale-while-revalidate=600",
+          "CF-Cache-Status": "MISS",
         },
       }
     );
+
+    putEdgeCache(req, res, 60, 600);
+
+    return res;
   } catch (error) {
     console.error("[GET /api/products/search] Error:", error);
     return NextResponse.json(

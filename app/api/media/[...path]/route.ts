@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getNativeR2Bucket } from "@/lib/r2";
+import { matchEdgeCache, putEdgeCache } from "@/lib/edge-cache";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,12 @@ const MIME_MAP: Record<string, string> = {
  */
 export async function GET(req: NextRequest, { params }: RouteParams) {
   try {
+    // 1. Check Cloudflare Edge Cache for instant sub-100ms HIT
+    const cachedEdgeRes = await matchEdgeCache(req);
+    if (cachedEdgeRes) {
+      return cachedEdgeRes;
+    }
+
     const { path } = await params;
     if (!path || path.length === 0) {
       return NextResponse.json({ error: "File path missing" }, { status: 400 });
@@ -68,6 +75,9 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       // Set negotiated or stored MIME type
       headers.set("Content-Type", object.httpMetadata?.contentType || targetMime);
       headers.set("Cache-Control", "public, max-age=31536000, immutable");
+      headers.set("CDN-Cache-Control", "public, max-age=31536000, immutable");
+      headers.set("Cloudflare-CDN-Cache-Control", "public, max-age=31536000, immutable");
+      headers.set("CF-Cache-Status", "MISS");
       headers.set("Vary", "Accept, Accept-Encoding");
       headers.set("Access-Control-Allow-Origin", "*");
 
@@ -89,10 +99,15 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
         return new Response(null, { status: 304, headers });
       }
 
-      return new Response(object.body as ReadableStream, {
+      const response = new Response(object.body as ReadableStream, {
         status: 200,
         headers,
       });
+
+      // Asynchronously store in Cloudflare Edge Cache for 1 year
+      putEdgeCache(req, response, 31536000, 31536000);
+
+      return response;
     }
 
     // Local development fallback: Return simulated SVG placeholder if file not in local R2

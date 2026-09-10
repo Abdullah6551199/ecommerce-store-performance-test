@@ -286,7 +286,7 @@ export const getCategoryWithHierarchy = cache(async (slug: string): Promise<{
     getActiveCategories(),
   ]);
 
-  const children = activeCategories.filter((c) => c.parentId === category.id);
+  const children = (activeCategories || []).filter((c) => c && c.parentId === category.id);
   return { category, parent, children };
 });
 

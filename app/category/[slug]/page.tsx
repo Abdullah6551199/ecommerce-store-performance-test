@@ -82,23 +82,44 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps): Promise<React.JSX.Element> {
   const { slug } = await params;
-  const sp = searchParams ? await searchParams : {};
-  const currentPage = sp.page ? Math.max(1, parseInt(sp.page, 10) || 1) : 1;
+  let sp: { page?: string } = {};
+  try {
+    if (searchParams) {
+      sp = (await searchParams) || {};
+    }
+  } catch {
+    sp = {};
+  }
+  const currentPage = sp?.page ? Math.max(1, parseInt(sp.page, 10) || 1) : 1;
   const PAGE_SIZE = 12;
 
   // Fetch category, parent, and direct children via unified cached hierarchy
-  const { category, parent, children } = await getCategoryWithHierarchy(slug);
+  let hierarchy = { category: null as any, parent: null as any, children: [] as any[] };
+  try {
+    hierarchy = await getCategoryWithHierarchy(slug);
+  } catch (err) {
+    console.warn("[CategoryPage] getCategoryWithHierarchy failed:", err);
+  }
+
+  const category = hierarchy.category || (await getCategoryBySlug(slug));
 
   if (!category || category.status !== "active") {
     notFound();
   }
 
+  const parent = hierarchy.parent;
+  const children = hierarchy.children || [];
+
   // Fetch paginated products directly for this category
-  const { products: categoryProducts, total, totalPages, page } = await getProductsByCategoryPaginated(
+  const paginatedResult = await getProductsByCategoryPaginated(
     category.id,
     currentPage,
     PAGE_SIZE
   );
+  const categoryProducts = paginatedResult?.products || [];
+  const total = paginatedResult?.total || 0;
+  const totalPages = paginatedResult?.totalPages || 1;
+  const page = paginatedResult?.page || currentPage;
 
   // Structured Data (JSON-LD)
   const categoryJsonLd = generateCategoryJsonLd(category, categoryProducts);

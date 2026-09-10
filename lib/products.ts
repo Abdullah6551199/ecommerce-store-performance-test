@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { z } from "zod";
-import { eq, ne, desc, asc, and, inArray, sql } from "drizzle-orm";
+import { eq, ne, desc, asc, and, inArray, sql, count } from "drizzle-orm";
 import { getDb, products, productImages, productVariants, categories } from "./db";
 import { getVariantsByProductId, saveProductVariants, type ProductVariantRecord } from "./variants";
 
@@ -57,6 +57,9 @@ export interface CatalogProductItem {
   id: string;
   name: string;
   slug: string;
+  sku?: string;
+  tags?: string[] | null;
+  description?: string | null;
   price: number;
   salePrice: number | null;
   brand: string | null;
@@ -895,13 +898,13 @@ export async function searchProductsAdvanced(
   if (params.query && params.query.trim()) {
     const q = params.query.trim().toLowerCase();
     filtered = filtered.filter((p) => {
-      const matchName = p.name.toLowerCase().includes(q);
-      const matchSku = p.sku.toLowerCase().includes(q);
+      const matchName = Boolean(p.name && p.name.toLowerCase().includes(q));
+      const matchSku = Boolean(p.sku && p.sku.toLowerCase().includes(q));
       const matchBrand = Boolean(p.brand && p.brand.toLowerCase().includes(q));
       const matchDesc = Boolean(p.description && p.description.toLowerCase().includes(q));
       const matchShortDesc = Boolean(p.shortDescription && p.shortDescription.toLowerCase().includes(q));
       const matchCat = Boolean(p.categoryName && p.categoryName.toLowerCase().includes(q));
-      const matchTags = Array.isArray(p.tags) && p.tags.some((t) => t.toLowerCase().includes(q));
+      const matchTags = Array.isArray(p.tags) && p.tags.some((t) => typeof t === "string" && t.toLowerCase().includes(q));
       return matchName || matchSku || matchBrand || matchDesc || matchShortDesc || matchCat || matchTags;
     });
   }
@@ -1029,6 +1032,9 @@ export async function listCatalogProducts(options?: {
           id: products.id,
           name: products.name,
           slug: products.slug,
+          sku: products.sku,
+          description: products.description,
+          tags: products.tags,
           price: products.price,
           salePrice: products.salePrice,
           brand: products.brand,
@@ -1078,6 +1084,9 @@ export async function listCatalogProducts(options?: {
         id: r.id,
         name: r.name,
         slug: r.slug,
+        sku: r.sku || "",
+        tags: r.tags || [],
+        description: r.description || null,
         price: Number(r.price),
         salePrice: r.salePrice !== null && r.salePrice !== undefined ? Number(r.salePrice) : null,
         brand: r.brand || null,
@@ -1181,7 +1190,7 @@ export async function getProductsByCategoryPaginated(
 
       const [countRes, prods] = await Promise.all([
         db
-          .select({ count: sql<number>`count(*)` })
+          .select({ count: count() })
           .from(products)
           .where(and(...conditions)),
         listCatalogProducts({

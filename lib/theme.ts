@@ -201,11 +201,17 @@ const THEME_SETTINGS_KEY = "theme_settings";
 
 // In-memory fallback
 let memoryThemeSettings: ThemeSettings = { ...DEFAULT_THEME_SETTINGS };
+let lastThemeFetchTime = 0;
+const THEME_CACHE_TTL_MS = 60000;
 
 /**
  * Fetch theme settings from Cloudflare D1 or fallback memory
  */
 export async function getThemeSettings(): Promise<ThemeSettings> {
+  if (lastThemeFetchTime > 0 && Date.now() - lastThemeFetchTime < THEME_CACHE_TTL_MS) {
+    return memoryThemeSettings;
+  }
+
   const db = getDb();
   if (db) {
     try {
@@ -240,6 +246,7 @@ export async function getThemeSettings(): Promise<ThemeSettings> {
           },
         };
         memoryThemeSettings = merged;
+        lastThemeFetchTime = Date.now();
         return merged;
       }
     } catch (err) {
@@ -284,6 +291,7 @@ export async function updateThemeSettings(
   };
 
   memoryThemeSettings = updated;
+  lastThemeFetchTime = 0;
 
   const db = getDb();
   if (db) {

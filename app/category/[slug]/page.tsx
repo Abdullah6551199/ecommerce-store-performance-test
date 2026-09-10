@@ -12,16 +12,6 @@ import { normalizeImageUrl } from "@/lib/utils";
 
 export const revalidate = 300;
 
-export async function generateStaticParams() {
-  try {
-    const { getActiveCategories } = await import("@/lib/categories");
-    const cats = await getActiveCategories();
-    return cats.map((c) => ({ slug: c.slug }));
-  } catch {
-    return [];
-  }
-}
-
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
   searchParams?: Promise<{ page?: string }>;

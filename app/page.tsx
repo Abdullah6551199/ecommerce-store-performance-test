@@ -59,7 +59,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
   // Identify LCP hero image for high-priority preloading
   const heroSection = sections.find((s) => s.type === "hero" && s.imageUrl);
   const heroImageUrl = heroSection?.imageUrl
-    ? normalizeImageUrl(heroSection.imageUrl, { hero: true, width: 1000, quality: 75 })
+    ? normalizeImageUrl(heroSection.imageUrl, { hero: true, width: 900, quality: 72 })
     : null;
 
   return (

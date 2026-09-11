@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Fallback for default admin in local testing if D1 not accessible
-    if (!userRecord && normalizedEmail === "admin@example.com") {
+    if (!userRecord && !db && normalizedEmail === "admin@example.com") {
       userRecord = {
         id: "admin-init-user",
         email: "admin@example.com",

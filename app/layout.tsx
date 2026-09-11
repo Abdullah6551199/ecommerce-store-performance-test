@@ -96,8 +96,13 @@ export default async function RootLayout({
   const themeCss = generateThemeCss(theme);
 
   return (
-    <html lang="en" className={`dark ${inter.variable}`}>
+    <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("apex_theme");if(t==="light"){document.documentElement.classList.remove("dark");}else if(t==="dark"){document.documentElement.classList.add("dark");}else if(window.matchMedia&&!window.matchMedia("(prefers-color-scheme: dark)").matches){document.documentElement.classList.remove("dark");}else{document.documentElement.classList.add("dark");}}catch(e){}})();`,
+          }}
+        />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <style
@@ -110,7 +115,7 @@ export default async function RootLayout({
           {/* Main Background Wrapper applying the dynamic Brand Gradient */}
           <div className="relative flex min-h-screen flex-col bg-brand-gradient">
             {/* Subtle ambient contrast layer ensuring readability while branding shines through */}
-            <div className="absolute inset-0 bg-black/45 pointer-events-none backdrop-blur-[1px]" />
+            <div className="absolute inset-0 bg-white/60 dark:bg-black/45 pointer-events-none backdrop-blur-[1px] transition-colors duration-300" />
 
             {/* Foreground content stack */}
             <div className="relative z-10 flex min-h-screen flex-col">

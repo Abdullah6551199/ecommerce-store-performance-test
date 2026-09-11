@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "./LogoutButton";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface AdminSidebarProps {
   userEmail: string;
@@ -22,6 +23,11 @@ const navigationItems: NavItem[] = [
     name: "Dashboard",
     href: "/admin/dashboard",
     icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+  },
+  {
+    name: "Analytics",
+    href: "/admin/analytics",
+    icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
   },
   {
     name: "Products",
@@ -74,7 +80,7 @@ export default function AdminShell({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#080e0a] text-white selection:bg-[#FEF500] selection:text-black">
+    <div className="flex min-h-screen bg-zinc-50 dark:bg-[#080e0a] text-zinc-900 dark:text-white selection:bg-[#FEF500] selection:text-black transition-colors duration-200">
       {/* Mobile Drawer Backdrop */}
       {mobileOpen && (
         <div
@@ -85,12 +91,12 @@ export default function AdminShell({
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-white/10 bg-[#0c140f] transition-transform duration-300 md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] transition-all duration-300 md:static md:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Sidebar Brand Header */}
-        <div className="flex h-16 items-center justify-between border-b border-white/10 px-6">
+        <div className="flex h-16 items-center justify-between border-b border-zinc-200 dark:border-white/10 px-6">
           <Link
             href="/admin/dashboard"
             onClick={() => setMobileOpen(false)}
@@ -108,11 +114,11 @@ export default function AdminShell({
               </svg>
             </div>
             <div>
-              <span className="block font-bold tracking-tight text-white leading-tight">
+              <span className="block font-bold tracking-tight text-zinc-900 dark:text-white leading-tight">
                 Store Admin
               </span>
-              <span className="block text-[10px] text-white/50 font-mono tracking-wider">
-                STAGE 3 FOUNDATION
+              <span className="block text-[10px] text-zinc-500 dark:text-white/50 font-mono tracking-wider">
+                STAGE 13 ANALYTICS
               </span>
             </div>
           </Link>
@@ -121,7 +127,7 @@ export default function AdminShell({
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
-            className="rounded-lg p-1.5 text-white/60 hover:bg-white/5 hover:text-white md:hidden"
+            className="rounded-lg p-1.5 text-zinc-500 dark:text-white/60 hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-zinc-900 dark:hover:text-white md:hidden"
             aria-label="Close navigation"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -141,13 +147,13 @@ export default function AdminShell({
                 onClick={() => setMobileOpen(false)}
                 className={`group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all ${
                   isActive
-                    ? "border border-[#18C729]/30 bg-[#18C729]/10 text-white shadow-sm shadow-[#18C729]/10"
-                    : "text-white/70 hover:bg-white/5 hover:text-white"
+                    ? "border border-[#18C729]/30 bg-[#18C729]/10 text-[#18C729] dark:text-white shadow-sm shadow-[#18C729]/10"
+                    : "text-zinc-600 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-zinc-900 dark:hover:text-white"
                 }`}
               >
                 <svg
                   className={`h-5 w-5 transition-colors ${
-                    isActive ? "text-[#18C729]" : "text-white/50 group-hover:text-[#18C729]"
+                    isActive ? "text-[#18C729]" : "text-zinc-400 dark:text-white/50 group-hover:text-[#18C729]"
                   }`}
                   fill="none"
                   viewBox="0 0 24 24"
@@ -166,16 +172,16 @@ export default function AdminShell({
         </nav>
 
         {/* Sidebar Footer / User Profile */}
-        <div className="border-t border-white/10 p-4">
-          <div className="flex items-center gap-3 rounded-xl bg-white/5 p-2.5">
+        <div className="border-t border-zinc-200 dark:border-white/10 p-4">
+          <div className="flex items-center gap-3 rounded-xl bg-zinc-100 dark:bg-white/5 p-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#18C729]/20 text-xs font-bold text-[#18C729]">
               {(userEmail || "A")[0].toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-semibold text-white">{userEmail}</p>
+              <p className="truncate text-xs font-semibold text-zinc-900 dark:text-white">{userEmail}</p>
               <div className="flex items-center gap-1.5">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#18C729]" />
-                <span className="text-[10px] uppercase font-mono tracking-wider text-[#FEF500]">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-amber-600 dark:text-[#FEF500]">
                   {userRole}
                 </span>
               </div>
@@ -187,13 +193,13 @@ export default function AdminShell({
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col min-w-0">
         {/* Top Sticky Header */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#0c140f]/80 px-4 backdrop-blur-md sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-zinc-200 dark:border-white/10 bg-white/80 dark:bg-[#0c140f]/80 px-4 backdrop-blur-md sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             {/* Mobile Hamburger Toggle */}
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="rounded-lg p-2 text-white/70 hover:bg-white/5 hover:text-white md:hidden"
+              className="rounded-lg p-2 text-zinc-600 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-zinc-900 dark:hover:text-white md:hidden"
               aria-label="Open navigation drawer"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -201,23 +207,26 @@ export default function AdminShell({
               </svg>
             </button>
 
-            <span className="text-sm font-semibold text-white/70 hidden sm:inline">
+            <span className="text-sm font-semibold text-zinc-700 dark:text-white/70 hidden sm:inline">
               Admin Portal
             </span>
-            <span className="h-4 w-[1px] bg-white/20 hidden sm:inline" />
+            <span className="h-4 w-[1px] bg-zinc-300 dark:bg-white/20 hidden sm:inline" />
             <div className="flex items-center gap-2">
               <span className="flex h-2 w-2 rounded-full bg-[#18C729] animate-pulse" />
               <span className="text-xs font-semibold uppercase tracking-wider text-[#18C729]">
-                Cloudflare D1 + R2 Connected
+                Live Cloudflare D1 Connected
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Theme Toggle for Admin Panel */}
+            <ThemeToggle storageKey="apex_admin_theme" />
+
             <Link
               href="/"
               target="_blank"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-white/70 transition-colors hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
             >
               <span>View Storefront</span>
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

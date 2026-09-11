@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Homepage Mobile",
+    "formFactor": "mobile",
+    "performance": 89,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "3.5 s",
+    "fcp": "1.4 s",
+    "tbt": "40 ms",
+    "cls": "0"
+  },
+  {
+    "name": "Homepage Desktop",
+    "formFactor": "desktop",
+    "performance": 92,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "1.6 s",
+    "fcp": "0.6 s",
+    "tbt": "0 ms",
+    "cls": "0"
+  },
+  {
+    "name": "Product Page Mobile",
+    "formFactor": "mobile",
+    "performance": 86,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "3.3 s",
+    "fcp": "1.4 s",
+    "tbt": "30 ms",
+    "cls": "0"
+  },
+  {
+    "name": "Product Page Desktop",
+    "formFactor": "desktop",
+    "performance": 91,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "1.6 s",
+    "fcp": "0.5 s",
+    "tbt": "0 ms",
+    "cls": "0"
+  },
+  {
+    "name": "Category Page Mobile",
+    "formFactor": "mobile",
+    "performance": 91,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "3.2 s",
+    "fcp": "1.3 s",
+    "tbt": "30 ms",
+    "cls": "0"
+  },
+  {
+    "name": "Category Page Desktop",
+    "formFactor": "desktop",
+    "performance": 93,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "1.5 s",
+    "fcp": "0.7 s",
+    "tbt": "0 ms",
+    "cls": "0"
+  },
+  {
+    "name": "Search Page Mobile",
+    "formFactor": "mobile",
+    "performance": 92,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "3.1 s",
+    "fcp": "1.3 s",
+    "tbt": "80 ms",
+    "cls": "0.001"
+  },
+  {
+    "name": "Search Page Desktop",
+    "formFactor": "desktop",
+    "performance": 91,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "1.6 s",
+    "fcp": "0.8 s",
+    "tbt": "0 ms",
+    "cls": "0"
+  }
+]

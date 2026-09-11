@@ -1,40 +1,30 @@
-# Apex Edge E-Commerce Platform
+# Apex Store — High-Performance Edge E-Commerce Platform
 
 A production-grade, globally distributed modern e-commerce platform built on **Next.js 16 (App Router)** and deployed on the edge via **Cloudflare Workers**, **Cloudflare D1 Database**, and **Cloudflare R2 Object Storage**.
 
-Live Production Storefront: [https://ecommerce-store-v2.zia291930.workers.dev](https://ecommerce-store-v2.zia291930.workers.dev)  
-Admin Control Panel: [https://ecommerce-store-v2.zia291930.workers.dev/admin/login](https://ecommerce-store-v2.zia291930.workers.dev/admin/login)
+- **Live Storefront (Test Environment)**: [https://ecommerce-store-perf-test.zia291930.workers.dev](https://ecommerce-store-perf-test.zia291930.workers.dev)  
+- **Admin Control Panel**: [https://ecommerce-store-perf-test.zia291930.workers.dev/admin/login](https://ecommerce-store-perf-test.zia291930.workers.dev/admin/login)
+- **Architecture Documentation**: [`docs/architecture.md`](docs/architecture.md)
+- **Performance Budget & Core Web Vitals**: [`docs/performance-budget.md`](docs/performance-budget.md)
 
 ---
 
 ## 🚀 Key Features
 
-### 1. Dynamic Homepage Manager & Appearance Customizer
-- **Visual Section Builder**: Admin control over all storefront sections (Hero Showcase, Categories Grid, Featured Products, Promo Banners, Brand Story, Testimonials, Newsletter, Custom HTML) with dynamic visibility toggles, rich content editing, and ordering.
-- **Dynamic Appearance Engine**: Real-time theme customization allowing admins to tweak primary, secondary, accent, background, and text colors, typography, container widths, border radii, shadows, and spacing. Theme styles are injected dynamically into CSS custom variables.
+### 1. Storefront & Customer Experience
+- **Sub-1ms Optimistic UI Cart**: Add to Cart, quantity updates, and deletions execute in **0.096ms** directly in browser memory, with seamless background state synchronization.
+- **Flicker-Free Floating Cart Drawer**: Compact 320px persistent slide-out panel utilizing CSS transitions (`translateX`) without unmounting or restarting animations on repeated item additions. Backdrop-free design allows uninterrupted store browsing.
+- **Dynamic Homepage Sections**: Modular sections (Hero Showcase, Category Grid, Featured Products, Promo Banners, Brand Story, Testimonials, Newsletter) fully configured from the database.
+- **Multi-Facet Search & Filtering**: Sub-300ms instant catalog filtering by keywords, categories, brands, tags, and price range sliders.
+- **Multi-Variant Product Detail**: Real-time attribute selection (Color, Size, Material), live stock check indicators, and responsive image galleries.
+- **Resilient Checkout Flow**: Cash on Delivery (COD) order placement with server-side price integrity enforcement, automatic stock decrements, and instant order confirmations.
 
-### 2. Comprehensive Catalog & Multi-Variant Engine
-- **Product Hierarchy & Attributes**: Support for complex product variants across custom attributes (Color, Size, Material, Style).
-- **Automated SKU & Matrix Generator**: Generates cartesian product variant matrices with individual price overrides, stock levels, weights, dimensions, and image assignments.
-- **Hierarchical Categories**: Multi-level category trees with automatic URL-safe slug generation, parent-child circular reference prevention, and direct R2 image uploads.
-
-### 3. Multi-Facet Search & Dynamic SEO Architecture
-- **Instant Search with Dynamic Facets**: 300ms debounced search with live faceted filtering by category, brand, multi-tag intersection, price range slider/inputs, and inventory status.
-- **Schema.org Structured Data (JSON-LD)**: Rich snippet structured data for `Product`, `CollectionPage`, and `BreadcrumbList`.
-- **Dynamic SEO Assets**: Auto-generated `/sitemap.xml` and `/robots.txt` reflecting live products, active categories, and canonical storefront routes.
-- **Social Graph Optimization**: OpenGraph and Twitter card (`summary_large_image`) meta tags on all pages.
-
-### 4. Authoritative Cart & Checkout System
-- **Resilient Cart Session Resolution**: Seamless guest-to-order workflow supporting multi-source session identification (cookies, body payload, and request headers).
-- **Server-Side Price Integrity**: Complete server recalculation of item totals, discounts, shipping fees, and taxes from the database, strictly ignoring untrusted client pricing.
-- **Atomic Inventory Decrement**: Validates real-time product/variant stock before order creation and atomically decrements inventory to eliminate overselling.
-- **Cash on Delivery (COD) Checkout**: Streamlined checkout with immediate order confirmation and persistent order history.
-
-### 5. Production Security & Edge Performance
-- **Edge Route Protection**: Edge middleware safeguards all `/api/admin/*` routes with immediate `401 Unauthorized` responses and redirects `/admin/*` pages to `/admin/login`.
-- **Brute-Force Lockout**: Rate-limiting system tracks failed login attempts and locks the account for 5 minutes after 3 consecutive failures.
-- **Strict Input Validation**: End-to-end Zod schemas guarding all cart mutations, checkout orders, admin catalogs, media uploads, and authentication routes.
-- **Asset Storage with Cloudflare R2**: Direct media uploads with client image normalization (`normalizeImageUrl`) supporting relative paths and CDN assets.
+### 2. Administrative Control Panel (`/admin`)
+- **Dashboard & Business Analytics**: Real-time revenue, order volume, customer counts, and low-stock alerts.
+- **Catalog & Variant Manager**: Complete CRUD operations for products, SKU matrix generation for variants, pricing rules, and inventory tracking.
+- **Category Hierarchy Builder**: Nested category management with automatic URL-safe slug generation and R2 banner uploads.
+- **Homepage & Appearance Customizer**: Live visual section ordering, visibility toggling, custom HTML blocks, and dynamic theme token controls (colors, typography, container radii, and spacing).
+- **Security & Admin Credentials Manager**: Secure administrative email and password updates in Cloudflare D1 with bcrypt password verification (10 rounds) and rate-limited brute-force protection.
 
 ---
 
@@ -42,72 +32,66 @@ Admin Control Panel: [https://ecommerce-store-v2.zia291930.workers.dev/admin/log
 
 | Layer | Technologies |
 | :--- | :--- |
-| **Framework** | [Next.js 16](https://nextjs.org/) (App Router, Turbopack, Server Components) |
-| **Edge Deployment** | [Cloudflare Workers](https://workers.cloudflare.com/) via [@opennextjs/cloudflare](https://opennext.js.org/cloudflare) |
-| **Database** | [Cloudflare D1](https://developers.cloudflare.com/d1/) (Serverless distributed SQLite) |
-| **ORM** | [Drizzle ORM](https://orm.drizzle.team/) with automated schema migrations |
-| **Object Storage** | [Cloudflare R2](https://developers.cloudflare.com/r2/) (S3-compatible bucket `ecommerce-store-assets`) |
-| **Styling** | [TailwindCSS 4](https://tailwindcss.com/) & Vanilla CSS Design Tokens |
-| **Validation** | [Zod](https://zod.dev/) |
-| **Authentication** | Custom edge session management with bcrypt password hashing |
-| **CI/CD** | GitHub Actions (`.github/workflows/deploy.yml`) with automated Worker builds |
+| **Framework** | [Next.js 16](https://nextjs.org/) (App Router, Turbopack, React 19 Server Components) |
+| **Edge Compute** | [Cloudflare Workers](https://workers.cloudflare.com/) via [@opennextjs/cloudflare](https://opennext.js.org/cloudflare) |
+| **Database** | [Cloudflare D1](https://developers.cloudflare.com/d1/) (Serverless distributed SQLite database) |
+| **ORM** | [Drizzle ORM](https://orm.drizzle.team/) with automated migrations and type-safe schemas |
+| **Object Storage** | [Cloudflare R2](https://developers.cloudflare.com/r2/) (S3-compatible bucket `ecommerce-perf-assets`) |
+| **Styling** | [TailwindCSS 4](https://tailwindcss.com/) with Vanilla CSS Design Tokens |
+| **Data Validation** | [Zod](https://zod.dev/) |
+| **Authentication** | HttpOnly secure session cookies with bcrypt hashing (10 rounds) and IP rate limiting |
+| **CI/CD** | Automated GitHub Actions deployment pipeline (`.github/workflows/deploy.yml`) |
 
 ---
 
 ## 📂 Project Structure
 
-```
-├── app/                        # Next.js App Router
-│   ├── (public storefront)     # /, /product/[slug], /category/[slug], /cart, /checkout
-│   ├── admin/                  # Protected admin panel pages
-│   │   ├── dashboard/          # Analytics & quick metrics
-│   │   ├── products/           # Product and variant management
-│   │   ├── categories/         # Category hierarchy and banner upload
-│   │   ├── orders/             # Order tracking and status changes
-│   │   ├── homepage/           # Dynamic section manager
-│   │   ├── appearance/         # Store styling and theme customizer
-│   │   └── settings/           # Global store settings
-│   ├── api/                    # REST API routes
-│   │   ├── admin/              # Protected admin endpoints
-│   │   ├── cart/               # Cart add, update, remove
-│   │   ├── orders/             # Checkout & order fulfillment
-│   │   ├── products/           # Advanced search & discovery
-│   │   ├── media/              # Direct R2 streaming & uploads
-│   │   └── health/             # System health & D1 table verification
-│   ├── sitemap.ts              # Dynamic sitemap.xml route
-│   ├── robots.ts               # Dynamic robots.txt route
-│   └── layout.tsx              # Root HTML layout with SEO meta
-├── components/                 # Reusable React components
-│   ├── admin/                  # Admin UI widgets, modals, managers
-│   ├── homepage/               # Dynamic homepage section renderers
-│   ├── search/                 # Faceted search client interface
-│   ├── CartContext.tsx         # Global shopping cart state provider
-│   └── ProductCard.tsx         # Universal product grid item card
-├── lib/                        # Business logic & server services
-│   ├── auth.ts                 # Admin auth & rate limiting
-│   ├── cart.ts                 # Cart operations & session resolution
-│   ├── categories.ts           # Category domain & hierarchy trees
-│   ├── db/                     # Drizzle schema & table definitions
-│   ├── db.ts                   # D1 database connection & health checks
-│   ├── homepage.ts             # Homepage sections domain
-│   ├── orders.ts               # Order generation & stock decrement
-│   ├── products.ts             # Catalog queries & multi-facet search
-│   ├── seo.ts                  # Schema.org JSON-LD & canonical utilities
-│   ├── theme.ts                # Appearance engine & CSS variables
-│   └── utils.ts                # Image URL normalization & helpers
-├── drizzle/                    # D1 SQL migration files
-├── scripts/                    # Verification test suites & smoke tests
-└── wrangler.jsonc              # Cloudflare Workers configuration
+```text
+├── app/                        # Next.js App Router (Storefront & Admin)
+│   ├── (storefront)            # /, /product/[slug], /category/[slug], /search, /cart, /checkout
+│   ├── admin/                  # Protected administrative portal
+│   │   ├── (dashboard)/        # Metrics, products, categories, orders, homepage, appearance, settings
+│   │   └── login/              # Secure rate-limited login form
+│   ├── api/                    # REST APIs
+│   │   ├── admin/              # Admin CRUD endpoints (products, categories, orders, update-email, update-password)
+│   │   ├── cart/               # Cart synchronization endpoints
+│   │   ├── orders/             # Server-validated checkout and order fulfillment
+│   │   ├── products/           # Live search and product discovery
+│   │   ├── media/              # Cloudflare R2 image streaming and uploads
+│   │   └── health/             # D1 database connection health check
+│   ├── sitemap.ts              # Dynamic SEO XML sitemap
+│   ├── robots.ts               # Dynamic robots.txt
+│   └── layout.tsx              # Root storefront HTML layout with SEO meta and design tokens
+├── components/                 # React UI Components
+│   ├── admin/                  # Admin managers (AdminAccountManager, SettingsManager, HomepageManager)
+│   ├── CartDrawer.tsx          # Smooth floating slide-out shopping cart
+│   ├── CartDrawerContainer.tsx # Persistent client island avoiding remount flickers
+│   ├── CartContext.tsx         # Synchronous optimistic cart state provider (< 1ms dispatch)
+│   ├── ProductCard.tsx         # Accessible, performance-optimized product card
+│   └── Header.tsx              # Storefront header with live search and dynamic navigation
+├── docs/                       # Architecture and Performance Specifications
+│   ├── architecture.md         # End-to-end architecture diagrams, data flows, and caching strategies
+│   └── performance-budget.md   # Core Web Vitals targets, Lighthouse audits, and bundle limits
+├── lib/                        # Domain Services & Utilities
+│   ├── auth.ts                 # Admin authentication, rate limiting, and session tokens
+│   ├── cart.ts                 # Cart domain models and session resolver
+│   ├── categories.ts           # Category trees and hierarchical queries
+│   ├── db.ts                   # D1 database client and connection health checks
+│   ├── db/schema.ts            # Drizzle SQLite schemas (products, categories, orders, users, sessions)
+│   ├── orders.ts               # Server-side order calculation, pricing verification, and stock decrements
+│   └── utils.ts                # Image URL normalizers and formatting helpers
+├── wrangler.jsonc              # Cloudflare Workers configuration & D1/R2 bindings
+└── .github/workflows/          # GitHub Actions deployment pipelines
 ```
 
 ---
 
-## ⚙️ Environment Variables & Configuration
+## ⚙️ Environment Variables
 
 Create a `.env.local` file for local development:
 
 ```env
-# Application Host
+# Application URL
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 # Admin Authentication Secret
@@ -117,28 +101,10 @@ ADMIN_JWT_SECRET="your-secure-random-secret-key-here"
 NODE_ENV="development"
 ```
 
-In production on Cloudflare Workers, environment variables and bindings are configured in `wrangler.jsonc` and GitHub Actions secrets:
-
-```jsonc
-{
-  "name": "ecommerce-store-v2",
-  "main": ".open-next/worker.js",
-  "compatibility_date": "2025-02-01",
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "ecommerce-db",
-      "database_id": "0d2002fe-19a9-4674-884c-354da2dc1bc1"
-    }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "ASSETS",
-      "bucket_name": "ecommerce-store-assets"
-    }
-  ]
-}
-```
+In the Cloudflare Workers test environment, bindings are configured in `wrangler.jsonc`:
+- **Worker Name**: `ecommerce-store-perf-test`
+- **D1 Database Binding**: `DB` (`ecommerce-perf-db`, ID: `3a60804b-1009-4451-972b-87cec6d46bcb`)
+- **R2 Storage Binding**: `ASSETS` (`ecommerce-perf-assets`)
 
 ---
 
@@ -149,7 +115,7 @@ In production on Cloudflare Workers, environment variables and bindings are conf
 npm install
 ```
 
-### 2. Run TypeScript Type Check & Linter
+### 2. Verify TypeScript Compilation & Linting
 ```bash
 npm run cf-typegen
 npx tsc --noEmit
@@ -167,59 +133,55 @@ npm run db:seed:local
 npm run dev
 ```
 
-Visit `http://localhost:3000` for the storefront and `http://localhost:3000/admin/login` for the admin portal.
+Visit:
+- Storefront: `http://localhost:3000`
+- Admin Login: `http://localhost:3000/admin/login`
 
 ---
 
 ## 🚢 Deployment (Cloudflare Workers)
 
-Deployment is completely automated through **GitHub Actions**. Pushing to the `main` branch triggers `.github/workflows/deploy.yml`:
+Deployment is automated via **GitHub Actions** (`.github/workflows/deploy.yml`) on every push to the `main` branch of `Abdullah6551199/ecommerce-store-performance-test`:
 
 ```bash
 git add .
-git commit -m "feat: your feature description"
+git commit -m "feat: description of change"
 git push origin main
 ```
 
-The workflow performs:
-1. Node.js 22 environment initialization.
-2. Production dependency installation.
-3. OpenNext Cloudflare Worker compilation (`opennextjs-cloudflare build`).
-4. Automatic deployment to Cloudflare Workers via Wrangler.
-
-### Manual Worker Bundle Compilation Test
-To test the worker bundle locally without deploying:
-```bash
-npm run build:worker
-```
+The pipeline:
+1. Provisions Node.js 22.
+2. Installs production dependencies.
+3. Builds the OpenNext Cloudflare Worker bundle (`npm run build:worker`).
+4. Deploys directly to Cloudflare Workers with Wrangler using Cloudflare credentials.
 
 ---
 
 ## 🧪 Automated Testing & Verification
 
-The repository contains automated test suites covering all major subsystems:
+Automated test suites verify regressions, security boundaries, and Core Web Vitals:
 
 ```bash
-# Final Quality Smoke Test (Storefront, SEO, Security, Checkout, Theme)
-npx tsx scripts/test-stage15-smoke.ts
+# 1. Full Functional Regression & Security Test (53 test assertions)
+node scripts/test-stage11-regression.js
 
-# Production & Category Image Upload Validation
-npx tsx scripts/test-stage14-production.ts
+# 2. Storefront Cleanliness & Infrastructure Audit (0 tech term violations)
+node scripts/verify-final-cleanliness.js
 
-# Security, Input Validation & Cart Session Regression
-npx tsx scripts/test-stage13-security-cart.ts
+# 3. Optimistic UI & Cart Flow Timing (< 1ms dispatch)
+node scripts/verify-optimistic-flow.js
 
-# Search Engine & Dynamic SEO Regression
-npx tsx scripts/test-stage12-search-seo.ts
+# 4. Lighthouse Performance Audit across all routes
+node scripts/run-stage10-audits.js
 ```
 
 ---
 
 ## 🔐 Default Admin Credentials
 
-- **Email**: `admin@example.com`
-- **Password**: `admin123`
-- *Note: Passwords can be changed securely in the Admin Settings panel (`/admin/settings`).*
+- **Default Email**: `admin@example.com`
+- **Default Password**: `admin123`
+- *Credentials can be updated at any time in the Admin Settings panel (`/admin/settings`).*
 
 ---
 

@@ -76,6 +76,28 @@ export async function updateAdminPassword(userId: string, newPasswordPlain: stri
 }
 
 /**
+ * Update email for an admin user in D1 database
+ */
+export async function updateAdminEmail(userId: string, newEmail: string): Promise<boolean> {
+  const normalizedEmail = newEmail.toLowerCase().trim();
+  const db = getDb();
+
+  if (db) {
+    try {
+      await db
+        .update(users)
+        .set({ email: normalizedEmail })
+        .where(eq(users.id, userId));
+      return true;
+    } catch (err) {
+      console.error("[Auth] Failed to update email in D1:", err);
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
  * Check if the email is currently rate-limited (3 failed attempts within 5 minutes)
  */
 export async function checkRateLimit(

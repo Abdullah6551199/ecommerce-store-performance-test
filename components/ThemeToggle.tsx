@@ -54,22 +54,12 @@ export default function ThemeToggle({
     }
   };
 
-  // Avoid hydration mismatch by rendering a stable placeholder before mount
-  if (!mounted) {
-    return (
-      <div
-        className={`relative inline-flex h-8 w-16 items-center rounded-full border border-white/20 bg-white/10 p-1 opacity-60 ${className}`}
-        aria-hidden="true"
-      >
-        <span className="h-6 w-6 rounded-full bg-white/30" />
-      </div>
-    );
-  }
 
   return (
     <button
       type="button"
       role="switch"
+      data-theme-key={storageKey}
       aria-checked={isDark}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
       onClick={toggleTheme}

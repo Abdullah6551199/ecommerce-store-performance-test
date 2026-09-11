@@ -88,13 +88,13 @@ export default function AnalyticsDashboard(): React.JSX.Element {
       ]);
 
       if (kpiRes?.success) setKpis(kpiRes.data);
-      if (trendRes?.success) setSalesTrend(trendRes.data.trend || []);
-      if (catRes?.success) setCategories(catRes.data.categories || []);
-      if (topRes?.success) setTopProducts(topRes.data.products || []);
-      if (weeklyRes?.success) setWeeklyPatterns(weeklyRes.data.patterns || []);
-      if (monthlyRes?.success) setMonthlyPatterns(monthlyRes.data.dates || []);
+      if (trendRes?.success) setSalesTrend(Array.isArray(trendRes.data) ? trendRes.data : trendRes.data?.trend || []);
+      if (catRes?.success) setCategories(Array.isArray(catRes.data) ? catRes.data : catRes.data?.categories || []);
+      if (topRes?.success) setTopProducts(Array.isArray(topRes.data) ? topRes.data : topRes.data?.products || []);
+      if (weeklyRes?.success) setWeeklyPatterns(Array.isArray(weeklyRes.data) ? weeklyRes.data : weeklyRes.data?.patterns || []);
+      if (monthlyRes?.success) setMonthlyPatterns(Array.isArray(monthlyRes.data) ? monthlyRes.data : monthlyRes.data?.dates || []);
       if (yearlyRes?.success) setYearlyPatterns(yearlyRes.data);
-      if (insightsRes?.success) setSmartNotifications(insightsRes.data.insights || []);
+      if (insightsRes?.success) setSmartNotifications(Array.isArray(insightsRes.data) ? insightsRes.data : insightsRes.data?.insights || []);
     } catch (err) {
       console.error("[AnalyticsDashboard] Error fetching analytics data:", err);
     } finally {

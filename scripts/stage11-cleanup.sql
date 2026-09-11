@@ -29,3 +29,10 @@ UPDATE homepage_sections
 SET content = '{"heading":"Built at the Intersection of Innovation & Human Potential","subheading":"Our Performance Manifesto","narrativeText":"We engineer apparel and equipment with relentless attention to biomechanics and endurance. Featherlight materials, hyper-durable composites, and uncompromising ergonomics for athletes who refuse to settle. Every product is stress-tested in elite athletic facilities.","statItems":[{"label":"Fast Dispatch","value":"< 24h","desc":"Express delivery dispatch"},{"label":"Energy Return","value":"+32%","desc":"Carbon-matrix tech"},{"label":"Active Athletes","value":"25,000+","desc":"Worldwide community"},{"label":"Customer Rating","value":"99.4%","desc":"Verified athlete satisfaction"}],"ctaText":"Explore The Full Catalog","ctaUrl":"/search"}',
     updated_at = CURRENT_TIMESTAMP
 WHERE id = 'sec-brand-story';
+
+-- 6. Update products seo_description
+UPDATE products
+SET seo_description = 'Shop Apex Velocity Runner X1 with customizable colors and sizes. Fast express delivery.',
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = 'prod-apex-vrx1';
+

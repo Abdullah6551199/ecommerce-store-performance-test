@@ -25,7 +25,7 @@ INSERT OR REPLACE INTO products (
   '["running", "sneakers", "footwear", "performance"]',
   'published',
   'Apex Velocity Runner X1 - Modular Performance Sneaker',
-  'Shop Apex Velocity Runner X1 with customizable colors and sizes. Fast edge delivery.',
+  'Shop Apex Velocity Runner X1 with customizable colors and sizes. Fast express delivery.',
   CURRENT_TIMESTAMP,
   CURRENT_TIMESTAMP
 );

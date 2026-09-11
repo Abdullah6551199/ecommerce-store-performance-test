@@ -1,13 +1,12 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import CustomersManager from "@/components/admin/CustomersManager";
 
-export const dynamic = "force-dynamic";
-
-export const metadata = {
-  title: "Customers Directory | Admin Dashboard",
-  description: "View and manage registered customers, order history, and lifetime customer value.",
-};
-
 export default function AdminCustomersPage(): React.JSX.Element {
+  useEffect(() => {
+    document.title = "Customers Directory - Admin Panel";
+  }, []);
+
   return <CustomersManager />;
 }

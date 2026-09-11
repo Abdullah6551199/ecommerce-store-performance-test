@@ -58,14 +58,14 @@ function MetricCard({
   const isDown = metric.direction === "down";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 dark:border-white/10 border-black/10 bg-[#0d1611] dark:bg-[#0d1611] bg-white p-5 shadow-lg transition-all hover:border-[#18C729]/40 hover:shadow-xl hover:shadow-[#18C729]/10">
+    <div className="relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-lg transition-all hover:border-[#18C729]/40 hover:shadow-xl hover:shadow-[#18C729]/10">
       {/* Top row: Title and Icon */}
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-white/60 dark:text-white/60 text-black/60">
+        <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-white/60">
           {metric.title}
         </span>
         <div
-          className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 dark:bg-white/5 bg-black/5"
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-100 dark:bg-white/5"
           style={{ color: accentColor }}
         >
           {icon}
@@ -74,7 +74,7 @@ function MetricCard({
 
       {/* Main Value & Sparkline */}
       <div className="mt-4 flex items-end justify-between gap-2">
-        <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white dark:text-white text-black">
+        <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
           {metric.formatted}
         </span>
         {metric.sparkline && (
@@ -89,8 +89,8 @@ function MetricCard({
             isUp
               ? "bg-[#18C729]/15 text-[#18C729]"
               : isDown
-              ? "bg-red-500/15 text-red-400"
-              : "bg-white/10 dark:bg-white/10 bg-black/10 text-white/60 dark:text-white/60 text-black/60"
+              ? "bg-red-500/15 text-red-500"
+              : "bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-white/60"
           }`}
         >
           {isUp && (
@@ -105,7 +105,7 @@ function MetricCard({
           )}
           <span>{Math.abs(metric.changePercent)}%</span>
         </div>
-        <span className="text-[11px] text-white/40 dark:text-white/40 text-black/40 truncate">
+        <span className="text-[11px] text-zinc-400 dark:text-white/40 truncate">
           vs previous period ({metric.prevFormatted})
         </span>
       </div>
@@ -120,7 +120,7 @@ export default function KpiCards({ kpis, loading }: KpiCardsProps): React.JSX.El
         {Array.from({ length: 6 }).map((_, idx) => (
           <div
             key={idx}
-            className="h-36 rounded-2xl border border-white/10 dark:border-white/10 border-black/10 bg-white/5 dark:bg-white/5 bg-black/5"
+            className="h-36 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5"
           />
         ))}
       </div>

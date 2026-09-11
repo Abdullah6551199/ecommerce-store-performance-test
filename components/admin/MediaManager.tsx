@@ -196,8 +196,8 @@ export default function MediaManager(): React.JSX.Element {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Media Library</h1>
-          <p className="mt-1 text-xs text-white/60">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Media Library</h1>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-white/60">
             Cloudflare R2 object storage asset management and high-resolution image repository.
           </p>
         </div>
@@ -207,7 +207,7 @@ export default function MediaManager(): React.JSX.Element {
             type="button"
             onClick={() => fetchMedia(search, typeFilter)}
             disabled={isLoading}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-medium text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all disabled:opacity-50"
           >
             <svg
               className={`h-3.5 w-3.5 ${isLoading ? "animate-spin text-[#18C729]" : ""}`}
@@ -252,7 +252,7 @@ export default function MediaManager(): React.JSX.Element {
           className={`flex items-center justify-between rounded-xl border p-4 text-xs ${
             uploadMessage.type === "success"
               ? "border-[#18C729]/30 bg-[#18C729]/10 text-[#18C729]"
-              : "border-red-500/30 bg-red-500/10 text-red-400"
+              : "border-red-500/30 bg-red-500/10 text-red-500 dark:text-red-400"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -261,7 +261,7 @@ export default function MediaManager(): React.JSX.Element {
           <button
             type="button"
             onClick={() => setUploadMessage(null)}
-            className="text-white/40 hover:text-white"
+            className="text-zinc-400 dark:text-white/40 hover:text-zinc-800 dark:hover:text-white"
           >
             ✕
           </button>
@@ -270,50 +270,50 @@ export default function MediaManager(): React.JSX.Element {
 
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-white/10 bg-[#0c140f] p-4 shadow-lg">
+        <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-4 shadow-sm dark:shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-white/50">Total Assets Stored</span>
+            <span className="text-xs font-medium text-zinc-500 dark:text-white/50">Total Assets Stored</span>
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#18C729]/15 text-[#18C729]">
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
           </div>
-          <div className="mt-3 text-2xl font-extrabold text-white">{summary.totalFiles}</div>
-          <p className="mt-1 text-[11px] text-white/40">Synchronized in D1 database</p>
+          <div className="mt-3 text-2xl font-extrabold text-zinc-900 dark:text-white">{summary.totalFiles}</div>
+          <p className="mt-1 text-[11px] text-zinc-400 dark:text-white/40">Synchronized in D1 database</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0c140f] p-4 shadow-lg">
+        <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-4 shadow-sm dark:shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-white/50">Storage Volume</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#FEF500]/15 text-[#FEF500]">
+            <span className="text-xs font-medium text-zinc-500 dark:text-white/50">Storage Volume</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/15 dark:bg-[#FEF500]/15 text-amber-600 dark:text-[#FEF500]">
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
           </div>
-          <div className="mt-3 text-2xl font-extrabold text-white">{summary.totalSizeFormatted}</div>
-          <p className="mt-1 text-[11px] text-white/40">Cloudflare R2 object storage</p>
+          <div className="mt-3 text-2xl font-extrabold text-zinc-900 dark:text-white">{summary.totalSizeFormatted}</div>
+          <p className="mt-1 text-[11px] text-zinc-400 dark:text-white/40">Cloudflare R2 object storage</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0c140f] p-4 shadow-lg">
+        <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-4 shadow-sm dark:shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-white/50">Storage Provider</span>
+            <span className="text-xs font-medium text-zinc-500 dark:text-white/50">Storage Provider</span>
             <span className="rounded-lg border border-[#18C729]/30 bg-[#18C729]/10 px-2 py-0.5 text-[10px] font-mono font-bold text-[#18C729]">
               ACTIVE
             </span>
           </div>
-          <div className="mt-3 text-lg font-bold text-white">Cloudflare R2</div>
-          <p className="mt-1 text-[11px] text-white/40">Bucket: ecommerce-store-assets</p>
+          <div className="mt-3 text-lg font-bold text-zinc-900 dark:text-white">Cloudflare R2</div>
+          <p className="mt-1 text-[11px] text-zinc-400 dark:text-white/40">Bucket: ecommerce-store-assets</p>
         </div>
       </div>
 
       {/* Action & Filter Bar */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-[#0c140f] p-3 shadow-lg lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-3 shadow-sm dark:shadow-lg lg:flex-row lg:items-center lg:justify-between">
         {/* Search */}
         <div className="relative flex-1">
           <svg
-            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40"
+            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 dark:text-white/40"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -325,7 +325,7 @@ export default function MediaManager(): React.JSX.Element {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search media by filename, URL, or alt text..."
-            className="w-full rounded-xl border border-white/10 bg-white/5 py-2 pl-10 pr-4 text-xs text-white placeholder-white/40 focus:border-[#18C729] focus:outline-none focus:ring-1 focus:ring-[#18C729]"
+            className="w-full rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-50 dark:bg-white/5 py-2 pl-10 pr-4 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/40 focus:border-[#18C729] focus:outline-none focus:ring-1 focus:ring-[#18C729]"
           />
         </div>
 
@@ -334,7 +334,7 @@ export default function MediaManager(): React.JSX.Element {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+            className="rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
           >
             <option value="all">All File Types</option>
             <option value="image/jpeg">JPEG Images</option>
@@ -344,14 +344,14 @@ export default function MediaManager(): React.JSX.Element {
             <option value="image/gif">GIF Animations</option>
           </select>
 
-          <div className="flex rounded-xl border border-white/10 bg-white/5 p-0.5">
+          <div className="flex rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 p-0.5">
             <button
               type="button"
               onClick={() => setViewMode("grid")}
               className={`rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
                 viewMode === "grid"
                   ? "bg-[#18C729] text-black font-semibold"
-                  : "text-white/60 hover:text-white"
+                  : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
               }`}
               title="Grid View"
             >
@@ -365,7 +365,7 @@ export default function MediaManager(): React.JSX.Element {
               className={`rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
                 viewMode === "table"
                   ? "bg-[#18C729] text-black font-semibold"
-                  : "text-white/60 hover:text-white"
+                  : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
               }`}
               title="Table View"
             >
@@ -381,7 +381,7 @@ export default function MediaManager(): React.JSX.Element {
       {viewMode === "grid" ? (
         <div>
           {isLoading && items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0c140f] p-16 text-white/40">
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-16 text-zinc-500 dark:text-white/40">
               <svg className="h-8 w-8 animate-spin text-[#18C729] mb-3" viewBox="0 0 24 24" fill="none">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
@@ -389,14 +389,14 @@ export default function MediaManager(): React.JSX.Element {
               <span>Loading media assets from Cloudflare R2...</span>
             </div>
           ) : items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-[#0c140f]/60 p-16 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 text-white/40 mb-3">
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-[#0c140f]/60 p-16 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-white/5 text-zinc-400 dark:text-white/40 mb-3">
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <p className="text-sm font-semibold text-white">No media assets found</p>
-              <p className="text-xs text-white/40 mt-1 max-w-sm">
+              <p className="text-sm font-semibold text-zinc-900 dark:text-white">No media assets found</p>
+              <p className="text-xs text-zinc-500 dark:text-white/40 mt-1 max-w-sm">
                 {search || typeFilter !== "all"
                   ? "No images matched your filter parameters."
                   : "Upload image assets to Cloudflare R2 to see them appear here."}
@@ -404,7 +404,7 @@ export default function MediaManager(): React.JSX.Element {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-xs font-medium text-white hover:bg-white/20 transition-all"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-zinc-100 dark:bg-white/10 px-4 py-2 text-xs font-medium text-zinc-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/20 transition-all"
               >
                 Upload First Asset
               </button>
@@ -417,11 +417,11 @@ export default function MediaManager(): React.JSX.Element {
                 return (
                   <div
                     key={item.id}
-                    className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0c140f] hover:border-[#18C729]/50 transition-all shadow-md hover:shadow-xl hover:shadow-[#18C729]/5"
+                    className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] hover:border-[#18C729]/50 transition-all shadow-sm dark:shadow-md hover:shadow-xl hover:shadow-[#18C729]/5"
                   >
                     {/* Thumbnail */}
                     <div
-                      className="relative aspect-square w-full cursor-pointer overflow-hidden bg-black/40"
+                      className="relative aspect-square w-full cursor-pointer overflow-hidden bg-zinc-100 dark:bg-black/40"
                       onClick={() => setSelectedItem(item)}
                     >
                       <img
@@ -437,7 +437,7 @@ export default function MediaManager(): React.JSX.Element {
                           if (parent && !parent.querySelector(".fallback-icon")) {
                             const div = document.createElement("div");
                             div.className =
-                              "fallback-icon flex h-full w-full items-center justify-center text-white/30 text-xs font-mono";
+                              "fallback-icon flex h-full w-full items-center justify-center text-zinc-400 dark:text-white/30 text-xs font-mono";
                             div.innerText = "Preview N/A";
                             parent.appendChild(div);
                           }
@@ -486,10 +486,10 @@ export default function MediaManager(): React.JSX.Element {
 
                     {/* Meta Card */}
                     <div className="flex flex-1 flex-col justify-between p-2.5 text-[11px]">
-                      <div className="truncate font-medium text-white/90" title={fileName}>
+                      <div className="truncate font-medium text-zinc-900 dark:text-white/90" title={fileName}>
                         {fileName}
                       </div>
-                      <div className="mt-1 flex items-center justify-between text-white/40">
+                      <div className="mt-1 flex items-center justify-between text-zinc-500 dark:text-white/40">
                         <span>{formatBytes(item.size)}</span>
                         <span>{formatDate(item.createdAt)}</span>
                       </div>
@@ -502,10 +502,10 @@ export default function MediaManager(): React.JSX.Element {
         </div>
       ) : (
         /* Table View */
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0c140f] shadow-xl">
+        <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] shadow-sm dark:shadow-xl">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-white/80">
-              <thead className="border-b border-white/10 bg-black/30 text-[11px] uppercase tracking-wider text-white/50">
+            <table className="w-full text-left text-xs text-zinc-800 dark:text-white/80">
+              <thead className="border-b border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-black/30 text-[11px] uppercase tracking-wider text-zinc-500 dark:text-white/50">
                 <tr>
                   <th scope="col" className="px-5 py-3.5 font-semibold">Preview</th>
                   <th scope="col" className="px-5 py-3.5 font-semibold">File Name / URL</th>
@@ -515,16 +515,16 @@ export default function MediaManager(): React.JSX.Element {
                   <th scope="col" className="px-5 py-3.5 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-zinc-200 dark:divide-white/5">
                 {isLoading && items.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-12 text-center text-white/40">
+                    <td colSpan={6} className="p-12 text-center text-zinc-400 dark:text-white/40">
                       Loading media assets...
                     </td>
                   </tr>
                 ) : items.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-12 text-center text-white/40">
+                    <td colSpan={6} className="p-12 text-center text-zinc-400 dark:text-white/40">
                       No media files found.
                     </td>
                   </tr>
@@ -533,11 +533,11 @@ export default function MediaManager(): React.JSX.Element {
                     const normUrl = normalizeImageUrl(item.url);
                     const fileName = getFileName(item.url);
                     return (
-                      <tr key={item.id} className="hover:bg-white/[0.02] transition-colors">
+                      <tr key={item.id} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors">
                         {/* Thumbnail */}
                         <td className="px-5 py-3">
                           <div
-                            className="relative h-12 w-12 cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-black/40"
+                            className="relative h-12 w-12 cursor-pointer overflow-hidden rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-black/40"
                             onClick={() => setSelectedItem(item)}
                           >
                             <img
@@ -551,26 +551,26 @@ export default function MediaManager(): React.JSX.Element {
 
                         {/* File Name / URL */}
                         <td className="px-5 py-3">
-                          <div className="font-semibold text-white truncate max-w-xs">{fileName}</div>
-                          <div className="truncate max-w-md font-mono text-[10px] text-white/40">
+                          <div className="font-semibold text-zinc-900 dark:text-white truncate max-w-xs">{fileName}</div>
+                          <div className="truncate max-w-md font-mono text-[10px] text-zinc-500 dark:text-white/40">
                             {item.url}
                           </div>
                         </td>
 
                         {/* Type */}
                         <td className="px-5 py-3">
-                          <span className="rounded-md bg-white/10 px-2 py-0.5 font-mono text-[10px] font-bold text-white">
+                          <span className="rounded-md bg-zinc-100 dark:bg-white/10 px-2 py-0.5 font-mono text-[10px] font-bold text-zinc-800 dark:text-white">
                             {getTypeLabel(item.type)}
                           </span>
                         </td>
 
                         {/* Size */}
-                        <td className="px-5 py-3 font-mono text-white/70">
+                        <td className="px-5 py-3 font-mono text-zinc-700 dark:text-white/70">
                           {formatBytes(item.size)}
                         </td>
 
                         {/* Uploaded */}
-                        <td className="px-5 py-3 text-[11px] text-white/50">
+                        <td className="px-5 py-3 text-[11px] text-zinc-500 dark:text-white/50">
                           {formatDate(item.createdAt)}
                         </td>
 
@@ -580,7 +580,7 @@ export default function MediaManager(): React.JSX.Element {
                             <button
                               type="button"
                               onClick={() => handleCopy(normUrl, item.id)}
-                              className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/80 hover:bg-white/15 hover:text-white transition-all"
+                              className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-xs text-zinc-700 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/15 hover:text-zinc-900 dark:hover:text-white transition-all"
                             >
                               {copiedId === item.id ? (
                                 <span className="text-[#18C729] font-bold">Copied!</span>
@@ -593,7 +593,7 @@ export default function MediaManager(): React.JSX.Element {
                               href={normUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="rounded-lg border border-white/10 bg-white/5 p-1.5 text-white/60 hover:bg-white/15 hover:text-white transition-all"
+                              className="rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 p-1.5 text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/15 hover:text-zinc-900 dark:hover:text-white transition-all"
                               title="Open Original"
                             >
                               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -615,17 +615,17 @@ export default function MediaManager(): React.JSX.Element {
       {/* Asset Preview Modal */}
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-          <div className="relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-white/15 bg-[#0c140f] shadow-2xl">
+          <div className="relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-zinc-200 dark:border-white/15 bg-white dark:bg-[#0c140f] shadow-2xl">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 px-6 py-4">
               <div>
-                <h3 className="font-bold text-white">{getFileName(selectedItem.url)}</h3>
-                <p className="text-xs text-white/50">{selectedItem.type} • {formatBytes(selectedItem.size)}</p>
+                <h3 className="font-bold text-zinc-900 dark:text-white">{getFileName(selectedItem.url)}</h3>
+                <p className="text-xs text-zinc-500 dark:text-white/50">{selectedItem.type} • {formatBytes(selectedItem.size)}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedItem(null)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all"
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-white/70 hover:bg-zinc-200 dark:hover:bg-white/20 hover:text-zinc-900 dark:hover:text-white transition-all"
               >
                 ✕
               </button>
@@ -634,7 +634,7 @@ export default function MediaManager(): React.JSX.Element {
             {/* Modal Content */}
             <div className="grid grid-cols-1 overflow-y-auto md:grid-cols-2">
               {/* Image Preview */}
-              <div className="flex items-center justify-center bg-black/60 p-6">
+              <div className="flex items-center justify-center bg-zinc-100 dark:bg-black/60 p-6">
                 <img
                   src={normalizeImageUrl(selectedItem.url)}
                   alt={selectedItem.altText || "Preview"}
@@ -643,15 +643,15 @@ export default function MediaManager(): React.JSX.Element {
               </div>
 
               {/* Details & Copy Snippets */}
-              <div className="space-y-4 p-6 text-xs text-white/80">
+              <div className="space-y-4 p-6 text-xs text-zinc-800 dark:text-white/80">
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-white/40">Resolved Image URL</label>
+                  <label className="text-[10px] uppercase tracking-wider text-zinc-500 dark:text-white/40">Resolved Image URL</label>
                   <div className="mt-1 flex items-center gap-2">
                     <input
                       type="text"
                       readOnly
                       value={normalizeImageUrl(selectedItem.url)}
-                      className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 font-mono text-[11px] text-white"
+                      className="w-full rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-50 dark:bg-black/40 px-3 py-2 font-mono text-[11px] text-zinc-900 dark:text-white"
                     />
                     <button
                       type="button"
@@ -664,37 +664,37 @@ export default function MediaManager(): React.JSX.Element {
                 </div>
 
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-white/40">Markdown Snippet</label>
+                  <label className="text-[10px] uppercase tracking-wider text-zinc-500 dark:text-white/40">Markdown Snippet</label>
                   <div className="mt-1 flex items-center gap-2">
                     <input
                       type="text"
                       readOnly
                       value={`![${selectedItem.altText || "Image"}](${normalizeImageUrl(selectedItem.url)})`}
-                      className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 font-mono text-[11px] text-white/70"
+                      className="w-full rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-50 dark:bg-black/40 px-3 py-2 font-mono text-[11px] text-zinc-700 dark:text-white/70"
                     />
                     <button
                       type="button"
                       onClick={() =>
                         handleCopy(`![${selectedItem.altText || "Image"}](${normalizeImageUrl(selectedItem.url)})`, "modal-md")
                       }
-                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white hover:bg-white/10"
+                      className="rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-2 text-zinc-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10"
                     >
                       {copiedId === "modal-md" ? "✓" : "Copy"}
                     </button>
                   </div>
                 </div>
 
-                <div className="space-y-2 pt-2 border-t border-white/10">
+                <div className="space-y-2 pt-2 border-t border-zinc-200 dark:border-white/10">
                   <div className="flex justify-between">
-                    <span className="text-white/40">Asset ID</span>
-                    <span className="font-mono text-white/90">{selectedItem.id}</span>
+                    <span className="text-zinc-500 dark:text-white/40">Asset ID</span>
+                    <span className="font-mono text-zinc-900 dark:text-white/90">{selectedItem.id}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-white/40">Uploaded At</span>
-                    <span className="text-white/90">{formatDate(selectedItem.createdAt)}</span>
+                    <span className="text-zinc-500 dark:text-white/40">Uploaded At</span>
+                    <span className="text-zinc-800 dark:text-white/90">{formatDate(selectedItem.createdAt)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-white/40">Storage Bucket</span>
+                    <span className="text-zinc-500 dark:text-white/40">Storage Bucket</span>
                     <span className="font-mono text-[#18C729]">ecommerce-store-assets</span>
                   </div>
                 </div>
@@ -704,7 +704,7 @@ export default function MediaManager(): React.JSX.Element {
                     href={normalizeImageUrl(selectedItem.url)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-2.5 font-medium text-white hover:bg-white/10 transition-colors"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 py-2.5 font-medium text-zinc-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors"
                   >
                     <span>Open High-Res Original</span>
                     <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

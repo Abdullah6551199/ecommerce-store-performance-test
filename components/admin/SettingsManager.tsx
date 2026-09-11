@@ -92,7 +92,7 @@ export default function SettingsManager(): React.JSX.Element {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-12 text-center text-xs text-white/50 animate-pulse">
+      <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-12 text-center text-xs text-zinc-500 dark:text-white/50 animate-pulse">
         Loading store settings from Cloudflare D1...
       </div>
     );
@@ -111,20 +111,20 @@ export default function SettingsManager(): React.JSX.Element {
       )}
 
       {error && (
-        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs text-red-300">
+        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs text-red-600 dark:text-red-300">
           {error}
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex border-b border-white/10 gap-2 overflow-x-auto pb-1">
+      <div className="flex border-b border-zinc-200 dark:border-white/10 gap-2 overflow-x-auto pb-1">
         <button
           type="button"
           onClick={() => setActiveTab("general")}
           className={`px-4 py-2 text-xs font-semibold rounded-t-xl transition-all ${
             activeTab === "general"
-              ? "border-b-2 border-[#18C729] text-[#18C729] bg-white/5"
-              : "text-white/60 hover:text-white"
+              ? "border-b-2 border-[#18C729] text-[#18C729] bg-zinc-100 dark:bg-white/5"
+              : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
           }`}
         >
           General Branding
@@ -134,8 +134,8 @@ export default function SettingsManager(): React.JSX.Element {
           onClick={() => setActiveTab("contact")}
           className={`px-4 py-2 text-xs font-semibold rounded-t-xl transition-all ${
             activeTab === "contact"
-              ? "border-b-2 border-[#18C729] text-[#18C729] bg-white/5"
-              : "text-white/60 hover:text-white"
+              ? "border-b-2 border-[#18C729] text-[#18C729] bg-zinc-100 dark:bg-white/5"
+              : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
           }`}
         >
           Contact Information
@@ -145,8 +145,8 @@ export default function SettingsManager(): React.JSX.Element {
           onClick={() => setActiveTab("social")}
           className={`px-4 py-2 text-xs font-semibold rounded-t-xl transition-all ${
             activeTab === "social"
-              ? "border-b-2 border-[#18C729] text-[#18C729] bg-white/5"
-              : "text-white/60 hover:text-white"
+              ? "border-b-2 border-[#18C729] text-[#18C729] bg-zinc-100 dark:bg-white/5"
+              : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
           }`}
         >
           Social Media Links
@@ -156,8 +156,8 @@ export default function SettingsManager(): React.JSX.Element {
           onClick={() => setActiveTab("header_footer")}
           className={`px-4 py-2 text-xs font-semibold rounded-t-xl transition-all ${
             activeTab === "header_footer"
-              ? "border-b-2 border-[#18C729] text-[#18C729] bg-white/5"
-              : "text-white/60 hover:text-white"
+              ? "border-b-2 border-[#18C729] text-[#18C729] bg-zinc-100 dark:bg-white/5"
+              : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
           }`}
         >
           Header & Footer
@@ -167,55 +167,55 @@ export default function SettingsManager(): React.JSX.Element {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Tab 1: General Branding */}
         {activeTab === "general" && (
-          <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-6 space-y-5">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">Brand & Identity</h2>
+          <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-6 space-y-5">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-white">Brand & Identity</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-white/70">Store Name</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Store Name</label>
                 <input
                   type="text"
                   required
                   value={settings.storeName}
                   onChange={(e) => setSettings({ ...settings, storeName: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/70">Logo Text / Monogram</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Logo Text / Monogram</label>
                 <input
                   type="text"
                   value={settings.logoText}
                   onChange={(e) => setSettings({ ...settings, logoText: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-white/70">Store Tagline</label>
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Store Tagline</label>
               <input
                 type="text"
                 value={settings.tagline}
                 onChange={(e) => setSettings({ ...settings, tagline: e.target.value })}
-                className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-white/70">Meta Description</label>
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Meta Description</label>
               <textarea
                 rows={3}
                 value={settings.description}
                 onChange={(e) => setSettings({ ...settings, description: e.target.value })}
-                className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
               />
             </div>
 
             {/* Logo Upload Section */}
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
+            <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-white">Custom Brand Logo (R2)</label>
+                <label className="text-xs font-semibold text-zinc-700 dark:text-white">Custom Brand Logo (R2)</label>
                 <label className="cursor-pointer rounded-lg bg-[#18C729]/20 px-2.5 py-1 text-[11px] font-semibold text-[#18C729] hover:bg-[#18C729]/30 transition-colors">
                   {uploadingLogo ? "Uploading..." : "Upload Logo to R2"}
                   <input
@@ -232,19 +232,19 @@ export default function SettingsManager(): React.JSX.Element {
                 placeholder="https://... image URL"
                 value={settings.logoUrl || ""}
                 onChange={(e) => setSettings({ ...settings, logoUrl: e.target.value })}
-                className="w-full rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                className="w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
               />
               {settings.logoUrl && (
                 <div className="flex items-center gap-3">
                   <img
                     src={settings.logoUrl}
                     alt="Logo preview"
-                    className="h-10 w-auto max-w-xs rounded border border-white/20 p-1 bg-black/30"
+                    className="h-10 w-auto max-w-xs rounded border border-zinc-300 dark:border-white/20 p-1 bg-zinc-100 dark:bg-black/30"
                   />
                   <button
                     type="button"
                     onClick={() => setSettings({ ...settings, logoUrl: "" })}
-                    className="text-xs text-red-400 hover:underline"
+                    className="text-xs text-red-500 dark:text-red-400 hover:underline"
                   >
                     Clear logo
                   </button>
@@ -256,38 +256,38 @@ export default function SettingsManager(): React.JSX.Element {
 
         {/* Tab 2: Contact Information */}
         {activeTab === "contact" && (
-          <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-6 space-y-5">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">Customer Support & Locations</h2>
+          <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-6 space-y-5">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-white">Customer Support & Locations</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-white/70">Support Email</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Support Email</label>
                 <input
                   type="email"
                   required
                   value={settings.contactEmail}
                   onChange={(e) => setSettings({ ...settings, contactEmail: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/70">Support Phone</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Support Phone</label>
                 <input
                   type="text"
                   value={settings.contactPhone}
                   onChange={(e) => setSettings({ ...settings, contactPhone: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-white/70">Physical Address / Headquarters</label>
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Physical Address / Headquarters</label>
               <input
                 type="text"
                 value={settings.contactAddress}
                 onChange={(e) => setSettings({ ...settings, contactAddress: e.target.value })}
-                className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
               />
             </div>
           </div>
@@ -295,11 +295,11 @@ export default function SettingsManager(): React.JSX.Element {
 
         {/* Tab 3: Social Media Links */}
         {activeTab === "social" && (
-          <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-6 space-y-5">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">Social Media Channels</h2>
+          <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-6 space-y-5">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-white">Social Media Channels</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-white/70">Twitter / X URL</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Twitter / X URL</label>
                 <input
                   type="url"
                   value={settings.socialLinks?.twitter || ""}
@@ -309,12 +309,12 @@ export default function SettingsManager(): React.JSX.Element {
                       socialLinks: { ...settings.socialLinks, twitter: e.target.value },
                     })
                   }
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/70">Instagram URL</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Instagram URL</label>
                 <input
                   type="url"
                   value={settings.socialLinks?.instagram || ""}
@@ -324,12 +324,12 @@ export default function SettingsManager(): React.JSX.Element {
                       socialLinks: { ...settings.socialLinks, instagram: e.target.value },
                     })
                   }
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/70">Facebook URL</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Facebook URL</label>
                 <input
                   type="url"
                   value={settings.socialLinks?.facebook || ""}
@@ -339,12 +339,12 @@ export default function SettingsManager(): React.JSX.Element {
                       socialLinks: { ...settings.socialLinks, facebook: e.target.value },
                     })
                   }
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/70">GitHub URL</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">GitHub URL</label>
                 <input
                   type="url"
                   value={settings.socialLinks?.github || ""}
@@ -354,12 +354,12 @@ export default function SettingsManager(): React.JSX.Element {
                       socialLinks: { ...settings.socialLinks, github: e.target.value },
                     })
                   }
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/70">YouTube URL</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">YouTube URL</label>
                 <input
                   type="url"
                   value={settings.socialLinks?.youtube || ""}
@@ -369,7 +369,7 @@ export default function SettingsManager(): React.JSX.Element {
                       socialLinks: { ...settings.socialLinks, youtube: e.target.value },
                     })
                   }
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
             </div>
@@ -378,8 +378,8 @@ export default function SettingsManager(): React.JSX.Element {
 
         {/* Tab 4: Header & Footer */}
         {activeTab === "header_footer" && (
-          <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-6 space-y-5">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">Header & Footer Experience</h2>
+          <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-6 space-y-5">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-white">Header & Footer Experience</h2>
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
@@ -388,42 +388,42 @@ export default function SettingsManager(): React.JSX.Element {
                   id="showAnnouncement"
                   checked={settings.showAnnouncement}
                   onChange={(e) => setSettings({ ...settings, showAnnouncement: e.target.checked })}
-                  className="h-4 w-4 rounded border-white/20 bg-white/5 text-[#18C729] focus:ring-[#18C729]"
+                  className="h-4 w-4 rounded border-zinc-300 dark:border-white/20 bg-white dark:bg-white/5 text-[#18C729] focus:ring-[#18C729]"
                 />
-                <label htmlFor="showAnnouncement" className="text-xs text-white font-medium">
+                <label htmlFor="showAnnouncement" className="text-xs text-zinc-800 dark:text-white font-medium">
                   Display Top Announcement Banner
                 </label>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-white/70">Announcement Message</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Announcement Message</label>
                   <input
                     type="text"
                     value={settings.announcementText}
                     onChange={(e) => setSettings({ ...settings, announcementText: e.target.value })}
-                    className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                    className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-white/70">Announcement Target Link</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Announcement Target Link</label>
                   <input
                     type="text"
                     value={settings.announcementUrl}
                     onChange={(e) => setSettings({ ...settings, announcementUrl: e.target.value })}
-                    className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                    className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/70">Copyright Footer Text</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Copyright Footer Text</label>
                 <input
                   type="text"
                   value={settings.copyrightText}
                   onChange={(e) => setSettings({ ...settings, copyrightText: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
             </div>

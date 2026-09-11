@@ -13,13 +13,13 @@ export default function CartNavButton(): React.JSX.Element {
     <button
       type="button"
       onClick={openDrawer}
-      className="group relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 px-2.5 py-1 transition-all hover:scale-105 hover:border-[#18C729]/50 hover:bg-[#18C729]/10 cursor-pointer"
+      className="group relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-black/5 dark:bg-white/5 px-2.5 py-1 transition-all hover:scale-105 hover:border-[#18C729]/50 hover:bg-[#18C729]/10 cursor-pointer"
       aria-label={`Shopping Cart, ${itemCount} items`}
       title={`Shopping Cart (${itemCount} items)`}
     >
       <div className="relative flex items-center justify-center">
         <svg
-          className="h-4 w-4 text-white group-hover:text-[#18C729] transition-colors"
+          className="h-4 w-4 text-zinc-800 dark:text-white group-hover:text-[#18C729] transition-colors"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -38,7 +38,7 @@ export default function CartNavButton(): React.JSX.Element {
           </span>
         )}
       </div>
-      <span className="text-[10px] font-bold text-white/60 group-hover:text-[#18C729] leading-tight mt-0.5 tracking-tight transition-colors">
+      <span className="text-[10px] font-bold text-zinc-600 dark:text-white/60 group-hover:text-[#18C729] leading-tight mt-0.5 tracking-tight transition-colors">
         Cart
       </span>
     </button>

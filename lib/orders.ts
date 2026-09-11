@@ -530,3 +530,42 @@ export async function updateAdminOrderStatus(
 
   return memoryOrders[idx];
 }
+
+/**
+ * Bulk update fulfillment status for multiple orders
+ */
+export async function updateBulkAdminOrderStatus(
+  orderIds: string[],
+  newStatus: OrderStatus
+): Promise<number> {
+  if (!orderIds || orderIds.length === 0) return 0;
+  const db = getDb();
+  const now = new Date().toISOString();
+
+  if (db) {
+    const res = await db
+      .update(orders)
+      .set({
+        status: newStatus,
+        updatedAt: now,
+      })
+      .where(inArray(orders.id, orderIds))
+      .returning({ id: orders.id });
+
+    return res.length;
+  }
+
+  let count = 0;
+  for (let i = 0; i < memoryOrders.length; i++) {
+    if (orderIds.includes(memoryOrders[i].id)) {
+      memoryOrders[i] = {
+        ...memoryOrders[i],
+        status: newStatus,
+        updatedAt: now,
+      };
+      count++;
+    }
+  }
+  return count;
+}
+

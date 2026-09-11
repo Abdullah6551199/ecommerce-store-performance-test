@@ -18,7 +18,7 @@ export default function MobileNav({ navLinks }: MobileNavProps): React.JSX.Eleme
       <button
         type="button"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="md:hidden flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white"
+        className="md:hidden flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-black/5 dark:bg-white/5 text-zinc-800 dark:text-white"
         aria-label="Toggle Navigation"
       >
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -31,13 +31,13 @@ export default function MobileNav({ navLinks }: MobileNavProps): React.JSX.Eleme
       </button>
 
       {mobileMenuOpen && (
-        <div className="absolute top-16 left-0 right-0 md:hidden border-t border-white/10 bg-[#080e0a] px-4 py-3 space-y-1 shadow-2xl z-50">
+        <div className="absolute top-16 left-0 right-0 md:hidden border-t border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a] px-4 py-3 space-y-1 shadow-2xl z-50">
           {navLinks.map((item, idx) => (
             <Link
               key={`mob-${item.url}-${idx}`}
               href={item.url}
               onClick={() => setMobileMenuOpen(false)}
-              className="flex min-h-[44px] items-center px-3 py-2 text-xs font-semibold text-white/80 hover:text-[#18C729] rounded-lg transition-colors"
+              className="flex min-h-[44px] items-center px-3 py-2 text-xs font-semibold text-zinc-800 dark:text-white/80 hover:text-[#18C729] rounded-lg transition-colors"
             >
               {item.label}
             </Link>
@@ -46,7 +46,7 @@ export default function MobileNav({ navLinks }: MobileNavProps): React.JSX.Eleme
             href="/admin/products"
             prefetch={false}
             onClick={() => setMobileMenuOpen(false)}
-            className="flex min-h-[44px] items-center px-3 py-2 text-xs font-semibold text-[#FEF500] rounded-lg transition-colors"
+            className="flex min-h-[44px] items-center px-3 py-2 text-xs font-semibold text-emerald-600 dark:text-[#FEF500] rounded-lg transition-colors"
           >
             Admin Portal
           </Link>

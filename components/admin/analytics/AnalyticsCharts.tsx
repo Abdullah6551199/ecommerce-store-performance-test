@@ -19,7 +19,7 @@ export function SalesTrendChart({ data }: { data: SalesTrendPoint[] }) {
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center text-xs text-white/40 dark:text-white/40 text-black/40">
+      <div className="flex h-64 items-center justify-center text-xs text-zinc-500 dark:text-white/40">
         No sales trend data available for this period.
       </div>
     );
@@ -63,11 +63,11 @@ export function SalesTrendChart({ data }: { data: SalesTrendPoint[] }) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-[#18C729]" />
-            <span className="font-semibold text-white/80 dark:text-white/80 text-black/80">Revenue ($)</span>
+            <span className="font-semibold text-zinc-700 dark:text-white/80">Revenue ($)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="h-3 w-3 rounded-full bg-[#FEF500]" />
-            <span className="font-semibold text-white/80 dark:text-white/80 text-black/80">Orders</span>
+            <span className="font-semibold text-zinc-700 dark:text-white/80">Orders</span>
           </div>
         </div>
         {hoveredPoint && (
@@ -102,7 +102,8 @@ export function SalesTrendChart({ data }: { data: SalesTrendPoint[] }) {
                   y1={y}
                   x2={width - padRight}
                   y2={y}
-                  stroke="rgba(255,255,255,0.08)"
+                  stroke="currentColor"
+                  className="text-zinc-200 dark:text-white/10"
                   strokeDasharray="4 4"
                 />
                 <text
@@ -110,7 +111,8 @@ export function SalesTrendChart({ data }: { data: SalesTrendPoint[] }) {
                   y={y + 4}
                   textAnchor="end"
                   fontSize="10"
-                  fill="rgba(255,255,255,0.4)"
+                  fill="currentColor"
+                  className="text-zinc-400 dark:text-white/40"
                   fontFamily="monospace"
                 >
                   ${revVal}
@@ -175,7 +177,8 @@ export function SalesTrendChart({ data }: { data: SalesTrendPoint[] }) {
                   y={height - 12}
                   textAnchor="middle"
                   fontSize="10"
-                  fill="rgba(255,255,255,0.5)"
+                  fill="currentColor"
+                  className="text-zinc-500 dark:text-white/50"
                   fontFamily="monospace"
                 >
                   {p.label}
@@ -195,7 +198,7 @@ export function SalesTrendChart({ data }: { data: SalesTrendPoint[] }) {
 export function CategoryPerformanceChart({ data }: { data: CategoryPerformanceItem[] }) {
   if (!data || data.length === 0) {
     return (
-      <div className="flex h-56 items-center justify-center text-xs text-white/40 dark:text-white/40 text-black/40">
+      <div className="flex h-56 items-center justify-center text-xs text-zinc-500 dark:text-white/40">
         No category revenue data available.
       </div>
     );
@@ -210,17 +213,17 @@ export function CategoryPerformanceChart({ data }: { data: CategoryPerformanceIt
         return (
           <div key={cat.categoryId} className="space-y-1">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-white/90 dark:text-white/90 text-black/90">
+              <span className="font-semibold text-zinc-800 dark:text-white/90">
                 {cat.categoryName}
               </span>
               <div className="flex items-center gap-2 font-mono">
                 <span className="text-[#18C729] font-bold">${cat.revenue.toFixed(2)}</span>
-                <span className="text-white/40 dark:text-white/40 text-black/40 text-[10px]">
+                <span className="text-zinc-500 dark:text-white/40 text-[10px]">
                   ({cat.unitsSold} units • {cat.percentage}%)
                 </span>
               </div>
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-white/5 dark:bg-white/5 bg-black/5">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-white/5">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-[#18C729] to-[#FEF500] transition-all duration-500"
                 style={{ width: `${pct}%` }}
@@ -239,7 +242,7 @@ export function CategoryPerformanceChart({ data }: { data: CategoryPerformanceIt
 export function TopProductsChart({ data }: { data: TopProductItem[] }) {
   if (!data || data.length === 0) {
     return (
-      <div className="flex h-64 items-center justify-center text-xs text-white/40 dark:text-white/40 text-black/40">
+      <div className="flex h-64 items-center justify-center text-xs text-zinc-500 dark:text-white/40">
         No product sales recorded in this period.
       </div>
     );
@@ -254,15 +257,15 @@ export function TopProductsChart({ data }: { data: TopProductItem[] }) {
         return (
           <div
             key={prod.id}
-            className="flex items-center gap-3 rounded-xl border border-white/5 dark:border-white/5 border-black/5 bg-white/[0.02] p-2.5 hover:bg-white/[0.06] transition-colors"
+            className="flex items-center gap-3 rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-white/[0.02] p-2.5 hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors"
           >
             {/* Rank badge */}
-            <span className="w-5 text-center font-mono text-xs font-extrabold text-white/40 dark:text-white/40 text-black/40">
+            <span className="w-5 text-center font-mono text-xs font-extrabold text-zinc-400 dark:text-white/40">
               #{idx + 1}
             </span>
 
             {/* Thumbnail */}
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/40">
+            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-black/40">
               <Image
                 src={prod.imageUrl}
                 alt={prod.name}
@@ -275,7 +278,7 @@ export function TopProductsChart({ data }: { data: TopProductItem[] }) {
             {/* Info & Bar */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <span className="truncate text-xs font-bold text-white dark:text-white text-black">
+                <span className="truncate text-xs font-bold text-zinc-900 dark:text-white">
                   {prod.name}
                 </span>
                 <span className="shrink-0 font-mono text-xs font-bold text-[#18C729]">
@@ -284,14 +287,14 @@ export function TopProductsChart({ data }: { data: TopProductItem[] }) {
               </div>
 
               {/* Progress bar */}
-              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-white/5 dark:bg-white/5 bg-black/5">
+              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-white/5">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-[#18C729] to-[#3de34d] transition-all duration-500"
                   style={{ width: `${barWidth}%` }}
                 />
               </div>
 
-              <div className="mt-1 flex items-center justify-between text-[10px] text-white/50 dark:text-white/50 text-black/50 font-mono">
+              <div className="mt-1 flex items-center justify-between text-[10px] text-zinc-500 dark:text-white/50 font-mono">
                 <span>Stock: {prod.currentStock} left</span>
                 <span>Revenue: ${prod.revenue.toFixed(2)}</span>
               </div>
@@ -305,19 +308,20 @@ export function TopProductsChart({ data }: { data: TopProductItem[] }) {
 
 /**
  * Chart 4: Order Status Distribution (Donut Chart)
+ * PART 3 FIX: Compact layout, truncated labels with tooltips, no label overflow!
  */
 export function OrderStatusDonutChart({
   statusCounts,
 }: {
   statusCounts: Record<string, number>;
 }) {
-  const statusConfig: Record<string, { label: string; color: string }> = {
-    delivered: { label: "Delivered", color: "#18C729" },
-    shipped: { label: "Shipped", color: "#3de34d" },
-    processing: { label: "Processing", color: "#FEF500" },
-    confirmed: { label: "Confirmed", color: "#3b82f6" },
-    pending: { label: "Pending", color: "#f59e0b" },
-    cancelled: { label: "Cancelled", color: "#ef4444" },
+  const statusConfig: Record<string, { label: string; shortLabel: string; color: string }> = {
+    delivered: { label: "Delivered", shortLabel: "Deliv.", color: "#18C729" },
+    shipped: { label: "Shipped", shortLabel: "Ship.", color: "#3de34d" },
+    processing: { label: "Processing", shortLabel: "Proc.", color: "#FEF500" },
+    confirmed: { label: "Confirmed", shortLabel: "Conf.", color: "#3b82f6" },
+    pending: { label: "Pending", shortLabel: "Pend.", color: "#f59e0b" },
+    cancelled: { label: "Cancelled", shortLabel: "Canc.", color: "#ef4444" },
   };
 
   const total = Object.values(statusCounts).reduce((s, c) => s + c, 0) || 1;
@@ -332,6 +336,7 @@ export function OrderStatusDonutChart({
     return {
       statusKey,
       label: config.label,
+      shortLabel: config.shortLabel,
       color: config.color,
       count,
       percent: Math.round(percent * 100),
@@ -339,13 +344,13 @@ export function OrderStatusDonutChart({
     };
   });
 
-  const radius = 65;
+  const radius = 60;
   const circumference = 2 * Math.PI * radius;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
+    <div className="w-full flex flex-col md:flex-row items-center justify-around gap-6 py-2">
       {/* SVG Donut */}
-      <div className="relative h-44 w-44 shrink-0 flex items-center justify-center">
+      <div className="relative h-40 w-40 shrink-0 flex items-center justify-center">
         <svg viewBox="0 0 160 160" className="h-full w-full -rotate-90">
           {segments.map((seg) => {
             const strokeDasharray = `${seg.percent === 0 ? 0 : circumference * (seg.count / total)} ${circumference}`;
@@ -358,7 +363,7 @@ export function OrderStatusDonutChart({
                 r={radius}
                 fill="transparent"
                 stroke={seg.color}
-                strokeWidth={18}
+                strokeWidth={16}
                 strokeDasharray={strokeDasharray}
                 strokeDashoffset={strokeDashoffset}
                 className="transition-all duration-500"
@@ -367,27 +372,35 @@ export function OrderStatusDonutChart({
           })}
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-          <span className="font-mono text-2xl font-extrabold text-white dark:text-white text-black">
+          <span className="font-mono text-2xl font-extrabold text-zinc-900 dark:text-white">
             {total}
           </span>
-          <span className="text-[10px] uppercase font-semibold text-white/50 dark:text-white/50 text-black/50">
+          <span className="text-[10px] uppercase font-semibold text-zinc-500 dark:text-white/50">
             Total Orders
           </span>
         </div>
       </div>
 
-      {/* Legend list */}
-      <div className="grid grid-cols-2 gap-2 text-xs w-full sm:w-auto">
+      {/* Legend list (Clean Grid, Truncated + Tooltips, within bounds) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-x-4 gap-y-2.5 text-xs w-full max-w-sm">
         {segments.map((seg) => (
-          <div key={seg.statusKey} className="flex items-center gap-2">
+          <div
+            key={seg.statusKey}
+            className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors cursor-default"
+            title={`${seg.label}: ${seg.count} orders (${seg.percent}%)`}
+          >
             <span
-              className="h-2.5 w-2.5 rounded-full shrink-0"
+              className="h-2.5 w-2.5 rounded-full shrink-0 shadow-sm"
               style={{ backgroundColor: seg.color }}
             />
-            <span className="text-white/70 dark:text-white/70 text-black/70">{seg.label}:</span>
-            <span className="font-mono font-bold text-white dark:text-white text-black">
-              {seg.count}
-            </span>
+            <div className="flex items-baseline justify-between gap-1.5 min-w-0 flex-1">
+              <span className="text-zinc-600 dark:text-white/70 truncate text-xs" title={seg.label}>
+                {seg.shortLabel}
+              </span>
+              <span className="font-mono font-bold text-zinc-900 dark:text-white text-xs shrink-0">
+                {seg.count}
+              </span>
+            </div>
           </div>
         ))}
       </div>
@@ -405,7 +418,7 @@ export function CustomerGrowthChart({
 }) {
   if (!trendData || trendData.length === 0) {
     return (
-      <div className="flex h-56 items-center justify-center text-xs text-white/40 dark:text-white/40 text-black/40">
+      <div className="flex h-56 items-center justify-center text-xs text-zinc-500 dark:text-white/40">
         No customer growth trend recorded.
       </div>
     );
@@ -438,7 +451,7 @@ export function CustomerGrowthChart({
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between text-xs text-white/60 dark:text-white/60 text-black/60">
+      <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-white/60">
         <span>Cumulative Customer Base</span>
         <span className="font-mono text-[#18C729] font-bold">
           +{points[points.length - 1].count - points[0].count} in period

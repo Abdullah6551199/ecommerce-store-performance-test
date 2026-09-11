@@ -343,8 +343,8 @@ export default function HomepageManager(): React.JSX.Element {
       {/* Top Header Controls */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Dynamic Homepage Manager</h1>
-          <p className="mt-1 text-xs text-white/60">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Dynamic Homepage Manager</h1>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-white/60">
             Control storefront sections, content, images, reordering, and visibility in real time.
           </p>
         </div>
@@ -353,7 +353,7 @@ export default function HomepageManager(): React.JSX.Element {
           <button
             type="button"
             onClick={handleResetDefaults}
-            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-white/80 hover:bg-white/10 hover:text-white transition-all"
+            className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all"
           >
             Restore Default Templates
           </button>
@@ -374,33 +374,33 @@ export default function HomepageManager(): React.JSX.Element {
       </div>
 
       {/* Quick Add Presets Strip */}
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-white/10 bg-white/5 p-3">
-        <span className="text-xs font-semibold text-white/70 mr-1">Quick Add:</span>
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3">
+        <span className="text-xs font-semibold text-zinc-600 dark:text-white/70 mr-1">Quick Add:</span>
         <button
           type="button"
           onClick={() => handleOpenAddModal("testimonials")}
-          className="rounded-lg border border-white/10 bg-[#0d1611] px-2.5 py-1 text-xs text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
+          className="rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] px-2.5 py-1 text-xs text-zinc-800 dark:text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
         >
           + Testimonials
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("newsletter")}
-          className="rounded-lg border border-white/10 bg-[#0d1611] px-2.5 py-1 text-xs text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
+          className="rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] px-2.5 py-1 text-xs text-zinc-800 dark:text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
         >
           + Newsletter
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("promo_banner")}
-          className="rounded-lg border border-white/10 bg-[#0d1611] px-2.5 py-1 text-xs text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
+          className="rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] px-2.5 py-1 text-xs text-zinc-800 dark:text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
         >
           + Promo Banner
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("custom_html")}
-          className="rounded-lg border border-white/10 bg-[#0d1611] px-2.5 py-1 text-xs text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
+          className="rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] px-2.5 py-1 text-xs text-zinc-800 dark:text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
         >
           + Custom HTML
         </button>
@@ -418,12 +418,12 @@ export default function HomepageManager(): React.JSX.Element {
 
       {/* Error Banner */}
       {error && (
-        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs text-red-300 flex items-center justify-between">
+        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs text-red-500 dark:text-red-300 flex items-center justify-between">
           <span>{error}</span>
           <button
             type="button"
             onClick={fetchSections}
-            className="underline hover:text-white"
+            className="underline hover:text-red-600 dark:hover:text-white"
           >
             Retry
           </button>
@@ -432,12 +432,12 @@ export default function HomepageManager(): React.JSX.Element {
 
       {/* Sections List */}
       {loading ? (
-        <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-12 text-center text-xs text-white/50 animate-pulse">
+        <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-12 text-center text-xs text-zinc-500 dark:text-white/50 animate-pulse">
           Loading homepage sections from Cloudflare D1...
         </div>
       ) : sections.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/15 bg-[#0c140f]/60 p-12 text-center">
-          <p className="text-sm font-semibold text-white">No sections currently configured.</p>
+        <div className="rounded-2xl border border-dashed border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-[#0c140f]/60 p-12 text-center">
+          <p className="text-sm font-semibold text-zinc-900 dark:text-white">No sections currently configured.</p>
           <button
             type="button"
             onClick={handleResetDefaults}
@@ -453,8 +453,8 @@ export default function HomepageManager(): React.JSX.Element {
               key={sec.id}
               className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border transition-all p-4 ${
                 sec.isActive
-                  ? "border-white/15 bg-[#0d1611] hover:border-white/25"
-                  : "border-white/5 bg-[#090e0b]/60 opacity-60"
+                  ? "border-zinc-200 dark:border-white/15 bg-white dark:bg-[#0d1611] hover:border-[#18C729]/40 shadow-sm"
+                  : "border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-[#090e0b]/60 opacity-60"
               }`}
             >
               {/* Left Column: Sort controls + Badge + Title */}
@@ -465,7 +465,7 @@ export default function HomepageManager(): React.JSX.Element {
                     type="button"
                     disabled={idx === 0}
                     onClick={() => handleMove(idx, "up")}
-                    className="h-6 w-6 rounded bg-white/5 flex items-center justify-center text-white/60 hover:bg-white/10 hover:text-white disabled:opacity-20 disabled:hover:bg-white/5"
+                    className="h-6 w-6 rounded bg-zinc-100 dark:bg-white/5 flex items-center justify-center text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white disabled:opacity-20"
                     title="Move Up"
                   >
                     ▲
@@ -474,7 +474,7 @@ export default function HomepageManager(): React.JSX.Element {
                     type="button"
                     disabled={idx === sections.length - 1}
                     onClick={() => handleMove(idx, "down")}
-                    className="h-6 w-6 rounded bg-white/5 flex items-center justify-center text-white/60 hover:bg-white/10 hover:text-white disabled:opacity-20 disabled:hover:bg-white/5"
+                    className="h-6 w-6 rounded bg-zinc-100 dark:bg-white/5 flex items-center justify-center text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white disabled:opacity-20"
                     title="Move Down"
                   >
                     ▼
@@ -482,27 +482,27 @@ export default function HomepageManager(): React.JSX.Element {
                 </div>
 
                 {/* Section Index */}
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-xs font-mono font-bold text-[#18C729]">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 dark:bg-white/5 text-xs font-mono font-bold text-emerald-600 dark:text-[#18C729]">
                   {idx + 1}
                 </div>
 
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-[#FEF500]">
+                    <span className="rounded-md border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-amber-600 dark:text-[#FEF500]">
                       {sec.type}
                     </span>
                     <span
                       className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
                         sec.isActive
                           ? "bg-[#18C729]/15 text-[#18C729]"
-                          : "bg-white/10 text-white/40"
+                          : "bg-zinc-200 dark:bg-white/10 text-zinc-500 dark:text-white/40"
                       }`}
                     >
                       {sec.isActive ? "Visible" : "Hidden"}
                     </span>
                   </div>
-                  <h3 className="mt-1 text-sm font-semibold text-white">{sec.title}</h3>
-                  <p className="text-xs text-white/50 truncate max-w-md">
+                  <h3 className="mt-1 text-sm font-semibold text-zinc-900 dark:text-white">{sec.title}</h3>
+                  <p className="text-xs text-zinc-500 dark:text-white/50 truncate max-w-md">
                     {sec.content?.heading || sec.content?.subheading || "Custom dynamic content"}
                   </p>
                 </div>
@@ -516,7 +516,7 @@ export default function HomepageManager(): React.JSX.Element {
                   className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition-colors ${
                     sec.isActive
                       ? "border-[#18C729]/30 bg-[#18C729]/10 text-[#18C729] hover:bg-[#18C729]/20"
-                      : "border-white/10 bg-white/5 text-white/50 hover:bg-white/10"
+                      : "border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-white/50 hover:bg-zinc-200 dark:hover:bg-white/10"
                   }`}
                 >
                   {sec.isActive ? "Visible" : "Hidden"}
@@ -528,7 +528,7 @@ export default function HomepageManager(): React.JSX.Element {
                     setEditingSection(JSON.parse(JSON.stringify(sec)));
                     setActiveTab("edit");
                   }}
-                  className="rounded-xl border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10 hover:border-white/30 transition-all flex items-center gap-1.5"
+                  className="rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1.5 text-xs font-medium text-zinc-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10 hover:border-[#18C729]/40 transition-all flex items-center gap-1.5"
                 >
                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -539,7 +539,7 @@ export default function HomepageManager(): React.JSX.Element {
                 <button
                   type="button"
                   onClick={() => handleDelete(sec.id, sec.title)}
-                  className="rounded-xl border border-red-500/20 bg-red-500/5 px-2.5 py-1.5 text-xs text-red-400 hover:bg-red-500/15 hover:border-red-500/40 transition-all"
+                  className="rounded-xl border border-red-500/20 bg-red-500/5 px-2.5 py-1.5 text-xs text-red-500 dark:text-red-400 hover:bg-red-500/15 hover:border-red-500/40 transition-all"
                   title="Delete Section"
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -555,27 +555,27 @@ export default function HomepageManager(): React.JSX.Element {
       {/* Edit Section Modal with Live Preview */}
       {editingSection && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-4xl rounded-3xl border border-white/20 bg-[#0d1611] p-6 sm:p-8 shadow-2xl my-8 flex flex-col max-h-[90vh]">
+          <div className="relative w-full max-w-4xl rounded-3xl border border-zinc-200 dark:border-white/20 bg-white dark:bg-[#0d1611] p-6 sm:p-8 shadow-2xl my-8 flex flex-col max-h-[90vh]">
             {/* Modal Header with Edit / Live Preview Tabs */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-white/10 pb-4">
               <div>
-                <h2 className="text-lg font-bold text-white">
+                <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
                   {editingSection.id.startsWith("new-") ? "Create New Section" : "Edit Homepage Section"}
                 </h2>
-                <p className="text-xs text-white/50">
-                  Type: <span className="font-mono text-[#FEF500] uppercase">{editingSection.type}</span>
+                <p className="text-xs text-zinc-500 dark:text-white/50">
+                  Type: <span className="font-mono text-amber-600 dark:text-[#FEF500] uppercase">{editingSection.type}</span>
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex rounded-xl border border-white/10 bg-white/5 p-1">
+                <div className="flex rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 p-1">
                   <button
                     type="button"
                     onClick={() => setActiveTab("edit")}
                     className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
                       activeTab === "edit"
                         ? "bg-[#18C729] text-black"
-                        : "text-white/70 hover:text-white"
+                        : "text-zinc-700 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white"
                     }`}
                   >
                     Form Editor
@@ -586,7 +586,7 @@ export default function HomepageManager(): React.JSX.Element {
                     className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
                       activeTab === "preview"
                         ? "bg-[#18C729] text-black"
-                        : "text-white/70 hover:text-white"
+                        : "text-zinc-700 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white"
                     }`}
                   >
                     Live Preview
@@ -596,7 +596,7 @@ export default function HomepageManager(): React.JSX.Element {
                 <button
                   type="button"
                   onClick={() => setEditingSection(null)}
-                  className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white"
+                  className="rounded-lg p-1.5 text-zinc-500 dark:text-white/50 hover:bg-zinc-100 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
                 >
                   ✕
                 </button>
@@ -607,11 +607,11 @@ export default function HomepageManager(): React.JSX.Element {
             <div className="flex-1 overflow-y-auto py-4 pr-1">
               {activeTab === "preview" ? (
                 <div className="space-y-4">
-                  <div className="rounded-xl border border-white/10 bg-black/40 p-4 text-xs text-white/60 flex items-center justify-between">
+                  <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-black/40 p-4 text-xs text-zinc-600 dark:text-white/60 flex items-center justify-between">
                     <span>⚡ Live rendering of this section as it appears on the storefront:</span>
                     <span className="font-mono text-[#18C729] uppercase font-bold">{editingSection.type}</span>
                   </div>
-                  <div className="rounded-2xl border border-white/10 bg-[#080e0a] p-4 sm:p-6 overflow-hidden">
+                  <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-[#080e0a] p-4 sm:p-6 overflow-hidden">
                     {renderHomepageSection(editingSection)}
                   </div>
                 </div>
@@ -620,22 +620,22 @@ export default function HomepageManager(): React.JSX.Element {
                   {/* Basic Metadata */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-white/70">Section Title (Admin Reference)</label>
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Section Title (Admin Reference)</label>
                       <input
                         type="text"
                         required
                         value={editingSection.title}
                         onChange={(e) => setEditingSection({ ...editingSection, title: e.target.value })}
-                        className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-white/70">Section Type</label>
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Section Type</label>
                       <select
                         value={editingSection.type}
                         onChange={(e) => setEditingSection({ ...editingSection, type: e.target.value as HomepageSectionType })}
-                        className="mt-1 w-full rounded-xl border border-white/15 bg-[#0d1611] px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-[#0d1611] px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                       >
                         <option value="hero">Hero Showcase</option>
                         <option value="categories">Categories Grid</option>
@@ -656,17 +656,17 @@ export default function HomepageManager(): React.JSX.Element {
                       id="modal-active"
                       checked={editingSection.isActive}
                       onChange={(e) => setEditingSection({ ...editingSection, isActive: e.target.checked })}
-                      className="h-4 w-4 rounded border-white/20 bg-white/5 text-[#18C729] focus:ring-[#18C729]"
+                      className="h-4 w-4 rounded border-zinc-300 dark:border-white/20 bg-white dark:bg-white/5 text-[#18C729] focus:ring-[#18C729]"
                     />
-                    <label htmlFor="modal-active" className="text-xs text-white font-medium cursor-pointer">
+                    <label htmlFor="modal-active" className="text-xs text-zinc-800 dark:text-white font-medium cursor-pointer">
                       Active (Visible on Storefront Homepage)
                     </label>
                   </div>
 
                   {/* Image URL & R2 Upload */}
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
+                  <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4 space-y-3">
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-semibold text-white">Section Image (Cloudflare R2)</label>
+                      <label className="text-xs font-semibold text-zinc-800 dark:text-white">Section Image (Cloudflare R2)</label>
                       <label className="cursor-pointer rounded-lg bg-[#18C729]/20 px-2.5 py-1 text-[11px] font-semibold text-[#18C729] hover:bg-[#18C729]/30 transition-colors">
                         {uploadingImage ? "Uploading to R2..." : "Upload Image to R2"}
                         <input
@@ -683,19 +683,19 @@ export default function HomepageManager(): React.JSX.Element {
                       placeholder="https://... or upload image directly"
                       value={editingSection.imageUrl || ""}
                       onChange={(e) => setEditingSection({ ...editingSection, imageUrl: e.target.value })}
-                      className="w-full rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                      className="w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                     />
                     {editingSection.imageUrl && (
                       <div className="mt-2 flex items-center gap-3">
                         <img
                           src={editingSection.imageUrl}
                           alt="Preview"
-                          className="h-14 w-24 rounded-lg object-cover border border-white/20"
+                          className="h-14 w-24 rounded-lg object-cover border border-zinc-300 dark:border-white/20"
                         />
                         <button
                           type="button"
                           onClick={() => setEditingSection({ ...editingSection, imageUrl: null })}
-                          className="text-xs text-red-400 hover:underline"
+                          className="text-xs text-red-500 dark:text-red-400 hover:underline"
                         >
                           Remove image
                         </button>
@@ -705,13 +705,13 @@ export default function HomepageManager(): React.JSX.Element {
 
                   {/* Common Heading & Subheading Fields */}
                   <div className="space-y-4 pt-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#FEF500]">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-[#FEF500]">
                       Content & Copy Fields
                     </h4>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-semibold text-white/70">Main Heading</label>
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Main Heading</label>
                         <input
                           type="text"
                           value={editingSection.content?.heading || ""}
@@ -721,11 +721,11 @@ export default function HomepageManager(): React.JSX.Element {
                               content: { ...editingSection.content, heading: e.target.value },
                             })
                           }
-                          className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-white/70">Badge Text (Tag / Pill)</label>
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Badge Text (Tag / Pill)</label>
                         <input
                           type="text"
                           value={editingSection.content?.badgeText || ""}
@@ -735,13 +735,13 @@ export default function HomepageManager(): React.JSX.Element {
                               content: { ...editingSection.content, badgeText: e.target.value },
                             })
                           }
-                          className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-white/70">Subheading / Description</label>
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Subheading / Description</label>
                       <textarea
                         rows={2}
                         value={editingSection.content?.subheading || ""}
@@ -751,17 +751,17 @@ export default function HomepageManager(): React.JSX.Element {
                             content: { ...editingSection.content, subheading: e.target.value },
                           })
                         }
-                        className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                       />
                     </div>
 
                     {/* Hero Specific Fields */}
                     {editingSection.type === "hero" && (
-                      <div className="space-y-4 rounded-xl border border-white/10 bg-white/5 p-4">
-                        <h5 className="text-xs font-bold text-white">Hero Buttons & Alignment</h5>
+                      <div className="space-y-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
+                        <h5 className="text-xs font-bold text-zinc-900 dark:text-white">Hero Buttons & Alignment</h5>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-semibold text-white/70">Primary Button Label</label>
+                            <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Primary Button Label</label>
                             <input
                               type="text"
                               value={editingSection.content?.buttonText || ""}
@@ -771,11 +771,11 @@ export default function HomepageManager(): React.JSX.Element {
                                   content: { ...editingSection.content, buttonText: e.target.value },
                                 })
                               }
-                              className="mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                              className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-white/70">Primary Button URL</label>
+                            <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Primary Button URL</label>
                             <input
                               type="text"
                               value={editingSection.content?.buttonUrl || ""}
@@ -785,11 +785,11 @@ export default function HomepageManager(): React.JSX.Element {
                                   content: { ...editingSection.content, buttonUrl: e.target.value },
                                 })
                               }
-                              className="mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                              className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-white/70">Secondary Button Label</label>
+                            <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Secondary Button Label</label>
                             <input
                               type="text"
                               value={editingSection.content?.secondaryButtonText || ""}
@@ -799,11 +799,11 @@ export default function HomepageManager(): React.JSX.Element {
                                   content: { ...editingSection.content, secondaryButtonText: e.target.value },
                                 })
                               }
-                              className="mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                              className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-white/70">Secondary Button URL</label>
+                            <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Secondary Button URL</label>
                             <input
                               type="text"
                               value={editingSection.content?.secondaryButtonUrl || ""}
@@ -813,7 +813,7 @@ export default function HomepageManager(): React.JSX.Element {
                                   content: { ...editingSection.content, secondaryButtonUrl: e.target.value },
                                 })
                               }
-                              className="mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                              className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                             />
                           </div>
                         </div>
@@ -822,9 +822,9 @@ export default function HomepageManager(): React.JSX.Element {
 
                     {/* Promo Banner Fields */}
                     {editingSection.type === "promo_banner" && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
                         <div>
-                          <label className="block text-xs font-semibold text-white/70">Button Label</label>
+                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Button Label</label>
                           <input
                             type="text"
                             value={editingSection.content?.buttonText || ""}
@@ -834,11 +834,11 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, buttonText: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-white/70">Button URL</label>
+                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Button URL</label>
                           <input
                             type="text"
                             value={editingSection.content?.buttonUrl || ""}
@@ -848,7 +848,7 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, buttonUrl: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                           />
                         </div>
                       </div>
@@ -856,9 +856,9 @@ export default function HomepageManager(): React.JSX.Element {
 
                     {/* Testimonials Fields */}
                     {editingSection.type === "testimonials" && (
-                      <div className="space-y-4 rounded-xl border border-white/10 bg-white/5 p-4">
+                      <div className="space-y-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
                         <div className="flex items-center justify-between">
-                          <h5 className="text-xs font-bold text-white">Testimonial Quotes</h5>
+                          <h5 className="text-xs font-bold text-zinc-900 dark:text-white">Testimonial Quotes</h5>
                           <button
                             type="button"
                             onClick={handleAddTestimonial}
@@ -872,14 +872,14 @@ export default function HomepageManager(): React.JSX.Element {
                           editingSection.content.testimonials.map((t: any, idx: number) => (
                             <div
                               key={idx}
-                              className="space-y-3 rounded-xl border border-white/10 bg-black/40 p-3 text-xs"
+                              className="space-y-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-black/40 p-3 text-xs"
                             >
                               <div className="flex items-center justify-between">
-                                <span className="font-semibold text-white">Item #{idx + 1}</span>
+                                <span className="font-semibold text-zinc-800 dark:text-white">Item #{idx + 1}</span>
                                 <button
                                   type="button"
                                   onClick={() => handleRemoveTestimonial(idx)}
-                                  className="text-red-400 hover:underline"
+                                  className="text-red-500 dark:text-red-400 hover:underline"
                                 >
                                   Remove
                                 </button>
@@ -889,7 +889,7 @@ export default function HomepageManager(): React.JSX.Element {
                                 placeholder="Quote statement..."
                                 value={t.quote || ""}
                                 onChange={(e) => handleUpdateTestimonial(idx, "quote", e.target.value)}
-                                className="w-full rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                                className="w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                               />
                               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                                 <input
@@ -897,21 +897,21 @@ export default function HomepageManager(): React.JSX.Element {
                                   placeholder="Author Name"
                                   value={t.author || ""}
                                   onChange={(e) => handleUpdateTestimonial(idx, "author", e.target.value)}
-                                  className="rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 text-xs text-white"
+                                  className="rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white"
                                 />
                                 <input
                                   type="text"
                                   placeholder="Role / Sport"
                                   value={t.role || ""}
                                   onChange={(e) => handleUpdateTestimonial(idx, "role", e.target.value)}
-                                  className="rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 text-xs text-white"
+                                  className="rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white"
                                 />
                                 <input
                                   type="text"
                                   placeholder="Avatar Image URL"
                                   value={t.avatar || ""}
                                   onChange={(e) => handleUpdateTestimonial(idx, "avatar", e.target.value)}
-                                  className="rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 text-xs text-white"
+                                  className="rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white"
                                 />
                               </div>
                             </div>
@@ -921,9 +921,9 @@ export default function HomepageManager(): React.JSX.Element {
 
                     {/* Newsletter Specific Fields */}
                     {editingSection.type === "newsletter" && (
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
                         <div>
-                          <label className="block text-xs font-semibold text-white/70">Button Text</label>
+                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Button Text</label>
                           <input
                             type="text"
                             value={editingSection.content?.buttonText || ""}
@@ -933,11 +933,11 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, buttonText: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-xs text-white"
+                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-white/70">Placeholder Text</label>
+                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Placeholder Text</label>
                           <input
                             type="text"
                             value={editingSection.content?.placeholderText || ""}
@@ -947,11 +947,11 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, placeholderText: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-xs text-white"
+                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-white/70">Disclaimer</label>
+                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Disclaimer</label>
                           <input
                             type="text"
                             value={editingSection.content?.disclaimer || ""}
@@ -961,7 +961,7 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, disclaimer: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-xs text-white"
+                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white"
                           />
                         </div>
                       </div>
@@ -969,8 +969,8 @@ export default function HomepageManager(): React.JSX.Element {
 
                     {/* Custom HTML Specific Fields */}
                     {editingSection.type === "custom_html" && (
-                      <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">
-                        <label className="block text-xs font-semibold text-white/70">HTML Content</label>
+                      <div className="space-y-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">HTML Content</label>
                         <textarea
                           rows={5}
                           value={editingSection.content?.html || ""}
@@ -980,7 +980,7 @@ export default function HomepageManager(): React.JSX.Element {
                               content: { ...editingSection.content, html: e.target.value },
                             })
                           }
-                          className="w-full rounded-xl border border-white/15 bg-black/40 p-3 font-mono text-xs text-white focus:border-[#18C729] focus:outline-none"
+                          className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 p-3 font-mono text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                         />
                       </div>
                     )}
@@ -990,8 +990,8 @@ export default function HomepageManager(): React.JSX.Element {
             </div>
 
             {/* Modal Buttons */}
-            <div className="mt-4 flex justify-between items-center border-t border-white/10 pt-4">
-              <div className="text-xs text-white/50">
+            <div className="mt-4 flex justify-between items-center border-t border-zinc-200 dark:border-white/10 pt-4">
+              <div className="text-xs text-zinc-500 dark:text-white/50">
                 {editingSection.isActive ? "🟢 Visible on storefront" : "⚪ Hidden from storefront"}
               </div>
 
@@ -999,7 +999,7 @@ export default function HomepageManager(): React.JSX.Element {
                 <button
                   type="button"
                   onClick={() => setEditingSection(null)}
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/80 hover:bg-white/10"
+                  className="rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-4 py-2 text-xs font-medium text-zinc-700 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
                 >
                   Cancel
                 </button>

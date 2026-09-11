@@ -1,8 +1,12 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import HomepageManager from "@/components/admin/HomepageManager";
 
-export const dynamic = "force-dynamic";
-
 export default function AdminHomepagePage(): React.JSX.Element {
+  useEffect(() => {
+    document.title = "Homepage Builder - Admin Panel";
+  }, []);
+
   return <HomepageManager />;
 }

@@ -147,7 +147,7 @@ export default function AppearanceManager(): React.JSX.Element {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-12 text-center text-xs text-white/50 animate-pulse">
+      <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-12 text-center text-xs text-zinc-500 dark:text-white/50 animate-pulse">
         Loading store appearance settings from Cloudflare D1...
       </div>
     );
@@ -158,8 +158,8 @@ export default function AppearanceManager(): React.JSX.Element {
       {/* Top Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Appearance & Theme System</h1>
-          <p className="mt-1 text-xs text-white/60">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Appearance & Theme System</h1>
+          <p className="mt-1 text-xs text-zinc-600 dark:text-white/60">
             Customize colors, typography, borders, and brand accents with dynamic storefront propagation.
           </p>
         </div>
@@ -168,7 +168,7 @@ export default function AppearanceManager(): React.JSX.Element {
           <button
             type="button"
             onClick={handleResetDefaults}
-            className="rounded-xl border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-medium text-white/80 hover:bg-white/10 hover:text-white transition-all"
+            className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3.5 py-2 text-xs font-medium text-zinc-700 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all"
           >
             Reset to Brand Defaults
           </button>
@@ -203,21 +203,21 @@ export default function AppearanceManager(): React.JSX.Element {
       )}
 
       {error && (
-        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs text-red-300 flex items-center justify-between">
+        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs text-red-600 dark:text-red-300 flex items-center justify-between">
           <span>{error}</span>
-          <button type="button" onClick={fetchTheme} className="underline hover:text-white">
+          <button type="button" onClick={fetchTheme} className="underline hover:text-red-700 dark:hover:text-white">
             Retry
           </button>
         </div>
       )}
 
       {/* Presets Strip */}
-      <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-4 space-y-2">
+      <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-4 space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#FEF500]">
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-[#FEF500]">
             Curated Theme Presets
           </span>
-          <span className="text-[11px] text-white/50">Click to preview palette & typography</span>
+          <span className="text-[11px] text-zinc-500 dark:text-white/50">Click to preview palette & typography</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
           {THEME_PRESETS.map((preset) => (
@@ -225,11 +225,11 @@ export default function AppearanceManager(): React.JSX.Element {
               key={preset.id}
               type="button"
               onClick={() => handleApplyPreset(preset)}
-              className="text-left rounded-xl border border-white/10 bg-white/5 p-3 hover:border-[#18C729]/50 hover:bg-white/10 transition-all flex flex-col justify-between"
+              className="text-left rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 hover:border-[#18C729]/50 hover:bg-zinc-100 dark:hover:bg-white/10 transition-all flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-white">{preset.name}</h4>
+                  <h4 className="text-xs font-bold text-zinc-900 dark:text-white">{preset.name}</h4>
                   <div className="flex gap-1">
                     <span
                       className="h-3 w-3 rounded-full border border-black/40"
@@ -241,7 +241,7 @@ export default function AppearanceManager(): React.JSX.Element {
                     />
                   </div>
                 </div>
-                <p className="mt-1 text-[11px] text-white/50 line-clamp-2">{preset.description}</p>
+                <p className="mt-1 text-[11px] text-zinc-500 dark:text-white/50 line-clamp-2">{preset.description}</p>
               </div>
               <div className="mt-3 text-[10px] font-semibold text-[#18C729]">Apply Preset &rarr;</div>
             </button>
@@ -254,14 +254,14 @@ export default function AppearanceManager(): React.JSX.Element {
         {/* Left Column: Form Settings Tabs */}
         <div className="lg:col-span-7 space-y-4">
           {/* Tabs Navigation */}
-          <div className="flex rounded-2xl border border-white/10 bg-[#0c140f] p-1 gap-1">
+          <div className="flex rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-[#0c140f] p-1 gap-1">
             <button
               type="button"
               onClick={() => setActiveTab("colors")}
               className={`flex-1 rounded-xl py-2 text-xs font-semibold transition-all ${
                 activeTab === "colors"
                   ? "bg-[#18C729] text-black shadow-md"
-                  : "text-white/70 hover:text-white"
+                  : "text-zinc-600 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               Colors & Palette
@@ -272,7 +272,7 @@ export default function AppearanceManager(): React.JSX.Element {
               className={`flex-1 rounded-xl py-2 text-xs font-semibold transition-all ${
                 activeTab === "typography"
                   ? "bg-[#18C729] text-black shadow-md"
-                  : "text-white/70 hover:text-white"
+                  : "text-zinc-600 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               Typography
@@ -283,7 +283,7 @@ export default function AppearanceManager(): React.JSX.Element {
               className={`flex-1 rounded-xl py-2 text-xs font-semibold transition-all ${
                 activeTab === "design"
                   ? "bg-[#18C729] text-black shadow-md"
-                  : "text-white/70 hover:text-white"
+                  : "text-zinc-600 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               Design & Radii
@@ -294,7 +294,7 @@ export default function AppearanceManager(): React.JSX.Element {
               className={`flex-1 rounded-xl py-2 text-xs font-semibold transition-all ${
                 activeTab === "branding"
                   ? "bg-[#18C729] text-black shadow-md"
-                  : "text-white/70 hover:text-white"
+                  : "text-zinc-600 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               Branding Assets
@@ -303,8 +303,8 @@ export default function AppearanceManager(): React.JSX.Element {
 
           {/* Tab 1: Colors */}
           {activeTab === "colors" && (
-            <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-6 space-y-4">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-6 space-y-4">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
                 <span>Color Palette Tokens</span>
                 <span className="text-[10px] font-mono text-[#18C729] bg-[#18C729]/10 px-2 py-0.5 rounded">
                   9 Tokens
@@ -313,10 +313,10 @@ export default function AppearanceManager(): React.JSX.Element {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Primary */}
-                <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1.5">
-                  <label className="text-xs font-semibold text-white flex items-center justify-between">
+                <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 space-y-1.5">
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white flex items-center justify-between">
                     <span>Primary Color</span>
-                    <span className="font-mono text-[10px] text-white/50">{theme.colors.primary}</span>
+                    <span className="font-mono text-[10px] text-zinc-500 dark:text-white/50">{theme.colors.primary}</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -325,7 +325,7 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, primary: e.target.value } })
                       }
-                      className="h-8 w-10 cursor-pointer rounded border border-white/20 bg-transparent"
+                      className="h-8 w-10 cursor-pointer rounded border border-zinc-300 dark:border-white/20 bg-transparent"
                     />
                     <input
                       type="text"
@@ -333,16 +333,16 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, primary: e.target.value } })
                       }
-                      className="flex-1 rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 font-mono text-xs text-white"
+                      className="flex-1 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-2.5 py-1.5 font-mono text-xs text-zinc-900 dark:text-white"
                     />
                   </div>
                 </div>
 
                 {/* Secondary */}
-                <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1.5">
-                  <label className="text-xs font-semibold text-white flex items-center justify-between">
+                <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 space-y-1.5">
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white flex items-center justify-between">
                     <span>Secondary Color</span>
-                    <span className="font-mono text-[10px] text-white/50">{theme.colors.secondary}</span>
+                    <span className="font-mono text-[10px] text-zinc-500 dark:text-white/50">{theme.colors.secondary}</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -351,7 +351,7 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, secondary: e.target.value } })
                       }
-                      className="h-8 w-10 cursor-pointer rounded border border-white/20 bg-transparent"
+                      className="h-8 w-10 cursor-pointer rounded border border-zinc-300 dark:border-white/20 bg-transparent"
                     />
                     <input
                       type="text"
@@ -359,16 +359,16 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, secondary: e.target.value } })
                       }
-                      className="flex-1 rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 font-mono text-xs text-white"
+                      className="flex-1 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-2.5 py-1.5 font-mono text-xs text-zinc-900 dark:text-white"
                     />
                   </div>
                 </div>
 
                 {/* Accent */}
-                <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1.5">
-                  <label className="text-xs font-semibold text-white flex items-center justify-between">
+                <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 space-y-1.5">
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white flex items-center justify-between">
                     <span>Accent / Highlight</span>
-                    <span className="font-mono text-[10px] text-white/50">{theme.colors.accent}</span>
+                    <span className="font-mono text-[10px] text-zinc-500 dark:text-white/50">{theme.colors.accent}</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -377,7 +377,7 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, accent: e.target.value } })
                       }
-                      className="h-8 w-10 cursor-pointer rounded border border-white/20 bg-transparent"
+                      className="h-8 w-10 cursor-pointer rounded border border-zinc-300 dark:border-white/20 bg-transparent"
                     />
                     <input
                       type="text"
@@ -385,16 +385,16 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, accent: e.target.value } })
                       }
-                      className="flex-1 rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 font-mono text-xs text-white"
+                      className="flex-1 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-2.5 py-1.5 font-mono text-xs text-zinc-900 dark:text-white"
                     />
                   </div>
                 </div>
 
                 {/* Background */}
-                <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1.5">
-                  <label className="text-xs font-semibold text-white flex items-center justify-between">
+                <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 space-y-1.5">
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white flex items-center justify-between">
                     <span>Background Base</span>
-                    <span className="font-mono text-[10px] text-white/50">{theme.colors.background}</span>
+                    <span className="font-mono text-[10px] text-zinc-500 dark:text-white/50">{theme.colors.background}</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -403,7 +403,7 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, background: e.target.value } })
                       }
-                      className="h-8 w-10 cursor-pointer rounded border border-white/20 bg-transparent"
+                      className="h-8 w-10 cursor-pointer rounded border border-zinc-300 dark:border-white/20 bg-transparent"
                     />
                     <input
                       type="text"
@@ -411,16 +411,16 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, background: e.target.value } })
                       }
-                      className="flex-1 rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 font-mono text-xs text-white"
+                      className="flex-1 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-2.5 py-1.5 font-mono text-xs text-zinc-900 dark:text-white"
                     />
                   </div>
                 </div>
 
                 {/* Text Color */}
-                <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1.5">
-                  <label className="text-xs font-semibold text-white flex items-center justify-between">
+                <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 space-y-1.5">
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white flex items-center justify-between">
                     <span>Text Primary</span>
-                    <span className="font-mono text-[10px] text-white/50">{theme.colors.text}</span>
+                    <span className="font-mono text-[10px] text-zinc-500 dark:text-white/50">{theme.colors.text}</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -429,7 +429,7 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, text: e.target.value } })
                       }
-                      className="h-8 w-10 cursor-pointer rounded border border-white/20 bg-transparent"
+                      className="h-8 w-10 cursor-pointer rounded border border-zinc-300 dark:border-white/20 bg-transparent"
                     />
                     <input
                       type="text"
@@ -437,16 +437,16 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, text: e.target.value } })
                       }
-                      className="flex-1 rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 font-mono text-xs text-white"
+                      className="flex-1 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-2.5 py-1.5 font-mono text-xs text-zinc-900 dark:text-white"
                     />
                   </div>
                 </div>
 
                 {/* Muted Text */}
-                <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1.5">
-                  <label className="text-xs font-semibold text-white flex items-center justify-between">
+                <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 space-y-1.5">
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white flex items-center justify-between">
                     <span>Muted Text</span>
-                    <span className="font-mono text-[10px] text-white/50">{theme.colors.mutedText}</span>
+                    <span className="font-mono text-[10px] text-zinc-500 dark:text-white/50">{theme.colors.mutedText}</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -455,7 +455,7 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, mutedText: e.target.value } })
                       }
-                      className="h-8 w-10 cursor-pointer rounded border border-white/20 bg-transparent"
+                      className="h-8 w-10 cursor-pointer rounded border border-zinc-300 dark:border-white/20 bg-transparent"
                     />
                     <input
                       type="text"
@@ -463,16 +463,16 @@ export default function AppearanceManager(): React.JSX.Element {
                       onChange={(e) =>
                         setTheme({ ...theme, colors: { ...theme.colors, mutedText: e.target.value } })
                       }
-                      className="flex-1 rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 font-mono text-xs text-white"
+                      className="flex-1 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-2.5 py-1.5 font-mono text-xs text-zinc-900 dark:text-white"
                     />
                   </div>
                 </div>
 
                 {/* Border */}
-                <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1.5">
-                  <label className="text-xs font-semibold text-white flex items-center justify-between">
+                <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 space-y-1.5">
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white flex items-center justify-between">
                     <span>Border Outline</span>
-                    <span className="font-mono text-[10px] text-white/50">{theme.colors.border}</span>
+                    <span className="font-mono text-[10px] text-zinc-500 dark:text-white/50">{theme.colors.border}</span>
                   </label>
                   <input
                     type="text"
@@ -480,15 +480,15 @@ export default function AppearanceManager(): React.JSX.Element {
                     onChange={(e) =>
                       setTheme({ ...theme, colors: { ...theme.colors, border: e.target.value } })
                     }
-                    className="w-full rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 font-mono text-xs text-white"
+                    className="w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-2.5 py-1.5 font-mono text-xs text-zinc-900 dark:text-white"
                   />
                 </div>
 
                 {/* Success & Error */}
-                <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1.5">
-                  <label className="text-xs font-semibold text-white flex items-center justify-between">
+                <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 space-y-1.5">
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white flex items-center justify-between">
                     <span>Status Signals</span>
-                    <span className="text-[10px] text-white/50">Success / Error</span>
+                    <span className="text-[10px] text-zinc-500 dark:text-white/50">Success / Error</span>
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="flex items-center gap-1.5">
@@ -498,9 +498,9 @@ export default function AppearanceManager(): React.JSX.Element {
                         onChange={(e) =>
                           setTheme({ ...theme, colors: { ...theme.colors, success: e.target.value } })
                         }
-                        className="h-7 w-8 cursor-pointer rounded border border-white/20 bg-transparent"
+                        className="h-7 w-8 cursor-pointer rounded border border-zinc-300 dark:border-white/20 bg-transparent"
                       />
-                      <span className="font-mono text-[10px] text-white/70">{theme.colors.success}</span>
+                      <span className="font-mono text-[10px] text-zinc-700 dark:text-white/70">{theme.colors.success}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <input
@@ -509,9 +509,9 @@ export default function AppearanceManager(): React.JSX.Element {
                         onChange={(e) =>
                           setTheme({ ...theme, colors: { ...theme.colors, error: e.target.value } })
                         }
-                        className="h-7 w-8 cursor-pointer rounded border border-white/20 bg-transparent"
+                        className="h-7 w-8 cursor-pointer rounded border border-zinc-300 dark:border-white/20 bg-transparent"
                       />
-                      <span className="font-mono text-[10px] text-white/70">{theme.colors.error}</span>
+                      <span className="font-mono text-[10px] text-zinc-700 dark:text-white/70">{theme.colors.error}</span>
                     </div>
                   </div>
                 </div>
@@ -521,12 +521,12 @@ export default function AppearanceManager(): React.JSX.Element {
 
           {/* Tab 2: Typography */}
           {activeTab === "typography" && (
-            <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-6 space-y-4">
-              <h3 className="text-sm font-bold text-white">Typography Families</h3>
+            <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-6 space-y-4">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Typography Families</h3>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-white/70">Headings Font</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Headings Font</label>
                   <select
                     value={theme.typography.headingFont}
                     onChange={(e) =>
@@ -535,7 +535,7 @@ export default function AppearanceManager(): React.JSX.Element {
                         typography: { ...theme.typography, headingFont: e.target.value },
                       })
                     }
-                    className="mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                    className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                   >
                     <option value="Inter, system-ui, sans-serif">Inter (Modern & Clean)</option>
                     <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans (Sleek Geometric)</option>
@@ -544,7 +544,7 @@ export default function AppearanceManager(): React.JSX.Element {
                     <option value="system-ui, -apple-system, sans-serif">System UI (Native Edge)</option>
                   </select>
                   <p
-                    className="mt-2 p-3 rounded-lg bg-white/5 text-base font-extrabold text-white"
+                    className="mt-2 p-3 rounded-lg bg-zinc-100 dark:bg-white/5 text-base font-extrabold text-zinc-900 dark:text-white"
                     style={{ fontFamily: theme.typography.headingFont }}
                   >
                     Engineered for Peak Athletic Velocity 0123456789
@@ -552,7 +552,7 @@ export default function AppearanceManager(): React.JSX.Element {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-white/70">Body Font</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Body Font</label>
                   <select
                     value={theme.typography.bodyFont}
                     onChange={(e) =>
@@ -561,7 +561,7 @@ export default function AppearanceManager(): React.JSX.Element {
                         typography: { ...theme.typography, bodyFont: e.target.value },
                       })
                     }
-                    className="mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                    className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                   >
                     <option value="Inter, system-ui, sans-serif">Inter (High Legibility)</option>
                     <option value="Roboto, sans-serif">Roboto</option>
@@ -569,7 +569,7 @@ export default function AppearanceManager(): React.JSX.Element {
                     <option value="system-ui, -apple-system, sans-serif">System Native</option>
                   </select>
                   <p
-                    className="mt-2 p-3 rounded-lg bg-white/5 text-xs text-white/70 leading-relaxed"
+                    className="mt-2 p-3 rounded-lg bg-zinc-100 dark:bg-white/5 text-xs text-zinc-600 dark:text-white/70 leading-relaxed"
                     style={{ fontFamily: theme.typography.bodyFont }}
                   >
                     Next-generation sports equipment and technical apparel engineered for peak human performance with zero edge latency.
@@ -577,7 +577,7 @@ export default function AppearanceManager(): React.JSX.Element {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-white/70">Button Font</label>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Button Font</label>
                   <select
                     value={theme.typography.buttonFont}
                     onChange={(e) =>
@@ -586,7 +586,7 @@ export default function AppearanceManager(): React.JSX.Element {
                         typography: { ...theme.typography, buttonFont: e.target.value },
                       })
                     }
-                    className="mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                    className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                   >
                     <option value="Inter, system-ui, sans-serif">Inter</option>
                     <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans</option>
@@ -599,12 +599,12 @@ export default function AppearanceManager(): React.JSX.Element {
 
           {/* Tab 3: Design & Radii */}
           {activeTab === "design" && (
-            <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-6 space-y-5">
-              <h3 className="text-sm font-bold text-white">Layout, Radii & Shadows</h3>
+            <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-6 space-y-5">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Layout, Radii & Shadows</h3>
 
               <div className="space-y-4">
                 <div>
-                  <div className="flex justify-between text-xs font-semibold text-white/70">
+                  <div className="flex justify-between text-xs font-semibold text-zinc-700 dark:text-white/70">
                     <label>Container Max Width</label>
                     <span className="font-mono text-[#18C729]">{theme.design.containerWidth}</span>
                   </div>
@@ -616,7 +616,7 @@ export default function AppearanceManager(): React.JSX.Element {
                         design: { ...theme.design, containerWidth: e.target.value },
                       })
                     }
-                    className="mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white"
+                    className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white"
                   >
                     <option value="1200px">1200px (Compact)</option>
                     <option value="1280px">1280px (Standard / Max-7XL)</option>
@@ -627,7 +627,7 @@ export default function AppearanceManager(): React.JSX.Element {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-white/70">Button Radius</label>
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Button Radius</label>
                     <input
                       type="text"
                       value={theme.design.buttonRadius}
@@ -637,13 +637,13 @@ export default function AppearanceManager(): React.JSX.Element {
                           design: { ...theme.design, buttonRadius: e.target.value },
                         })
                       }
-                      className="mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 font-mono text-xs text-white"
+                      className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 font-mono text-xs text-zinc-900 dark:text-white"
                       placeholder="12px or 9999px"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-white/70">Card Radius</label>
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Card Radius</label>
                     <input
                       type="text"
                       value={theme.design.cardRadius}
@@ -653,13 +653,13 @@ export default function AppearanceManager(): React.JSX.Element {
                           design: { ...theme.design, cardRadius: e.target.value },
                         })
                       }
-                      className="mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 font-mono text-xs text-white"
+                      className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 font-mono text-xs text-zinc-900 dark:text-white"
                       placeholder="24px"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-white/70">Base Border Radius</label>
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Base Border Radius</label>
                     <input
                       type="text"
                       value={theme.design.borderRadius}
@@ -669,7 +669,7 @@ export default function AppearanceManager(): React.JSX.Element {
                           design: { ...theme.design, borderRadius: e.target.value },
                         })
                       }
-                      className="mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 font-mono text-xs text-white"
+                      className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 font-mono text-xs text-zinc-900 dark:text-white"
                       placeholder="12px"
                     />
                   </div>
@@ -677,7 +677,7 @@ export default function AppearanceManager(): React.JSX.Element {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-white/70">Shadow Intensity</label>
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Shadow Intensity</label>
                     <select
                       value={theme.design.shadows}
                       onChange={(e) =>
@@ -686,7 +686,7 @@ export default function AppearanceManager(): React.JSX.Element {
                           design: { ...theme.design, shadows: e.target.value as any },
                         })
                       }
-                      className="mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white"
+                      className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white"
                     >
                       <option value="none">None (Flat Minimalist)</option>
                       <option value="soft">Soft Ambient</option>
@@ -696,7 +696,7 @@ export default function AppearanceManager(): React.JSX.Element {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-white/70">Spacing Density</label>
+                    <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Spacing Density</label>
                     <select
                       value={theme.design.spacing}
                       onChange={(e) =>
@@ -705,7 +705,7 @@ export default function AppearanceManager(): React.JSX.Element {
                           design: { ...theme.design, spacing: e.target.value as any },
                         })
                       }
-                      className="mt-1 w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white"
+                      className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white"
                     >
                       <option value="compact">Compact (High density)</option>
                       <option value="normal">Normal (Standard)</option>
@@ -719,13 +719,13 @@ export default function AppearanceManager(): React.JSX.Element {
 
           {/* Tab 4: Branding Assets */}
           {activeTab === "branding" && (
-            <div className="rounded-2xl border border-white/10 bg-[#0d1611] p-6 space-y-4">
-              <h3 className="text-sm font-bold text-white">Store Branding & Announcements</h3>
+            <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-6 space-y-4">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Store Branding & Announcements</h3>
 
               {/* Logo Upload */}
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
+              <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-white">Store Logo</label>
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white">Store Logo</label>
                   <label className="cursor-pointer rounded-lg bg-[#18C729]/20 px-2.5 py-1 text-[11px] font-semibold text-[#18C729] hover:bg-[#18C729]/30 transition-colors">
                     {uploadingLogo ? "Uploading to R2..." : "Upload Logo to R2"}
                     <input
@@ -747,19 +747,19 @@ export default function AppearanceManager(): React.JSX.Element {
                       other: { ...theme.other, storeLogo: e.target.value },
                     })
                   }
-                  className="w-full rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
                 {theme.other.storeLogo && (
                   <div className="flex items-center gap-3 pt-1">
                     <img
                       src={theme.other.storeLogo}
                       alt="Logo preview"
-                      className="h-10 max-w-[120px] object-contain rounded border border-white/20 p-1 bg-black/50"
+                      className="h-10 max-w-[120px] object-contain rounded border border-zinc-300 dark:border-white/20 p-1 bg-zinc-100 dark:bg-black/50"
                     />
                     <button
                       type="button"
                       onClick={() => setTheme({ ...theme, other: { ...theme.other, storeLogo: "" } })}
-                      className="text-xs text-red-400 hover:underline"
+                      className="text-xs text-red-500 dark:text-red-400 hover:underline"
                     >
                       Clear logo
                     </button>
@@ -768,9 +768,9 @@ export default function AppearanceManager(): React.JSX.Element {
               </div>
 
               {/* Favicon Upload */}
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
+              <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-white">Favicon (.ico or .png)</label>
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-white">Favicon (.ico or .png)</label>
                   <label className="cursor-pointer rounded-lg bg-[#18C729]/20 px-2.5 py-1 text-[11px] font-semibold text-[#18C729] hover:bg-[#18C729]/30 transition-colors">
                     {uploadingFavicon ? "Uploading to R2..." : "Upload Favicon to R2"}
                     <input
@@ -792,13 +792,13 @@ export default function AppearanceManager(): React.JSX.Element {
                       other: { ...theme.other, favicon: e.target.value },
                     })
                   }
-                  className="w-full rounded-lg border border-white/15 bg-black/40 px-3 py-1.5 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
 
               {/* Announcement Bar */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-white/70">Top Announcement Bar Text</label>
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Top Announcement Bar Text</label>
                 <input
                   type="text"
                   value={theme.other.announcementBarText || ""}
@@ -808,7 +808,7 @@ export default function AppearanceManager(): React.JSX.Element {
                       other: { ...theme.other, announcementBarText: e.target.value },
                     })
                   }
-                  className="w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                  className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
                 />
               </div>
             </div>
@@ -818,7 +818,7 @@ export default function AppearanceManager(): React.JSX.Element {
         {/* Right Column: Live Mockup Preview */}
         <div className="lg:col-span-5 space-y-3 sticky top-20">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[#FEF500]">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-[#FEF500]">
               Interactive Live Storefront Mockup
             </h3>
             <span className="text-[10px] text-[#18C729] font-mono">Dynamic CSS Sync</span>

@@ -147,7 +147,7 @@ export default function AdminShell({
                 onClick={() => setMobileOpen(false)}
                 className={`group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all ${
                   isActive
-                    ? "border border-[#18C729]/30 bg-[#18C729]/10 text-[#18C729] dark:text-white shadow-sm shadow-[#18C729]/10"
+                    ? "border border-[#18C729]/40 bg-[#18C729]/15 text-emerald-800 dark:text-white font-semibold shadow-sm shadow-[#18C729]/10"
                     : "text-zinc-600 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-zinc-900 dark:hover:text-white"
                 }`}
               >
@@ -214,7 +214,7 @@ export default function AdminShell({
             <div className="flex items-center gap-2">
               <span className="flex h-2 w-2 rounded-full bg-[#18C729] animate-pulse" />
               <span className="text-xs font-semibold uppercase tracking-wider text-[#18C729]">
-                Live Cloudflare D1 Connected
+                Live Database Connected
               </span>
             </div>
           </div>

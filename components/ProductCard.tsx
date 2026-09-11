@@ -33,14 +33,14 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
 
   return (
     <div
-      className="group relative flex flex-col overflow-hidden border border-white/10 bg-[#0c140f]/80 p-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-white/30 hover:shadow-2xl"
+      className="group relative flex flex-col overflow-hidden border border-zinc-200 dark:border-white/10 bg-white/90 dark:bg-[#0c140f]/80 p-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-[#18C729]/50 hover:shadow-xl dark:hover:shadow-2xl shadow-sm text-zinc-900 dark:text-white"
       style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
     >
       {/* Product Image Link Container */}
       <Link
         href={`/product/${product.slug}`}
         prefetch={false}
-        className="relative block aspect-[4/4] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40"
+        className="relative block aspect-[4/4] w-full overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-black/40"
       >
         {resolvedImage ? (
           <Image
@@ -53,8 +53,8 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-white/5 to-white/[0.02] p-4 text-center">
-            <svg className="h-10 w-10 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="flex h-full w-full flex-col items-center justify-center bg-zinc-100 dark:bg-white/[0.02] p-4 text-center">
+            <svg className="h-10 w-10 text-zinc-400 dark:text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -62,7 +62,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <span className="mt-2 text-[10px] text-white/40 font-mono">No Image</span>
+            <span className="mt-2 text-[10px] text-zinc-500 dark:text-white/40 font-mono">No Image</span>
           </div>
         )}
 
@@ -77,7 +77,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
             </span>
           )}
           {product.brand && (
-            <span className="rounded-full border border-white/20 bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white/90 backdrop-blur-md">
+            <span className="rounded-full border border-zinc-300 dark:border-white/20 bg-white/80 dark:bg-black/60 px-2 py-0.5 text-[10px] font-medium text-zinc-800 dark:text-white/90 backdrop-blur-md">
               {product.brand}
             </span>
           )}
@@ -86,11 +86,11 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
         {/* Stock status indicator pill */}
         <div className="absolute top-3 right-3">
           {isOutOfStock ? (
-            <span className="rounded-full bg-red-950/80 border border-red-500/40 px-2 py-0.5 text-[10px] font-semibold text-red-300 backdrop-blur-md">
+            <span className="rounded-full bg-red-100 dark:bg-red-950/80 border border-red-400 dark:border-red-500/40 px-2 py-0.5 text-[10px] font-semibold text-red-700 dark:text-red-300 backdrop-blur-md">
               Sold Out
             </span>
           ) : isLowStock ? (
-            <span className="rounded-full bg-amber-950/80 border border-amber-500/40 px-2 py-0.5 text-[10px] font-semibold text-amber-300 backdrop-blur-md">
+            <span className="rounded-full bg-amber-100 dark:bg-amber-950/80 border border-amber-400 dark:border-amber-500/40 px-2 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-300 backdrop-blur-md">
               Low Stock
             </span>
           ) : null}
@@ -101,37 +101,36 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
       <div className="mt-4 flex flex-1 flex-col justify-between space-y-3">
         <div>
           {product.categoryName && (
-            <span className="text-[10px] font-medium uppercase tracking-wider text-white/40">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-500 dark:text-white/40">
               {product.categoryName}
             </span>
           )}
-          <h3 className="mt-0.5 text-sm font-bold text-white group-hover:text-[#18C729] transition-colors line-clamp-1">
+          <h3 className="mt-0.5 text-sm font-bold text-zinc-900 dark:text-white group-hover:text-[#18C729] transition-colors line-clamp-1">
             <Link href={`/product/${product.slug}`} prefetch={false}>{product.name}</Link>
           </h3>
           {product.shortDescription && (
-            <p className="mt-1 text-xs text-white/50 line-clamp-2">
+            <p className="mt-1 text-xs text-zinc-600 dark:text-white/50 line-clamp-2">
               {product.shortDescription}
             </p>
           )}
         </div>
 
         {/* Price & Action Area */}
-        <div className="pt-2 border-t border-white/10 flex items-center justify-between">
+        <div className="pt-2 border-t border-zinc-200 dark:border-white/10 flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             {hasSale ? (
               <>
                 <span
-                  className="text-base font-extrabold"
-                  style={{ color: "var(--color-primary, #18C729)" }}
+                  className="text-base font-extrabold text-[#18C729]"
                 >
                   ${Number(product.salePrice).toFixed(2)}
                 </span>
-                <span className="text-xs text-white/40 line-through">
+                <span className="text-xs text-zinc-400 dark:text-white/40 line-through">
                   ${Number(product.price).toFixed(2)}
                 </span>
               </>
             ) : (
-              <span className="text-base font-extrabold text-white">
+              <span className="text-base font-extrabold text-zinc-900 dark:text-white">
                 ${Number(product.price).toFixed(2)}
               </span>
             )}

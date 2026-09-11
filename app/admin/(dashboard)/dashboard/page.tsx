@@ -1,53 +1,58 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { getDb, products, categories, media, settings } from "@/lib/db";
-import { count } from "drizzle-orm";
-import {
-  getAnalyticsKpis,
-  getTodaySmartInsights,
-  type AnalyticsKpiResponse,
-  type SmartNotification,
-} from "@/lib/analytics";
+import type { AnalyticsKpiResponse, SmartNotification } from "@/lib/analytics";
 
-export const dynamic = "force-dynamic";
+interface DashboardData {
+  counts: {
+    totalProducts: number;
+    totalCategories: number;
+    totalMedia: number;
+    totalSettings: number;
+  };
+  analyticsKpis: AnalyticsKpiResponse | null;
+  smartInsights: SmartNotification[];
+  admin: {
+    email: string;
+    role: string;
+  };
+}
 
-export default async function AdminDashboardPage(): Promise<React.JSX.Element> {
-  const db = getDb();
-  let totalProducts = 0;
-  let totalCategories = 0;
-  let totalMedia = 0;
-  let totalSettings = 0;
+export default function AdminDashboardPage(): React.JSX.Element {
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (db) {
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      const [prodRes, catRes, mediaRes, setRes] = await Promise.all([
-        db.select({ value: count() }).from(products),
-        db.select({ value: count() }).from(categories),
-        db.select({ value: count() }).from(media),
-        db.select({ value: count() }).from(settings),
-      ]);
-      totalProducts = prodRes[0]?.value || 0;
-      totalCategories = catRes[0]?.value || 0;
-      totalMedia = mediaRes[0]?.value || 0;
-      totalSettings = setRes[0]?.value || 0;
+      const res = await fetch("/api/admin/dashboard");
+      const json = (await res.json()) as any;
+      if (res.ok && json.success) {
+        setData(json.data);
+      } else {
+        setError(json.error || "Failed to load dashboard metrics");
+      }
     } catch (err) {
-      console.warn("[Admin Dashboard] Error querying D1 metrics:", err);
+      setError("Network connection error. Please retry.");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  // Fetch real analytics KPIs and today's smart insights
-  let analyticsKpis: AnalyticsKpiResponse | null = null;
-  let smartInsights: SmartNotification[] = [];
-  try {
-    const [kpiData, insightsData] = await Promise.all([
-      getAnalyticsKpis("last_30_days"),
-      getTodaySmartInsights(),
-    ]);
-    analyticsKpis = kpiData;
-    smartInsights = insightsData.insights || [];
-  } catch (err) {
-    console.warn("[Admin Dashboard] Error querying analytics data:", err);
-  }
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const totalProducts = data?.counts?.totalProducts ?? 0;
+  const totalCategories = data?.counts?.totalCategories ?? 0;
+  const totalMedia = data?.counts?.totalMedia ?? 0;
+  const totalSettings = data?.counts?.totalSettings ?? 0;
+  const analyticsKpis = data?.analyticsKpis ?? null;
+  const smartInsights = data?.smartInsights ?? [];
+  const primaryInsight = smartInsights[0] ?? null;
 
   const statCards = [
     {
@@ -88,11 +93,9 @@ export default async function AdminDashboardPage(): Promise<React.JSX.Element> {
     },
   ];
 
-  const primaryInsight = smartInsights[0] || null;
-
   return (
     <div className="space-y-8">
-      {/* Top Banner / Welcome Shell with Link to Analytics */}
+      {/* Top Banner / Welcome Shell */}
       <div className="relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0f1a13] p-6 shadow-xl">
         <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -124,21 +127,51 @@ export default async function AdminDashboardPage(): Promise<React.JSX.Element> {
         </div>
       </div>
 
-      {/* Part 4.2: 3 Mini KPI Widgets for Store Telemetry */}
-      {analyticsKpis && (
-        <div>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-white/60">
-              Live Sales Performance (Last 30 Days)
-            </h2>
-            <Link
-              href="/admin/analytics"
-              className="text-xs font-semibold text-[#18C729] hover:underline"
-            >
-              Detailed Analytics &rarr;
-            </Link>
-          </div>
+      {/* Error Fallback with Retry */}
+      {error && (
+        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs text-red-600 dark:text-red-300 flex items-center justify-between">
+          <span>{error}</span>
+          <button
+            type="button"
+            onClick={fetchDashboardData}
+            className="font-bold underline hover:text-red-700 dark:hover:text-white"
+          >
+            Retry Fetch
+          </button>
+        </div>
+      )}
 
+      {/* 3 Mini KPI Widgets (Skeleton or Real) */}
+      <div>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-white/60">
+            Live Sales Performance (Last 30 Days)
+          </h2>
+          <Link
+            href="/admin/analytics"
+            className="text-xs font-semibold text-[#18C729] hover:underline"
+          >
+            Detailed Analytics &rarr;
+          </Link>
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-28 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-sm animate-pulse flex flex-col justify-between"
+              >
+                <div className="flex justify-between items-center">
+                  <div className="h-3 w-24 bg-zinc-200 dark:bg-white/10 rounded" />
+                  <div className="h-7 w-7 bg-zinc-200 dark:bg-white/10 rounded-lg" />
+                </div>
+                <div className="h-6 w-32 bg-zinc-200 dark:bg-white/10 rounded" />
+                <div className="h-2.5 w-40 bg-zinc-200 dark:bg-white/10 rounded" />
+              </div>
+            ))}
+          </div>
+        ) : analyticsKpis ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {/* KPI 1: Total Revenue */}
             <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-sm transition-all hover:border-[#18C729]/40">
@@ -215,11 +248,13 @@ export default async function AdminDashboardPage(): Promise<React.JSX.Element> {
               </p>
             </div>
           </div>
-        </div>
-      )}
+        ) : null}
+      </div>
 
-      {/* Part 4.2: Today's Smart Insights Preview Card */}
-      {primaryInsight && (
+      {/* Today's Smart Insights Preview Card */}
+      {loading ? (
+        <div className="h-24 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 animate-pulse" />
+      ) : primaryInsight ? (
         <div className="rounded-2xl border border-[#18C729]/30 bg-gradient-to-r from-[#18C729]/10 via-[#FEF500]/5 to-transparent p-5 shadow-md">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
@@ -254,7 +289,7 @@ export default async function AdminDashboardPage(): Promise<React.JSX.Element> {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* Real Statistics Grid (Catalog Objects) */}
       <div>
@@ -262,40 +297,56 @@ export default async function AdminDashboardPage(): Promise<React.JSX.Element> {
           Catalog & Assets Inventory
         </h2>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {statCards.map((card) => (
-            <Link
-              key={card.title}
-              href={card.href}
-              className="group relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-sm transition-all hover:border-[#18C729]/40 hover:shadow-lg"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-white/60">
-                  {card.title}
-                </span>
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 dark:bg-white/5 transition-transform group-hover:scale-110"
-                  style={{ color: card.accent }}
-                >
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d={card.icon} />
-                  </svg>
+          {loading ? (
+            [1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="h-32 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-sm animate-pulse flex flex-col justify-between"
+              >
+                <div className="flex justify-between items-center">
+                  <div className="h-3 w-20 bg-zinc-200 dark:bg-white/10 rounded" />
+                  <div className="h-8 w-8 bg-zinc-200 dark:bg-white/10 rounded-lg" />
                 </div>
+                <div className="h-7 w-16 bg-zinc-200 dark:bg-white/10 rounded" />
+                <div className="h-2.5 w-32 bg-zinc-200 dark:bg-white/10 rounded" />
               </div>
+            ))
+          ) : (
+            statCards.map((card) => (
+              <Link
+                key={card.title}
+                href={card.href}
+                className="group relative overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-sm transition-all hover:border-[#18C729]/40 hover:shadow-lg"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-white/60">
+                    {card.title}
+                  </span>
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 dark:bg-white/5 transition-transform group-hover:scale-110"
+                    style={{ color: card.accent }}
+                  >
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d={card.icon} />
+                    </svg>
+                  </div>
+                </div>
 
-              <div className="mt-4 flex items-baseline gap-2">
-                <span className="text-3xl font-extrabold text-zinc-900 dark:text-white">
-                  {card.value}
-                </span>
-                <span className="rounded-md bg-zinc-100 dark:bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold text-[#18C729]">
-                  {card.badge}
-                </span>
-              </div>
+                <div className="mt-4 flex items-baseline gap-2">
+                  <span className="text-3xl font-extrabold text-zinc-900 dark:text-white">
+                    {card.value}
+                  </span>
+                  <span className="rounded-md bg-zinc-100 dark:bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold text-[#18C729]">
+                    {card.badge}
+                  </span>
+                </div>
 
-              <p className="mt-2 text-xs text-zinc-500 dark:text-white/40">
-                {card.desc}
-              </p>
-            </Link>
-          ))}
+                <p className="mt-2 text-xs text-zinc-500 dark:text-white/40">
+                  {card.desc}
+                </p>
+              </Link>
+            ))
+          )}
         </div>
       </div>
 

@@ -158,15 +158,15 @@ export default function AnalyticsDashboard(): React.JSX.Element {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-extrabold tracking-tight text-white dark:text-white text-zinc-900 sm:text-3xl">
+            <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-white sm:text-3xl">
               Analytics & Intelligence
             </h1>
             <span className="flex items-center gap-1.5 rounded-full border border-[#18C729]/30 bg-[#18C729]/10 px-2.5 py-0.5 text-xs font-semibold text-[#18C729]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#18C729] animate-pulse" />
-              Real D1 Data
+              Live Telemetry
             </span>
           </div>
-          <p className="mt-1 text-xs text-white/60 dark:text-white/60 text-zinc-600">
+          <p className="mt-1 text-xs text-zinc-600 dark:text-white/60">
             Real-time sales telemetry, predictive weekly/monthly demand patterns, and catalog health.
           </p>
         </div>
@@ -178,9 +178,9 @@ export default function AnalyticsDashboard(): React.JSX.Element {
             type="button"
             onClick={handleExportCsv}
             disabled={exporting || loading}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 dark:border-white/10 border-zinc-300 bg-white/5 dark:bg-white/5 bg-zinc-100 px-4 py-2 text-xs font-bold text-white dark:text-white text-zinc-900 shadow-sm hover:bg-white/10 dark:hover:bg-white/10 hover:bg-zinc-200 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-4 py-2 text-xs font-bold text-zinc-900 dark:text-white shadow-sm hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors disabled:opacity-50"
           >
-            <svg className="h-4 w-4 text-[#FEF500]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-4 w-4 text-amber-500 dark:text-[#FEF500]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span>{exporting ? "Generating CSV..." : "Export to CSV"}</span>
@@ -191,7 +191,7 @@ export default function AnalyticsDashboard(): React.JSX.Element {
             type="button"
             onClick={fetchAnalytics}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 dark:border-white/10 border-zinc-300 bg-white/5 dark:bg-white/5 bg-zinc-100 p-2 text-xs font-semibold text-white/70 dark:text-white/70 text-zinc-600 hover:text-white dark:hover:text-white hover:text-zinc-900 hover:bg-white/10 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 p-2 text-xs font-semibold text-zinc-600 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors"
             title="Refresh analytics data"
             aria-label="Refresh analytics data"
           >
@@ -209,7 +209,7 @@ export default function AnalyticsDashboard(): React.JSX.Element {
       </div>
 
       {/* Time Period Selector Tabs */}
-      <div className="space-y-3 rounded-2xl border border-white/10 dark:border-white/10 border-zinc-200 bg-[#0c140f] dark:bg-[#0c140f] bg-white p-3 shadow-lg">
+      <div className="space-y-3 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-3 shadow-lg">
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {PERIOD_OPTIONS.map((opt) => {
             const isSelected = period === opt.id;
@@ -221,7 +221,7 @@ export default function AnalyticsDashboard(): React.JSX.Element {
                 className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                   isSelected
                     ? "border border-[#18C729]/50 bg-[#18C729] text-black shadow-md shadow-[#18C729]/20"
-                    : "border border-white/5 dark:border-white/5 border-zinc-200 bg-white/5 dark:bg-white/5 bg-zinc-100 text-white/70 dark:text-white/70 text-zinc-700 hover:bg-white/10 dark:hover:bg-white/10 hover:bg-zinc-200 hover:text-white dark:hover:text-white hover:text-zinc-900"
+                    : "border border-zinc-200 dark:border-white/5 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
                 }`}
               >
                 {opt.label}
@@ -232,23 +232,23 @@ export default function AnalyticsDashboard(): React.JSX.Element {
 
         {/* Custom Date Pickers (Shown only when 'custom' is active) */}
         {period === "custom" && (
-          <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-white/10 dark:border-white/10 border-zinc-200 text-xs">
-            <label className="flex items-center gap-2 text-white/70 dark:text-white/70 text-zinc-600">
+          <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-zinc-200 dark:border-white/10 text-xs">
+            <label className="flex items-center gap-2 text-zinc-600 dark:text-white/70">
               <span>From:</span>
               <input
                 type="date"
                 value={customFrom}
                 onChange={(e) => setCustomFrom(e.target.value)}
-                className="rounded-lg border border-white/15 dark:border-white/15 border-zinc-300 bg-black/40 dark:bg-black/40 bg-zinc-100 px-2.5 py-1 text-white dark:text-white text-zinc-900 focus:border-[#18C729] focus:outline-none"
+                className="rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-black/40 px-2.5 py-1 text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
               />
             </label>
-            <label className="flex items-center gap-2 text-white/70 dark:text-white/70 text-zinc-600">
+            <label className="flex items-center gap-2 text-zinc-600 dark:text-white/70">
               <span>To:</span>
               <input
                 type="date"
                 value={customTo}
                 onChange={(e) => setCustomTo(e.target.value)}
-                className="rounded-lg border border-white/15 dark:border-white/15 border-zinc-300 bg-black/40 dark:bg-black/40 bg-zinc-100 px-2.5 py-1 text-white dark:text-white text-zinc-900 focus:border-[#18C729] focus:outline-none"
+                className="rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-black/40 px-2.5 py-1 text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
               />
             </label>
             <button
@@ -282,10 +282,10 @@ export default function AnalyticsDashboard(): React.JSX.Element {
       {/* 3. Interactive Charts Grid */}
       <section className="space-y-6" aria-labelledby="charts-heading">
         <div className="flex items-center justify-between">
-          <h2 id="charts-heading" className="text-lg font-extrabold tracking-tight text-white dark:text-white text-zinc-900">
+          <h2 id="charts-heading" className="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white">
             Performance Visualizations
           </h2>
-          <span className="text-xs text-white/50 dark:text-white/50 text-zinc-500 font-mono">
+          <span className="text-xs text-zinc-500 dark:text-white/50 font-mono">
             Zero-bundle SVG engine
           </span>
         </div>
@@ -293,13 +293,13 @@ export default function AnalyticsDashboard(): React.JSX.Element {
         {/* Row 1: Sales Trend + Order Status Donut */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Line Chart (2 Cols) */}
-          <div className="lg:col-span-2 rounded-2xl border border-white/10 dark:border-white/10 border-zinc-200 bg-[#0d1611] dark:bg-[#0d1611] bg-white p-5 shadow-lg">
+          <div className="lg:col-span-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-white dark:text-white text-zinc-900">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
                   Sales Trend (Revenue & Order Volume)
                 </h3>
-                <p className="text-[11px] text-white/50 dark:text-white/50 text-zinc-500">
+                <p className="text-[11px] text-zinc-500 dark:text-white/50">
                   Dual-axis interactive time series with hover telemetry
                 </p>
               </div>
@@ -308,12 +308,12 @@ export default function AnalyticsDashboard(): React.JSX.Element {
           </div>
 
           {/* Donut Chart (1 Col) */}
-          <div className="rounded-2xl border border-white/10 dark:border-white/10 border-zinc-200 bg-[#0d1611] dark:bg-[#0d1611] bg-white p-5 shadow-lg">
+          <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-lg">
             <div className="mb-4">
-              <h3 className="text-sm font-bold text-white dark:text-white text-zinc-900">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
                 Order Status Distribution
               </h3>
-              <p className="text-[11px] text-white/50 dark:text-white/50 text-zinc-500">
+              <p className="text-[11px] text-zinc-500 dark:text-white/50">
                 Lifecycle breakdown across all active orders
               </p>
             </div>
@@ -324,13 +324,13 @@ export default function AnalyticsDashboard(): React.JSX.Element {
         {/* Row 2: Top Selling Products + Category Performance */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Top Products */}
-          <div className="rounded-2xl border border-white/10 dark:border-white/10 border-zinc-200 bg-[#0d1611] dark:bg-[#0d1611] bg-white p-5 shadow-lg">
+          <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-white dark:text-white text-zinc-900">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
                   Top Selling Products
                 </h3>
-                <p className="text-[11px] text-white/50 dark:text-white/50 text-zinc-500">
+                <p className="text-[11px] text-zinc-500 dark:text-white/50">
                   Top 10 catalog items by sales quantity
                 </p>
               </div>
@@ -342,17 +342,17 @@ export default function AnalyticsDashboard(): React.JSX.Element {
           </div>
 
           {/* Category Performance */}
-          <div className="rounded-2xl border border-white/10 dark:border-white/10 border-zinc-200 bg-[#0d1611] dark:bg-[#0d1611] bg-white p-5 shadow-lg">
+          <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-white dark:text-white text-zinc-900">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
                   Category Performance
                 </h3>
-                <p className="text-[11px] text-white/50 dark:text-white/50 text-zinc-500">
+                <p className="text-[11px] text-zinc-500 dark:text-white/50">
                   Revenue contribution and unit share per taxonomy
                 </p>
               </div>
-              <span className="text-xs font-mono font-bold text-[#FEF500]">
+              <span className="text-xs font-mono font-bold text-amber-600 dark:text-[#FEF500]">
                 {categories.length} Taxonomies
               </span>
             </div>
@@ -361,12 +361,12 @@ export default function AnalyticsDashboard(): React.JSX.Element {
         </div>
 
         {/* Row 3: Customer Growth Area Chart */}
-        <div className="rounded-2xl border border-white/10 dark:border-white/10 border-zinc-200 bg-[#0d1611] dark:bg-[#0d1611] bg-white p-5 shadow-lg">
+        <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-5 shadow-lg">
           <div className="mb-3">
-            <h3 className="text-sm font-bold text-white dark:text-white text-zinc-900">
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
               Customer Acquisition Growth
             </h3>
-            <p className="text-[11px] text-white/50 dark:text-white/50 text-zinc-500">
+            <p className="text-[11px] text-zinc-500 dark:text-white/50">
               Cumulative unique shopper trajectory over selected timeframe
             </p>
           </div>

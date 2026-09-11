@@ -52,7 +52,7 @@ export default function ProductGallery({
   return (
     <div className="flex flex-col gap-4">
       {/* Active Featured Image Viewer (LCP target) */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-3xl border border-white/15 bg-black/50 shadow-2xl group">
+      <div className="relative aspect-square w-full overflow-hidden rounded-3xl border border-zinc-200 dark:border-white/15 bg-zinc-100 dark:bg-black/50 shadow-2xl group">
         {activeImage ? (
           <Image
             src={activeImage}
@@ -64,7 +64,7 @@ export default function ProductGallery({
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="aspect-square w-full flex flex-col items-center justify-center p-8 text-center text-white/30">
+          <div className="aspect-square w-full flex flex-col items-center justify-center p-8 text-center text-zinc-400 dark:text-white/30">
             <svg className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -77,7 +77,7 @@ export default function ProductGallery({
           </div>
         )}
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 dark:from-black/40 via-transparent to-transparent" />
       </div>
 
       {/* Gallery Thumbnail Strip */}
@@ -93,7 +93,7 @@ export default function ProductGallery({
                 className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border transition-all cursor-pointer ${
                   isCurrent
                     ? "border-[#18C729] ring-2 ring-[#18C729]/30 scale-105"
-                    : "border-white/10 opacity-70 hover:opacity-100 hover:border-white/30"
+                    : "border-zinc-200 dark:border-white/10 opacity-70 hover:opacity-100 hover:border-zinc-400 dark:hover:border-white/30"
                 }`}
               >
                 <Image

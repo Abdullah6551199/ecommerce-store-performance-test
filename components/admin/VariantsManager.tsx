@@ -466,7 +466,7 @@ export default function VariantsManager({
           className={`flex items-center gap-2 rounded-xl p-3 text-xs border transition-all ${
             feedback.type === "success"
               ? "border-[#18C729]/30 bg-[#18C729]/10 text-[#18C729]"
-              : "border-red-500/30 bg-red-500/10 text-red-400"
+              : "border-red-500/30 bg-red-500/10 text-red-500 dark:text-red-400"
           }`}
         >
           {feedback.type === "success" ? (
@@ -483,29 +483,29 @@ export default function VariantsManager({
       )}
 
       {/* 1. ATTRIBUTES CONFIGURATION SECTION */}
-      <div className="rounded-2xl border border-white/10 bg-black/25 p-4 sm:p-5 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
+      <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-black/25 p-4 sm:p-5 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-200 dark:border-white/10 pb-3">
           <div>
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
               <svg className="h-4 w-4 text-[#18C729]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
               Step 1: Define Attributes & Options
             </h3>
-            <p className="text-[11px] text-white/50">
+            <p className="text-[11px] text-zinc-500 dark:text-white/50">
               Add product attributes like Color or Size and list the available options.
             </p>
           </div>
 
           {/* Quick Add Preset Buttons */}
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[11px] text-white/40">Presets:</span>
+            <span className="text-[11px] text-zinc-500 dark:text-white/40">Presets:</span>
             {presetAttributes.map((preset) => (
               <button
                 key={preset}
                 type="button"
                 onClick={() => handleAddAttribute(preset)}
-                className="rounded-lg border border-white/15 bg-white/5 px-2 py-0.5 text-[11px] font-medium text-white/70 hover:border-[#18C729] hover:text-[#18C729] transition-colors"
+                className="rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2 py-0.5 text-[11px] font-medium text-zinc-700 dark:text-white/70 hover:border-[#18C729] hover:text-[#18C729] transition-colors"
               >
                 +{preset}
               </button>
@@ -518,21 +518,21 @@ export default function VariantsManager({
           {attributesList.map((attr, attrIdx) => (
             <div
               key={attrIdx}
-              className="rounded-xl border border-white/10 bg-white/[0.02] p-3.5 space-y-2.5"
+              className="rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-white/[0.02] p-3.5 space-y-2.5"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="rounded-md bg-[#18C729]/15 px-2 py-0.5 text-xs font-bold text-[#18C729] border border-[#18C729]/30">
                     {attr.name}
                   </span>
-                  <span className="text-[11px] text-white/40">
+                  <span className="text-[11px] text-zinc-500 dark:text-white/40">
                     ({attr.values.length} value{attr.values.length === 1 ? "" : "s"})
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleRemoveAttribute(attrIdx)}
-                  className="text-xs text-red-400/70 hover:text-red-400 transition-colors"
+                  className="text-xs text-red-500 dark:text-red-400/70 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                 >
                   Remove Attribute
                 </button>
@@ -543,13 +543,13 @@ export default function VariantsManager({
                 {attr.values.map((val, valIdx) => (
                   <span
                     key={valIdx}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-white"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-xs text-zinc-900 dark:text-white"
                   >
                     <span>{val}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveValue(attrIdx, valIdx)}
-                      className="text-white/40 hover:text-red-400 transition-colors"
+                      className="text-zinc-400 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                       title="Remove option"
                     >
                       &times;
@@ -581,12 +581,12 @@ export default function VariantsManager({
                         ? "S, M, L"
                         : "Value"
                     })`}
-                    className="h-8 w-44 rounded-lg border border-white/15 bg-white/5 px-2.5 text-xs text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+                    className="h-8 w-44 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => handleAddValue(attrIdx)}
-                    className="h-8 rounded-lg bg-white/10 px-2.5 text-xs font-semibold text-white hover:bg-[#18C729] hover:text-black transition-colors"
+                    className="h-8 rounded-lg bg-zinc-200 dark:bg-white/10 px-2.5 text-xs font-semibold text-zinc-800 dark:text-white hover:bg-[#18C729] hover:text-black transition-colors"
                   >
                     Add
                   </button>
@@ -608,12 +608,12 @@ export default function VariantsManager({
                 }
               }}
               placeholder="New custom attribute name (e.g. Material, Edition)"
-              className="h-9 w-64 rounded-xl border border-white/15 bg-white/5 px-3 text-xs text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+              className="h-9 w-64 rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
             />
             <button
               type="button"
               onClick={() => handleAddAttribute(newAttrName)}
-              className="h-9 rounded-xl border border-white/20 bg-white/5 px-3.5 text-xs font-semibold text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
+              className="h-9 rounded-xl border border-zinc-300 dark:border-white/20 bg-white dark:bg-white/5 px-3.5 text-xs font-semibold text-zinc-800 dark:text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
             >
               + Add Attribute
             </button>
@@ -621,7 +621,7 @@ export default function VariantsManager({
         </div>
 
         {/* Generate Button Action */}
-        <div className="flex items-center justify-between pt-2 border-t border-white/10">
+        <div className="flex items-center justify-between pt-2 border-t border-zinc-200 dark:border-white/10">
           <button
             type="button"
             onClick={handleGenerateCombinations}
@@ -636,7 +636,7 @@ export default function VariantsManager({
           <button
             type="button"
             onClick={handleAddSingleVariant}
-            className="rounded-xl border border-white/15 bg-white/5 px-3.5 py-2 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+            className="rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-white/80 hover:bg-zinc-100 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-colors"
           >
             + Add Single Variant Row
           </button>
@@ -644,16 +644,16 @@ export default function VariantsManager({
       </div>
 
       {/* 2. VARIANT COMBINATIONS TABLE / CARDS */}
-      <div className="rounded-2xl border border-white/10 bg-black/25 p-4 sm:p-5 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+      <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-black/25 p-4 sm:p-5 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 dark:border-white/10 pb-3">
           <div>
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
               <svg className="h-4 w-4 text-[#FEF500]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
               </svg>
               Step 2: Configure Variants ({variants.length})
             </h3>
-            <p className="text-[11px] text-white/50">
+            <p className="text-[11px] text-zinc-500 dark:text-white/50">
               Set unique SKU, pricing, stock, and individual photos for each variant.
             </p>
           </div>
@@ -668,12 +668,12 @@ export default function VariantsManager({
                   value={bulkPrice}
                   onChange={(e) => setBulkPrice(e.target.value)}
                   placeholder="Bulk Price ($)"
-                  className="h-7 w-24 rounded-lg border border-white/15 bg-white/5 px-2 text-xs text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+                  className="h-7 w-24 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={handleApplyBulkPrice}
-                  className="h-7 rounded-lg bg-white/10 px-2 text-[11px] font-semibold text-white/80 hover:bg-white/20 transition-colors"
+                  className="h-7 rounded-lg bg-zinc-200 dark:bg-white/10 px-2 text-[11px] font-semibold text-zinc-700 dark:text-white/80 hover:bg-zinc-300 dark:hover:bg-white/20 transition-colors"
                 >
                   Set All
                 </button>
@@ -685,12 +685,12 @@ export default function VariantsManager({
                   value={bulkStock}
                   onChange={(e) => setBulkStock(e.target.value)}
                   placeholder="Bulk Stock"
-                  className="h-7 w-20 rounded-lg border border-white/15 bg-white/5 px-2 text-xs text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+                  className="h-7 w-20 rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={handleApplyBulkStock}
-                  className="h-7 rounded-lg bg-white/10 px-2 text-[11px] font-semibold text-white/80 hover:bg-white/20 transition-colors"
+                  className="h-7 rounded-lg bg-zinc-200 dark:bg-white/10 px-2 text-[11px] font-semibold text-zinc-700 dark:text-white/80 hover:bg-zinc-300 dark:hover:bg-white/20 transition-colors"
                 >
                   Set All
                 </button>
@@ -699,7 +699,7 @@ export default function VariantsManager({
               <button
                 type="button"
                 onClick={() => setVariants([])}
-                className="h-7 rounded-lg bg-red-500/10 px-2 text-[11px] font-semibold text-red-400 hover:bg-red-500/20 transition-colors"
+                className="h-7 rounded-lg bg-red-500/10 px-2 text-[11px] font-semibold text-red-500 dark:text-red-400 hover:bg-red-500/20 transition-colors"
               >
                 Clear All
               </button>
@@ -709,12 +709,12 @@ export default function VariantsManager({
 
         {/* Variants List / Rows */}
         {variants.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-white/15 p-8 text-center text-white/40 space-y-2">
-            <svg className="mx-auto h-8 w-8 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="rounded-xl border border-dashed border-zinc-300 dark:border-white/15 p-8 text-center text-zinc-400 dark:text-white/40 space-y-2">
+            <svg className="mx-auto h-8 w-8 text-zinc-300 dark:text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
             <p className="text-xs">No variants defined yet.</p>
-            <p className="text-[11px] text-white/30">
+            <p className="text-[11px] text-zinc-400 dark:text-white/30">
               Add attributes above and click &quot;Generate Variant Combinations&quot; to begin.
             </p>
           </div>
@@ -725,8 +725,8 @@ export default function VariantsManager({
                 key={v.id || idx}
                 className={`rounded-2xl border p-4 transition-all ${
                   v.isDefault
-                    ? "border-[#18C729]/50 bg-[#18C729]/[0.03] shadow-md shadow-[#18C729]/5"
-                    : "border-white/10 bg-white/[0.01]"
+                    ? "border-[#18C729]/50 bg-[#18C729]/[0.04] shadow-md shadow-[#18C729]/5"
+                    : "border-zinc-200 dark:border-white/10 bg-white dark:bg-white/[0.01]"
                 }`}
               >
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -738,7 +738,7 @@ export default function VariantsManager({
                       className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors ${
                         v.isDefault
                           ? "bg-[#18C729] text-black"
-                          : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
+                          : "bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-white/50 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
                       }`}
                       title={v.isDefault ? "Default Variant" : "Click to set as default variant"}
                     >
@@ -759,10 +759,10 @@ export default function VariantsManager({
                       {Object.entries(v.options || {}).map(([key, val]) => (
                         <span
                           key={key}
-                          className="rounded-md border border-white/15 bg-white/5 px-2 py-0.5 text-xs text-white/90"
+                          className="rounded-md border border-zinc-200 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-2 py-0.5 text-xs text-zinc-800 dark:text-white/90"
                         >
-                          <span className="text-white/40">{key}:</span>{" "}
-                          <span className="font-semibold text-[#FEF500]">{val}</span>
+                          <span className="text-zinc-500 dark:text-white/40">{key}:</span>{" "}
+                          <span className="font-semibold text-emerald-600 dark:text-[#FEF500]">{val}</span>
                         </span>
                       ))}
                     </div>
@@ -775,7 +775,7 @@ export default function VariantsManager({
                       onClick={() =>
                         setExpandedRows((prev) => ({ ...prev, [idx]: !prev[idx] }))
                       }
-                      className="rounded-lg bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/60 hover:bg-white/10 hover:text-white transition-colors"
+                      className="rounded-lg bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-[11px] font-medium text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-colors"
                     >
                       {expandedRows[idx] ? "Hide Specs" : "Weight & Dimensions"}
                     </button>
@@ -783,7 +783,7 @@ export default function VariantsManager({
                     <button
                       type="button"
                       onClick={() => handleDeleteVariant(idx)}
-                      className="rounded-lg p-1.5 text-white/40 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                      className="rounded-lg p-1.5 text-zinc-400 dark:text-white/40 hover:bg-red-500/10 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                       title="Delete Variant"
                     >
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -797,8 +797,8 @@ export default function VariantsManager({
                 <div className="mt-3.5 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-5 items-end">
                   {/* SKU */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-white/60 mb-1">
-                      SKU <span className="text-red-400">*</span>
+                    <label className="block text-[11px] font-semibold text-zinc-700 dark:text-white/60 mb-1">
+                      SKU <span className="text-red-500 dark:text-red-400">*</span>
                     </label>
                     <input
                       type="text"
@@ -807,13 +807,13 @@ export default function VariantsManager({
                         handleUpdateVariant(idx, { sku: e.target.value.toUpperCase() })
                       }
                       placeholder="e.g. SNEAK-BLK-S"
-                      className="h-9 w-full rounded-xl border border-white/15 bg-white/5 px-2.5 text-xs font-mono text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+                      className="h-9 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2.5 text-xs font-mono text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
                     />
                   </div>
 
                   {/* Price */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-white/60 mb-1">
+                    <label className="block text-[11px] font-semibold text-zinc-700 dark:text-white/60 mb-1">
                       Price ($)
                     </label>
                     <input
@@ -826,13 +826,13 @@ export default function VariantsManager({
                         })
                       }
                       placeholder={basePrice > 0 ? `$${basePrice.toFixed(2)} (Base)` : "0.00"}
-                      className="h-9 w-full rounded-xl border border-white/15 bg-white/5 px-2.5 text-xs text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+                      className="h-9 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
                     />
                   </div>
 
                   {/* Sale Price */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-white/60 mb-1">
+                    <label className="block text-[11px] font-semibold text-zinc-700 dark:text-white/60 mb-1">
                       Sale Price ($)
                     </label>
                     <input
@@ -845,13 +845,13 @@ export default function VariantsManager({
                         })
                       }
                       placeholder="Optional"
-                      className="h-9 w-full rounded-xl border border-white/15 bg-white/5 px-2.5 text-xs text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+                      className="h-9 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
                     />
                   </div>
 
                   {/* Stock */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-white/60 mb-1">
+                    <label className="block text-[11px] font-semibold text-zinc-700 dark:text-white/60 mb-1">
                       Stock Qty
                     </label>
                     <input
@@ -861,18 +861,18 @@ export default function VariantsManager({
                         handleUpdateVariant(idx, { stock: parseInt(e.target.value, 10) || 0 })
                       }
                       placeholder="0"
-                      className="h-9 w-full rounded-xl border border-white/15 bg-white/5 px-2.5 text-xs text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+                      className="h-9 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
                     />
                   </div>
 
                   {/* Image Picker / Uploader */}
                   <div>
-                    <label className="block text-[11px] font-semibold text-white/60 mb-1">
+                    <label className="block text-[11px] font-semibold text-zinc-700 dark:text-white/60 mb-1">
                       Variant Image
                     </label>
                     <div className="flex items-center gap-2">
                       {v.imageUrl ? (
-                        <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-white/20 bg-black">
+                        <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg border border-zinc-300 dark:border-white/20 bg-zinc-100 dark:bg-black">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={v.imageUrl} alt={v.sku} className="h-full w-full object-cover" />
                           <button
@@ -885,7 +885,7 @@ export default function VariantsManager({
                           </button>
                         </div>
                       ) : (
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-dashed border-white/20 text-white/20 text-xs">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-dashed border-zinc-300 dark:border-white/20 text-zinc-400 dark:text-white/20 text-xs">
                           Img
                         </div>
                       )}
@@ -894,7 +894,7 @@ export default function VariantsManager({
                         type="button"
                         disabled={uploadingIndex === idx}
                         onClick={() => triggerImageUpload(idx)}
-                        className="h-9 flex-1 rounded-xl border border-white/15 bg-white/5 px-2 text-[11px] font-medium text-white/70 hover:border-[#18C729] hover:text-white disabled:opacity-50 transition-colors truncate"
+                        className="h-9 flex-1 rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2 text-[11px] font-medium text-zinc-700 dark:text-white/70 hover:border-[#18C729] hover:text-[#18C729] dark:hover:text-white disabled:opacity-50 transition-colors truncate"
                       >
                         {uploadingIndex === idx ? "Uploading..." : v.imageUrl ? "Change" : "+ Upload"}
                       </button>
@@ -904,7 +904,7 @@ export default function VariantsManager({
                         <button
                           type="button"
                           onClick={() => handleUpdateVariant(idx, { imageUrl: availableImages[0] })}
-                          className="h-9 rounded-xl border border-white/15 bg-white/5 px-2 text-[10px] text-white/50 hover:text-white"
+                          className="h-9 rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2 text-[10px] text-zinc-600 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white"
                           title="Use Main Product Photo"
                         >
                           Use Main
@@ -916,9 +916,9 @@ export default function VariantsManager({
 
                 {/* Expandable Specifications (Weight & Dimensions) */}
                 {expandedRows[idx] && (
-                  <div className="mt-3.5 pt-3 border-t border-white/10 grid grid-cols-2 sm:grid-cols-5 gap-3">
+                  <div className="mt-3.5 pt-3 border-t border-zinc-200 dark:border-white/10 grid grid-cols-2 sm:grid-cols-5 gap-3">
                     <div>
-                      <label className="block text-[10px] text-white/50 mb-1">Weight (kg/lb)</label>
+                      <label className="block text-[10px] text-zinc-500 dark:text-white/50 mb-1">Weight (kg/lb)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -929,11 +929,11 @@ export default function VariantsManager({
                           })
                         }
                         placeholder="e.g. 0.85"
-                        className="h-8 w-full rounded-lg border border-white/15 bg-white/5 px-2 text-xs text-white"
+                        className="h-8 w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2 text-xs text-zinc-900 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-white/50 mb-1">Length</label>
+                      <label className="block text-[10px] text-zinc-500 dark:text-white/50 mb-1">Length</label>
                       <input
                         type="number"
                         step="0.1"
@@ -947,11 +947,11 @@ export default function VariantsManager({
                           })
                         }
                         placeholder="Length"
-                        className="h-8 w-full rounded-lg border border-white/15 bg-white/5 px-2 text-xs text-white"
+                        className="h-8 w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2 text-xs text-zinc-900 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-white/50 mb-1">Width</label>
+                      <label className="block text-[10px] text-zinc-500 dark:text-white/50 mb-1">Width</label>
                       <input
                         type="number"
                         step="0.1"
@@ -965,11 +965,11 @@ export default function VariantsManager({
                           })
                         }
                         placeholder="Width"
-                        className="h-8 w-full rounded-lg border border-white/15 bg-white/5 px-2 text-xs text-white"
+                        className="h-8 w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2 text-xs text-zinc-900 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-white/50 mb-1">Height</label>
+                      <label className="block text-[10px] text-zinc-500 dark:text-white/50 mb-1">Height</label>
                       <input
                         type="number"
                         step="0.1"
@@ -983,11 +983,11 @@ export default function VariantsManager({
                           })
                         }
                         placeholder="Height"
-                        className="h-8 w-full rounded-lg border border-white/15 bg-white/5 px-2 text-xs text-white"
+                        className="h-8 w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-2 text-xs text-zinc-900 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-white/50 mb-1">Unit</label>
+                      <label className="block text-[10px] text-zinc-500 dark:text-white/50 mb-1">Unit</label>
                       <select
                         value={v.dimensions?.unit || "cm"}
                         onChange={(e) =>
@@ -995,7 +995,7 @@ export default function VariantsManager({
                             dimensions: { ...v.dimensions, unit: e.target.value },
                           })
                         }
-                        className="h-8 w-full rounded-lg border border-white/15 bg-[#0e1610] px-2 text-xs text-white"
+                        className="h-8 w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-[#0e1610] px-2 text-xs text-zinc-900 dark:text-white"
                       >
                         <option value="cm">cm</option>
                         <option value="in">in</option>
@@ -1011,8 +1011,8 @@ export default function VariantsManager({
 
         {/* Action / Save Bar */}
         {variants.length > 0 && (
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-white/10">
-            <div className="text-[11px] text-white/40">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-zinc-200 dark:border-white/10">
+            <div className="text-[11px] text-zinc-500 dark:text-white/40">
               * Click &quot;Save Variants&quot; to write all combinations directly to Cloudflare D1.
             </div>
 
@@ -1041,7 +1041,7 @@ export default function VariantsManager({
                 )}
               </button>
             ) : (
-              <div className="text-xs text-[#FEF500] font-medium">
+              <div className="text-xs text-amber-600 dark:text-[#FEF500] font-medium">
                 Variants will be created automatically when this product is saved.
               </div>
             )}

@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
     : "Apex Store | Premium E-Commerce Experience";
   const description =
     settings.description ||
-    "Discover the next-generation digital storefront powered by Cloudflare Workers and Next.js.";
+    "Discover next-generation high-performance athletic apparel and footwear engineered for peak human performance.";
 
   return {
     title,

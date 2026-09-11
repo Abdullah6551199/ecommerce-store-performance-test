@@ -180,7 +180,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
               </p>
             ) : (
               <p className="text-xs text-white/40 italic">
-                Dynamic category catalog powered by Cloudflare D1.
+                Curated performance gear engineered for excellence.
               </p>
             )}
 

@@ -177,9 +177,9 @@ export default function Footer({ settings = DEFAULT_STORE_SETTINGS }: FooterProp
           </div>
 
           <div className="flex items-center gap-4 text-[11px]">
-            <span className="text-[#18C729] font-medium">⚡ Edge Commerce</span>
+            <span className="text-[#18C729] font-medium">⚡ Premium Athletic Gear</span>
             <span className="text-white/30">•</span>
-            <span>Cloudflare Workers + D1 + R2</span>
+            <span>Worldwide Shipping • Secure Checkout</span>
           </div>
         </div>
       </div>

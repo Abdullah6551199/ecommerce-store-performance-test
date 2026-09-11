@@ -338,7 +338,7 @@ export default function CartDrawer(): React.JSX.Element {
             </div>
 
             <p className="text-center text-[9px] text-white/40">
-              ⚡ Edge Powered • Cash on Delivery Available
+              ⚡ Express Dispatch • Cash on Delivery Available
             </p>
           </div>
         )}

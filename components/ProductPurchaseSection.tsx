@@ -205,7 +205,7 @@ export default function ProductPurchaseSection({
           )}
         </div>
         <p className="text-[11px] text-white/50">
-          Taxes calculated at checkout. Real-time Cloudflare D1 inventory.
+          Taxes calculated at checkout. Real-time live inventory.
         </p>
       </div>
 
@@ -349,7 +349,7 @@ export default function ProductPurchaseSection({
           <span className="h-1.5 w-1.5 rounded-full bg-[#18C729]" />
           <span>
             {activeVariant ? `Variant: ${activeVariant.sku} • ` : ""}
-            Cloudflare Workers Edge Delivery
+            Fast Express Delivery
           </span>
         </div>
       </div>

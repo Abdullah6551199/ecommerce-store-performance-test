@@ -69,7 +69,7 @@ export const DEFAULT_THEME_SETTINGS: ThemeSettings = {
   other: {
     storeLogo: "",
     favicon: "",
-    announcementBarText: "⚡ FLASH LAUNCH: Global Edge Commerce Powered by Cloudflare D1 & R2",
+    announcementBarText: "🚀 Flash Launch — Free Express Shipping on Orders Over $100",
   },
 };
 

@@ -9,9 +9,9 @@ export interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  name: "Dynamic Store",
-  description: "Next-generation dynamic e-commerce platform built with Next.js and Cloudflare Workers.",
-  url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  name: "ApexStore",
+  description: "Next-generation high-performance athletic apparel and footwear engineered for peak human performance.",
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://ecommerce-store-perf-test.zia291930.workers.dev",
   ogImage: "/og.png",
   links: {},
 };

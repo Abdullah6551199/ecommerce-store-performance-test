@@ -31,13 +31,13 @@ export interface StoreSettings {
 
 export const DEFAULT_STORE_SETTINGS: StoreSettings = {
   storeName: "ApexStore",
-  tagline: "High-Performance Athletic Gear & Edge Apparel",
+  tagline: "High-Performance Athletic Gear & Technical Apparel",
   description: "Next-generation sports equipment and technical apparel engineered for peak human performance.",
   logoUrl: "",
   logoText: "ApexStore",
-  contactEmail: "support@apexstore.edge",
+  contactEmail: "support@apexstore.com",
   contactPhone: "+1 (800) 555-APEX",
-  contactAddress: "Edge Tech Hub, 100 Velocity Blvd, San Francisco, CA",
+  contactAddress: "100 Velocity Blvd, San Francisco, CA",
   socialLinks: {
     twitter: "https://twitter.com",
     instagram: "https://instagram.com",
@@ -65,7 +65,7 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
       title: "Company",
       links: [
         { label: "Our Story", url: "/#brand-story" },
-        { label: "Edge Architecture", url: "/#hero-section" },
+        { label: "Engineering Philosophy", url: "/#hero-section" },
         { label: "Admin Portal", url: "/admin/products" },
         { label: "Privacy Policy", url: "#" },
       ],
@@ -75,12 +75,12 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
       links: [
         { label: "Shipping Policy", url: "#" },
         { label: "Returns & Exchanges", url: "#" },
-        { label: "Support Desk", url: "mailto:support@apexstore.edge" },
+        { label: "Support Desk", url: "mailto:support@apexstore.com" },
         { label: "System Health", url: "/api/health" },
       ],
     },
   ],
-  announcementText: "⚡ FLASH LAUNCH: Global Edge Commerce Powered by Cloudflare D1 & R2",
+  announcementText: "🚀 Flash Launch — Free Express Shipping on Orders Over $100",
   announcementUrl: "/search",
   showAnnouncement: true,
   copyrightText: "ApexStore Commerce Inc. All rights reserved.",

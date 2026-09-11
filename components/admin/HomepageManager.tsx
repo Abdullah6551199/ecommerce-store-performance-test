@@ -263,8 +263,8 @@ export default function HomepageManager(): React.JSX.Element {
       case "hero":
         initialContent = {
           heading: "Engineered for Peak Athletic Velocity",
-          subheading: "Ultra-responsive edge commerce meets next-generation athletic design.",
-          badgeText: "Next-Gen Commerce",
+          subheading: "Discover precision athletic gear crafted for high-intensity training and endurance.",
+          badgeText: "New Season Collection",
           buttonText: "Shop Featured Gear",
           buttonUrl: "#featured-products",
           secondaryButtonText: "Explore Collections",

@@ -256,7 +256,7 @@ export default function CartPage(): React.JSX.Element {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#18C729]" />
-                    <span>Encrypted & fast Cloudflare edge checkout</span>
+                    <span>Encrypted & fast secure checkout</span>
                   </div>
                 </div>
               </div>

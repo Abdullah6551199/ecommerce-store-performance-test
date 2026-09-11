@@ -9,7 +9,7 @@ export function getBaseUrl(): string {
   if (envUrl && envUrl.startsWith("http")) {
     return envUrl.replace(/\/+$/, "");
   }
-  return "https://ecommerce-store-v2.zia291930.workers.dev";
+  return "https://ecommerce-store-perf-test.zia291930.workers.dev";
 }
 
 /**

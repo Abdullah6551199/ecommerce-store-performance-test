@@ -5,7 +5,7 @@ INSERT OR REPLACE INTO settings (id, key, value, created_at, updated_at)
 VALUES (
   'setting-store-main',
   'store_settings',
-  '{"storeName":"ApexStore","tagline":"High-Performance Athletic Gear & Edge Apparel","description":"Next-generation sports equipment and technical apparel engineered for peak human performance.","logoUrl":"","logoText":"ApexStore","contactEmail":"support@apexstore.edge","contactPhone":"+1 (800) 555-APEX","contactAddress":"Edge Tech Hub, 100 Velocity Blvd, San Francisco, CA","socialLinks":{"twitter":"https://twitter.com","instagram":"https://instagram.com","facebook":"https://facebook.com","github":"https://github.com","youtube":"https://youtube.com"},"headerNav":[{"label":"Home","url":"/"},{"label":"Products","url":"/search"},{"label":"Categories","url":"/#categories-section"},{"label":"Featured","url":"/#featured-products"}],"footerLinks":[{"title":"Explore","links":[{"label":"All Products","url":"/search"},{"label":"Featured Collections","url":"/#featured-products"},{"label":"Categories","url":"/#categories-section"},{"label":"Performance Gear","url":"/search?q=runner"}]},{"title":"Company","links":[{"label":"Our Story","url":"/#brand-story"},{"label":"Edge Architecture","url":"/#hero-section"},{"label":"Admin Portal","url":"/admin/products"},{"label":"Privacy Policy","url":"#"}]},{"title":"Customer Care","links":[{"label":"Shipping Policy","url":"#"},{"label":"Returns & Exchanges","url":"#"},{"label":"Support Desk","url":"mailto:support@apexstore.edge"},{"label":"System Health","url":"/api/health"}]}],"announcementText":"⚡ FLASH LAUNCH: Global Edge Commerce Powered by Cloudflare D1 & R2","announcementUrl":"/search","showAnnouncement":true,"copyrightText":"ApexStore Commerce Inc. All rights reserved."}',
+  '{"storeName":"ApexStore","tagline":"High-Performance Athletic Gear & Technical Apparel","description":"Next-generation sports equipment and technical apparel engineered for peak human performance.","logoUrl":"","logoText":"ApexStore","contactEmail":"support@apexstore.com","contactPhone":"+1 (800) 555-APEX","contactAddress":"100 Velocity Blvd, San Francisco, CA","socialLinks":{"twitter":"https://twitter.com","instagram":"https://instagram.com","facebook":"https://facebook.com","github":"https://github.com","youtube":"https://youtube.com"},"headerNav":[{"label":"Home","url":"/"},{"label":"Products","url":"/search"},{"label":"Categories","url":"/#categories-section"},{"label":"Featured","url":"/#featured-products"}],"footerLinks":[{"title":"Explore","links":[{"label":"All Products","url":"/search"},{"label":"Featured Collections","url":"/#featured-products"},{"label":"Categories","url":"/#categories-section"},{"label":"Performance Gear","url":"/search?q=runner"}]},{"title":"Company","links":[{"label":"Our Story","url":"/#brand-story"},{"label":"Engineering Philosophy","url":"/#hero-section"},{"label":"Admin Portal","url":"/admin/products"},{"label":"Privacy Policy","url":"#"}]},{"title":"Customer Care","links":[{"label":"Shipping Policy","url":"#"},{"label":"Returns & Exchanges","url":"#"},{"label":"Support Desk","url":"mailto:support@apexstore.com"},{"label":"System Health","url":"/api/health"}]}],"announcementText":"🚀 Flash Launch — Free Express Shipping on Orders Over $100","announcementUrl":"/search","showAnnouncement":true,"copyrightText":"ApexStore Commerce Inc. All rights reserved."}',
   CURRENT_TIMESTAMP,
   CURRENT_TIMESTAMP
 );
@@ -16,7 +16,7 @@ VALUES (
   'sec-hero-banner',
   'hero',
   'Main Hero Showcase',
-  '{"heading":"Curated Collections Engineered for Excellence.","subheading":"Experience ultra-fast edge commerce powered by Cloudflare D1 database and R2 cloud storage. Browse our dynamic collections and featured items below.","badgeText":"Next-Gen Commerce • Cloudflare Workers + D1 + R2","buttonText":"Shop Featured","buttonUrl":"#featured-products","secondaryButtonText":"Explore Categories","secondaryButtonUrl":"#categories-section","alignment":"left"}',
+  '{"heading":"Curated Collections Engineered for Excellence.","subheading":"Discover precision athletic gear crafted for high-intensity training, trail endurance, and everyday speed. Browse our dynamic collections and featured items below.","badgeText":"New Season Collection • Engineered For Speed","buttonText":"Shop Featured","buttonUrl":"#featured-products","secondaryButtonText":"Explore Categories","secondaryButtonUrl":"#categories-section","alignment":"left"}',
   'https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=1600&auto=format&fit=crop',
   1,
   1,
@@ -42,7 +42,7 @@ VALUES (
   'sec-featured-products',
   'featured_products',
   'Featured Performance Catalog',
-  '{"heading":"Featured Products","subheading":"Hand-picked essentials freshly queried from Cloudflare D1 database.","badgeText":"Live Database Catalog","maxItems":4,"viewAllUrl":"/search"}',
+  '{"heading":"Featured Products","subheading":"Hand-picked essentials crafted for peak performance and durability.","badgeText":"Featured Innovations","maxItems":4,"viewAllUrl":"/search"}',
   NULL,
   3,
   1,
@@ -68,7 +68,7 @@ VALUES (
   'sec-brand-story',
   'brand_story',
   'The Apex Standard Brand Story',
-  '{"heading":"Built at the Intersection of Edge Speed & Human Potential","subheading":"Our Performance Manifesto","narrativeText":"We engineer apparel and equipment with the same relentless optimization that powers modern edge computing. Zero latency, hyper-durable materials, and uncompromising performance for athletes who refuse to settle. Every product is stress-tested in elite athletic facilities.","statItems":[{"label":"Edge Latency","value":"< 50ms","desc":"Global edge dispatch"},{"label":"Energy Return","value":"+32%","desc":"Carbon-matrix tech"},{"label":"Active Athletes","value":"25,000+","desc":"Worldwide community"},{"label":"D1 Availability","value":"99.99%","desc":"Cloudflare distributed"}],"ctaText":"Explore The Full Catalog","ctaUrl":"/search"}',
+  '{"heading":"Built at the Intersection of Innovation & Human Potential","subheading":"Our Performance Manifesto","narrativeText":"We engineer apparel and equipment with relentless attention to biomechanics and endurance. Featherlight materials, hyper-durable composites, and uncompromising ergonomics for athletes who refuse to settle. Every product is stress-tested in elite training facilities.","statItems":[{"label":"Fast Dispatch","value":"< 24h","desc":"Express delivery dispatch"},{"label":"Energy Return","value":"+32%","desc":"Carbon-matrix tech"},{"label":"Active Athletes","value":"25,000+","desc":"Worldwide community"},{"label":"Customer Rating","value":"99.4%","desc":"Verified athlete satisfaction"}],"ctaText":"Explore The Full Catalog","ctaUrl":"/search"}',
   'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop',
   5,
   1,

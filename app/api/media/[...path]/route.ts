@@ -66,7 +66,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       const object = await r2.get(key);
       if (!object) {
         return NextResponse.json(
-          { error: `Asset not found in R2: ${key}` },
+          { error: `Asset not found: ${key}` },
           { status: 404 }
         );
       }
@@ -135,7 +135,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
   } catch (error) {
     console.error("[GET /api/media/[...path]] Error:", error);
     return NextResponse.json(
-      { error: "Failed to stream media asset from R2." },
+      { error: "Failed to stream media asset." },
       { status: 500 }
     );
   }

@@ -56,17 +56,17 @@ async function runTests() {
   let sampleProduct = null;
   try {
     console.log("\n2. Fetching active product from storefront catalog...");
-    const catRes = await fetch(`${BASE_URL}/api/products`);
+    const catRes = await fetch(`${BASE_URL}/api/products/search?q=runner`);
     const catJson = await catRes.json();
-    const prods = catJson.products || catJson.data || [];
+    const prods = catJson.data || [];
     if (prods.length > 0) {
       sampleProduct = prods[0];
       console.log(`   ✅ Found active product: "${sampleProduct.name}" (ID: ${sampleProduct.id}, Price: $${sampleProduct.salePrice || sampleProduct.price})`);
     } else {
-      console.warn("   ⚠️ No products found in /api/products, will attempt homepage extraction");
+      console.warn("   ⚠️ No products found in search");
     }
   } catch (err) {
-    console.warn("   ⚠️ /api/products not available:", err.message);
+    console.warn("   ⚠️ /api/products/search error:", err.message);
   }
 
   // Test 3: Order placement with empty cart (must fail with 400)

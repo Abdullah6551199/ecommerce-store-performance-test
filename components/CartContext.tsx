@@ -93,7 +93,11 @@ interface CartContextType {
   removeItem: (cartItemId: string) => Promise<boolean>;
   clearCart: () => void;
   refreshCart: () => Promise<void>;
-  applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
+  applyCoupon: (
+    code: string,
+    options?: { silentToast?: boolean; customSuccessMsg?: string }
+  ) => Promise<{ success: boolean; message: string }>;
+  applyBestCoupon: () => Promise<{ success: boolean; message: string }>;
   removeCoupon: () => void;
   refreshCoupons: () => Promise<void>;
 }
@@ -462,16 +466,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Apply Coupon method
   const applyCoupon = useCallback(
-    async (code: string): Promise<{ success: boolean; message: string }> => {
+    async (
+      code: string,
+      options?: { silentToast?: boolean; customSuccessMsg?: string }
+    ): Promise<{ success: boolean; message: string }> => {
       const trimmed = code.trim().toUpperCase();
       if (!trimmed) {
         const msg = "Please enter a coupon code";
         setCouponError(msg);
-        showToast(msg, "error");
+        if (!options?.silentToast) showToast(msg, "error");
         return { success: false, message: msg };
       }
 
-      const items = storedItems.map(buildCartItemDetail);
+      const items = (storedItemsRef.current.length > 0 ? storedItemsRef.current : storedItems).map(buildCartItemDetail);
       const subtotal = Number(
         items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
       );
@@ -479,7 +486,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (items.length === 0 || subtotal <= 0) {
         const msg = "Your cart is empty. Add items before applying a coupon.";
         setCouponError(msg);
-        showToast(msg, "error");
+        if (!options?.silentToast) showToast(msg, "error");
         return { success: false, message: msg };
       }
 
@@ -503,7 +510,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if (!json.valid || !json.coupon) {
           const errMsg = json.message || "Invalid coupon code";
           setCouponError(errMsg);
-          showToast(errMsg, "error");
+          if (!options?.silentToast) showToast(errMsg, "error");
           return { success: false, message: errMsg };
         }
 
@@ -517,17 +524,104 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           localStorage.setItem(LOCAL_STORAGE_COUPON_KEY, json.coupon.code);
         }
 
-        showToast(json.message || `Coupon ${json.coupon.code} applied!`, "success");
-        return { success: true, message: json.message };
+        if (!options?.silentToast) {
+          showToast(
+            options?.customSuccessMsg || json.message || `Coupon ${json.coupon.code} applied!`,
+            "success"
+          );
+        }
+        return { success: true, message: json.message || "Coupon applied!" };
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : "Validation failed";
         setCouponError(errMsg);
-        showToast(errMsg, "error");
+        if (!options?.silentToast) showToast(errMsg, "error");
         return { success: false, message: errMsg };
       }
     },
     [storedItems, showToast]
   );
+
+  // Apply Best Coupon method (automatically applies best applicable coupon)
+  const applyBestCoupon = useCallback(async (): Promise<{ success: boolean; message: string }> => {
+    const currentList = storedItemsRef.current.length > 0 ? storedItemsRef.current : storedItems;
+    if (currentList.length === 0) {
+      const msg = "Your cart is empty. Add items before applying a coupon.";
+      showToast(msg, "error");
+      return { success: false, message: msg };
+    }
+
+    const items = currentList.map(buildCartItemDetail);
+    const cartSubtotal = Number(
+      items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+    );
+
+    let target = bestCoupon;
+    let targetDiscount = bestDiscount;
+
+    // If bestCoupon state hasn't resolved yet or is null, evaluate from availableCoupons
+    if (!target && availableCoupons.length > 0) {
+      const applicable = availableCoupons.filter((c) => {
+        if (c.minOrderValue && cartSubtotal < c.minOrderValue) return false;
+        return true;
+      });
+
+      if (applicable.length > 0) {
+        applicable.sort((a, b) => {
+          if (a.isAutoApply && !b.isAutoApply) return -1;
+          if (!a.isAutoApply && b.isAutoApply) return 1;
+          const valA = a.type === "fixed" ? a.value : (cartSubtotal * a.value) / 100;
+          const valB = b.type === "fixed" ? b.value : (cartSubtotal * b.value) / 100;
+          return valB - valA;
+        });
+        target = applicable[0];
+        targetDiscount =
+          target.type === "fixed"
+            ? target.value
+            : Number(((cartSubtotal * target.value) / 100).toFixed(2));
+      }
+    }
+
+    if (!target) {
+      const msg = "No coupons available for current cart";
+      showToast(msg, "error");
+      return { success: false, message: msg };
+    }
+
+    // Check if already applied
+    if (appliedCoupon && appliedCoupon.code.toUpperCase() === target.code.toUpperCase()) {
+      const msg = "Best coupon already applied";
+      showToast(msg, "success");
+      return { success: true, message: msg };
+    }
+
+    // Apply the target coupon
+    const res = await applyCoupon(target.code, { silentToast: true });
+    if (res.success) {
+      const saved =
+        targetDiscount > 0
+          ? targetDiscount
+          : target.type === "fixed"
+          ? target.value
+          : target.type === "free_shipping"
+          ? 15.0
+          : Number(((cartSubtotal * target.value) / 100).toFixed(2));
+
+      const msg = `Best coupon applied: ${target.code} (saved $${saved.toFixed(2)})`;
+      showToast(msg, "success");
+      return { success: true, message: msg };
+    } else {
+      showToast(res.message || "Could not apply coupon", "error");
+      return res;
+    }
+  }, [
+    storedItems,
+    bestCoupon,
+    bestDiscount,
+    availableCoupons,
+    appliedCoupon,
+    applyCoupon,
+    showToast,
+  ]);
 
   // Remove Coupon method
   const removeCoupon = useCallback(() => {
@@ -623,7 +717,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       showToast("Added to cart", "success");
 
       if (openOnSuccess) {
-        setIsDrawerOpen(true);
+        setIsDrawerOpen((prev) => (prev ? prev : true));
       }
 
       return true;
@@ -702,7 +796,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           "success"
         );
         if (openOnSuccess) {
-          setIsDrawerOpen(true);
+          setIsDrawerOpen((prev) => (prev ? prev : true));
         }
         return { success: true, count: addedCount };
       }
@@ -793,6 +887,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         refreshCart,
         applyCoupon,
+        applyBestCoupon,
         removeCoupon,
         refreshCoupons,
       }}

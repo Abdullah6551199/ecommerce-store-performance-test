@@ -26,5 +26,5 @@ export default function CartDrawerContainer(): React.JSX.Element | null {
     return null;
   }
 
-  return <CartDrawer />;
+  return <CartDrawer key="cart-drawer-stable" />;
 }

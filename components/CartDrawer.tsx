@@ -70,14 +70,20 @@ export default function CartDrawer(): React.JSX.Element {
     <aside
       aria-label="Shopping Cart Drawer"
       aria-hidden={!isDrawerOpen}
-      className={`fixed inset-0 z-50 pointer-events-none transition-visibility duration-300 ${
+      className={`fixed inset-0 z-50 pointer-events-none ${
         isDrawerOpen ? "visible" : "invisible"
       }`}
     >
       {/* Slide-in floating drawer panel (320px maximum, store behind remains interactive) */}
       <div
         ref={drawerRef}
-        className={`fixed top-0 right-0 bottom-0 w-full sm:w-[320px] max-w-[320px] bg-white dark:bg-[#09100c] text-zinc-900 dark:text-white border-l border-zinc-200 dark:border-white/15 shadow-[-12px_0_40px_rgba(0,0,0,0.15)] dark:shadow-[-12px_0_40px_rgba(0,0,0,0.85)] flex flex-col justify-between pointer-events-auto transform transition-transform duration-300 ease-out z-50 ${
+        key="cart-drawer-panel"
+        style={{
+          width: "320px",
+          maxWidth: "320px",
+          willChange: "transform",
+        }}
+        className={`fixed top-0 right-0 bottom-0 w-[320px] max-w-[320px] bg-white dark:bg-[#09100c] text-zinc-900 dark:text-white border-l border-zinc-200 dark:border-white/15 shadow-[-12px_0_40px_rgba(0,0,0,0.15)] dark:shadow-[-12px_0_40px_rgba(0,0,0,0.85)] flex flex-col justify-between pointer-events-auto transition-transform duration-300 ease-out z-50 ${
           isDrawerOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -148,14 +154,14 @@ export default function CartDrawer(): React.JSX.Element {
           </div>
           <div className="h-1 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-black/50">
             <div
-              className="h-full bg-gradient-to-r from-[#18C729] to-[#FEF500] transition-all duration-500"
+              className="h-full bg-gradient-to-r from-[#18C729] to-[#FEF500] transition-[width] duration-300 ease-out"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
         </div>
 
         {/* Cart Items List */}
-        <div className="flex-1 overflow-y-auto px-5 py-3 space-y-3">
+        <div className="flex-1 min-h-[140px] overflow-y-auto px-4 py-3 space-y-2.5 [scrollbar-gutter:stable]">
           {items.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center py-8 text-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 mb-3">
@@ -189,7 +195,7 @@ export default function CartDrawer(): React.JSX.Element {
             items.map((item) => (
               <div
                 key={item.id}
-                className="flex gap-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 hover:border-zinc-300 dark:hover:border-white/20 transition-all"
+                className="flex gap-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 hover:border-zinc-300 dark:hover:border-white/20 transition-colors"
               >
                 {/* Product Thumbnail */}
                 <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-black/40">
@@ -290,7 +296,7 @@ export default function CartDrawer(): React.JSX.Element {
 
         {/* Footer Summary & Checkout */}
         {items.length > 0 && (
-          <div className="border-t border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-black/40 p-4 space-y-3">
+          <div className="border-t border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-black/40 p-4 space-y-2.5 shrink-0">
             {/* Compact Coupon input & badge */}
             <CouponsSection compact={true} />
 

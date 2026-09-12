@@ -24,7 +24,11 @@ export function getAbsoluteUrl(path: string = ""): string {
 /**
  * Generate Product schema.org structured data (JSON-LD)
  */
-export function generateProductJsonLd(product: ProductWithImagesAndCategory) {
+export function generateProductJsonLd(
+  product: ProductWithImagesAndCategory,
+  ratingSummary?: { averageRating: number; totalReviews: number },
+  reviewList?: Array<{ customerName: string; rating: number; content: string; createdAt: string }>
+) {
   const baseUrl = getBaseUrl();
   const productUrl = `${baseUrl}/product/${product.slug}`;
   const images = (product.images && product.images.length > 0
@@ -39,7 +43,7 @@ export function generateProductJsonLd(product: ProductWithImagesAndCategory) {
     product.stockStatus === "out_of_stock" ||
     (product.trackInventory && product.stockQuantity <= 0 && !product.allowBackorders);
 
-  return {
+  const jsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
@@ -66,6 +70,33 @@ export function generateProductJsonLd(product: ProductWithImagesAndCategory) {
       },
     },
   };
+
+  if (ratingSummary && ratingSummary.totalReviews > 0) {
+    jsonLd.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: String(ratingSummary.averageRating),
+      reviewCount: String(ratingSummary.totalReviews),
+    };
+  }
+
+  if (reviewList && reviewList.length > 0) {
+    jsonLd.review = reviewList.slice(0, 10).map((r) => ({
+      "@type": "Review",
+      author: {
+        "@type": "Person",
+        name: r.customerName,
+      },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: String(r.rating),
+        bestRating: "5",
+      },
+      reviewBody: r.content,
+      datePublished: r.createdAt ? r.createdAt.split("T")[0] : undefined,
+    }));
+  }
+
+  return jsonLd;
 }
 
 /**

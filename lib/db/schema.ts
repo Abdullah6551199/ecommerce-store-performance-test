@@ -354,6 +354,7 @@ export const orders = sqliteTable("orders", {
   })
     .default("pending")
     .notNull(),
+  hasReview: integer("has_review").default(0).notNull(),
   createdAt: text("created_at")
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
@@ -593,3 +594,94 @@ export type NewFaqRecord = typeof faqs.$inferInsert;
 
 export type ContactMessageRecord = typeof contactMessages.$inferSelect;
 export type NewContactMessageRecord = typeof contactMessages.$inferInsert;
+
+// 22. Reviews Table
+export const reviews = sqliteTable("reviews", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  productId: text("product_id").notNull(),
+  orderId: text("order_id"),
+  customerId: text("customer_id"),
+  customerName: text("customer_name").notNull(),
+  customerEmail: text("customer_email").notNull(),
+  rating: integer("rating").notNull(),
+  title: text("title"),
+  content: text("content").notNull(),
+  isVerifiedPurchase: integer("is_verified_purchase").default(0).notNull(),
+  status: text("status", { enum: ["pending", "approved", "rejected"] })
+    .default("pending")
+    .notNull(),
+  helpfulCount: integer("helpful_count").default(0).notNull(),
+  notHelpfulCount: integer("not_helpful_count").default(0).notNull(),
+  adminReply: text("admin_reply"),
+  adminReplyAt: text("admin_reply_at"),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 23. Review Images Table
+export const reviewImages = sqliteTable("review_images", {
+  id: text("id").primaryKey(),
+  reviewId: text("review_id")
+    .notNull()
+    .references(() => reviews.id, { onDelete: "cascade" }),
+  imageUrl: text("image_url").notNull(),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 24. Review Helpful Votes Table
+export const reviewHelpful = sqliteTable("review_helpful", {
+  id: text("id").primaryKey(),
+  reviewId: text("review_id")
+    .notNull()
+    .references(() => reviews.id, { onDelete: "cascade" }),
+  userIp: text("user_ip").notNull(),
+  voteType: text("vote_type", { enum: ["helpful", "not_helpful"] }).notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export const reviewsRelations = relations(reviews, ({ one, many }) => ({
+  product: one(products, {
+    fields: [reviews.productId],
+    references: [products.id],
+  }),
+  order: one(orders, {
+    fields: [reviews.orderId],
+    references: [orders.id],
+  }),
+  images: many(reviewImages),
+  helpfulVotes: many(reviewHelpful),
+}));
+
+export const reviewImagesRelations = relations(reviewImages, ({ one }) => ({
+  review: one(reviews, {
+    fields: [reviewImages.reviewId],
+    references: [reviews.id],
+  }),
+}));
+
+export const reviewHelpfulRelations = relations(reviewHelpful, ({ one }) => ({
+  review: one(reviews, {
+    fields: [reviewHelpful.reviewId],
+    references: [reviews.id],
+  }),
+}));
+
+export type ReviewRecord = typeof reviews.$inferSelect;
+export type NewReviewRecord = typeof reviews.$inferInsert;
+
+export type ReviewImageRecord = typeof reviewImages.$inferSelect;
+export type NewReviewImageRecord = typeof reviewImages.$inferInsert;
+
+export type ReviewHelpfulRecord = typeof reviewHelpful.$inferSelect;
+export type NewReviewHelpfulRecord = typeof reviewHelpful.$inferInsert;
+

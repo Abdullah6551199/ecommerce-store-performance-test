@@ -72,6 +72,89 @@ export default function CouponsSection({
     return "available";
   };
 
+  const formatDiscountValue = (c: CouponRecord) => {
+    if (c.type === "free_shipping") return "Free Shipping";
+    if (c.type === "fixed") return `$${c.value} off`;
+    if (c.type === "percentage") return `${c.value}% off`;
+    return `${c.value}% off`;
+  };
+
+  const formatCouponTypeLabel = (type: string) => {
+    if (type === "percentage") return "Percentage";
+    if (type === "fixed") return "Fixed";
+    if (type === "free_shipping") return "Free Shipping";
+    return type.replace(/_/g, " ");
+  };
+
+  // Full-size Card for Cart & Checkout pages (min-h-[80px], p-4, 2 clear rows)
+  const renderFullCard = (c: CouponRecord) => {
+    const status = formatCouponStatus(c);
+    const remaining = c.minOrderValue ? c.minOrderValue - subtotal : 0;
+    const discountText = formatDiscountValue(c);
+    const typeLabel = formatCouponTypeLabel(c.type);
+
+    return (
+      <div
+        key={c.id}
+        className={`min-h-[80px] p-4 rounded-2xl border transition-all duration-150 flex flex-col justify-between gap-3 ${
+          status === "applied"
+            ? "border-[#18C729] bg-[#18C729]/10 shadow-sm"
+            : status === "available"
+            ? "border-zinc-200 dark:border-white/10 bg-white dark:bg-white/5 hover:border-[#18C729]/60 hover:bg-zinc-50 dark:hover:bg-white/[0.08] shadow-sm"
+            : "border-zinc-200/80 dark:border-white/10 bg-zinc-50/60 dark:bg-white/[0.02] opacity-80"
+        }`}
+      >
+        {/* Row 1: Code (bold, large) + Discount value badge + Apply/Status button */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 flex-wrap min-w-0">
+            <span className="font-mono font-black text-base sm:text-lg text-zinc-900 dark:text-white tracking-wider">
+              {c.code}
+            </span>
+            <span className="px-2.5 py-0.5 rounded-md bg-[#18C729]/20 text-[#18C729] text-xs font-bold shrink-0">
+              {discountText}
+            </span>
+            <span className="text-[11px] text-zinc-500 dark:text-white/50 capitalize shrink-0 font-medium">
+              ({typeLabel})
+            </span>
+          </div>
+
+          <div className="shrink-0">
+            {status === "applied" ? (
+              <span className="inline-flex items-center px-3 py-1 rounded-xl bg-[#18C729]/20 text-[#18C729] text-xs font-bold border border-[#18C729]/30">
+                Applied ✓
+              </span>
+            ) : status === "available" ? (
+              <button
+                type="button"
+                onClick={() => handleApply(c.code)}
+                disabled={isApplying}
+                className="rounded-xl bg-[#18C729] hover:bg-[#15af24] text-black px-4 py-1.5 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95 disabled:opacity-50"
+              >
+                Apply
+              </button>
+            ) : (
+              <span className="inline-flex items-center px-2.5 py-1 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-500/30">
+                {remaining > 0 ? `Add $${Math.ceil(remaining)} more` : "Locked"}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Row 2: Description + Details: Min order • Expiry date */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs text-zinc-600 dark:text-white/70 pt-2 border-t border-zinc-100 dark:border-white/5">
+          <span className="font-medium truncate">
+            {c.description || `${discountText} on all eligible orders`}
+          </span>
+          <div className="flex items-center gap-2 text-[11px] text-zinc-500 dark:text-white/50 shrink-0 font-mono">
+            <span>{c.minOrderValue && c.minOrderValue > 0 ? `Min $${Math.round(c.minOrderValue)}` : "No min"}</span>
+            <span>•</span>
+            <span>Expires {formatExpiry(c.endDate)}</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Compact card design (height <= 60px)
   const renderCompactCard = (c: CouponRecord) => {
     const status = formatCouponStatus(c);
@@ -323,8 +406,8 @@ export default function CouponsSection({
           </div>
 
           {isAvailableExpanded && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
-              {availableCoupons.map(renderCompactCard)}
+            <div className="grid grid-cols-1 gap-3 pt-0.5">
+              {availableCoupons.map(renderFullCard)}
             </div>
           )}
         </div>

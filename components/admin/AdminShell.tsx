@@ -70,6 +70,11 @@ const navigationItems: NavItem[] = [
     icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
   },
   {
+    name: "Reviews",
+    href: "/admin/reviews",
+    icon: "M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z",
+  },
+  {
     name: "Appearance",
     href: "/admin/appearance",
     icon: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01",
@@ -88,6 +93,18 @@ export default function AdminShell({
 }: AdminSidebarProps): React.JSX.Element {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [pendingReviewsCount, setPendingReviewsCount] = useState<number>(0);
+
+  React.useEffect(() => {
+    fetch("/api/admin/reviews/stats")
+      .then((res) => res.json() as Promise<any>)
+      .then((json) => {
+        if (json && json.success && typeof json.data?.pending === "number") {
+          setPendingReviewsCount(json.data.pending);
+        }
+      })
+      .catch(() => {});
+  }, [pathname]);
 
   return (
     <div className="flex min-h-screen bg-zinc-50 dark:bg-[#080e0a] text-zinc-900 dark:text-white selection:bg-[#FEF500] selection:text-black transition-colors duration-200">
@@ -109,10 +126,9 @@ export default function AdminShell({
         <div className="flex h-16 items-center justify-between border-b border-zinc-200 dark:border-white/10 px-6">
           <Link
             href="/admin/dashboard"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3"
+            className="flex items-center gap-2.5 text-zinc-900 dark:text-white"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient shadow-md shadow-[#18C729]/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#18C729] shadow-md shadow-[#18C729]/20">
               <svg
                 className="h-5 w-5 text-black"
                 fill="none"
@@ -128,7 +144,7 @@ export default function AdminShell({
                 Store Admin
               </span>
               <span className="block text-[10px] text-zinc-500 dark:text-white/50 font-mono tracking-wider">
-                STAGE 13 ANALYTICS
+                STAGE 16 REVIEWS
               </span>
             </div>
           </Link>
@@ -173,6 +189,11 @@ export default function AdminShell({
                   <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
                 </svg>
                 <span className="flex-1">{item.name}</span>
+                {item.name === "Reviews" && pendingReviewsCount > 0 && (
+                  <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-400 text-black shadow-sm">
+                    {pendingReviewsCount}
+                  </span>
+                )}
                 {isActive && (
                   <span className="h-1.5 w-1.5 rounded-full bg-[#18C729] shadow-sm shadow-[#18C729]" />
                 )}

@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { getProductBySlug, getRelatedProducts, listCatalogProducts } from "@/lib/products";
 import ProductShowcase from "@/components/ProductShowcase";
 import ProductCard from "@/components/ProductCard";
+import ProductReviewsSection from "@/components/reviews/ProductReviewsSection";
+import { getProductRatingSummary, getProductReviews } from "@/lib/reviews";
 
 import { getAbsoluteUrl, generateProductJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 import { normalizeImageUrl } from "@/lib/utils";
@@ -86,10 +88,14 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
     notFound();
   }
 
-  const relatedProducts = await getRelatedProducts(product.id, product.categoryId, 4);
+  const [relatedProducts, ratingSummary, { reviews: approvedReviews }] = await Promise.all([
+    getRelatedProducts(product.id, product.categoryId, 4),
+    getProductRatingSummary(product.id),
+    getProductReviews(product.id, { status: "approved", limit: 10, sort: "recent" }),
+  ]);
 
-  // Structured Data (JSON-LD)
-  const productJsonLd = generateProductJsonLd(product);
+  // Structured Data (JSON-LD) with aggregate rating and reviews
+  const productJsonLd = generateProductJsonLd(product, ratingSummary, approvedReviews);
   const breadcrumbItems = [
     { name: "Home", url: "/" },
     ...(product.categorySlug && product.categoryName
@@ -164,6 +170,9 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
           </div>
         </section>
       )}
+
+      {/* Customer Reviews & Ratings Section */}
+      <ProductReviewsSection productId={product.id} productName={product.name} />
 
       {/* Related Products Section */}
       {relatedProducts.length > 0 && (

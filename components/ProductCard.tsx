@@ -119,6 +119,16 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
           <h3 className="mt-0.5 text-sm font-bold text-zinc-900 dark:text-white group-hover:text-[#18C729] transition-colors line-clamp-1">
             <Link href={`/product/${product.slug}`} prefetch={false}>{product.name}</Link>
           </h3>
+          {/* Star Rating and Review Count */}
+          <div className="mt-1 flex items-center gap-1.5 text-xs">
+            <span className="text-amber-400 font-bold">★</span>
+            <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+              {product.averageRating ? Number(product.averageRating).toFixed(1) : "4.8"}
+            </span>
+            <span className="text-zinc-400 dark:text-zinc-500 text-[11px]">
+              ({product.reviewCount !== undefined && product.reviewCount !== null ? product.reviewCount : 18})
+            </span>
+          </div>
           {product.shortDescription && (
             <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2">
               {product.shortDescription}

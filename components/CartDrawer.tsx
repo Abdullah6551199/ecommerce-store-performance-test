@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, memo } from "react";
+import React, { useEffect, useRef, useState, memo } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "./CartContext";
@@ -14,10 +15,10 @@ interface CartDrawerPanelProps {
 }
 
 /**
- * Isolated Memoized Outer Panel
- * Isolates the fixed sliding drawer panel from cart item state updates.
- * Adding or modifying products does NOT cause this outer wrapper to re-render,
- * eliminating any transform recalculation or slider bounce.
+ * Isolated Memoized Outer Panel (Stage 16: Portal + CSS Containment)
+ * Decouples the drawer from the React tree by rendering directly into document.body.
+ * Animation is 100% CSS-driven with hardware acceleration and layout isolation
+ * (contain: layout style paint), preventing any bounce when products are added.
  */
 const CartDrawerPanel = memo(function CartDrawerPanel({
   isOpen,
@@ -25,6 +26,11 @@ const CartDrawerPanel = memo(function CartDrawerPanel({
   children,
 }: CartDrawerPanelProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close on Escape key
   useEffect(() => {
@@ -56,30 +62,25 @@ const CartDrawerPanel = memo(function CartDrawerPanel({
     };
   }, [isOpen, onClose]);
 
-  return (
-    <aside
+  if (!mounted) return null;
+
+  return createPortal(
+    <div
+      ref={drawerRef}
+      id="cart-drawer-panel"
       aria-label="Shopping Cart Drawer"
       aria-hidden={!isOpen}
-      className={`fixed inset-0 z-50 pointer-events-none ${
-        isOpen ? "visible" : "invisible"
+      className={`cart-drawer-panel bg-white dark:bg-[#09100c] text-zinc-900 dark:text-white border-l border-zinc-200 dark:border-white/15 shadow-[-12px_0_40px_rgba(0,0,0,0.15)] dark:shadow-[-12px_0_40px_rgba(0,0,0,0.85)] flex flex-col justify-between z-50 ${
+        isOpen ? "open drawer-open" : "drawer-closed"
       }`}
+      style={{
+        pointerEvents: isOpen ? "auto" : "none",
+        visibility: isOpen ? "visible" : "hidden",
+      }}
     >
-      <div
-        ref={drawerRef}
-        key="cart-drawer-panel"
-        style={{
-          width: "320px",
-          minWidth: "320px",
-          maxWidth: "320px",
-          willChange: "transform",
-        }}
-        className={`fixed top-0 right-0 bottom-0 w-[320px] max-w-[320px] bg-white dark:bg-[#09100c] text-zinc-900 dark:text-white border-l border-zinc-200 dark:border-white/15 shadow-[-12px_0_40px_rgba(0,0,0,0.15)] dark:shadow-[-12px_0_40px_rgba(0,0,0,0.85)] flex flex-col justify-between pointer-events-auto transition-transform duration-300 ease-out z-50 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        {children}
-      </div>
-    </aside>
+      {children}
+    </div>,
+    document.body
   );
 });
 

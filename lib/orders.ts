@@ -305,6 +305,7 @@ export async function createOrderFromCart(
     total,
     paymentMethod: "cod",
     status: "pending",
+    hasReview: 0,
     createdAt: now,
     updatedAt: now,
   };

@@ -41,6 +41,8 @@ export interface ProductRecord {
   status: "draft" | "published" | "archived";
   seoTitle: string | null;
   seoDescription: string | null;
+  averageRating?: number | null;
+  reviewCount?: number | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -74,6 +76,8 @@ export interface CatalogProductItem {
   shortDescription?: string | null;
   images?: ProductImageRecord[];
   variants?: ProductVariantRecord[];
+  averageRating?: number | null;
+  reviewCount?: number | null;
 }
 
 /**

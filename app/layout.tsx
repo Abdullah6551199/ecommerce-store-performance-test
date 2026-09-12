@@ -11,6 +11,7 @@ import { WishlistProvider } from "@/components/WishlistContext";
 import "./globals.css";
 
 import CartDrawerContainer from "@/components/CartDrawerContainer";
+import BroadcastPopup from "@/components/BroadcastPopup";
 
 
 const inter = Inter({
@@ -128,6 +129,8 @@ export default async function RootLayout({
             </div>
             {/* Global Cart Slide-Over Drawer (Loaded on demand) */}
             <CartDrawerContainer />
+            {/* Global Broadcast Popup Modal */}
+            <BroadcastPopup />
           </WishlistProvider>
         </CartProvider>
       </body>

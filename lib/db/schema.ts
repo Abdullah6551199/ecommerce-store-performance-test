@@ -823,4 +823,61 @@ export type NewNotificationRecord = typeof notifications.$inferInsert;
 export type CustomerWishlistRecord = typeof customerWishlist.$inferSelect;
 export type NewCustomerWishlistRecord = typeof customerWishlist.$inferInsert;
 
+// 30. Broadcasts Table
+export const broadcasts = sqliteTable("broadcasts", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  imageUrl: text("image_url"),
+  linkUrl: text("link_url"),
+  buttonText: text("button_text"),
+  type: text("type").default("info"),
+  target: text("target").default("all"),
+  status: text("status").default("sent"),
+  sentAt: text("sent_at"),
+  scheduledFor: text("scheduled_for"),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  createdBy: text("created_by"),
+});
+
+// 31. Broadcast Views Table
+export const broadcastViews = sqliteTable("broadcast_views", {
+  id: text("id").primaryKey(),
+  broadcastId: text("broadcast_id")
+    .notNull()
+    .references(() => broadcasts.id, { onDelete: "cascade" }),
+  customerId: text("customer_id").references(() => customers.id, { onDelete: "set null" }),
+  visitorId: text("visitor_id"),
+  isDismissed: integer("is_dismissed", { mode: "boolean" }).default(false).notNull(),
+  viewedAt: text("viewed_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  clickedAt: text("clicked_at"),
+});
+
+export const broadcastsRelations = relations(broadcasts, ({ many }) => ({
+  views: many(broadcastViews),
+}));
+
+export const broadcastViewsRelations = relations(broadcastViews, ({ one }) => ({
+  broadcast: one(broadcasts, {
+    fields: [broadcastViews.broadcastId],
+    references: [broadcasts.id],
+  }),
+  customer: one(customers, {
+    fields: [broadcastViews.customerId],
+    references: [customers.id],
+  }),
+}));
+
+export type BroadcastRecord = typeof broadcasts.$inferSelect;
+export type NewBroadcastRecord = typeof broadcasts.$inferInsert;
+
+export type BroadcastViewRecord = typeof broadcastViews.$inferSelect;
+export type NewBroadcastViewRecord = typeof broadcastViews.$inferInsert;
+
+
 

@@ -336,6 +336,9 @@ export const orders = sqliteTable("orders", {
   notes: text("notes"),
   subtotal: real("subtotal").notNull(),
   shipping: real("shipping").notNull(),
+  discountAmount: real("discount_amount").default(0).notNull(),
+  discountCode: text("discount_code"),
+  discountType: text("discount_type"),
   total: real("total").notNull(),
   paymentMethod: text("payment_method").default("cod").notNull(),
   status: text("status", {
@@ -381,8 +384,67 @@ export const orderItems = sqliteTable("order_items", {
     .notNull(),
 });
 
+// 17. Coupons Table
+export const coupons = sqliteTable("coupons", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  code: text("code").notNull().unique(),
+  description: text("description"),
+  type: text("type", {
+    enum: [
+      "percentage",
+      "fixed",
+      "free_shipping",
+      "buy_x_get_y",
+      "category",
+      "product",
+      "min_order",
+      "first_order",
+    ],
+  }).notNull(),
+  value: real("value").notNull(),
+  minOrderValue: real("min_order_value"),
+  maxDiscount: real("max_discount"),
+  applyTo: text("apply_to").default("all"), // 'all', 'category', 'product'
+  applyToId: text("apply_to_id"),
+  buyQuantity: integer("buy_quantity"),
+  getQuantity: integer("get_quantity"),
+  usageLimit: integer("usage_limit"),
+  usedCount: integer("used_count").default(0).notNull(),
+  perCustomerLimit: integer("per_customer_limit").default(1).notNull(),
+  startDate: text("start_date"),
+  endDate: text("end_date"),
+  firstOrderOnly: integer("first_order_only", { mode: "boolean" }).default(false).notNull(),
+  isVisible: integer("is_visible", { mode: "boolean" }).default(true).notNull(),
+  isAutoApply: integer("is_auto_apply", { mode: "boolean" }).default(false).notNull(),
+  isFeatured: integer("is_featured", { mode: "boolean" }).default(false).notNull(),
+  isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 18. Coupon Usages Table
+export const couponUsages = sqliteTable("coupon_usages", {
+  id: text("id").primaryKey(),
+  couponId: text("coupon_id")
+    .notNull()
+    .references(() => coupons.id, { onDelete: "cascade" }),
+  orderId: text("order_id")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  customerEmail: text("customer_email"),
+  customerId: text("customer_id"),
+  discountAmount: real("discount_amount").notNull(),
+  usedAt: text("used_at").notNull(),
+});
+
 export const ordersRelations = relations(orders, ({ many }) => ({
   items: many(orderItems),
+  couponUsages: many(couponUsages),
 }));
 
 export const orderItemsRelations = relations(orderItems, ({ one }) => ({
@@ -397,6 +459,21 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
   variant: one(productVariants, {
     fields: [orderItems.variantId],
     references: [productVariants.id],
+  }),
+}));
+
+export const couponsRelations = relations(coupons, ({ many }) => ({
+  usages: many(couponUsages),
+}));
+
+export const couponUsagesRelations = relations(couponUsages, ({ one }) => ({
+  coupon: one(coupons, {
+    fields: [couponUsages.couponId],
+    references: [coupons.id],
+  }),
+  order: one(orders, {
+    fields: [couponUsages.orderId],
+    references: [orders.id],
   }),
 }));
 
@@ -448,4 +525,11 @@ export type NewOrderRecord = typeof orders.$inferInsert;
 
 export type OrderItemRecord = typeof orderItems.$inferSelect;
 export type NewOrderItemRecord = typeof orderItems.$inferInsert;
+
+export type CouponRecord = typeof coupons.$inferSelect;
+export type NewCouponRecord = typeof coupons.$inferInsert;
+
+export type CouponUsageRecord = typeof couponUsages.$inferSelect;
+export type NewCouponUsageRecord = typeof couponUsages.$inferInsert;
+
 

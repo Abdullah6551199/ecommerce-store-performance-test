@@ -14,6 +14,7 @@ import {
 export type { OrderRecord, OrderItemRecord };
 import { getCartWithItems, clearCart, getOrCreateCart, memoryCarts, type CartSummary } from "./cart";
 import { memoryProducts } from "./products";
+import { validateCoupon, recordCouponUsage } from "./coupons";
 
 // Validation Schemas
 export const orderItemInputSchema = z.object({
@@ -44,6 +45,7 @@ export const createOrderSchema = z.object({
     .min(5, "Delivery address must be at least 5 characters"),
   city: z.string().trim().min(2, "City is required"),
   notes: z.string().trim().optional(),
+  couponCode: z.string().trim().optional().or(z.literal("")),
   paymentMethod: z.literal("cod").default("cod"),
   items: z.array(orderItemInputSchema).optional(),
 });
@@ -241,8 +243,51 @@ export async function createOrderFromCart(
 
   calculatedSubtotal = Math.round(calculatedSubtotal * 100) / 100;
   const freeShippingThreshold = 100;
-  const shipping = calculatedSubtotal >= freeShippingThreshold ? 0 : 15;
-  const total = Math.round((calculatedSubtotal + shipping) * 100) / 100;
+  let shipping = calculatedSubtotal >= freeShippingThreshold ? 0 : 15;
+
+  // Authoritative Coupon Validation
+  let discountAmount = 0;
+  let appliedDiscountCode: string | null = null;
+  let appliedDiscountType: string | null = null;
+  let verifiedCouponId: string | null = null;
+
+  if (validated.couponCode) {
+    const couponValidation = await validateCoupon({
+      code: validated.couponCode,
+      cartItems: rawItems.map((i) => {
+        const prod = prodMap.get(i.productId);
+        return {
+          productId: i.productId,
+          variantId: i.variantId,
+          quantity: i.quantity,
+          unitPrice: prod ? Number(prod.salePrice ?? prod.price) : 0,
+          categoryId: prod?.categoryId || null,
+        };
+      }),
+      subtotal: calculatedSubtotal,
+      customerEmail: validated.email || null,
+    });
+
+    if (!couponValidation.valid) {
+      throw new Error(`Coupon error: ${couponValidation.message}`);
+    }
+
+    if (couponValidation.coupon) {
+      verifiedCouponId = couponValidation.coupon.id;
+      appliedDiscountCode = couponValidation.coupon.code;
+      appliedDiscountType = couponValidation.coupon.type;
+
+      if (couponValidation.freeShipping) {
+        shipping = 0;
+      }
+      discountAmount = couponValidation.discount;
+    }
+  }
+
+  const total = Math.max(
+    0,
+    Math.round((calculatedSubtotal - discountAmount + shipping) * 100) / 100
+  );
 
   const orderRecord: OrderRecord = {
     id: orderId,
@@ -254,6 +299,9 @@ export async function createOrderFromCart(
     notes: validated.notes || null,
     subtotal: calculatedSubtotal,
     shipping,
+    discountAmount,
+    discountCode: appliedDiscountCode,
+    discountType: appliedDiscountType,
     total,
     paymentMethod: "cod",
     status: "pending",
@@ -307,7 +355,22 @@ export async function createOrderFromCart(
       }
     }
 
-    // 6. Clear legacy cart items if present
+    // 6. Record coupon usage if coupon was applied
+    if (verifiedCouponId) {
+      try {
+        await recordCouponUsage({
+          couponId: verifiedCouponId,
+          orderId,
+          discountAmount,
+          customerEmail: validated.email || null,
+          customerId: userId || null,
+        });
+      } catch (couponErr) {
+        console.warn("Failed to record coupon usage in D1:", couponErr);
+      }
+    }
+
+    // 7. Clear legacy cart items if present
     if (legacyCartIdToClear) {
       try {
         await clearCart(legacyCartIdToClear);

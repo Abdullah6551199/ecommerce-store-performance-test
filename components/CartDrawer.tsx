@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "./CartContext";
 import { normalizeImageUrl } from "@/lib/utils";
+import CouponsSection from "./CouponsSection";
 
 export default function CartDrawer(): React.JSX.Element {
   const {
@@ -17,6 +18,9 @@ export default function CartDrawer(): React.JSX.Element {
     closeDrawer,
     updateQuantity,
     removeItem,
+    appliedCoupon,
+    discountAmount,
+    freeShippingCoupon,
   } = useCart();
 
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -287,11 +291,20 @@ export default function CartDrawer(): React.JSX.Element {
         {/* Footer Summary & Checkout */}
         {items.length > 0 && (
           <div className="border-t border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-black/40 p-4 space-y-3">
+            {/* Compact Coupon input & badge */}
+            <CouponsSection compact={true} />
+
             <div className="space-y-1 text-xs">
               <div className="flex justify-between text-zinc-600 dark:text-white/70">
                 <span>Subtotal</span>
                 <span className="font-semibold text-zinc-900 dark:text-white">${subtotal.toFixed(2)}</span>
               </div>
+              {appliedCoupon && (
+                <div className="flex justify-between text-[#18C729] font-bold">
+                  <span>Discount ({appliedCoupon.code})</span>
+                  <span>{freeShippingCoupon ? "FREE" : `-$${discountAmount.toFixed(2)}`}</span>
+                </div>
+              )}
               <div className="flex justify-between text-zinc-600 dark:text-white/70">
                 <span>Shipping</span>
                 <span>

@@ -7,6 +7,7 @@ import { siteConfig } from "@/config/site";
 import { getStoreSettings } from "@/lib/settings";
 import { getThemeSettings, generateThemeCss } from "@/lib/theme";
 import { CartProvider } from "@/components/CartContext";
+import { WishlistProvider } from "@/components/WishlistContext";
 import "./globals.css";
 
 import CartDrawerContainer from "@/components/CartDrawerContainer";
@@ -112,20 +113,22 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col antialiased selection:bg-[#FEF500] selection:text-black`}>
         <CartProvider>
-          {/* Main Background Wrapper applying the dynamic Brand Gradient */}
-          <div className="relative flex min-h-screen flex-col bg-brand-gradient">
-            {/* Subtle ambient contrast layer ensuring readability while branding shines through */}
-            <div className="absolute inset-0 bg-white/60 dark:bg-black/45 pointer-events-none backdrop-blur-[1px] transition-colors duration-300" />
+          <WishlistProvider>
+            {/* Main Background Wrapper applying the dynamic Brand Gradient */}
+            <div className="relative flex min-h-screen flex-col bg-brand-gradient">
+              {/* Subtle ambient contrast layer ensuring readability while branding shines through */}
+              <div className="absolute inset-0 bg-white/60 dark:bg-black/45 pointer-events-none backdrop-blur-[1px] transition-colors duration-300" />
 
-            {/* Foreground content stack */}
-            <div className="relative z-10 flex min-h-screen flex-col">
-              <Header settings={mergedSettings} />
-              <main className="flex-1">{children}</main>
-              <Footer settings={mergedSettings} />
+              {/* Foreground content stack */}
+              <div className="relative z-10 flex min-h-screen flex-col">
+                <Header settings={mergedSettings} />
+                <main className="flex-1">{children}</main>
+                <Footer settings={mergedSettings} />
+              </div>
             </div>
-          </div>
-          {/* Global Cart Slide-Over Drawer (Loaded on demand) */}
-          <CartDrawerContainer />
+            {/* Global Cart Slide-Over Drawer (Loaded on demand) */}
+            <CartDrawerContainer />
+          </WishlistProvider>
         </CartProvider>
       </body>
     </html>

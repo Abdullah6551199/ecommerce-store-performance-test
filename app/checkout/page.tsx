@@ -8,10 +8,21 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartContext";
 import { normalizeImageUrl } from "@/lib/utils";
+import CouponsSection from "@/components/CouponsSection";
 
 export default function CheckoutPage(): React.JSX.Element {
   const router = useRouter();
-  const { cart, items, subtotal, total, isLoading, clearCart } = useCart();
+  const {
+    cart,
+    items,
+    subtotal,
+    total,
+    isLoading,
+    clearCart,
+    appliedCoupon,
+    discountAmount,
+    freeShippingCoupon,
+  } = useCart();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -93,6 +104,7 @@ export default function CheckoutPage(): React.JSX.Element {
         credentials: "include",
         body: JSON.stringify({
           ...formData,
+          couponCode: appliedCoupon?.code || undefined,
           paymentMethod: "cod",
           items: items.map((i) => ({
             productId: i.productId,
@@ -443,12 +455,29 @@ export default function CheckoutPage(): React.JSX.Element {
                 ))}
               </div>
 
+              {/* Coupons & Discounts Promo Section */}
+              <div className="pt-2 border-t border-white/10">
+                <CouponsSection />
+              </div>
+
               {/* Pricing breakdown */}
               <div className="border-t border-white/10 pt-4 space-y-2 text-xs">
                 <div className="flex justify-between text-white/70">
                   <span>Subtotal</span>
                   <span className="font-semibold text-white font-mono">${subtotal.toFixed(2)}</span>
                 </div>
+
+                {appliedCoupon && (
+                  <div className="flex justify-between text-[#18C729] font-bold">
+                    <span>Discount ({appliedCoupon.code})</span>
+                    <span>
+                      {freeShippingCoupon
+                        ? "FREE SHIPPING"
+                        : `-$${discountAmount.toFixed(2)}`}
+                    </span>
+                  </div>
+                )}
+
                 <div className="flex justify-between text-white/70">
                   <span>Standard Shipping</span>
                   <span>

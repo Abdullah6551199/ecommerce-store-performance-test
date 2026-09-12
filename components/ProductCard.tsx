@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { ProductWithImagesAndCategory, CatalogProductItem } from "@/lib/products";
 import { normalizeImageUrl } from "@/lib/utils";
 import QuickAddToCart from "@/components/QuickAddToCart";
+import WishlistHeartButton from "@/components/WishlistHeartButton";
 
 interface ProductCardProps {
   product: ProductWithImagesAndCategory | CatalogProductItem;
@@ -70,7 +71,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
 
         {/* Top Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start z-10 pointer-events-none">
           {hasSale && (
             <span className="rounded-full border border-red-500/30 bg-red-500/80 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-md backdrop-blur-md">
               -{discountPercent}% OFF
@@ -81,10 +82,6 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
               {product.brand}
             </span>
           )}
-        </div>
-
-        {/* Stock status indicator pill */}
-        <div className="absolute top-3 right-3">
           {isOutOfStock ? (
             <span className="rounded-full bg-red-100 dark:bg-red-950/80 border border-red-400 dark:border-red-500/40 px-2 py-0.5 text-[10px] font-semibold text-red-700 dark:text-red-300 backdrop-blur-md">
               Sold Out
@@ -94,6 +91,20 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
               Low Stock
             </span>
           ) : null}
+        </div>
+
+        {/* Wishlist Heart Toggle (Top-right corner) */}
+        <div className="absolute top-3 right-3 z-20">
+          <WishlistHeartButton
+            product={{
+              productId: product.id,
+              slug: product.slug,
+              name: product.name,
+              price: product.price,
+              salePrice: product.salePrice,
+              imageUrl: resolvedImage,
+            }}
+          />
         </div>
       </Link>
 

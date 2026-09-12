@@ -7,9 +7,22 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/components/CartContext";
 import { normalizeImageUrl } from "@/lib/utils";
+import CouponsSection from "@/components/CouponsSection";
 
 export default function CartPage(): React.JSX.Element {
-  const { cart, items, itemCount, subtotal, total, isLoading, updateQuantity, removeItem } = useCart();
+  const {
+    cart,
+    items,
+    itemCount,
+    subtotal,
+    total,
+    isLoading,
+    updateQuantity,
+    removeItem,
+    appliedCoupon,
+    discountAmount,
+    freeShippingCoupon,
+  } = useCart();
 
   const freeShippingThreshold = cart?.freeShippingThreshold || 100;
   const freeShippingRemaining = cart?.freeShippingRemaining ?? Math.max(0, freeShippingThreshold - subtotal);
@@ -207,7 +220,10 @@ export default function CartPage(): React.JSX.Element {
             </div>
 
             {/* Summary Column (4 cols) */}
-            <div className="lg:col-span-4 sticky top-24">
+            <div className="lg:col-span-4 sticky top-24 space-y-6">
+              {/* Coupons & Promotions Section */}
+              <CouponsSection />
+
               <div className="rounded-3xl border border-white/15 bg-[#0c140f] p-6 shadow-2xl space-y-5">
                 <h2 className="text-lg font-bold text-white border-b border-white/10 pb-4">
                   Order Summary
@@ -219,9 +235,20 @@ export default function CartPage(): React.JSX.Element {
                     <span className="font-semibold text-white">${subtotal.toFixed(2)}</span>
                   </div>
 
+                  {appliedCoupon && (
+                    <div className="flex justify-between text-[#18C729] font-bold">
+                      <span>Discount ({appliedCoupon.code})</span>
+                      <span>
+                        {freeShippingCoupon
+                          ? "FREE SHIPPING"
+                          : `-$${discountAmount.toFixed(2)}`}
+                      </span>
+                    </div>
+                  )}
+
                   <div className="flex justify-between text-white/70">
                     <span>Shipping</span>
-                    <span>{cart?.shipping === 0 ? <strong className="text-[#18C729]">FREE</strong> : `$${(cart?.shipping || 10).toFixed(2)}`}</span>
+                    <span>{cart?.shipping === 0 ? <strong className="text-[#18C729]">FREE</strong> : `$${(cart?.shipping || 15).toFixed(2)}`}</span>
                   </div>
 
                   <div className="flex justify-between text-white/70">

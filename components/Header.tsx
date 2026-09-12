@@ -6,6 +6,7 @@ import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
 import { normalizeImageUrl } from "@/lib/utils";
 import HeaderSearch from "@/components/HeaderSearch";
 import CartNavButton from "@/components/CartNavButton";
+import WishlistNavButton from "@/components/WishlistNavButton";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const MobileNav = dynamic(() => import("@/components/MobileNav"));
@@ -122,6 +123,9 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </Link>
+
+            {/* Wishlist Button (Client Island) */}
+            <WishlistNavButton />
 
             {/* Cart Button (Client Island) */}
             <CartNavButton />

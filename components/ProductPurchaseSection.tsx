@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { useCart } from "@/components/CartContext";
+import { useWishlist } from "@/components/WishlistContext";
 import type { ProductVariantRecord } from "@/lib/variants";
 
 interface ProductPurchaseSectionProps {
@@ -39,6 +40,9 @@ export default function ProductPurchaseSection({
   variants = [],
 }: ProductPurchaseSectionProps): React.JSX.Element {
   const { addItem } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const inWishlist = isInWishlist(productId);
+
   const [quantity, setQuantity] = useState(1);
   const [addedNotice, setAddedNotice] = useState(false);
   const [cartPayloadSummary, setCartPayloadSummary] = useState<string | null>(null);
@@ -332,6 +336,40 @@ export default function ProductPurchaseSection({
                 <span>Add to Cart</span>
               </>
             )}
+          </button>
+
+          {/* Wishlist Button */}
+          <button
+            type="button"
+            onClick={() =>
+              toggleWishlist({
+                productId,
+                slug: baseSku || productId,
+                name: productName,
+                price: currentPrice,
+                salePrice: currentSalePrice,
+              })
+            }
+            aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+            title={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition-all duration-200 cursor-pointer ${
+              inWishlist
+                ? "border-red-500/40 bg-red-500/10 text-red-500"
+                : "border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:text-red-500 hover:border-red-500/40 hover:scale-105"
+            }`}
+          >
+            <svg
+              className={`h-5 w-5 ${inWishlist ? "fill-red-500 text-red-500" : "fill-none"}`}
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
           </button>
         </div>
 

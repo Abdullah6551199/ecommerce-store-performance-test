@@ -11,6 +11,9 @@ import React, {
 import type { CartSummary, CartItemDetail } from "@/lib/cart";
 
 export const LOCAL_STORAGE_CART_KEY = "apex_cart_v1";
+export const LOCAL_STORAGE_COUPON_KEY = "apex_applied_coupon_v1";
+
+import type { CouponRecord } from "@/lib/coupons";
 
 export interface StoredCartItem {
   productId: string;
@@ -56,6 +59,14 @@ interface CartContextType {
   isLoading: boolean;
   isDrawerOpen: boolean;
   toast: CartToastState | null;
+  appliedCoupon: CouponRecord | null;
+  discountAmount: number;
+  freeShippingCoupon: boolean;
+  availableCoupons: CouponRecord[];
+  bestCoupon: CouponRecord | null;
+  bestDiscount: number;
+  smartSuggestion: string | null;
+  couponError: string | null;
   openDrawer: () => void;
   closeDrawer: () => void;
   toggleDrawer: () => void;
@@ -70,6 +81,9 @@ interface CartContextType {
   removeItem: (cartItemId: string) => Promise<boolean>;
   clearCart: () => void;
   refreshCart: () => Promise<void>;
+  applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
+  removeCoupon: () => void;
+  refreshCoupons: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -97,7 +111,11 @@ function buildCartItemDetail(item: StoredCartItem): CartItemDetail {
   };
 }
 
-function computeCartSummary(storedItems: StoredCartItem[]): {
+function computeCartSummary(
+  storedItems: StoredCartItem[],
+  discountAmount: number = 0,
+  freeShippingCoupon: boolean = false
+): {
   cart: CartSummary;
   items: CartItemDetail[];
   itemCount: number;
@@ -111,9 +129,13 @@ function computeCartSummary(storedItems: StoredCartItem[]): {
   );
   const freeShippingThreshold = 100;
   const freeShippingRemaining = Math.max(0, freeShippingThreshold - subtotal);
-  const shipping =
+  const baseShipping =
     subtotal >= freeShippingThreshold || items.length === 0 ? 0 : 15;
-  const total = Number((subtotal + shipping).toFixed(2));
+  const shipping = freeShippingCoupon ? 0 : baseShipping;
+  const total = Math.max(
+    0,
+    Number((subtotal - discountAmount + shipping).toFixed(2))
+  );
 
   const cart: CartSummary = {
     id: LOCAL_STORAGE_CART_KEY,
@@ -238,6 +260,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toast, setToast] = useState<CartToastState | null>(null);
 
+  // Coupon States
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponRecord | null>(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [freeShippingCoupon, setFreeShippingCoupon] = useState(false);
+  const [availableCoupons, setAvailableCoupons] = useState<CouponRecord[]>([]);
+  const [bestCoupon, setBestCoupon] = useState<CouponRecord | null>(null);
+  const [bestDiscount, setBestDiscount] = useState(0);
+  const [smartSuggestion, setSmartSuggestion] = useState<string | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+
   const showToast = useCallback(
     (message: string, type: "success" | "error" = "success") => {
       const id = Date.now();
@@ -268,6 +300,98 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Fetch available coupons and suggestions
+  const refreshCoupons = useCallback(async () => {
+    try {
+      const items = storedItems.map(buildCartItemDetail);
+      const subtotal = Number(
+        items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+      );
+
+      const res = await fetch(`/api/coupons/available?subtotal=${subtotal}`);
+      const json = (await res.json()) as any;
+      if (json.success) {
+        setAvailableCoupons(json.coupons || []);
+        setBestCoupon(json.bestCoupon || null);
+        setBestDiscount(json.bestDiscount || 0);
+        setSmartSuggestion(json.suggestion || null);
+      }
+    } catch {
+      // Non-blocking
+    }
+  }, [storedItems]);
+
+  // Validate or re-evaluate applied coupon
+  const evaluateAppliedCoupon = useCallback(
+    async (codeToValidate: string, itemsList: StoredCartItem[]) => {
+      try {
+        const items = itemsList.map(buildCartItemDetail);
+        const subtotal = Number(
+          items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+        );
+
+        if (subtotal <= 0 || items.length === 0) {
+          setDiscountAmount(0);
+          setFreeShippingCoupon(false);
+          return;
+        }
+
+        const res = await fetch("/api/coupons/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code: codeToValidate,
+            cartItems: items.map((i) => ({
+              productId: i.productId,
+              variantId: i.variantId,
+              quantity: i.quantity,
+              unitPrice: i.unitPrice,
+            })),
+            subtotal,
+          }),
+        });
+
+        const json = (await res.json()) as any;
+        if (json.valid && json.coupon) {
+          setAppliedCoupon(json.coupon);
+          setDiscountAmount(json.discount || 0);
+          setFreeShippingCoupon(Boolean(json.freeShipping));
+          setCouponError(null);
+        } else {
+          // If no longer valid (e.g. min order dropped below threshold)
+          setCouponError(json.message || "Coupon is not applicable");
+          setDiscountAmount(0);
+          setFreeShippingCoupon(false);
+        }
+      } catch {
+        // Non-blocking
+      }
+    },
+    []
+  );
+
+  // Initial load of applied coupon from localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const savedCoupon = localStorage.getItem(LOCAL_STORAGE_COUPON_KEY);
+      if (savedCoupon && storedItems.length > 0) {
+        evaluateAppliedCoupon(savedCoupon, storedItems);
+      }
+    } catch {}
+  }, [evaluateAppliedCoupon, storedItems]);
+
+  // Re-evaluate coupons whenever storedItems change
+  useEffect(() => {
+    refreshCoupons();
+    if (typeof window !== "undefined") {
+      const savedCoupon = localStorage.getItem(LOCAL_STORAGE_COUPON_KEY);
+      if (savedCoupon) {
+        evaluateAppliedCoupon(savedCoupon, storedItems);
+      }
+    }
+  }, [storedItems, refreshCoupons, evaluateAppliedCoupon]);
+
   // Helper to persist to localStorage synchronously
   const persistItems = useCallback((items: StoredCartItem[]) => {
     setStoredItems(items);
@@ -291,9 +415,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = useCallback(() => {
     persistItems([]);
+    setAppliedCoupon(null);
+    setDiscountAmount(0);
+    setFreeShippingCoupon(false);
+    setCouponError(null);
     if (typeof window !== "undefined") {
       try {
         localStorage.removeItem(LOCAL_STORAGE_CART_KEY);
+        localStorage.removeItem(LOCAL_STORAGE_COUPON_KEY);
       } catch {}
     }
   }, [persistItems]);
@@ -312,6 +441,89 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
     } catch {}
   }, []);
+
+  // Apply Coupon method
+  const applyCoupon = useCallback(
+    async (code: string): Promise<{ success: boolean; message: string }> => {
+      const trimmed = code.trim().toUpperCase();
+      if (!trimmed) {
+        const msg = "Please enter a coupon code";
+        setCouponError(msg);
+        showToast(msg, "error");
+        return { success: false, message: msg };
+      }
+
+      const items = storedItems.map(buildCartItemDetail);
+      const subtotal = Number(
+        items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+      );
+
+      if (items.length === 0 || subtotal <= 0) {
+        const msg = "Your cart is empty. Add items before applying a coupon.";
+        setCouponError(msg);
+        showToast(msg, "error");
+        return { success: false, message: msg };
+      }
+
+      try {
+        const res = await fetch("/api/coupons/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code: trimmed,
+            cartItems: items.map((i) => ({
+              productId: i.productId,
+              variantId: i.variantId,
+              quantity: i.quantity,
+              unitPrice: i.unitPrice,
+            })),
+            subtotal,
+          }),
+        });
+
+        const json = (await res.json()) as any;
+        if (!json.valid || !json.coupon) {
+          const errMsg = json.message || "Invalid coupon code";
+          setCouponError(errMsg);
+          showToast(errMsg, "error");
+          return { success: false, message: errMsg };
+        }
+
+        // Successfully applied!
+        setAppliedCoupon(json.coupon);
+        setDiscountAmount(json.discount || 0);
+        setFreeShippingCoupon(Boolean(json.freeShipping));
+        setCouponError(null);
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem(LOCAL_STORAGE_COUPON_KEY, json.coupon.code);
+        }
+
+        showToast(json.message || `Coupon ${json.coupon.code} applied!`, "success");
+        return { success: true, message: json.message };
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : "Validation failed";
+        setCouponError(errMsg);
+        showToast(errMsg, "error");
+        return { success: false, message: errMsg };
+      }
+    },
+    [storedItems, showToast]
+  );
+
+  // Remove Coupon method
+  const removeCoupon = useCallback(() => {
+    setAppliedCoupon(null);
+    setDiscountAmount(0);
+    setFreeShippingCoupon(false);
+    setCouponError(null);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem(LOCAL_STORAGE_COUPON_KEY);
+      } catch {}
+    }
+    showToast("Coupon removed", "success");
+  }, [showToast]);
 
   const addItem = useCallback(
     async (
@@ -443,8 +655,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 
   const { cart, items, itemCount, subtotal, total } = useMemo(
-    () => computeCartSummary(storedItems),
-    [storedItems]
+    () => computeCartSummary(storedItems, discountAmount, freeShippingCoupon),
+    [storedItems, discountAmount, freeShippingCoupon]
   );
 
   return (
@@ -458,6 +670,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         isDrawerOpen,
         toast,
+        appliedCoupon,
+        discountAmount,
+        freeShippingCoupon,
+        availableCoupons,
+        bestCoupon,
+        bestDiscount,
+        smartSuggestion,
+        couponError,
         openDrawer,
         closeDrawer,
         toggleDrawer,
@@ -467,6 +687,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         removeItem,
         clearCart,
         refreshCart,
+        applyCoupon,
+        removeCoupon,
+        refreshCoupons,
       }}
     >
       {children}

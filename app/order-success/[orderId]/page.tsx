@@ -49,23 +49,23 @@ export default function OrderSuccessPage(): React.JSX.Element {
 
   if (isLoading) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center py-20 px-4 bg-[#070d09]">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-[#18C729]" />
-        <p className="mt-4 text-xs font-mono text-white/50 tracking-wider">RETRIEVING ORDER RECEIPT...</p>
+      <div className="min-h-[80vh] flex flex-col items-center justify-center py-20 px-4 text-zinc-900 dark:text-white">
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-zinc-300 dark:border-white/20 border-t-[#18C729]" />
+        <p className="mt-4 text-xs font-mono text-zinc-500 dark:text-white/50 tracking-wider">RETRIEVING ORDER RECEIPT...</p>
       </div>
     );
   }
 
   if (error || !order) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center py-20 px-4 text-center bg-[#070d09]">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10 text-red-400 mb-4 border border-red-500/20">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center py-20 px-4 text-center text-zinc-900 dark:text-white">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10 text-red-500 mb-4 border border-red-500/20">
           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
         </div>
-        <h1 className="text-xl font-bold text-white mb-2">Order Not Found</h1>
-        <p className="text-xs text-white/50 max-w-sm mb-6">
+        <h1 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">Order Not Found</h1>
+        <p className="text-xs text-zinc-500 dark:text-white/50 max-w-sm mb-6">
           {error || "We couldn't locate the specified order reference."}
         </p>
         <Link
@@ -81,7 +81,7 @@ export default function OrderSuccessPage(): React.JSX.Element {
   const shortId = order.id.slice(0, 8).toUpperCase();
 
   return (
-    <div className="min-h-screen bg-[#070d09] text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 text-zinc-900 dark:text-white">
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Celebration Banner */}
         <div className="text-center space-y-4">
@@ -95,22 +95,22 @@ export default function OrderSuccessPage(): React.JSX.Element {
             <span className="inline-block rounded-full bg-[#18C729]/10 border border-[#18C729]/20 px-3 py-1 text-[11px] font-mono font-bold text-[#18C729] uppercase tracking-wider mb-2">
               Order Confirmed &bull; Cash on Delivery
             </span>
-            <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-white sm:text-4xl">
               Thank You For Your Order!
             </h1>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-1 text-sm text-zinc-600 dark:text-white/60">
               We have received your order and our fulfillment team is preparing your package for dispatch.
             </p>
           </div>
 
           {/* Order ID bar */}
-          <div className="inline-flex items-center gap-3 rounded-2xl border border-white/15 bg-[#0c140f] px-5 py-2.5 shadow-xl">
-            <span className="text-xs text-white/50">Order Reference:</span>
-            <span className="font-mono font-bold text-sm text-[#FEF500]">#{shortId}</span>
+          <div className="inline-flex items-center gap-3 rounded-2xl border border-zinc-200 dark:border-white/15 bg-white dark:bg-[#0c140f] px-5 py-2.5 shadow-xl">
+            <span className="text-xs text-zinc-500 dark:text-white/50">Order Reference:</span>
+            <span className="font-mono font-bold text-sm text-emerald-600 dark:text-[#FEF500]">#{shortId}</span>
             <button
               type="button"
               onClick={copyOrderId}
-              className="rounded-lg bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
+              className="rounded-lg bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-[11px] font-medium text-zinc-700 dark:text-white/70 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
               title="Copy Full Order ID"
             >
               {copied ? (
@@ -133,13 +133,13 @@ export default function OrderSuccessPage(): React.JSX.Element {
             💵
           </div>
           <div className="flex-1 text-xs">
-            <h3 className="text-sm font-bold text-white mb-1">
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-1">
               Cash on Delivery (COD) Payment Instructions
             </h3>
-            <p className="text-white/70 leading-relaxed mb-2">
-              Please have the exact cash amount of <strong className="text-[#FEF500] font-mono text-sm">${order.total.toFixed(2)}</strong> ready when our courier agent arrives at your address.
+            <p className="text-zinc-700 dark:text-white/70 leading-relaxed mb-2">
+              Please have the exact cash amount of <strong className="text-emerald-600 dark:text-[#FEF500] font-mono text-sm">${order.total.toFixed(2)}</strong> ready when our courier agent arrives at your address.
             </p>
-            <div className="flex flex-wrap items-center gap-4 text-[11px] text-white/50 font-mono">
+            <div className="flex flex-wrap items-center gap-4 text-[11px] text-zinc-500 dark:text-white/50 font-mono">
               <span>Status: <strong className="text-[#18C729] uppercase">{order.status}</strong></span>
               <span>&bull;</span>
               <span>Courier: Standard Ground Dispatch</span>
@@ -148,26 +148,26 @@ export default function OrderSuccessPage(): React.JSX.Element {
         </div>
 
         {/* Order Details & Summary Card */}
-        <div className="rounded-2xl border border-white/10 bg-[#0c140f] p-6 shadow-2xl space-y-6">
-          <h2 className="text-base font-bold text-white tracking-tight border-b border-white/10 pb-3">
-            Order Receipt & Delivery Info
+        <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-6 shadow-xl dark:shadow-2xl space-y-6">
+          <h2 className="text-base font-bold text-zinc-900 dark:text-white tracking-tight border-b border-zinc-200 dark:border-white/10 pb-3">
+            Order Receipt &amp; Delivery Info
           </h2>
 
           {/* Customer & Address Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
             <div className="space-y-1.5">
-              <span className="text-white/40 uppercase tracking-wider font-mono text-[10px]">Customer Details</span>
-              <p className="font-bold text-white text-sm">{order.customerName}</p>
-              <p className="text-white/70 font-mono">{order.phone}</p>
-              {order.email && <p className="text-white/50">{order.email}</p>}
+              <span className="text-zinc-400 dark:text-white/40 uppercase tracking-wider font-mono text-[10px]">Customer Details</span>
+              <p className="font-bold text-zinc-900 dark:text-white text-sm">{order.customerName}</p>
+              <p className="text-zinc-700 dark:text-white/70 font-mono">{order.phone}</p>
+              {order.email && <p className="text-zinc-500 dark:text-white/50">{order.email}</p>}
             </div>
 
             <div className="space-y-1.5">
-              <span className="text-white/40 uppercase tracking-wider font-mono text-[10px]">Shipping Destination</span>
-              <p className="text-white font-medium">{order.address}</p>
-              <p className="text-white/70 font-medium">{order.city}</p>
+              <span className="text-zinc-400 dark:text-white/40 uppercase tracking-wider font-mono text-[10px]">Shipping Destination</span>
+              <p className="text-zinc-900 dark:text-white font-medium">{order.address}</p>
+              <p className="text-zinc-700 dark:text-white/70 font-medium">{order.city}</p>
               {order.notes && (
-                <p className="text-[11px] text-[#FEF500]/80 italic mt-1">
+                <p className="text-[11px] text-amber-600 dark:text-[#FEF500]/80 italic mt-1">
                   Note: &quot;{order.notes}&quot;
                 </p>
               )}
@@ -175,21 +175,21 @@ export default function OrderSuccessPage(): React.JSX.Element {
           </div>
 
           {/* Itemized Products */}
-          <div className="border-t border-white/10 pt-4 space-y-3">
-            <span className="text-white/40 uppercase tracking-wider font-mono text-[10px]">Purchased Items</span>
-            <div className="divide-y divide-white/5">
+          <div className="border-t border-zinc-200 dark:border-white/10 pt-4 space-y-3">
+            <span className="text-zinc-400 dark:text-white/40 uppercase tracking-wider font-mono text-[10px]">Purchased Items</span>
+            <div className="divide-y divide-zinc-200 dark:divide-white/5">
               {order.items.map((item) => (
                 <div key={item.id} className="py-3 flex items-center justify-between gap-3 text-xs">
                   <div>
-                    <p className="font-bold text-white">{item.productName}</p>
+                    <p className="font-bold text-zinc-900 dark:text-white">{item.productName}</p>
                     {item.variantName && (
-                      <p className="text-[11px] text-white/50">{item.variantName}</p>
+                      <p className="text-[11px] text-zinc-500 dark:text-white/50">{item.variantName}</p>
                     )}
-                    <p className="text-[10px] text-white/40 font-mono mt-0.5">
+                    <p className="text-[10px] text-zinc-400 dark:text-white/40 font-mono mt-0.5">
                       Qty: {item.quantity} × ${item.unitPrice.toFixed(2)}
                     </p>
                   </div>
-                  <div className="text-right font-mono font-bold text-white">
+                  <div className="text-right font-mono font-bold text-zinc-900 dark:text-white">
                     ${item.lineTotal.toFixed(2)}
                   </div>
                 </div>
@@ -198,24 +198,24 @@ export default function OrderSuccessPage(): React.JSX.Element {
           </div>
 
           {/* Financial Totals */}
-          <div className="border-t border-white/10 pt-4 space-y-2 text-xs">
-            <div className="flex justify-between text-white/70">
+          <div className="border-t border-zinc-200 dark:border-white/10 pt-4 space-y-2 text-xs">
+            <div className="flex justify-between text-zinc-600 dark:text-white/70">
               <span>Subtotal</span>
-              <span className="font-mono text-white">${order.subtotal.toFixed(2)}</span>
+              <span className="font-mono text-zinc-900 dark:text-white">${order.subtotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-white/70">
+            <div className="flex justify-between text-zinc-600 dark:text-white/70">
               <span>Shipping</span>
               <span>
                 {order.shipping === 0 ? (
                   <strong className="text-[#18C729]">FREE</strong>
                 ) : (
-                  <span className="font-mono text-white">${order.shipping.toFixed(2)}</span>
+                  <span className="font-mono text-zinc-900 dark:text-white">${order.shipping.toFixed(2)}</span>
                 )}
               </span>
             </div>
-            <div className="flex justify-between text-base font-extrabold text-white pt-2 border-t border-white/10">
+            <div className="flex justify-between text-base font-extrabold text-zinc-900 dark:text-white pt-2 border-t border-zinc-200 dark:border-white/10">
               <span>Total Payable</span>
-              <span className="text-xl font-mono text-[#FEF500] font-black">
+              <span className="text-xl font-mono text-emerald-600 dark:text-[#FEF500] font-black">
                 ${order.total.toFixed(2)}
               </span>
             </div>
@@ -237,7 +237,7 @@ export default function OrderSuccessPage(): React.JSX.Element {
           <button
             type="button"
             onClick={() => window.print()}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3.5 text-xs font-bold text-white hover:bg-white/10 hover:border-white/25 transition-all cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-6 py-3.5 text-xs font-bold text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10 hover:border-zinc-400 dark:hover:border-white/25 transition-all cursor-pointer"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />

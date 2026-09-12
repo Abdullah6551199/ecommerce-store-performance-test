@@ -30,7 +30,7 @@ export default function ProductShowcase({ product }: ProductShowcaseProps): Reac
       <div className="lg:col-span-5 space-y-6">
         <div className="space-y-2">
           {product.brand && (
-            <span className="text-xs font-bold uppercase tracking-wider text-[#FEF500]">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-[#FEF500]">
               {product.brand}
             </span>
           )}
@@ -41,7 +41,7 @@ export default function ProductShowcase({ product }: ProductShowcaseProps): Reac
 
         {/* Short Description (Server-rendered) */}
         {product.shortDescription && (
-          <p className="text-sm text-zinc-700 dark:text-white/70 leading-relaxed">
+          <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
             {product.shortDescription}
           </p>
         )}
@@ -65,7 +65,7 @@ export default function ProductShowcase({ product }: ProductShowcaseProps): Reac
         {/* Catalog Tags (Server-rendered) */}
         {product.tags && product.tags.length > 0 && (
           <div className="pt-2">
-            <span className="text-[11px] font-semibold text-zinc-500 dark:text-white/50 uppercase tracking-wider block mb-2">
+            <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider block mb-2">
               Catalog Tags
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -73,7 +73,7 @@ export default function ProductShowcase({ product }: ProductShowcaseProps): Reac
                 <Link
                   key={idx}
                   href={`/search?q=${encodeURIComponent(tag)}`}
-                  className="rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-xs text-zinc-700 dark:text-white/70 hover:border-[#18C729]/50 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                  className="rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-xs text-zinc-700 dark:text-zinc-300 hover:border-[#18C729]/50 hover:text-zinc-900 dark:hover:text-white transition-colors"
                 >
                   #{tag}
                 </Link>

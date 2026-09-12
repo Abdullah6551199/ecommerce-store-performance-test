@@ -45,7 +45,7 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
       )}
 
       {/* 2. Main Navigation Header (Server Component Container) */}
-      <header className="sticky top-0 z-50 w-full border-b border-black/10 dark:border-white/10 glass-panel backdrop-blur-md bg-white/85 dark:bg-[#080e0a]/85 transition-colors duration-300">
+      <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-white/10 glass-panel backdrop-blur-md bg-white/85 dark:bg-[#080e0a]/85 transition-colors duration-300">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 gap-4">
           {/* Logo Area (Server-rendered) */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group">
@@ -89,7 +89,7 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
           {/* Navigation Links & Action Icons */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Desktop Navigation (Server-rendered) */}
-            <nav className="hidden md:flex items-center gap-4 text-xs font-semibold text-zinc-700 dark:text-white/70">
+            <nav className="hidden md:flex items-center gap-4 text-xs font-semibold text-zinc-700 dark:text-zinc-300">
               {navLinks.map((item, idx) => (
                 <Link
                   key={`${item.url}-${idx}`}
@@ -102,7 +102,7 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
               <Link
                 href="/admin/products"
                 prefetch={false}
-                className="rounded-lg border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-2.5 py-1 text-[11px] font-bold text-zinc-800 dark:text-[#FEF500] hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                className="rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-[11px] font-bold text-zinc-800 dark:text-[#FEF500] hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors"
               >
                 Admin
               </Link>
@@ -115,7 +115,7 @@ export default function Header({ settings = DEFAULT_STORE_SETTINGS }: HeaderProp
             <Link
               href="/admin/login"
               prefetch={false}
-              className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:text-black dark:hover:text-white hover:border-[#18C729]/40 transition-all"
+              className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white hover:border-[#18C729]/40 transition-all"
               title="Account / Admin Login"
               aria-label="Account"
             >

@@ -49,6 +49,7 @@ interface WishlistContextType {
     salePrice?: number | null;
     imageUrl?: string | null;
   }) => boolean;
+  addToCart: (productId: string) => Promise<boolean>;
   moveToCart: (productId: string) => Promise<boolean>;
   addAllToCart: () => Promise<void>;
   clearWishlist: () => void;
@@ -59,7 +60,7 @@ const WishlistContext = createContext<WishlistContextType | undefined>(undefined
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { addItem, showToast } = useCart();
+  const { addItem, addItems, showToast } = useCart();
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -163,6 +164,27 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     [isInWishlist, removeFromWishlist, addToWishlist]
   );
 
+  // Individual add to cart (keeps item in wishlist)
+  const addToCart = useCallback(
+    async (productId: string): Promise<boolean> => {
+      const item = items.find((it) => it.productId === productId);
+      if (!item) return false;
+
+      const success = await addItem(item.productId, null, 1, {
+        productName: item.name,
+        productSlug: item.slug,
+        imageUrl: item.imageUrl,
+        price: item.price,
+        salePrice: item.salePrice,
+        openOnSuccess: true,
+      });
+
+      return success;
+    },
+    [items, addItem]
+  );
+
+  // Move to cart (adds to cart and removes from wishlist)
   const moveToCart = useCallback(
     async (productId: string): Promise<boolean> => {
       const item = items.find((it) => it.productId === productId);
@@ -180,33 +202,40 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       if (success) {
         const updated = items.filter((it) => it.productId !== productId);
         persistWishlist(updated);
-        showToast(`Moved "${item.name}" to cart!`, "success");
       }
 
       return success;
     },
-    [items, addItem, persistWishlist, showToast]
+    [items, addItem, persistWishlist]
   );
 
+  // Bulk add all wishlist items to cart in a single atomic operation
   const addAllToCart = useCallback(async () => {
     if (items.length === 0) return;
 
-    let addedCount = 0;
-    for (const item of items) {
-      await addItem(item.productId, null, 1, {
+    const entries = items.map((item) => ({
+      productId: item.productId,
+      variantId: null,
+      quantity: 1,
+      options: {
         productName: item.name,
         productSlug: item.slug,
         imageUrl: item.imageUrl,
         price: item.price,
         salePrice: item.salePrice,
-        openOnSuccess: false,
-      });
-      addedCount++;
-    }
+      },
+    }));
 
-    persistWishlist([]);
-    showToast(`Added ${addedCount} items to your cart!`, "success");
-  }, [items, addItem, persistWishlist, showToast]);
+    const result = await addItems(entries, false);
+    // User requested: "Clear the wishlist after successful add (or keep it — decide based on UX; keeping is better)"
+    // Keeping items in wishlist ensures customer doesn't lose saved items
+    if (result.success) {
+      showToast(
+        `Added ${result.count} ${result.count === 1 ? "item" : "items"} to your cart!`,
+        "success"
+      );
+    }
+  }, [items, addItems, showToast]);
 
   const clearWishlist = useCallback(() => {
     persistWishlist([]);
@@ -230,6 +259,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
         addToWishlist,
         removeFromWishlist,
         toggleWishlist,
+        addToCart,
         moveToCart,
         addAllToCart,
         clearWishlist,

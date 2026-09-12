@@ -280,11 +280,11 @@ export default function SearchClient({
       {/* Main Content Layout: Sidebar + Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
         {/* Mobile Filter Toggle Button */}
-        <div className="lg:hidden flex items-center justify-between pb-2 border-b border-white/10">
+        <div className="lg:hidden flex items-center justify-between pb-2 border-b border-zinc-200 dark:border-white/10">
           <button
             type="button"
             onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-semibold text-white hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-4 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10"
           >
             <svg className="h-4 w-4 text-[#18C729]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -292,22 +292,22 @@ export default function SearchClient({
             <span>Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}</span>
           </button>
 
-          <span className="text-xs text-white/50">{total} Results</span>
+          <span className="text-xs text-zinc-500 dark:text-white/50">{total} Results</span>
         </div>
 
         {/* Sidebar Filters */}
         <aside
           className={`lg:block ${
             mobileFilterOpen ? "block" : "hidden"
-          } space-y-6 rounded-3xl border border-white/10 bg-[#0c140f]/90 p-6 backdrop-blur-md shadow-xl lg:sticky lg:top-24`}
+          } space-y-6 rounded-3xl border border-zinc-200 dark:border-white/10 bg-white/95 dark:bg-[#0c140f]/90 p-6 backdrop-blur-md shadow-xl lg:sticky lg:top-24`}
         >
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">Filters</h2>
+          <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-white">Filters</h2>
             {activeFiltersCount > 0 && (
               <button
                 type="button"
                 onClick={handleClearAll}
-                className="text-xs font-medium text-[#FEF500] hover:underline"
+                className="text-xs font-semibold text-emerald-600 dark:text-[#FEF500] hover:underline"
               >
                 Reset All
               </button>
@@ -316,7 +316,7 @@ export default function SearchClient({
 
           {/* Sort Filter (also available in sidebar) */}
           <div className="space-y-2">
-            <label htmlFor="sort-select" className="text-xs font-semibold text-white/70">
+            <label htmlFor="sort-select" className="text-xs font-semibold text-zinc-700 dark:text-white/70">
               Sort By
             </label>
             <select
@@ -324,35 +324,35 @@ export default function SearchClient({
               aria-label="Sort By"
               value={sort}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="w-full rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-xs text-white focus:border-[#18C729] focus:outline-none"
+              className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
             >
-              <option value="newest" className="bg-[#0c140f] text-white">Newest Arrivals</option>
-              <option value="price_asc" className="bg-[#0c140f] text-white">Price: Low to High</option>
-              <option value="price_desc" className="bg-[#0c140f] text-white">Price: High to Low</option>
-              <option value="popular" className="bg-[#0c140f] text-white">Popularity &amp; Stock</option>
+              <option value="newest" className="bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white">Newest Arrivals</option>
+              <option value="price_asc" className="bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white">Price: Low to High</option>
+              <option value="price_desc" className="bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white">Price: High to Low</option>
+              <option value="popular" className="bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white">Popularity &amp; Stock</option>
             </select>
           </div>
 
           {/* Availability Filter */}
-          <div className="pt-2 border-t border-white/10">
+          <div className="pt-2 border-t border-zinc-200 dark:border-white/10">
             <label className="flex items-center gap-3 cursor-pointer group">
               <input
                 type="checkbox"
                 id="in-stock-filter"
                 checked={inStock}
                 onChange={handleStockToggle}
-                className="h-4 w-4 rounded border-white/20 bg-white/5 text-[#18C729] focus:ring-[#18C729] focus:ring-offset-black"
+                className="h-4 w-4 rounded border-zinc-300 dark:border-white/20 bg-white dark:bg-white/5 text-[#18C729] focus:ring-[#18C729] focus:ring-offset-black"
               />
-              <span className="text-xs font-medium text-white/80 group-hover:text-white transition-colors">
+              <span className="text-xs font-medium text-zinc-700 dark:text-white/80 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                 In Stock Only
               </span>
             </label>
           </div>
 
           {/* Price Range Filter */}
-          <div className="space-y-3 pt-2 border-t border-white/10">
+          <div className="space-y-3 pt-2 border-t border-zinc-200 dark:border-white/10">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-white/70">Price Range</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-white/70">Price Range</h3>
               {(minPrice || maxPrice) && (
                 <button
                   type="button"
@@ -361,7 +361,7 @@ export default function SearchClient({
                     setMaxPrice("");
                     applyFilters({ minPrice: "", maxPrice: "" });
                   }}
-                  className="text-[10px] text-white/40 hover:text-white"
+                  className="text-[10px] text-zinc-500 dark:text-white/40 hover:text-zinc-900 dark:hover:text-white"
                 >
                   Clear
                 </button>
@@ -369,26 +369,26 @@ export default function SearchClient({
             </div>
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <span className="absolute left-2.5 top-2 text-xs text-white/40">$</span>
+                <span className="absolute left-2.5 top-2 text-xs text-zinc-400 dark:text-white/40">$</span>
                 <input
                   type="number"
                   placeholder="Min"
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handlePriceApply()}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 pl-6 pr-2 py-1.5 text-xs text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+                  className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
                 />
               </div>
-              <span className="text-xs text-white/40">-</span>
+              <span className="text-xs text-zinc-400 dark:text-white/40">-</span>
               <div className="relative flex-1">
-                <span className="absolute left-2.5 top-2 text-xs text-white/40">$</span>
+                <span className="absolute left-2.5 top-2 text-xs text-zinc-400 dark:text-white/40">$</span>
                 <input
                   type="number"
                   placeholder="Max"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handlePriceApply()}
-                  className="w-full rounded-xl border border-white/15 bg-black/40 pl-6 pr-2 py-1.5 text-xs text-white placeholder-white/30 focus:border-[#18C729] focus:outline-none"
+                  className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
                 />
               </div>
               <button
@@ -400,23 +400,22 @@ export default function SearchClient({
               </button>
             </div>
             {facets.priceRange && (
-              <p className="text-[11px] text-white/40">
+              <p className="text-[11px] text-zinc-500 dark:text-white/40">
                 Range: ${facets.priceRange.min} – ${facets.priceRange.max}
               </p>
             )}
           </div>
 
           {/* Category Filter */}
-          {/* Category Filter */}
           {facets.categories && facets.categories.length > 0 && (
-            <div className="space-y-3 pt-2 border-t border-white/10">
+            <div className="space-y-3 pt-2 border-t border-zinc-200 dark:border-white/10">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-white/70">Category</h3>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-white/70">Category</h3>
                 {category && (
                   <button
                     type="button"
                     onClick={() => handleCategorySelect("")}
-                    className="text-[10px] text-white/40 hover:text-white"
+                    className="text-[10px] text-zinc-500 dark:text-white/40 hover:text-zinc-900 dark:hover:text-white"
                   >
                     Clear
                   </button>
@@ -433,11 +432,11 @@ export default function SearchClient({
                       className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
                         isSelected
                           ? "bg-[#18C729]/15 text-[#18C729] font-bold border border-[#18C729]/30"
-                          : "text-white/70 hover:bg-white/5 hover:text-white"
+                          : "text-zinc-700 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-zinc-900 dark:hover:text-white"
                       }`}
                     >
                       <span className="truncate">{cat.name}</span>
-                      <span className="ml-2 rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-white/40">
+                      <span className="ml-2 rounded-full bg-zinc-100 dark:bg-white/5 px-2 py-0.5 text-[10px] text-zinc-600 dark:text-white/40">
                         {cat.count}
                       </span>
                     </button>
@@ -449,14 +448,14 @@ export default function SearchClient({
 
           {/* Brand Filter */}
           {facets.brands && facets.brands.length > 0 && (
-            <div className="space-y-3 pt-2 border-t border-white/10">
+            <div className="space-y-3 pt-2 border-t border-zinc-200 dark:border-white/10">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-white/70">Brand</h3>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-white/70">Brand</h3>
                 {brand && (
                   <button
                     type="button"
                     onClick={() => handleBrandSelect("")}
-                    className="text-[10px] text-white/40 hover:text-white"
+                    className="text-[10px] text-zinc-500 dark:text-white/40 hover:text-zinc-900 dark:hover:text-white"
                   >
                     Clear
                   </button>
@@ -473,11 +472,11 @@ export default function SearchClient({
                       className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
                         isSelected
                           ? "bg-[#18C729]/15 text-[#18C729] font-bold border border-[#18C729]/30"
-                          : "text-white/70 hover:bg-white/5 hover:text-white"
+                          : "text-zinc-700 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-zinc-900 dark:hover:text-white"
                       }`}
                     >
                       <span className="truncate">{b.name}</span>
-                      <span className="ml-2 rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-white/40">
+                      <span className="ml-2 rounded-full bg-zinc-100 dark:bg-white/5 px-2 py-0.5 text-[10px] text-zinc-600 dark:text-white/40">
                         {b.count}
                       </span>
                     </button>
@@ -489,9 +488,9 @@ export default function SearchClient({
 
           {/* Tag Filter */}
           {facets.tags && facets.tags.length > 0 && (
-            <div className="space-y-3 pt-2 border-t border-white/10">
+            <div className="space-y-3 pt-2 border-t border-zinc-200 dark:border-white/10">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-white/70">Tags</h3>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-white/70">Tags</h3>
                 {selectedTags.length > 0 && (
                   <button
                     type="button"
@@ -499,7 +498,7 @@ export default function SearchClient({
                       setSelectedTags([]);
                       applyFilters({ tags: [] });
                     }}
-                    className="text-[10px] text-white/40 hover:text-white"
+                    className="text-[10px] text-zinc-500 dark:text-white/40 hover:text-zinc-900 dark:hover:text-white"
                   >
                     Clear
                   </button>
@@ -516,7 +515,7 @@ export default function SearchClient({
                       className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] transition-all ${
                         isSelected
                           ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/30"
-                          : "border border-white/10 bg-white/5 text-white/70 hover:border-white/30 hover:text-white"
+                          : "border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:border-zinc-400 dark:hover:border-white/30 hover:text-zinc-900 dark:hover:text-white"
                       }`}
                     >
                       <span>{t.name}</span>
@@ -533,9 +532,9 @@ export default function SearchClient({
         <section className="lg:col-span-3 space-y-6">
           <h2 className="sr-only">Search Results</h2>
           {/* Active Filter Chips & Results Count Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 dark:border-white/10 pb-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-white">
+              <span className="text-sm font-semibold text-zinc-900 dark:text-white">
                 {total} {total === 1 ? "Product" : "Products"}
               </span>
               {isLoading && (
@@ -551,13 +550,13 @@ export default function SearchClient({
 
             {/* Desktop Sort Dropdown */}
             <div className="hidden sm:flex items-center gap-2 text-xs">
-              <label htmlFor="desktop-sort-select" className="text-white/50">Sort by:</label>
+              <label htmlFor="desktop-sort-select" className="text-zinc-500 dark:text-white/50">Sort by:</label>
               <select
                 id="desktop-sort-select"
                 aria-label="Sort search results by"
                 value={sort}
                 onChange={(e) => handleSortChange(e.target.value)}
-                className="rounded-xl border border-white/15 bg-[#0c140f] px-3 py-1.5 text-xs text-white focus:border-[#18C729] focus:outline-none"
+                className="rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-[#0c140f] px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
               >
                 <option value="newest">Newest Arrivals</option>
                 <option value="price_asc">Price: Low to High</option>
@@ -570,7 +569,7 @@ export default function SearchClient({
           {/* Active Filter Badges */}
           {activeFiltersCount > 0 && (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-white/50">Active filters:</span>
+              <span className="text-xs text-zinc-500 dark:text-white/50">Active filters:</span>
 
               {query && (
                 <button
@@ -579,10 +578,10 @@ export default function SearchClient({
                     setQuery("");
                     applyFilters({ query: "" });
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
                 >
                   <span>Query: &quot;{query}&quot;</span>
-                  <span className="text-white/50 hover:text-white">&times;</span>
+                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
                 </button>
               )}
 
@@ -593,13 +592,13 @@ export default function SearchClient({
                     setCategory("");
                     applyFilters({ category: "" });
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
                 >
                   <span>
                     Category:{" "}
                     {facets.categories.find((c) => c.slug === category || c.id === category)?.name || category}
                   </span>
-                  <span className="text-white/50 hover:text-white">&times;</span>
+                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
                 </button>
               )}
 
@@ -610,10 +609,10 @@ export default function SearchClient({
                     setBrand("");
                     applyFilters({ brand: "" });
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
                 >
                   <span>Brand: {brand}</span>
-                  <span className="text-white/50 hover:text-white">&times;</span>
+                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
                 </button>
               )}
 
@@ -625,12 +624,12 @@ export default function SearchClient({
                     setMaxPrice("");
                     applyFilters({ minPrice: "", maxPrice: "" });
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
                 >
                   <span>
                     Price: {minPrice ? `$${minPrice}` : "$0"} – {maxPrice ? `$${maxPrice}` : "Any"}
                   </span>
-                  <span className="text-white/50 hover:text-white">&times;</span>
+                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
                 </button>
               )}
 
@@ -639,10 +638,10 @@ export default function SearchClient({
                   key={tag}
                   type="button"
                   onClick={() => handleTagToggle(tag)}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
                 >
                   <span>Tag: {tag}</span>
-                  <span className="text-white/50 hover:text-white">&times;</span>
+                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
                 </button>
               ))}
 
@@ -650,10 +649,10 @@ export default function SearchClient({
                 <button
                   type="button"
                   onClick={handleStockToggle}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
                 >
                   <span>In Stock Only</span>
-                  <span className="text-white/50 hover:text-white">&times;</span>
+                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
                 </button>
               )}
 
@@ -661,17 +660,17 @@ export default function SearchClient({
                 <button
                   type="button"
                   onClick={() => handleSortChange("newest")}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
                 >
                   <span>Sort: {sort}</span>
-                  <span className="text-white/50 hover:text-white">&times;</span>
+                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
                 </button>
               )}
 
               <button
                 type="button"
                 onClick={handleClearAll}
-                className="text-xs font-semibold text-[#FEF500] hover:underline ml-1"
+                className="text-xs font-semibold text-emerald-600 dark:text-[#FEF500] hover:underline ml-1"
               >
                 Clear All
               </button>
@@ -680,8 +679,8 @@ export default function SearchClient({
 
           {/* Product Grid / Empty State */}
           {products.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-white/15 bg-[#0c140f]/60 p-16 text-center backdrop-blur-md">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-[#FEF500]">
+            <div className="rounded-3xl border border-dashed border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-[#0c140f]/60 p-16 text-center backdrop-blur-md">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-white/5 text-emerald-600 dark:text-[#FEF500]">
                 <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
@@ -691,15 +690,15 @@ export default function SearchClient({
                   />
                 </svg>
               </div>
-              <h3 className="mt-4 text-base font-bold text-white">No Matching Products Found</h3>
-              <p className="mt-1 text-xs text-white/50 max-w-sm mx-auto">
+              <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-white">No Matching Products Found</h3>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-white/50 max-w-sm mx-auto">
                 No items match your active filters and search query. Try removing filters or searching for something else.
               </p>
               <div className="mt-6 flex justify-center gap-3">
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 transition-colors"
+                  className="rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-white/5 px-4 py-2 text-xs font-semibold text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
                 >
                   Reset All Filters
                 </button>
@@ -724,11 +723,11 @@ export default function SearchClient({
               </div>
 
               {totalPages > 1 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/10 mt-8">
-                  <p className="text-xs text-white/50">
-                    Showing <span className="text-white font-medium">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
-                    <span className="text-white font-medium">{Math.min(currentPage * PAGE_SIZE, total)}</span> of{" "}
-                    <span className="text-white font-medium">{total}</span> items
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-zinc-200 dark:border-white/10 mt-8">
+                  <p className="text-xs text-zinc-500 dark:text-white/50">
+                    Showing <span className="text-zinc-900 dark:text-white font-medium">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
+                    <span className="text-zinc-900 dark:text-white font-medium">{Math.min(currentPage * PAGE_SIZE, total)}</span> of{" "}
+                    <span className="text-zinc-900 dark:text-white font-medium">{total}</span> items
                   </p>
                   <div className="flex items-center gap-2">
                     <button
@@ -739,7 +738,7 @@ export default function SearchClient({
                         applyFilters({ page: prev });
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
-                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-800 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       ← Previous
                     </button>
@@ -757,7 +756,7 @@ export default function SearchClient({
                           className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
                             pNum === currentPage
                               ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
-                              : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                              : "border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
                           }`}
                         >
                           {pNum}
@@ -773,7 +772,7 @@ export default function SearchClient({
                         applyFilters({ page: next });
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
-                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-800 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       Next →
                     </button>

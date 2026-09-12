@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
 } from "react";
 import type { CartSummary, CartItemDetail } from "@/lib/cart";
 
@@ -44,6 +45,13 @@ export interface AddItemOptions {
   openOnSuccess?: boolean;
 }
 
+export interface BulkAddItemEntry {
+  productId: string;
+  variantId?: string | null;
+  quantity?: number;
+  options?: AddItemOptions;
+}
+
 export interface CartToastState {
   id: number;
   message: string;
@@ -77,6 +85,10 @@ interface CartContextType {
     quantity?: number,
     openOnSuccessOrOptions?: boolean | AddItemOptions
   ) => Promise<boolean>;
+  addItems: (
+    items: BulkAddItemEntry[],
+    openOnSuccess?: boolean
+  ) => Promise<{ success: boolean; count: number }>;
   updateQuantity: (cartItemId: string, quantity: number) => Promise<boolean>;
   removeItem: (cartItemId: string) => Promise<boolean>;
   clearCart: () => void;
@@ -256,6 +268,7 @@ function CartToastNotification({
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [storedItems, setStoredItems] = useState<StoredCartItem[]>([]);
+  const storedItemsRef = useRef<StoredCartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toast, setToast] = useState<CartToastState | null>(null);
@@ -289,6 +302,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if (raw) {
           const parsed = JSON.parse(raw) as StoredCart;
           if (parsed && Array.isArray(parsed.items)) {
+            storedItemsRef.current = parsed.items;
             setStoredItems(parsed.items);
           }
         }
@@ -394,6 +408,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Helper to persist to localStorage synchronously
   const persistItems = useCallback((items: StoredCartItem[]) => {
+    storedItemsRef.current = items;
     setStoredItems(items);
     if (typeof window !== "undefined") {
       try {
@@ -414,6 +429,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const toggleDrawer = useCallback(() => setIsDrawerOpen((prev) => !prev), []);
 
   const clearCart = useCallback(() => {
+    storedItemsRef.current = [];
     persistItems([]);
     setAppliedCoupon(null);
     setDiscountAmount(0);
@@ -434,9 +450,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (raw) {
         const parsed = JSON.parse(raw) as StoredCart;
         if (Array.isArray(parsed?.items)) {
+          storedItemsRef.current = parsed.items;
           setStoredItems(parsed.items);
         }
       } else {
+        storedItemsRef.current = [];
         setStoredItems([]);
       }
     } catch {}
@@ -547,7 +565,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       const normalizedVariantId = variantId || null;
-      const existingIdx = storedItems.findIndex(
+      // Read current list directly from ref to prevent stale closure overwrites
+      const currentList = [...storedItemsRef.current];
+      const existingIdx = currentList.findIndex(
         (it) =>
           it.productId === productId &&
           (it.variantId || null) === normalizedVariantId
@@ -556,7 +576,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       let newItems: StoredCartItem[];
 
       if (existingIdx >= 0) {
-        const existing = storedItems[existingIdx];
+        const existing = currentList[existingIdx];
         const newQty = existing.quantity + quantity;
 
         // Soft stock check against item limit
@@ -566,7 +586,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           return false;
         }
 
-        newItems = [...storedItems];
+        newItems = [...currentList];
         newItems[existingIdx] = {
           ...existing,
           quantity: newQty,
@@ -595,7 +615,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           stockQuantity: snapshotStock,
           options: options.variantOptions || null,
         };
-        newItems = [...storedItems, newItem];
+        newItems = [...currentList, newItem];
       }
 
       // Synchronous instant update (0ms, zero D1 hits)
@@ -608,19 +628,101 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       return true;
     },
-    [storedItems, showToast, persistItems]
+    [showToast, persistItems]
+  );
+
+  // Bulk add method: adds multiple items in a single atomic batch
+  const addItems = useCallback(
+    async (
+      itemsToAdd: BulkAddItemEntry[],
+      openOnSuccess = false
+    ): Promise<{ success: boolean; count: number }> => {
+      if (!itemsToAdd || itemsToAdd.length === 0) {
+        return { success: false, count: 0 };
+      }
+
+      const currentList = [...storedItemsRef.current];
+      let addedCount = 0;
+
+      for (const entry of itemsToAdd) {
+        const { productId, variantId, quantity = 1, options = {} } = entry;
+        const snapshotStock = options.stockQuantity ?? 99;
+
+        if (snapshotStock <= 0) continue;
+
+        const normalizedVariantId = variantId || null;
+        const existingIdx = currentList.findIndex(
+          (it) =>
+            it.productId === productId &&
+            (it.variantId || null) === normalizedVariantId
+        );
+
+        if (existingIdx >= 0) {
+          const existing = currentList[existingIdx];
+          const newQty = existing.quantity + quantity;
+          const limit = Math.min(existing.stockQuantity || 99, snapshotStock);
+          const safeQty = Math.min(newQty, limit);
+
+          currentList[existingIdx] = {
+            ...existing,
+            quantity: safeQty,
+            stockQuantity: snapshotStock,
+            price: options.price !== undefined ? options.price : existing.price,
+            salePrice:
+              options.salePrice !== undefined
+                ? options.salePrice
+                : existing.salePrice,
+          };
+          addedCount++;
+        } else {
+          const safeQty = Math.min(quantity, snapshotStock);
+          if (safeQty <= 0) continue;
+
+          const newItem: StoredCartItem = {
+            productId,
+            variantId: normalizedVariantId,
+            quantity: safeQty,
+            name: options.productName || "Product",
+            slug: options.productSlug || "",
+            price: options.price ?? 0,
+            salePrice: options.salePrice ?? null,
+            imageUrl: options.imageUrl || "",
+            stockQuantity: snapshotStock,
+            options: options.variantOptions || null,
+          };
+          currentList.push(newItem);
+          addedCount++;
+        }
+      }
+
+      if (addedCount > 0) {
+        persistItems(currentList);
+        showToast(
+          `${addedCount} ${addedCount === 1 ? "item" : "items"} added to cart`,
+          "success"
+        );
+        if (openOnSuccess) {
+          setIsDrawerOpen(true);
+        }
+        return { success: true, count: addedCount };
+      }
+
+      return { success: false, count: 0 };
+    },
+    [showToast, persistItems]
   );
 
   const updateQuantity = useCallback(
     async (cartItemId: string, quantity: number): Promise<boolean> => {
+      const currentList = [...storedItemsRef.current];
       let newItems: StoredCartItem[];
 
       if (quantity <= 0) {
-        newItems = storedItems.filter(
+        newItems = currentList.filter(
           (it) => `${it.productId}_${it.variantId || "default"}` !== cartItemId
         );
       } else {
-        newItems = storedItems.map((it) => {
+        newItems = currentList.map((it) => {
           const itemId = `${it.productId}_${it.variantId || "default"}`;
           if (itemId === cartItemId) {
             // Soft stock check
@@ -640,22 +742,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       persistItems(newItems);
       return true;
     },
-    [storedItems, showToast, persistItems]
+    [showToast, persistItems]
   );
 
   const removeItem = useCallback(
     async (cartItemId: string): Promise<boolean> => {
-      const newItems = storedItems.filter(
+      const newItems = storedItemsRef.current.filter(
         (it) => `${it.productId}_${it.variantId || "default"}` !== cartItemId
       );
       persistItems(newItems);
+      showToast("Item removed from cart", "success");
       return true;
     },
-    [storedItems, persistItems]
+    [showToast, persistItems]
   );
 
   const { cart, items, itemCount, subtotal, total } = useMemo(
-    () => computeCartSummary(storedItems, discountAmount, freeShippingCoupon),
+    () =>
+      computeCartSummary(storedItems, discountAmount, freeShippingCoupon),
     [storedItems, discountAmount, freeShippingCoupon]
   );
 
@@ -683,6 +787,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         toggleDrawer,
         showToast,
         addItem,
+        addItems,
         updateQuantity,
         removeItem,
         clearCart,

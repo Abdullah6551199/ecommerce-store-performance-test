@@ -112,7 +112,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
       <div className="mt-4 flex flex-1 flex-col justify-between space-y-3">
         <div>
           {product.categoryName && (
-            <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-500 dark:text-white/40">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               {product.categoryName}
             </span>
           )}
@@ -120,7 +120,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
             <Link href={`/product/${product.slug}`} prefetch={false}>{product.name}</Link>
           </h3>
           {product.shortDescription && (
-            <p className="mt-1 text-xs text-zinc-600 dark:text-white/50 line-clamp-2">
+            <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2">
               {product.shortDescription}
             </p>
           )}
@@ -136,7 +136,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
                 >
                   ${Number(product.salePrice).toFixed(2)}
                 </span>
-                <span className="text-xs text-zinc-400 dark:text-white/40 line-through">
+                <span className="text-xs text-zinc-400 dark:text-zinc-500 line-through font-mono">
                   ${Number(product.price).toFixed(2)}
                 </span>
               </>

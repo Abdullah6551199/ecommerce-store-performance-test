@@ -157,7 +157,7 @@ export default function Footer({ settings = DEFAULT_STORE_SETTINGS }: FooterProp
                     <Link
                       href={link.url}
                       prefetch={false}
-                      className="text-zinc-500 dark:text-white/60 hover:text-[#18C729] dark:hover:text-[#18C729] transition-colors"
+                      className="text-zinc-600 dark:text-white/60 hover:text-emerald-600 dark:hover:text-[#18C729] transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -169,7 +169,7 @@ export default function Footer({ settings = DEFAULT_STORE_SETTINGS }: FooterProp
         </div>
 
         {/* Bottom Bar: Copyright & Accents */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-zinc-200 dark:border-white/10 pt-8 text-xs text-zinc-500 dark:text-white/50">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-zinc-200 dark:border-white/10 pt-8 text-xs text-zinc-600 dark:text-white/50">
           <div className="flex items-center gap-2">
             <span>&copy; {currentYear}</span>
             <span className="h-1 w-1 rounded-full bg-[#18C729]" />
@@ -178,7 +178,7 @@ export default function Footer({ settings = DEFAULT_STORE_SETTINGS }: FooterProp
 
           <div className="flex items-center gap-4 text-[11px]">
             <span className="text-[#18C729] font-medium">⚡ Premium Athletic Gear</span>
-            <span className="text-zinc-300 dark:text-white/30">•</span>
+            <span className="text-zinc-400 dark:text-white/30">•</span>
             <span>Worldwide Shipping • Secure Checkout</span>
           </div>
         </div>

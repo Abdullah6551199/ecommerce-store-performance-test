@@ -128,7 +128,7 @@ export function CategoriesSection({
 
   return (
     <section id="categories-section" className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-zinc-200 dark:border-white/10 pb-4">
         <div>
           {content?.badgeText && (
             <div
@@ -142,11 +142,11 @@ export function CategoriesSection({
               <span>{content.badgeText}</span>
             </div>
           )}
-          <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-white">
+          <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
             {content?.heading || section.title}
           </h2>
           {content?.subheading && (
-            <p className="mt-1 text-xs text-white/50">{content.subheading}</p>
+            <p className="mt-1 text-xs text-zinc-500 dark:text-white/50">{content.subheading}</p>
           )}
         </div>
 
@@ -162,8 +162,8 @@ export function CategoriesSection({
       </div>
 
       {displayedCategories.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-white/15 bg-[#0c140f]/60 p-12 text-center backdrop-blur-md">
-          <p className="text-sm font-semibold text-white">No Categories Available Yet</p>
+        <div className="rounded-3xl border border-dashed border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-[#0c140f]/60 p-12 text-center backdrop-blur-md">
+          <p className="text-sm font-semibold text-zinc-900 dark:text-white">No Categories Available Yet</p>
           <div className="mt-4">
             <Link
               href="/admin/categories"
@@ -183,12 +183,12 @@ export function CategoriesSection({
             <Link
               key={category.id}
               href={`/search?category=${encodeURIComponent(category.slug)}`}
-              className="group relative flex flex-col overflow-hidden border border-white/10 bg-[#0c140f]/80 p-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+              className="group relative flex flex-col overflow-hidden border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f]/80 p-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:hover:shadow-2xl"
               style={{
                 borderRadius: "var(--radius-card, 1.5rem)",
               }}
             >
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-black/40">
                 {category.imageUrl ? (
                   <Image
                     src={normalizeImageUrl(category.imageUrl, { width: 600, quality: 75 })}
@@ -199,7 +199,7 @@ export function CategoriesSection({
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-white/5 to-white/[0.02] p-4 text-center">
+                  <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-zinc-100 dark:from-white/5 to-zinc-50 dark:to-white/[0.02] p-4 text-center">
                     <span
                       className="text-xl font-bold uppercase"
                       style={{ color: "var(--color-primary, #18C729)" }}
@@ -218,18 +218,18 @@ export function CategoriesSection({
 
               <div className="mt-4 flex flex-1 flex-col justify-between space-y-2">
                 <div>
-                  <h3 className="text-base font-bold text-white group-hover:text-[#18C729] transition-colors">
+                  <h3 className="text-base font-bold text-zinc-900 dark:text-white group-hover:text-[#18C729] transition-colors">
                     {category.name}
                   </h3>
                   {category.description && (
-                    <p className="mt-1 text-xs text-white/60 line-clamp-2">
+                    <p className="mt-1 text-xs text-zinc-600 dark:text-white/60 line-clamp-2">
                       {category.description}
                     </p>
                   )}
                 </div>
 
                 <div
-                  className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-semibold"
+                  className="flex items-center justify-between pt-3 border-t border-zinc-200 dark:border-white/10 text-xs font-semibold"
                   style={{ color: "var(--color-primary, #18C729)" }}
                 >
                   <span className="group-hover:underline">Explore Collection</span>
@@ -262,7 +262,7 @@ export function FeaturedProductsSection({
 
   return (
     <section id="featured-products" className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-zinc-200 dark:border-white/10 pb-4">
         <div>
           {content?.badgeText && (
             <div
@@ -276,11 +276,11 @@ export function FeaturedProductsSection({
               <span>{content.badgeText}</span>
             </div>
           )}
-          <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-white">
+          <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
             {content?.heading || section.title}
           </h2>
           {content?.subheading && (
-            <p className="mt-1 text-xs text-white/50">{content.subheading}</p>
+            <p className="mt-1 text-xs text-zinc-500 dark:text-white/50">{content.subheading}</p>
           )}
         </div>
 
@@ -296,8 +296,8 @@ export function FeaturedProductsSection({
       </div>
 
       {displayedProducts.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-white/15 bg-[#0c140f]/60 p-12 text-center backdrop-blur-md">
-          <p className="text-sm font-semibold text-white">No Products Published Yet</p>
+        <div className="rounded-3xl border border-dashed border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-[#0c140f]/60 p-12 text-center backdrop-blur-md">
+          <p className="text-sm font-semibold text-zinc-900 dark:text-white">No Products Published Yet</p>
           <div className="mt-4">
             <Link
               href="/admin/products"
@@ -415,7 +415,7 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
   return (
     <section
       id="brand-story"
-      className="relative space-y-10 border border-white/10 bg-[#090e0b]/90 p-8 sm:p-14 backdrop-blur-lg"
+      className="relative space-y-10 border border-zinc-200 dark:border-white/10 bg-white/95 dark:bg-[#090e0b]/90 p-8 sm:p-14 backdrop-blur-lg shadow-xl dark:shadow-none"
       style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
@@ -433,11 +433,11 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
             </div>
           )}
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-tight">
             {content?.heading || section.title}
           </h2>
 
-          <p className="text-xs sm:text-sm text-white/70 leading-relaxed max-w-2xl whitespace-pre-line">
+          <p className="text-xs sm:text-sm text-zinc-700 dark:text-white/70 leading-relaxed max-w-2xl whitespace-pre-line">
             {content?.narrativeText}
           </p>
 
@@ -445,7 +445,7 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
             <div className="pt-2">
               <a
                 href={content.ctaUrl}
-                className="inline-flex items-center gap-2 border border-white/20 bg-white/5 px-5 py-2.5 text-xs font-semibold text-white hover:bg-white/10 hover:border-white/30 transition-all"
+                className="inline-flex items-center gap-2 border border-zinc-300 dark:border-white/20 bg-zinc-100 dark:bg-white/5 px-5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10 hover:border-zinc-400 dark:hover:border-white/30 transition-all"
                 style={{ borderRadius: "var(--radius-btn, 0.75rem)" }}
               >
                 <span>{content.ctaText}</span>
@@ -457,7 +457,7 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
 
         {imageUrl && (
           <div className="lg:col-span-5 relative">
-            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-xl">
+            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/15 bg-zinc-100 dark:bg-black/40 shadow-xl">
               <Image
                 src={normalizeImageUrl(imageUrl, { width: 1200, quality: 75 })}
                 alt={content?.heading || "Brand Story"}
@@ -474,17 +474,17 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
 
       {/* Dynamic Stats Grid */}
       {statItems.length > 0 && (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 border-t border-white/10 pt-8">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 border-t border-zinc-200 dark:border-white/10 pt-8">
           {statItems.map((stat: { label: string; value: string; desc?: string }, idx: number) => (
-            <div key={`${stat.label}-${idx}`} className="rounded-2xl border border-white/5 bg-white/5 p-4 text-center">
+            <div key={`${stat.label}-${idx}`} className="rounded-2xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-white/5 p-4 text-center">
               <span
                 className="text-2xl sm:text-3xl font-extrabold"
                 style={{ color: "var(--color-primary, #18C729)" }}
               >
                 {stat.value}
               </span>
-              <p className="mt-1 text-xs font-semibold text-white">{stat.label}</p>
-              {stat.desc && <p className="mt-0.5 text-[10px] text-white/40">{stat.desc}</p>}
+              <p className="mt-1 text-xs font-semibold text-zinc-900 dark:text-white">{stat.label}</p>
+              {stat.desc && <p className="mt-0.5 text-[10px] text-zinc-500 dark:text-white/40">{stat.desc}</p>}
             </div>
           ))}
         </div>
@@ -503,7 +503,7 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
   return (
     <section
       id="testimonials-section"
-      className="space-y-8 rounded-3xl border border-white/10 bg-[#080d09]/80 p-8 sm:p-12 backdrop-blur-md"
+      className="space-y-8 rounded-3xl border border-zinc-200 dark:border-white/10 bg-white/95 dark:bg-[#080d09]/80 p-8 sm:p-12 backdrop-blur-md shadow-xl dark:shadow-none"
       style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
     >
       <div className="text-center max-w-2xl mx-auto space-y-2">
@@ -519,11 +519,11 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
             <span>{content.badgeText}</span>
           </div>
         )}
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
           {content?.heading || section.title}
         </h2>
         {content?.subheading && (
-          <p className="text-xs sm:text-sm text-white/60">{content.subheading}</p>
+          <p className="text-xs sm:text-sm text-zinc-600 dark:text-white/60">{content.subheading}</p>
         )}
       </div>
 
@@ -531,7 +531,7 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
         {(testimonials as Array<{ quote?: string; author?: string; role?: string; avatar?: string; rating?: number }>).map((t, idx: number) => (
           <div
             key={idx}
-            className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/5 p-6 hover:border-white/20 transition-all"
+            className="flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-6 hover:border-zinc-300 dark:hover:border-white/20 transition-all"
             style={{ borderRadius: "var(--radius-base, 1rem)" }}
           >
             <div className="space-y-3">
@@ -543,12 +543,12 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
                   </svg>
                 ))}
               </div>
-              <p className="text-xs sm:text-sm text-white/80 leading-relaxed italic">
+              <p className="text-xs sm:text-sm text-zinc-700 dark:text-white/80 leading-relaxed italic">
                 &ldquo;{t.quote}&rdquo;
               </p>
             </div>
 
-            <div className="mt-6 flex items-center gap-3 pt-4 border-t border-white/10">
+            <div className="mt-6 flex items-center gap-3 pt-4 border-t border-zinc-200 dark:border-white/10">
               {t.avatar ? (
                 <Image
                   src={normalizeImageUrl(t.avatar, { width: 80, quality: 80 })}
@@ -556,7 +556,7 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
                   width={40}
                   height={40}
                   loading="lazy"
-                  className="h-10 w-10 rounded-full object-cover border border-white/20"
+                  className="h-10 w-10 rounded-full object-cover border border-zinc-200 dark:border-white/20"
                 />
               ) : (
                 <div
@@ -567,8 +567,8 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
                 </div>
               )}
               <div>
-                <h4 className="text-xs font-bold text-white">{t.author}</h4>
-                <p className="text-[11px] text-white/50">{t.role}</p>
+                <h4 className="text-xs font-bold text-zinc-900 dark:text-white">{t.author}</h4>
+                <p className="text-[11px] text-zinc-500 dark:text-white/50">{t.role}</p>
               </div>
             </div>
           </div>
@@ -638,11 +638,11 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
 
   return (
     <section
-      className="border border-white/10 bg-[#0c140f]/80 p-8 backdrop-blur-md space-y-4"
+      className="border border-zinc-200 dark:border-white/10 bg-white/95 dark:bg-[#0c140f]/80 p-8 backdrop-blur-md space-y-4 shadow-xl dark:shadow-none"
       style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
     >
-      <h2 className="text-xl sm:text-2xl font-bold text-white">{content?.heading || title}</h2>
-      {content?.subheading && <p className="text-xs sm:text-sm text-white/60">{content.subheading}</p>}
+      <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white">{content?.heading || title}</h2>
+      {content?.subheading && <p className="text-xs sm:text-sm text-zinc-600 dark:text-white/60">{content.subheading}</p>}
 
       {imageUrl && (
         <div className="relative overflow-hidden rounded-xl h-64 sm:h-96 w-full">
@@ -659,7 +659,7 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
 
       {content?.html && (
         <div
-          className="prose prose-invert max-w-none text-xs sm:text-sm text-white/80"
+          className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-zinc-700 dark:text-white/80"
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       )}

@@ -145,14 +145,14 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       />
 
       {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-white/50">
-        <Link href="/" className="hover:text-white transition-colors">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-zinc-500 dark:text-white/50">
+        <Link href="/" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
           Home
         </Link>
         <span>/</span>
         {parent && (
           <>
-            <Link href={`/category/${parent.slug}`} className="hover:text-white transition-colors">
+            <Link href={`/category/${parent.slug}`} className="hover:text-zinc-900 dark:hover:text-white transition-colors">
               {parent.name}
             </Link>
             <span>/</span>
@@ -212,9 +212,9 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       {/* Subcategories (if any exist) */}
       {children.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+          <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
             <span>Explore Subcategories</span>
-            <span className="rounded-md bg-white/10 px-2 py-0.5 text-xs text-white/60">
+            <span className="rounded-md bg-zinc-100 dark:bg-white/10 px-2 py-0.5 text-xs text-zinc-600 dark:text-white/60">
               {children.length}
             </span>
           </h2>
@@ -224,14 +224,14 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
               <Link
                 key={child.id}
                 href={`/category/${child.slug}`}
-                className="group rounded-2xl border border-white/10 bg-[#0c140f]/60 p-4 backdrop-blur-md transition-all hover:border-[#18C729]/40 hover:shadow-lg hover:shadow-[#18C729]/10"
+                className="group rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f]/60 p-4 backdrop-blur-md shadow-sm transition-all hover:border-[#18C729]/40 hover:shadow-lg hover:shadow-[#18C729]/10"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-white group-hover:text-[#18C729] transition-colors">
+                  <span className="text-sm font-semibold text-zinc-900 dark:text-white group-hover:text-[#18C729] transition-colors">
                     {child.name}
                   </span>
                   <svg
-                    className="h-4 w-4 text-white/40 group-hover:text-[#18C729] group-hover:translate-x-0.5 transition-all"
+                    className="h-4 w-4 text-zinc-400 dark:text-white/40 group-hover:text-[#18C729] group-hover:translate-x-0.5 transition-all"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -240,7 +240,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                   </svg>
                 </div>
                 {child.description && (
-                  <p className="mt-1 text-xs text-white/50 line-clamp-1">
+                  <p className="mt-1 text-xs text-zinc-500 dark:text-white/50 line-clamp-1">
                     {child.description}
                   </p>
                 )}
@@ -252,28 +252,28 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
       {/* Dynamic Products in this Category */}
       <section className="space-y-6 pt-4">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
-          <h2 className="text-xl font-bold text-white">Products in {category.name}</h2>
-          <span className="rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-xs font-mono text-[#18C729]">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4">
+          <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Products in {category.name}</h2>
+          <span className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-1 text-xs font-mono text-[#18C729]">
             {total} Items
           </span>
         </div>
 
         {categoryProducts.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-white/15 bg-black/30 p-12 text-center backdrop-blur-md">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 text-[#18C729]">
+          <div className="rounded-3xl border border-dashed border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/30 p-12 text-center backdrop-blur-md">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-white/5 text-[#18C729]">
               <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
-            <h3 className="mt-4 text-base font-semibold text-white">No Products In This Category Yet</h3>
-            <p className="mt-1 text-xs text-white/50 max-w-md mx-auto">
+            <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-white">No Products In This Category Yet</h3>
+            <p className="mt-1 text-xs text-zinc-500 dark:text-white/50 max-w-md mx-auto">
               Products assigned to &quot;{category.name}&quot; will automatically display here when published.
             </p>
             <div className="mt-6">
               <Link
                 href="/admin/products"
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/80 hover:bg-white/10"
+                className="rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-white/5 px-4 py-2 text-xs font-medium text-zinc-900 dark:text-white/80 hover:bg-zinc-100 dark:hover:bg-white/10"
               >
                 Add Product to Category
               </Link>
@@ -288,23 +288,23 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             </div>
 
             {totalPages > 1 && (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/10">
-                <p className="text-xs text-white/50">
-                  Showing <span className="text-white font-medium">{(page - 1) * PAGE_SIZE + 1}</span> to{" "}
-                  <span className="text-white font-medium">{Math.min(page * PAGE_SIZE, total)}</span> of{" "}
-                  <span className="text-white font-medium">{total}</span> products
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-zinc-200 dark:border-white/10">
+                <p className="text-xs text-zinc-500 dark:text-white/50">
+                  Showing <span className="text-zinc-900 dark:text-white font-medium">{(page - 1) * PAGE_SIZE + 1}</span> to{" "}
+                  <span className="text-zinc-900 dark:text-white font-medium">{Math.min(page * PAGE_SIZE, total)}</span> of{" "}
+                  <span className="text-zinc-900 dark:text-white font-medium">{total}</span> products
                 </p>
                 <div className="flex items-center gap-2">
                   {page > 1 ? (
                     <Link
                       href={`/category/${category.slug}?page=${page - 1}`}
                       prefetch={false}
-                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all"
+                      className="rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-800 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all"
                     >
                       ← Previous
                     </Link>
                   ) : (
-                    <span className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-white/20 cursor-not-allowed">
+                    <span className="rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-100/50 dark:bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-zinc-400 dark:text-white/20 cursor-not-allowed">
                       ← Previous
                     </span>
                   )}
@@ -318,7 +318,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                         className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
                           pNum === page
                             ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
-                            : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                            : "border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
                         }`}
                       >
                         {pNum}
@@ -330,12 +330,12 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                     <Link
                       href={`/category/${category.slug}?page=${page + 1}`}
                       prefetch={false}
-                      className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all"
+                      className="rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-800 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all"
                     >
                       Next →
                     </Link>
                   ) : (
-                    <span className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-white/20 cursor-not-allowed">
+                    <span className="rounded-xl border border-zinc-200 dark:border-white/5 bg-zinc-100/50 dark:bg-white/[0.02] px-3 py-1.5 text-xs font-semibold text-zinc-400 dark:text-white/20 cursor-not-allowed">
                       Next →
                     </span>
                   )}

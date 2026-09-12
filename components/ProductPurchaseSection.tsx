@@ -155,73 +155,73 @@ export default function ProductPurchaseSection({
     <div className="space-y-6">
       {/* SKU and Stock Pill Bar */}
       <div className="flex flex-wrap items-center gap-2.5 pt-1">
-        <span className="rounded-lg bg-white/5 px-2.5 py-1 text-[11px] font-mono text-white/70 border border-white/10">
+        <span className="rounded-lg bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-[11px] font-mono text-zinc-700 dark:text-white/70 border border-zinc-200 dark:border-white/10">
           SKU: {displayedSku}
         </span>
 
         {hasVariants && (
-          <span className="rounded-lg bg-[#FEF500]/10 px-2.5 py-1 text-[11px] font-semibold text-[#FEF500] border border-[#FEF500]/20">
+          <span className="rounded-lg bg-emerald-500/10 dark:bg-[#FEF500]/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 dark:text-[#FEF500] border border-emerald-500/20 dark:border-[#FEF500]/20">
             {variants.length} Options Available
           </span>
         )}
 
         {isOutOfStock ? (
-          <span className="rounded-full bg-red-500/10 px-2.5 py-0.5 text-xs font-semibold text-red-400 border border-red-500/30">
+          <span className="rounded-full bg-red-500/10 px-2.5 py-0.5 text-xs font-semibold text-red-500 dark:text-red-400 border border-red-500/30">
             Sold Out
           </span>
         ) : isLowStock ? (
-          <span className="rounded-full bg-[#FEF500]/10 px-2.5 py-0.5 text-xs font-semibold text-[#FEF500] border border-[#FEF500]/30">
+          <span className="rounded-full bg-amber-500/10 dark:bg-[#FEF500]/10 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:text-[#FEF500] border border-amber-500/30 dark:border-[#FEF500]/30">
             Low Stock ({remainingStock} remaining)
           </span>
         ) : (
-          <span className="rounded-full bg-[#18C729]/10 px-2.5 py-0.5 text-xs font-semibold text-[#18C729] border border-[#18C729]/30">
+          <span className="rounded-full bg-[#18C729]/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:text-[#18C729] border border-[#18C729]/30">
             In Stock ({remainingStock} units)
           </span>
         )}
       </div>
 
       {/* Pricing Display */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 space-y-2">
+      <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50/80 dark:bg-white/[0.02] p-5 space-y-2">
         <div className="flex items-baseline gap-3">
           {hasSale ? (
             <>
               <span className="text-3xl font-extrabold text-[#18C729]">
                 ${Number(currentSalePrice).toFixed(2)}
               </span>
-              <span className="text-base text-white/40 line-through">
+              <span className="text-base text-zinc-400 dark:text-zinc-500 line-through font-mono">
                 ${Number(currentPrice).toFixed(2)}
               </span>
-              <span className="rounded-md bg-red-500/20 px-2 py-0.5 text-xs font-bold text-red-400 border border-red-500/30">
+              <span className="rounded-md bg-red-500/15 dark:bg-red-500/20 px-2 py-0.5 text-xs font-bold text-red-600 dark:text-red-400 border border-red-500/30">
                 Save ${savings} ({discountPercent}%)
               </span>
             </>
           ) : (
             <>
-              <span className="text-3xl font-extrabold text-white">
+              <span className="text-3xl font-extrabold text-zinc-900 dark:text-white">
                 ${Number(currentPrice).toFixed(2)}
               </span>
               {compareAtPrice && compareAtPrice > currentPrice && (
-                <span className="text-sm text-white/40 line-through">
+                <span className="text-sm text-zinc-400 dark:text-zinc-500 line-through font-mono">
                   MSRP ${Number(compareAtPrice).toFixed(2)}
                 </span>
               )}
             </>
           )}
         </div>
-        <p className="text-[11px] text-white/50">
+        <p className="text-[11px] text-zinc-500 dark:text-white/50">
           Taxes calculated at checkout. Real-time live inventory.
         </p>
       </div>
 
       {/* VARIANT SELECTORS */}
       {hasVariants && (
-        <div className="space-y-4 rounded-2xl border border-white/10 bg-black/20 p-5">
-          <div className="flex items-center justify-between border-b border-white/10 pb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-white">
+        <div className="space-y-4 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50/60 dark:bg-black/20 p-5">
+          <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-white">
               Select Options
             </span>
             {activeVariant && (
-              <span className="text-xs text-[#18C729] font-mono">
+              <span className="text-xs text-emerald-600 dark:text-[#18C729] font-mono font-bold">
                 {activeVariant.sku}
               </span>
             )}
@@ -233,8 +233,8 @@ export default function ProductPurchaseSection({
             return (
               <div key={attrName} className="space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-white/80">{attrName}</span>
-                  <span className="text-white/50 font-medium">{currentVal}</span>
+                  <span className="font-semibold text-zinc-800 dark:text-white/80">{attrName}</span>
+                  <span className="text-zinc-500 dark:text-white/50 font-medium">{currentVal}</span>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -254,16 +254,16 @@ export default function ProductPurchaseSection({
                         onClick={() => handleSelectOption(attrName, val)}
                         className={`min-h-[42px] px-4 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                           isSelected
-                            ? "border-[#18C729] bg-[#18C729]/15 text-white shadow-md shadow-[#18C729]/20 scale-105"
+                            ? "border-[#18C729] bg-[#18C729]/15 text-zinc-900 dark:text-white shadow-md shadow-[#18C729]/20 scale-105"
                             : isComboOutOfStock
-                            ? "border-white/10 bg-white/[0.02] text-white/30 hover:border-white/20"
-                            : "border-white/15 bg-white/5 text-white/70 hover:border-white/30 hover:text-white"
+                            ? "border-zinc-200 dark:border-white/10 bg-zinc-100/60 dark:bg-white/[0.02] text-zinc-400 dark:text-white/30 hover:border-zinc-300"
+                            : "border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white"
                         }`}
                       >
                         <span className="flex items-center gap-1.5">
                           {val}
                           {isComboOutOfStock && (
-                            <span className="text-[9px] text-red-400 font-normal">
+                            <span className="text-[9px] text-red-500 dark:text-red-400 font-normal">
                               (Out)
                             </span>
                           )}
@@ -279,27 +279,27 @@ export default function ProductPurchaseSection({
       )}
 
       {/* ADD TO CART & QUANTITY SECTION */}
-      <div className="space-y-4 pt-2 border-t border-white/10">
+      <div className="space-y-4 pt-2 border-t border-zinc-200 dark:border-white/10">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           {/* Quantity Selector */}
-          <div className="flex items-center rounded-2xl border border-white/15 bg-white/5 p-1">
+          <div className="flex items-center rounded-2xl border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 p-1">
             <button
               type="button"
               disabled={quantity <= 1 || isOutOfStock}
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-white/70 hover:bg-white/10 hover:text-white disabled:opacity-30 transition-colors cursor-pointer"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-600 dark:text-white/70 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white disabled:opacity-30 transition-colors cursor-pointer"
               aria-label="Decrease quantity"
             >
               -
             </button>
-            <span className="w-12 text-center text-sm font-bold text-white">
+            <span className="w-12 text-center text-sm font-bold text-zinc-900 dark:text-white">
               {quantity}
             </span>
             <button
               type="button"
               disabled={isOutOfStock || quantity >= remainingStock}
               onClick={() => setQuantity((q) => q + 1)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-white/70 hover:bg-white/10 hover:text-white disabled:opacity-30 transition-colors cursor-pointer"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-600 dark:text-white/70 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white disabled:opacity-30 transition-colors cursor-pointer"
               aria-label="Increase quantity"
             >
               +
@@ -313,7 +313,7 @@ export default function ProductPurchaseSection({
             disabled={isOutOfStock}
             className={`flex-1 inline-flex items-center justify-center gap-2 rounded-2xl py-3.5 px-8 text-sm font-bold transition-all shadow-xl cursor-pointer ${
               isOutOfStock
-                ? "bg-white/10 text-white/40 cursor-not-allowed border border-white/10"
+                ? "bg-zinc-200 dark:bg-white/10 text-zinc-400 dark:text-white/40 cursor-not-allowed border border-zinc-300 dark:border-white/10"
                 : addedNotice
                 ? "bg-[#18C729] text-black shadow-[#18C729]/30 scale-[1.02]"
                 : "bg-gradient-to-r from-[#18C729] to-[#12a822] text-black shadow-[#18C729]/25 hover:brightness-110 active:scale-[0.98]"
@@ -383,7 +383,7 @@ export default function ProductPurchaseSection({
           </div>
         )}
 
-        <div className="flex items-center gap-2 text-[11px] text-white/40">
+        <div className="flex items-center gap-2 text-[11px] text-zinc-500 dark:text-white/40">
           <span className="h-1.5 w-1.5 rounded-full bg-[#18C729]" />
           <span>
             {activeVariant ? `Variant: ${activeVariant.sku} • ` : ""}

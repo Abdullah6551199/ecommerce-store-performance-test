@@ -4,20 +4,47 @@ import Image from "next/image";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
 import { normalizeImageUrl } from "@/lib/utils";
 
+import { listPages } from "@/lib/cms";
+
 interface FooterProps {
   settings?: StoreSettings;
 }
 
 /**
  * Dynamic Storefront Footer Component
- * Rendered from Cloudflare D1 settings with contact details, social links,
+ * Rendered from Cloudflare D1 settings & CMS pages with contact details, social links,
  * multi-column navigation, and dynamic copyright year.
  */
-export default function Footer({ settings = DEFAULT_STORE_SETTINGS }: FooterProps): React.JSX.Element {
+export default async function Footer({ settings = DEFAULT_STORE_SETTINGS }: FooterProps): Promise<React.JSX.Element> {
   const currentYear = new Date().getFullYear();
-  const footerLinks = settings.footerLinks && settings.footerLinks.length > 0
+  let footerLinks = settings.footerLinks && settings.footerLinks.length > 0
     ? settings.footerLinks
     : DEFAULT_STORE_SETTINGS.footerLinks;
+
+  // Append any custom pages created in CMS marked showInFooter
+  try {
+    const cmsPages = await listPages();
+    const customFooterPages = cmsPages.filter((p: any) => !p.isDefault && p.showInFooter && p.isPublished);
+    if (customFooterPages.length > 0) {
+      footerLinks = footerLinks.map((col) => {
+        if (col.title === "Legal" || col.title === "Company") {
+          return {
+            ...col,
+            links: [
+              ...col.links,
+              ...customFooterPages.map((p: any) => ({
+                label: p.title,
+                url: `/pages/${p.slug}`,
+              })),
+            ],
+          };
+        }
+        return col;
+      });
+    }
+  } catch (err) {
+    console.warn("Could not load dynamic footer CMS pages:", err);
+  }
 
   const social = settings.socialLinks || DEFAULT_STORE_SETTINGS.socialLinks;
 

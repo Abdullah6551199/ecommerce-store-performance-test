@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { z } from "zod";
-import { eq, asc } from "drizzle-orm";
-import { getDb, categories } from "./db";
+import { eq, asc, sql } from "drizzle-orm";
+import { getDb, categories, products } from "./db";
 
 /**
  * ==============================================================================
@@ -442,4 +442,41 @@ export async function deleteCategory(id: string): Promise<boolean> {
   }
 
   return true;
+}
+
+export interface CategoryWithProductCount extends CategoryRecord {
+  productCount: number;
+}
+
+/**
+ * Retrieve categories with associated product count
+ */
+export async function getCategoriesWithProductCounts(): Promise<CategoryWithProductCount[]> {
+  const db = getDb();
+  if (db) {
+    try {
+      const rows = await db
+        .select({
+          category: categories,
+          productCount: sql<number>`cast(count(${products.id}) as integer)`,
+        })
+        .from(categories)
+        .leftJoin(products, eq(categories.id, products.categoryId))
+        .groupBy(categories.id)
+        .orderBy(asc(categories.sortOrder), asc(categories.name));
+
+      return rows.map((r) => ({
+        ...(r.category as CategoryRecord),
+        productCount: Number(r.productCount) || 0,
+      }));
+    } catch (err) {
+      console.warn("[getCategoriesWithProductCounts] D1 query error, falling back:", err);
+    }
+  }
+
+  const allCats = await listCategories();
+  return allCats.map((c) => ({
+    ...c,
+    productCount: 0,
+  }));
 }

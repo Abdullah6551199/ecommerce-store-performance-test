@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import Link from "next/link";
 import CategoryModal from "./CategoryModal";
+import ProductModal from "./ProductModal";
 import type { CategoryRecord, FlattenedCategory, CategoryWithChildren } from "@/lib/categories";
 import { buildCategoryTree, flattenCategoryHierarchy } from "@/lib/categories";
 
@@ -18,6 +20,10 @@ export default function CategoriesManager(): React.JSX.Element {
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryToEdit, setCategoryToEdit] = useState<CategoryRecord | null>(null);
+
+  // Product quick-add modal state
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [prefilledCategory, setPrefilledCategory] = useState<CategoryRecord | null>(null);
 
   // Delete confirmation
   const [categoryToDelete, setCategoryToDelete] = useState<CategoryRecord | null>(null);
@@ -302,6 +308,7 @@ export default function CategoriesManager(): React.JSX.Element {
                   <th className="py-3.5 pl-6 pr-4 font-semibold">Category (Hierarchy)</th>
                   <th className="px-4 py-3.5 font-semibold">Slug</th>
                   <th className="px-4 py-3.5 font-semibold">Parent Category</th>
+                  <th className="px-4 py-3.5 font-semibold">Products</th>
                   <th className="px-4 py-3.5 font-semibold">Status</th>
                   <th className="px-4 py-3.5 font-semibold">Sort</th>
                   <th className="py-3.5 pl-4 pr-6 text-right font-semibold">Actions</th>
@@ -311,6 +318,7 @@ export default function CategoriesManager(): React.JSX.Element {
                 {displayedCategories.map((cat) => {
                   const hasParent = Boolean(cat.parentId);
                   const indentPx = cat.depth * 24;
+                  const productCount = (cat as any).productCount ?? 0;
 
                   return (
                     <tr
@@ -390,6 +398,17 @@ export default function CategoriesManager(): React.JSX.Element {
                         )}
                       </td>
 
+                      {/* Products Count */}
+                      <td className="px-4 py-3.5">
+                        <Link
+                          href={`/admin/categories/${cat.id}/products`}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-xs hover:border-[#18C729]/40 hover:bg-[#18C729]/10 transition-colors"
+                        >
+                          <span className="font-mono font-bold text-[#18C729]">{productCount}</span>
+                          <span className="text-zinc-500 dark:text-white/50 text-[10px]">products</span>
+                        </Link>
+                      </td>
+
                       {/* Status */}
                       <td className="px-4 py-3.5">
                         {cat.status === "active" ? (
@@ -412,7 +431,36 @@ export default function CategoriesManager(): React.JSX.Element {
 
                       {/* Actions */}
                       <td className="py-3.5 pl-4 pr-6 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-1.5">
+                          {/* View Products */}
+                          <Link
+                            href={`/admin/categories/${cat.id}/products`}
+                            title={`View and manage products in ${cat.name}`}
+                            className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-2 py-1 text-xs font-semibold text-zinc-700 dark:text-white/80 hover:border-[#18C729]/40 hover:bg-[#18C729]/10 hover:text-[#18C729] transition-colors"
+                          >
+                            <svg className="h-3.5 w-3.5 text-[#18C729]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <span className="hidden sm:inline">View</span>
+                          </Link>
+
+                          {/* Add Product quick action */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPrefilledCategory(cat);
+                              setIsProductModalOpen(true);
+                            }}
+                            title={`Add Product to ${cat.name}`}
+                            className="inline-flex items-center gap-1 rounded-lg border border-[#18C729]/30 bg-[#18C729]/10 px-2 py-1 text-xs font-semibold text-[#18C729] hover:bg-[#18C729] hover:text-black transition-all cursor-pointer"
+                          >
+                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span className="hidden sm:inline">Add</span>
+                          </button>
+
                           <button
                             type="button"
                             onClick={() => handleOpenEdit(cat)}
@@ -459,6 +507,25 @@ export default function CategoriesManager(): React.JSX.Element {
         categoryToEdit={categoryToEdit}
         allCategories={categories}
         flattenedCategories={flattened}
+      />
+
+      {/* Quick Add Product Modal with Pre-filled Category */}
+      <ProductModal
+        isOpen={isProductModalOpen}
+        onClose={() => {
+          setIsProductModalOpen(false);
+          setPrefilledCategory(null);
+        }}
+        onSuccess={async () => {
+          await fetchCategories();
+          setFeedback({
+            type: "success",
+            message: `Product added successfully to ${prefilledCategory?.name || "category"}!`,
+          });
+        }}
+        productToEdit={null}
+        categoriesList={categories}
+        initialCategoryId={prefilledCategory?.id}
       />
 
       {/* Delete Confirmation Modal */}

@@ -182,7 +182,7 @@ export function CategoriesSection({
           {displayedCategories.map((category) => (
             <Link
               key={category.id}
-              href={`/search?category=${encodeURIComponent(category.slug)}`}
+              href={`/category/${category.slug}`}
               className="group relative flex flex-col overflow-hidden border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f]/80 p-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:hover:shadow-2xl"
               style={{
                 borderRadius: "var(--radius-card, 1.5rem)",

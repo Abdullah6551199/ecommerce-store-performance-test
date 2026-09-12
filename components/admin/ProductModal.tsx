@@ -14,6 +14,7 @@ interface ProductModalProps {
   onSuccess: () => void;
   productToEdit: ProductWithImagesAndCategory | null;
   categoriesList: CategoryRecord[];
+  initialCategoryId?: string;
 }
 
 export default function ProductModal({
@@ -22,6 +23,7 @@ export default function ProductModal({
   onSuccess,
   productToEdit,
   categoriesList,
+  initialCategoryId,
 }: ProductModalProps): React.JSX.Element | null {
   const [activeTab, setActiveTab] = useState<"basic" | "pricing" | "media" | "variants" | "seo">("basic");
   const [stagedVariants, setStagedVariants] = useState<ProductVariantInput[]>([]);
@@ -120,7 +122,7 @@ export default function ProductModal({
       setSlug("");
       setSlugManuallyEdited(false);
       setSku("");
-      setCategoryId("");
+      setCategoryId(initialCategoryId || "");
       setBrand("");
       setTags("");
       setShortDescription("");

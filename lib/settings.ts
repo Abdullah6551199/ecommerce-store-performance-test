@@ -47,36 +47,40 @@ export const DEFAULT_STORE_SETTINGS: StoreSettings = {
   },
   headerNav: [
     { label: "Home", url: "/" },
-    { label: "Products", url: "/search" },
-    { label: "Categories", url: "/#categories-section" },
-    { label: "Featured", url: "/#featured-products" },
+    { label: "Shop", url: "/shop" },
+    { label: "About", url: "/about" },
+    { label: "Contact", url: "/contact" },
   ],
   footerLinks: [
     {
-      title: "Explore",
+      title: "Shop",
       links: [
-        { label: "All Products", url: "/search" },
-        { label: "Featured Collections", url: "/#featured-products" },
-        { label: "Categories", url: "/#categories-section" },
-        { label: "Performance Gear", url: "/search?q=runner" },
+        { label: "All Products", url: "/shop" },
+        { label: "Categories", url: "/shop" },
+        { label: "New Arrivals", url: "/shop?sort=newest" },
       ],
     },
     {
       title: "Company",
       links: [
-        { label: "Our Story", url: "/#brand-story" },
-        { label: "Engineering Philosophy", url: "/#hero-section" },
-        { label: "Admin Portal", url: "/admin/products" },
-        { label: "Privacy Policy", url: "#" },
+        { label: "About Us", url: "/about" },
+        { label: "Contact Us", url: "/contact" },
+        { label: "Blog", url: "/about" },
       ],
     },
     {
-      title: "Customer Care",
+      title: "Support",
       links: [
-        { label: "Shipping Policy", url: "#" },
-        { label: "Returns & Exchanges", url: "#" },
-        { label: "Support Desk", url: "mailto:support@apexstore.com" },
-        { label: "System Health", url: "/api/health" },
+        { label: "FAQ", url: "/faq" },
+        { label: "Returns Policy", url: "/returns" },
+        { label: "Shipping Info", url: "/shipping" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Privacy Policy", url: "/privacy-policy" },
+        { label: "Terms & Conditions", url: "/terms" },
       ],
     },
   ],

@@ -532,4 +532,64 @@ export type NewCouponRecord = typeof coupons.$inferInsert;
 export type CouponUsageRecord = typeof couponUsages.$inferSelect;
 export type NewCouponUsageRecord = typeof couponUsages.$inferInsert;
 
+// 19. Pages Table (CMS)
+export const pages = sqliteTable("pages", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  content: text("content"), // HTML or Markdown/JSON
+  seoTitle: text("seo_title"),
+  seoDescription: text("seo_description"),
+  ogImage: text("og_image"),
+  showInFooter: integer("show_in_footer", { mode: "boolean" }).default(false).notNull(),
+  isPublished: integer("is_published", { mode: "boolean" }).default(true).notNull(),
+  isDefault: integer("is_default", { mode: "boolean" }).default(false).notNull(),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
 
+// 20. FAQs Table
+export const faqs = sqliteTable("faqs", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  question: text("question").notNull(),
+  answer: text("answer").notNull(),
+  category: text("category"),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 21. Contact Messages Table
+export const contactMessages = sqliteTable("contact_messages", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  subject: text("subject"),
+  message: text("message").notNull(),
+  isRead: integer("is_read", { mode: "boolean" }).default(false).notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export type PageRecord = typeof pages.$inferSelect;
+export type NewPageRecord = typeof pages.$inferInsert;
+
+export type FaqRecord = typeof faqs.$inferSelect;
+export type NewFaqRecord = typeof faqs.$inferInsert;
+
+export type ContactMessageRecord = typeof contactMessages.$inferSelect;
+export type NewContactMessageRecord = typeof contactMessages.$inferInsert;

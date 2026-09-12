@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { getCurrentAdmin } from "@/lib/auth";
 import {
   listCategories,
+  getCategoriesWithProductCounts,
   createCategory,
   categorySchema,
   getCategoryBySlug,
@@ -28,15 +29,22 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const items = await listCategories();
+    const items = await getCategoriesWithProductCounts();
     const tree = buildCategoryTree(items);
     const flattened = flattenCategoryHierarchy(tree);
+
+    // Map product counts to flattened items
+    const countMap = new Map(items.map((c) => [c.id, c.productCount]));
+    const flattenedWithCounts = flattened.map((f) => ({
+      ...f,
+      productCount: countMap.get(f.id) || 0,
+    }));
 
     return NextResponse.json({
       success: true,
       data: {
         categories: items,
-        flattened,
+        flattened: flattenedWithCounts,
         tree,
       },
     });

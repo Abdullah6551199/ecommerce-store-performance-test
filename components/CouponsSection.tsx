@@ -153,35 +153,37 @@ export default function CouponsSection({
     </button>
   );
 
-  // Compact drawer version
+  // Compact drawer version (Streamlined: Only Apply Best Coupon + Applied Badge + Cart Link)
   if (compact) {
     return (
-      <div className="space-y-2 pt-2 border-t border-zinc-200 dark:border-white/10 text-xs">
+      <div className="space-y-1.5 text-xs">
+        <div className="flex items-center justify-between text-[11px] font-bold text-zinc-500 dark:text-white/50 uppercase tracking-wider">
+          <span>🎟️ Coupons</span>
+        </div>
+
         {/* 1. Apply Best Coupon Button */}
         {renderApplyBestButton()}
 
         {/* 2. Applied Coupon Badge (if applied) */}
         {appliedCoupon && (
           <div className="flex items-center justify-between p-2 rounded-xl border border-[#18C729]/30 bg-[#18C729]/10 text-zinc-900 dark:text-white">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#18C729] text-black text-[10px] font-bold">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-md bg-[#18C729] text-black text-[9px] font-bold">
                 ✓
               </span>
               <div className="min-w-0">
-                <span className="font-mono font-bold text-xs block truncate">
-                  {appliedCoupon.code}
+                <span className="font-mono font-bold text-xs">
+                  {appliedCoupon.code} applied
                 </span>
-                <span className="text-[10px] text-[#18C729] block">
-                  {freeShippingCoupon
-                    ? "Free Shipping"
-                    : `Saved $${discountAmount.toFixed(2)}`}
+                <span className="text-[10px] text-[#18C729] ml-1">
+                  ({freeShippingCoupon ? "Free Shipping" : `-$${discountAmount.toFixed(2)}`})
                 </span>
               </div>
             </div>
             <button
               type="button"
               onClick={removeCoupon}
-              className="text-zinc-400 dark:text-white/40 hover:text-red-500 p-1 transition-colors"
+              className="text-zinc-400 dark:text-white/40 hover:text-red-500 p-0.5 transition-colors"
               title="Remove coupon"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -191,61 +193,16 @@ export default function CouponsSection({
           </div>
         )}
 
-        {/* 3. Manual Input */}
-        <div className="space-y-1">
-          <div className="flex gap-1.5">
-            <input
-              type="text"
-              value={inputCode}
-              onChange={(e) => setInputCode(e.target.value.toUpperCase())}
-              placeholder="Coupon code"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleApply();
-                }
-              }}
-              className="flex-1 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-black/30 px-3 py-1.5 text-xs font-mono uppercase text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none focus:border-[#18C729]"
-            />
-            <button
-              type="button"
-              onClick={() => handleApply()}
-              disabled={isApplying || !inputCode.trim()}
-              className="rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-black px-3.5 py-1.5 text-xs font-bold hover:brightness-110 disabled:opacity-40 transition-all cursor-pointer"
-            >
-              {isApplying ? "..." : "Apply"}
-            </button>
-          </div>
-
-          {couponError && (
-            <p className="text-[10px] text-red-500 font-medium">{couponError}</p>
-          )}
+        {/* 3. Link to Full Cart for Manual Promo Codes & Available Coupons */}
+        <div className="pt-0.5">
+          <Link
+            href="/cart"
+            className="text-[10px] text-zinc-500 dark:text-white/50 hover:text-[#18C729] transition-colors flex items-center gap-1"
+          >
+            <span>💡</span>
+            <span>For more options, visit cart →</span>
+          </Link>
         </div>
-
-        {/* 4. Collapsible Available Coupons Accordion (Inline - does NOT hide products!) */}
-        {availableCoupons.length > 0 && (
-          <div className="pt-0.5">
-            <button
-              type="button"
-              onClick={() => setIsExpanded((prev) => !prev)}
-              className="w-full flex items-center justify-between text-[11px] text-[#18C729] hover:text-[#15af24] font-semibold py-1 transition-colors cursor-pointer"
-            >
-              <span className="flex items-center gap-1">
-                <span>🏷️</span>
-                <span>Available Coupons ({availableCoupons.length})</span>
-              </span>
-              <span className="text-[10px] text-zinc-400 dark:text-white/40">
-                {isExpanded ? "▲ Hide" : "▼ View"}
-              </span>
-            </button>
-
-            {isExpanded && (
-              <div className="mt-1.5 space-y-1.5 max-h-40 overflow-y-auto pr-1 [scrollbar-gutter:stable]">
-                {availableCoupons.map(renderCompactCard)}
-              </div>
-            )}
-          </div>
-        )}
       </div>
     );
   }

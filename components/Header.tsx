@@ -9,6 +9,8 @@ import HeaderSearch from "@/components/HeaderSearch";
 import CategoriesDropdown from "@/components/CategoriesDropdown";
 import CartNavButton from "@/components/CartNavButton";
 import WishlistNavButton from "@/components/WishlistNavButton";
+import AccountNavButton from "@/components/AccountNavButton";
+import NotificationNavButton from "@/components/NotificationNavButton";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const MobileNav = dynamic(() => import("@/components/MobileNav"));
@@ -116,18 +118,11 @@ export default async function Header({
             {/* Cart Button (Client Island) */}
             <CartNavButton />
 
-            {/* Account Icon (Dedicated /account route) */}
-            <Link
-              href="/account"
-              prefetch={false}
-              className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white hover:border-[#18C729]/40 transition-all"
-              title="Account / Sign In"
-              aria-label="Account"
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </Link>
+            {/* Notification Bell (Client Island) */}
+            <NotificationNavButton />
+
+            {/* Account Profile / Dropdown (Client Island) */}
+            <AccountNavButton />
 
             {/* Dark / Light Theme Toggle Switch */}
             <ThemeToggle storageKey="apex_theme" />

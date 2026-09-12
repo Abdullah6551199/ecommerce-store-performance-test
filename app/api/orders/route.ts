@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createOrderFromCart, createOrderSchema } from "@/lib/orders";
 import { CART_COOKIE_NAME, CART_COOKIE_MAX_AGE, generateCartId } from "@/lib/cart";
+import { getCurrentCustomer } from "@/lib/customer-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,11 @@ export async function POST(req: NextRequest) {
         },
         { status: 400 }
       );
+    }
+
+    const currentCustomer = await getCurrentCustomer();
+    if (currentCustomer && !validationResult.data.customerId) {
+      validationResult.data.customerId = currentCustomer.id;
     }
 
     const order = await createOrderFromCart(validationResult.data, cartSessionId);

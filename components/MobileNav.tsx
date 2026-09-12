@@ -138,6 +138,15 @@ export default function MobileNav({
               My Wishlist
             </Link>
 
+            {/* Notifications */}
+            <Link
+              href="/account/notifications"
+              onClick={closeMenu}
+              className="flex min-h-[40px] items-center px-3 py-2 text-xs font-semibold text-emerald-600 dark:text-[#18C729] rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition"
+            >
+              Notifications
+            </Link>
+
             {/* Account */}
             <Link
               href="/account"

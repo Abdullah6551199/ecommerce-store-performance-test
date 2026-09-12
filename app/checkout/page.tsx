@@ -38,6 +38,90 @@ export default function CheckoutPage(): React.JSX.Element {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
+  // Customer Account & Saved Addresses state
+  interface SavedAddress {
+    id: string;
+    label: string;
+    fullName: string;
+    phone: string;
+    address: string;
+    city: string;
+    isDefault: boolean;
+  }
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("manual");
+  const [saveAddressForFuture, setSaveAddressForFuture] = useState(false);
+  const [isCustomerLoggedIn, setIsCustomerLoggedIn] = useState(false);
+  const [customerId, setCustomerId] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    async function loadCustomerData() {
+      try {
+        const [meRes, addrRes] = await Promise.all([
+          fetch("/api/auth/me"),
+          fetch("/api/customer/addresses"),
+        ]);
+
+        if (meRes.ok) {
+          const meData = (await meRes.json()) as {
+            customer?: { id: string; name?: string; email?: string; phone?: string | null };
+          };
+          if (meData.customer) {
+            setIsCustomerLoggedIn(true);
+            setCustomerId(meData.customer.id);
+            setFormData((prev) => ({
+              ...prev,
+              customerName: prev.customerName || meData.customer?.name || "",
+              email: prev.email || meData.customer?.email || "",
+              phone: prev.phone || meData.customer?.phone || "",
+            }));
+          }
+        }
+
+        if (addrRes.ok) {
+          const addrData = (await addrRes.json()) as { addresses?: SavedAddress[] };
+          const addrs: SavedAddress[] = addrData.addresses || [];
+          setSavedAddresses(addrs);
+
+          if (addrs.length > 0) {
+            const defaultAddr = addrs.find((a) => a.isDefault) || addrs[0];
+            setSelectedAddressId(defaultAddr.id);
+            setFormData((prev) => ({
+              ...prev,
+              customerName: defaultAddr.fullName,
+              phone: defaultAddr.phone,
+              address: defaultAddr.address,
+              city: defaultAddr.city,
+            }));
+          }
+        }
+      } catch {}
+    }
+    loadCustomerData();
+  }, []);
+
+  const handleAddressSelect = (id: string) => {
+    setSelectedAddressId(id);
+    if (id === "manual") {
+      setFormData((prev) => ({
+        ...prev,
+        address: "",
+        city: "",
+      }));
+      return;
+    }
+    const found = savedAddresses.find((a) => a.id === id);
+    if (found) {
+      setFormData((prev) => ({
+        ...prev,
+        customerName: found.fullName,
+        phone: found.phone,
+        address: found.address,
+        city: found.city,
+      }));
+    }
+  };
+
   const validateForm = () => {
     const errors: Record<string, string> = {};
 
@@ -104,6 +188,7 @@ export default function CheckoutPage(): React.JSX.Element {
         credentials: "include",
         body: JSON.stringify({
           ...formData,
+          customerId: customerId || undefined,
           couponCode: appliedCoupon?.code || undefined,
           paymentMethod: "cod",
           items: items.map((i) => ({
@@ -122,6 +207,23 @@ export default function CheckoutPage(): React.JSX.Element {
 
       if (!res.ok || !json.success) {
         throw new Error(json.error || "Failed to place order. Please check your details.");
+      }
+
+      // If customer requested saving new address for future orders
+      if (isCustomerLoggedIn && saveAddressForFuture && selectedAddressId === "manual") {
+        fetch("/api/customer/addresses", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            label: "Home",
+            fullName: formData.customerName,
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            country: "Pakistan",
+            isDefault: savedAddresses.length === 0,
+          }),
+        }).catch(() => {});
       }
 
       // Clear client-side cart completely from localStorage and React state
@@ -232,6 +334,36 @@ export default function CheckoutPage(): React.JSX.Element {
                   <p className="text-xs text-zinc-500 dark:text-white/50">Where should we deliver your package?</p>
                 </div>
               </div>
+
+              {/* Saved Addresses Selector (for authenticated customers) */}
+              {isCustomerLoggedIn && savedAddresses.length > 0 && (
+                <div className="p-3.5 rounded-2xl border border-[#18C729]/30 bg-[#18C729]/5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-zinc-900 dark:text-white">
+                      Select Delivery Address
+                    </label>
+                    <Link
+                      href="/account/addresses"
+                      target="_blank"
+                      className="text-[11px] font-bold text-[#18C729] hover:underline"
+                    >
+                      Manage Addresses &rarr;
+                    </Link>
+                  </div>
+                  <select
+                    value={selectedAddressId}
+                    onChange={(e) => handleAddressSelect(e.target.value)}
+                    className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-[#080e0a] px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#18C729]"
+                  >
+                    {savedAddresses.map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {a.label} &bull; {a.fullName} - {a.address}, {a.city} {a.isDefault ? "(Default)" : ""}
+                      </option>
+                    ))}
+                    <option value="manual">+ Enter a different delivery address</option>
+                  </select>
+                </div>
+              )}
 
               {/* Full Name */}
               <div>
@@ -359,6 +491,21 @@ export default function CheckoutPage(): React.JSX.Element {
                   />
                 </div>
               </div>
+
+              {/* Save Address Checkbox */}
+              {isCustomerLoggedIn && (selectedAddressId === "manual" || savedAddresses.length === 0) && (
+                <div className="pt-2 border-t border-zinc-100 dark:border-white/5">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-zinc-700 dark:text-white/80 select-none">
+                    <input
+                      type="checkbox"
+                      checked={saveAddressForFuture}
+                      onChange={(e) => setSaveAddressForFuture(e.target.checked)}
+                      className="w-4 h-4 rounded border-zinc-300 text-[#18C729] focus:ring-[#18C729]"
+                    />
+                    Save this address to my account for faster future checkouts
+                  </label>
+                </div>
+              )}
             </div>
 
             {/* Step 2: Payment Method (Cash on Delivery) */}

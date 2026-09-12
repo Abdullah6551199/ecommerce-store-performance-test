@@ -355,6 +355,7 @@ export const orders = sqliteTable("orders", {
     .default("pending")
     .notNull(),
   hasReview: integer("has_review").default(0).notNull(),
+  customerId: text("customer_id"),
   createdAt: text("created_at")
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
@@ -684,4 +685,142 @@ export type NewReviewImageRecord = typeof reviewImages.$inferInsert;
 
 export type ReviewHelpfulRecord = typeof reviewHelpful.$inferSelect;
 export type NewReviewHelpfulRecord = typeof reviewHelpful.$inferInsert;
+
+// 25. Customers Table (Stage 17)
+export const customers = sqliteTable("customers", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  name: text("name").notNull(),
+  phone: text("phone"),
+  status: text("status", { enum: ["active", "suspended"] }).default("active").notNull(),
+  isVerified: integer("is_verified", { mode: "boolean" }).default(false).notNull(),
+  lastLogin: text("last_login"),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 26. Customer Sessions Table
+export const customerSessions = sqliteTable("customer_sessions", {
+  id: text("id").primaryKey(),
+  customerId: text("customer_id")
+    .notNull()
+    .references(() => customers.id, { onDelete: "cascade" }),
+  token: text("token").notNull().unique(),
+  expiresAt: text("expires_at").notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 27. Customer Addresses Table
+export const customerAddresses = sqliteTable("customer_addresses", {
+  id: text("id").primaryKey(),
+  customerId: text("customer_id")
+    .notNull()
+    .references(() => customers.id, { onDelete: "cascade" }),
+  label: text("label").default("Home").notNull(),
+  fullName: text("full_name").notNull(),
+  phone: text("phone").notNull(),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  country: text("country").default("Pakistan").notNull(),
+  postalCode: text("postal_code"),
+  isDefault: integer("is_default", { mode: "boolean" }).default(false).notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 28. Notifications Table
+export const notifications = sqliteTable("notifications", {
+  id: text("id").primaryKey(),
+  customerId: text("customer_id")
+    .notNull()
+    .references(() => customers.id, { onDelete: "cascade" }),
+  type: text("type").notNull(), // 'order_status' | 'review_approved' | 'coupon' | 'welcome' | 'promotion' | 'stock_back' | 'custom'
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  link: text("link"),
+  isRead: integer("is_read", { mode: "boolean" }).default(false).notNull(),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 29. Customer Wishlist Table
+export const customerWishlist = sqliteTable("customer_wishlist", {
+  id: text("id").primaryKey(),
+  customerId: text("customer_id")
+    .notNull()
+    .references(() => customers.id, { onDelete: "cascade" }),
+  productId: text("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export const customersRelations = relations(customers, ({ many }) => ({
+  sessions: many(customerSessions),
+  addresses: many(customerAddresses),
+  notifications: many(notifications),
+  wishlist: many(customerWishlist),
+  orders: many(orders),
+  reviews: many(reviews),
+}));
+
+export const customerSessionsRelations = relations(customerSessions, ({ one }) => ({
+  customer: one(customers, {
+    fields: [customerSessions.customerId],
+    references: [customers.id],
+  }),
+}));
+
+export const customerAddressesRelations = relations(customerAddresses, ({ one }) => ({
+  customer: one(customers, {
+    fields: [customerAddresses.customerId],
+    references: [customers.id],
+  }),
+}));
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  customer: one(customers, {
+    fields: [notifications.customerId],
+    references: [customers.id],
+  }),
+}));
+
+export const customerWishlistRelations = relations(customerWishlist, ({ one }) => ({
+  customer: one(customers, {
+    fields: [customerWishlist.customerId],
+    references: [customers.id],
+  }),
+  product: one(products, {
+    fields: [customerWishlist.productId],
+    references: [products.id],
+  }),
+}));
+
+export type CustomerRecord = typeof customers.$inferSelect;
+export type NewCustomerRecord = typeof customers.$inferInsert;
+
+export type CustomerSessionRecord = typeof customerSessions.$inferSelect;
+export type NewCustomerSessionRecord = typeof customerSessions.$inferInsert;
+
+export type CustomerAddressRecord = typeof customerAddresses.$inferSelect;
+export type NewCustomerAddressRecord = typeof customerAddresses.$inferInsert;
+
+export type NotificationRecord = typeof notifications.$inferSelect;
+export type NewNotificationRecord = typeof notifications.$inferInsert;
+
+export type CustomerWishlistRecord = typeof customerWishlist.$inferSelect;
+export type NewCustomerWishlistRecord = typeof customerWishlist.$inferInsert;
+
 

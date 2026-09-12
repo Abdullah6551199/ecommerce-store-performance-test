@@ -6,11 +6,12 @@ export const dynamic = "force-dynamic";
 
 /**
  * GET /api/admin/customers
- * Protected admin endpoint returning aggregated customer profiles from D1 orders.
+ * Protected admin endpoint returning registered & guest customer profiles.
  */
 export async function GET(req: NextRequest) {
   try {
-    const admin = await getCurrentAdmin();
+    const sessionToken = req.cookies.get("admin_session")?.value;
+    const admin = await getCurrentAdmin(sessionToken);
     if (!admin) {
       return NextResponse.json(
         { success: false, error: "Unauthorized. Admin session required." },
@@ -20,10 +21,11 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search") || undefined;
+    const type = (searchParams.get("type") || "all") as "all" | "registered" | "guest";
     const limit = searchParams.get("limit") ? Number(searchParams.get("limit")) : 20;
     const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
 
-    const result = await getCustomers({ search, limit, page });
+    const result = await getCustomers({ search, type, limit, page });
 
     return NextResponse.json({
       success: true,

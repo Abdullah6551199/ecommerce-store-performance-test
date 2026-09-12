@@ -7,6 +7,7 @@ import {
   products,
   productVariants,
   carts,
+  customers,
   type OrderRecord,
   type OrderItemRecord,
 } from "./db";
@@ -15,6 +16,7 @@ export type { OrderRecord, OrderItemRecord };
 import { getCartWithItems, clearCart, getOrCreateCart, memoryCarts, type CartSummary } from "./cart";
 import { memoryProducts } from "./products";
 import { validateCoupon, recordCouponUsage } from "./coupons";
+import { createCustomerNotification } from "./customer-notifications";
 
 // Validation Schemas
 export const orderItemInputSchema = z.object({
@@ -47,6 +49,7 @@ export const createOrderSchema = z.object({
   notes: z.string().trim().optional(),
   couponCode: z.string().trim().optional().or(z.literal("")),
   paymentMethod: z.literal("cod").default("cod"),
+  customerId: z.string().trim().optional().nullable(),
   items: z.array(orderItemInputSchema).optional(),
 });
 
@@ -289,8 +292,23 @@ export async function createOrderFromCart(
     Math.round((calculatedSubtotal - discountAmount + shipping) * 100) / 100
   );
 
+  let resolvedCustomerId: string | null = validated.customerId || userId || null;
+  if (!resolvedCustomerId && validated.email && db) {
+    try {
+      const match = await db
+        .select({ id: customers.id })
+        .from(customers)
+        .where(sql`LOWER(${customers.email}) = ${validated.email.toLowerCase().trim()}`)
+        .limit(1);
+      if (match.length > 0) {
+        resolvedCustomerId = match[0].id;
+      }
+    } catch {}
+  }
+
   const orderRecord: OrderRecord = {
     id: orderId,
+    customerId: resolvedCustomerId,
     customerName: validated.customerName,
     phone: validated.phone,
     email: validated.email || null,
@@ -395,6 +413,21 @@ export async function createOrderFromCart(
       if (p && p.trackInventory) {
         p.stockQuantity = Math.max(0, p.stockQuantity - item.quantity);
       }
+    }
+  }
+
+  // Send In-App Notification if customer is identified
+  if (resolvedCustomerId) {
+    try {
+      await createCustomerNotification({
+        customerId: resolvedCustomerId,
+        type: "order_status",
+        title: `Order #${orderId.slice(0, 8).toUpperCase()} Confirmed`,
+        message: `Thank you for your order! Total: Rs. ${total.toFixed(2)}. We will notify you when it ships.`,
+        link: `/account/orders/${orderId}`,
+      });
+    } catch (notifErr) {
+      console.warn("[Orders] Could not send order confirmation notification:", notifErr);
     }
   }
 
@@ -578,7 +611,29 @@ export async function updateAdminOrderStatus(
       throw new Error(`Order with ID ${orderId} not found.`);
     }
 
-    return updated[0];
+    const updatedOrder = updated[0];
+    if (updatedOrder.customerId) {
+      let title = `Order #${orderId.slice(0, 8).toUpperCase()} Status Updated`;
+      let msg = `Your order status is now: ${newStatus.toUpperCase()}.`;
+      if (newStatus === "shipped") {
+        title = `Your Order #${orderId.slice(0, 8).toUpperCase()} has Shipped!`;
+        msg = "Great news! Your package is on its way to you.";
+      } else if (newStatus === "delivered") {
+        title = `Order #${orderId.slice(0, 8).toUpperCase()} Delivered`;
+        msg = "Your order has been delivered. Thank you for shopping with us!";
+      }
+      try {
+        await createCustomerNotification({
+          customerId: updatedOrder.customerId,
+          type: "order_status",
+          title,
+          message: msg,
+          link: `/account/orders/${orderId}`,
+        });
+      } catch {}
+    }
+
+    return updatedOrder;
   }
 
   const idx = memoryOrders.findIndex((o) => o.id === orderId);

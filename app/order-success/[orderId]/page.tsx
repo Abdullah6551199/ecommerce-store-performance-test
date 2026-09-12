@@ -13,8 +13,16 @@ export default function OrderSuccessPage(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Check if user is logged in
+    fetch("/api/auth/me")
+      .then((res) => {
+        if (res.ok) setIsLoggedIn(true);
+      })
+      .catch(() => {});
+
     if (!orderId) return;
 
     async function fetchOrder() {
@@ -221,6 +229,40 @@ export default function OrderSuccessPage(): React.JSX.Element {
             </div>
           </div>
         </div>
+
+        {/* Guest Prompt to Create Account */}
+        {!isLoggedIn && (
+          <div className="p-6 rounded-3xl border border-[#18C729]/30 bg-gradient-to-r from-[#18C729]/10 via-[#18C729]/5 to-transparent text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+            <div>
+              <h3 className="text-sm font-black text-zinc-900 dark:text-white">
+                Create an Account to Track Your Order
+              </h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 max-w-md">
+                Save your delivery address, track real-time delivery status, and reorder with one click.
+              </p>
+            </div>
+            <Link
+              href={`/signup?redirect=${encodeURIComponent(`/account/orders/${order.id}`)}`}
+              className="px-5 py-2.5 rounded-xl bg-[#18C729] text-black font-extrabold text-xs hover:bg-[#15af24] shadow-md shadow-[#18C729]/20 transition shrink-0"
+            >
+              Create Account &rarr;
+            </Link>
+          </div>
+        )}
+
+        {isLoggedIn && (
+          <div className="p-4 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/60 dark:bg-white/5 text-center flex items-center justify-between">
+            <span className="text-xs text-zinc-600 dark:text-zinc-400">
+              This order has been linked to your account.
+            </span>
+            <Link
+              href={`/account/orders/${order.id}`}
+              className="text-xs font-bold text-[#18C729] hover:underline"
+            >
+              View in Dashboard &rarr;
+            </Link>
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">

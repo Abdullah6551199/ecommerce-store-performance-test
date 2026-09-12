@@ -8,11 +8,13 @@ import {
   orders,
   orderItems,
   settings,
+  customers,
   type ReviewRecord,
   type NewReviewRecord,
   type ReviewImageRecord,
   type ReviewHelpfulRecord,
 } from "./db";
+import { createCustomerNotification } from "./customer-notifications";
 
 export type { ReviewRecord, NewReviewRecord, ReviewImageRecord, ReviewHelpfulRecord };
 
@@ -841,7 +843,35 @@ export async function adminUpdateReview(
   if (db) {
     try {
       await db.update(reviews).set(patch).where(eq(reviews.id, id));
-      return await adminGetReview(id);
+      const updatedRev = await adminGetReview(id);
+
+      if (updates.status === "approved" && updatedRev) {
+        let custId = updatedRev.customerId;
+        if (!custId && updatedRev.customerEmail) {
+          try {
+            const cRows = await db
+              .select({ id: customers.id })
+              .from(customers)
+              .where(sql`LOWER(${customers.email}) = ${updatedRev.customerEmail.toLowerCase().trim()}`)
+              .limit(1);
+            if (cRows.length > 0) custId = cRows[0].id;
+          } catch {}
+        }
+
+        if (custId) {
+          try {
+            await createCustomerNotification({
+              customerId: custId,
+              type: "review_approved",
+              title: "Review Published!",
+              message: "Your product review has been approved and is now live on our store. Thank you!",
+              link: "/account/reviews",
+            });
+          } catch {}
+        }
+      }
+
+      return updatedRev;
     } catch (err) {
       console.error("[adminUpdateReview] D1 error:", err);
       throw err;

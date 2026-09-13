@@ -289,5 +289,87 @@ The homepage is organized into a sequence of responsive sections:
 - **Form Links**:
   - Interactive links: `font-bold text-purple-600 dark:text-purple-300 hover:underline`.
 
+---
+
+## 10. Stage 18.5 Patterns: Customer Account Hub & Custom Pages Builder
+
+### 10.1 Account Hub Layout (`/account`)
+- **Breadcrumb Navigation**: Home > My Account > [Subpage] in lavender/purple tones (`text-purple-600 dark:text-purple-300`).
+- **Layout Grid**: 12-column responsive layout with 3-column sticky sidebar + 9-column content panel on desktop.
+- **Sidebar Drawer (Mobile)**: Off-canvas drawer accessible via mobile toggle button with purple header and smooth slide-in transition.
+- **User Avatar Banner**: Circular avatar container with brand gradient border (`from-purple-500 to-purple-300`) displaying initials or user picture, user full name, and email.
+- **Active Navigation Items**:
+  - Active: `bg-purple-50 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300 font-bold border-r-4 border-purple-500`.
+  - Inactive: `text-purple-700 dark:text-purple-300 hover:bg-purple-50/50 dark:hover:bg-purple-900/20`.
+  - Sign Out button: Styled with subtle danger border and clean exit icon.
+
+### 10.2 Dashboard & Quick Stat Cards
+- **Welcome Hero**: Soft purple tinted card (`bg-gradient-to-r from-purple-50/80 to-purple-100/40 dark:from-purple-950/40 dark:to-purple-900/20`) with user greeting and quick action buttons ("Browse Store", "View Cart").
+- **Stat Cards (4-Column Grid)**:
+  - Metric containers: `bg-white dark:bg-[#3C0561] rounded-2xl border border-purple-100 dark:border-purple-700 p-5 shadow-sm`.
+  - Stat icon: Circular purple background (`bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-300`).
+  - Stat value: Extra bold purple numbers (`text-2xl sm:text-3xl font-black text-purple-900 dark:text-purple-100`).
+  - Metrics tracked: Total Orders, Total Spent (currency formatted), Wishlist Items count, Reviews count.
+- **Recent Orders & Notifications Snippets**: Compact tables and list items with quick navigation links.
+
+### 10.3 Orders & Order Detail View
+- **Order Cards**:
+  - Header: Copyable order number pill with one-click clipboard copy and toast indicator ("Copied!").
+  - Date and Total: Formatted timestamps and bold currency values.
+  - Status Badge: Solid purple tokens (`bg-purple-100 text-purple-700 dark:bg-purple-900/60 dark:text-purple-300`).
+  - Actions: "View Details" secondary button and "Reorder" quick action button adding items to cart.
+- **Visual Status Timeline (`/account/orders/[id]`)**:
+  - Horizontal multi-step progress track on desktop (vertical on mobile) connecting Placed → Processing → Shipped → Delivered.
+  - Active steps: Vibrant purple node with white checkmark (`bg-purple-500 ring-4 ring-purple-100 dark:ring-purple-900`).
+  - Inactive steps: Soft neutral node (`bg-purple-100 text-purple-400`).
+  - Connected line: Dynamically colored track showing completion progress.
+- **Financial Breakdown**:
+  - Subtotal, discounts (highlighted in purple `- $X.XX`), shipping, tax, and bold grand total.
+  - Print / Download Invoice action button.
+
+### 10.4 Wishlist & Reviews Hub
+- **Wishlist Grid**:
+  - Responsive 2-to-4 column product cards.
+  - "Move to Cart" button: High-contrast purple button automatically opening the Cart Drawer.
+  - "Remove" button: Trash icon with subtle purple hover.
+  - Empty State: Illustrated empty state with "Browse Catalog" CTA.
+- **Reviews Management**:
+  - Star rating visualization (5-star gold score).
+  - Status Badges: Purple pill badge for Approved, Amber for Pending, Gray for Rejected.
+  - Pending reviews allow inline Edit and Delete actions.
+
+### 10.5 Addresses & Profile Settings
+- **Address Cards Grid**:
+  - Clean card displaying recipient name, phone, street, city, state, postal code, and country.
+  - "Default" address pill badge: `bg-purple-500 text-white text-xs font-bold px-2.5 py-0.5 rounded-full`.
+  - Add / Edit Address Modal: Accessible modal form with validated fields and purple action buttons.
+- **Profile & Password Management**:
+  - Update Personal Info form with real-time feedback.
+  - Change Password card with current/new password inputs and security strength meter.
+  - Danger Zone: Red-bordered modal for Account Deletion requiring typed confirmation.
+
+### 10.6 Notification Center
+- **Tab Filters**: Filter pills for "All", "Unread", "Read" with dynamic badge counters.
+- **Notification Item**:
+  - Unread state: Highlighted background (`bg-purple-50/60 dark:bg-purple-900/20`) with purple dot indicator.
+  - Quick action: "Mark as Read" icon button.
+- **Bulk Action**: Prominent "Mark All as Read" button at top.
+
+### 10.7 Custom Pages Builder & Storefront Rendering
+- **Admin Management Split**:
+  - **Core Pages**: Edit-only, Delete protected, "Reset to Default Template" button, hide-from-footer capability.
+  - **Custom Pages**: Full CRUD, URL slug generator, delete confirmation modal.
+- **Page Editor**:
+  - Template selector (Blank, Standard Content, About Us Style, Contact Style, FAQ Style, Custom HTML).
+  - Rich Text toolbar (H1-H6, paragraph, bold, italic, underline, lists, tables, buttons, blockquotes, code view).
+  - Pre-built sections drawer (Hero, Text+Image, 3-Column Cards, Team Grid, Testimonials, Stats Row, CTA Banner, FAQ Accordion, Custom HTML).
+  - R2 Image Upload integration via `/api/media`.
+  - SEO settings: Meta Title, Meta Description, OG Image, Canonical URL.
+  - Visibility controls: Published/Draft switch, Show in Header toggle, Show in Footer toggle, Access level (Public / Logged-in).
+- **Storefront Display (`/pages/[slug]`)**:
+  - Breadcrumb navigation and Big White Card wrapper with purple borders and shadows.
+  - Sanitized HTML rendering with dark mode contrast optimization (`dark:text-purple-100`).
+
+
 
 

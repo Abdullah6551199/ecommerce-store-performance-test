@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
 import { normalizeImageUrl } from "@/lib/utils";
-import { listPages } from "@/lib/cms";
+import { getNavigationPages } from "@/lib/cms";
 
 interface FooterProps {
   settings?: StoreSettings;
@@ -24,14 +24,18 @@ export default async function Footer({
   let customLegalLinks: Array<{ label: string; url: string }> = [];
 
   try {
-    const cmsPages = await listPages();
-    const activeCustom = cmsPages.filter((p: any) => !p.isDefault && p.showInFooter && p.isPublished);
-    customCompanyLinks = activeCustom
-      .filter((p: any) => p.slug.includes("about") || p.slug.includes("story") || p.slug.includes("career"))
-      .map((p: any) => ({ label: p.title, url: `/pages/${p.slug}` }));
-    customLegalLinks = activeCustom
-      .filter((p: any) => p.slug.includes("terms") || p.slug.includes("privacy") || p.slug.includes("cookie"))
-      .map((p: any) => ({ label: p.title, url: `/pages/${p.slug}` }));
+    const { footerPages } = await getNavigationPages();
+    const coreSlugs = ["home", "about", "contact", "privacy-policy", "terms", "returns", "shipping", "faq"];
+    const customFooterPages = footerPages.filter((p) => !coreSlugs.includes(p.slug));
+
+    customFooterPages.forEach((p) => {
+      const s = p.slug.toLowerCase();
+      if (s.includes("terms") || s.includes("privacy") || s.includes("cookie") || s.includes("policy") || s.includes("legal")) {
+        customLegalLinks.push({ label: p.title, url: p.href });
+      } else {
+        customCompanyLinks.push({ label: p.title, url: p.href });
+      }
+    });
   } catch (err) {
     console.warn("Could not load dynamic footer CMS pages:", err);
   }

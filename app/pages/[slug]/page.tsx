@@ -56,33 +56,36 @@ export default async function CustomPage({ params }: CustomPageProps): Promise<R
     notFound();
   }
 
+  const renderedContent = page.cleanContent || page.content || "";
+
   return (
     <div className="py-12 sm:py-16">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="mb-6 flex items-center text-xs text-zinc-500 dark:text-zinc-400 space-x-2">
-          <Link href="/" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        {/* Breadcrumbs */}
+        <nav className="mb-6 flex items-center text-xs text-zinc-500 dark:text-purple-300/80 space-x-2">
+          <Link href="/" className="hover:text-[#960DF2] dark:hover:text-[#EACFFC] transition-colors">
             Home
           </Link>
           <span>/</span>
-          <span className="text-zinc-900 dark:text-white font-medium">{page.title}</span>
+          <span className="text-[#3C0561] dark:text-white font-bold">{page.title}</span>
         </nav>
 
-        {/* Content Container */}
-        <article className="rounded-3xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-8 sm:p-12 shadow-sm">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-6">
+        {/* Big White Card Article */}
+        <article className="rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] p-8 sm:p-12 shadow-sm">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#3C0561] dark:text-white mb-6">
             {page.title}
           </h1>
           <div
-            className="prose dark:prose-invert max-w-none text-zinc-700 dark:text-zinc-300 leading-relaxed
-              prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-zinc-900 dark:prose-headings:text-white
+            className="prose dark:prose-invert max-w-none text-zinc-700 dark:text-purple-100/90 leading-relaxed
+              prose-headings:font-black prose-headings:tracking-tight prose-headings:text-[#3C0561] dark:prose-headings:text-white
               prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
               prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
               prose-p:my-4 prose-p:text-base prose-p:leading-relaxed
               prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
               prose-li:my-1.5
-              prose-strong:font-bold prose-strong:text-zinc-900 dark:prose-strong:text-white"
-            dangerouslySetInnerHTML={{ __html: page.content || "" }}
+              prose-strong:font-extrabold prose-strong:text-[#3C0561] dark:prose-strong:text-white
+              prose-a:text-[#960DF2] prose-a:underline hover:prose-a:text-[#850bd8]"
+            dangerouslySetInnerHTML={{ __html: renderedContent }}
           />
         </article>
       </div>

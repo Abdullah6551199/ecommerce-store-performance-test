@@ -38,7 +38,19 @@ export async function POST(req: NextRequest) {
     }
 
     const body = (await req.json()) as any;
-    const { title, slug, content, seoTitle, seoDescription, ogImage, showInFooter, isPublished } = body;
+    const {
+      title,
+      slug,
+      content,
+      template,
+      seoTitle,
+      seoDescription,
+      ogImage,
+      showInHeader,
+      showInFooter,
+      accessLevel,
+      isPublished,
+    } = body;
 
     if (!title || !slug) {
       return NextResponse.json(
@@ -51,10 +63,13 @@ export async function POST(req: NextRequest) {
       title,
       slug,
       content,
+      template,
       seoTitle,
       seoDescription,
       ogImage,
+      showInHeader: Boolean(showInHeader),
       showInFooter: Boolean(showInFooter),
+      accessLevel: accessLevel || "public",
       isPublished: isPublished !== undefined ? Boolean(isPublished) : true,
     });
 

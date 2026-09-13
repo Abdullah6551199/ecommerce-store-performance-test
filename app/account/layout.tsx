@@ -95,7 +95,7 @@ export default function AccountLayout({
       ),
     },
     {
-      name: "My Reviews",
+      name: "Reviews",
       href: "/account/reviews",
       icon: (
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,12 +104,21 @@ export default function AccountLayout({
       ),
     },
     {
-      name: "Saved Addresses",
+      name: "Addresses",
       href: "/account/addresses",
       icon: (
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+    },
+    {
+      name: "Profile",
+      href: "/account/profile",
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
         </svg>
       ),
     },
@@ -123,28 +132,30 @@ export default function AccountLayout({
         </svg>
       ),
     },
-    {
-      name: "Profile Settings",
-      href: "/account/profile",
-      icon: (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
-    },
   ];
+
+  const getSubPageName = () => {
+    if (pathname.startsWith("/account/orders")) return "Orders";
+    if (pathname.startsWith("/account/wishlist")) return "Wishlist";
+    if (pathname.startsWith("/account/reviews")) return "Reviews";
+    if (pathname.startsWith("/account/addresses")) return "Addresses";
+    if (pathname.startsWith("/account/profile")) return "Profile";
+    if (pathname.startsWith("/account/notifications")) return "Notifications";
+    return "";
+  };
+
+  const subPageName = getSubPageName();
 
   if (isLoading) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl border border-purple-100 dark:border-purple-800 bg-white/80 dark:bg-purple-950/40 backdrop-blur-md">
-          <svg className="w-5 h-5 animate-spin text-purple-600" fill="none" viewBox="0 0 24 24">
+        <div className="inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl border border-purple-200 dark:border-purple-800 bg-white/90 dark:bg-[#1E0230] shadow-sm">
+          <svg className="w-5 h-5 animate-spin text-[#960DF2]" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
           </svg>
-          <span className="text-xs font-semibold text-purple-700 dark:text-purple-300">
-            Loading your customer account...
+          <span className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">
+            Loading customer account...
           </span>
         </div>
       </div>
@@ -152,21 +163,55 @@ export default function AccountLayout({
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-      {/* Mobile Account Navigation Trigger */}
-      <div className="lg:hidden mb-6 flex items-center justify-between p-4 rounded-2xl border border-purple-100 dark:border-purple-800 bg-white dark:bg-[#3C0561] shadow-sm">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6">
+      {/* Breadcrumbs & Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 border-b border-purple-200/60 dark:border-purple-900/40">
         <div>
-          <p className="text-xs text-purple-600/70 dark:text-purple-300/70">Logged in as</p>
-          <p className="text-sm font-bold text-[#3C0561] dark:text-white truncate">
-            {customer?.name}
-          </p>
+          <nav className="flex items-center text-xs text-zinc-500 dark:text-purple-300/70 space-x-2">
+            <Link href="/" className="hover:text-[#960DF2] dark:hover:text-[#EACFFC] transition-colors">
+              Home
+            </Link>
+            <span>/</span>
+            <Link href="/account" className="hover:text-[#960DF2] dark:hover:text-[#EACFFC] transition-colors">
+              My Account
+            </Link>
+            {subPageName && (
+              <>
+                <span>/</span>
+                <span className="text-[#3C0561] dark:text-white font-bold">{subPageName}</span>
+              </>
+            )}
+          </nav>
+          <h1 className="text-xl sm:text-2xl font-black text-[#3C0561] dark:text-white tracking-tight mt-1">
+            My Account
+          </h1>
         </div>
+
+        <div className="text-xs text-zinc-500 dark:text-purple-300/80">
+          Signed in as <strong className="text-[#3C0561] dark:text-white">{customer?.email}</strong>
+        </div>
+      </div>
+
+      {/* Mobile Navigation Dropdown Trigger */}
+      <div className="lg:hidden flex items-center justify-between p-4 rounded-2xl border border-purple-100 dark:border-purple-800 bg-white dark:bg-[#1E0230] shadow-sm">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#960DF2] to-[#AB3DF5] text-white font-black text-xs shadow-md shadow-purple-500/20 shrink-0">
+            {customer?.name.charAt(0).toUpperCase()}
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs font-extrabold text-[#3C0561] dark:text-white truncate">
+              {customer?.name}
+            </p>
+            <p className="text-[10px] text-purple-600/80 dark:text-purple-300/70 truncate">{customer?.email}</p>
+          </div>
+        </div>
+
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-purple-200 dark:border-purple-700 text-xs font-bold text-[#3C0561] dark:text-purple-200 hover:border-purple-400"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-purple-200 dark:border-purple-700 text-xs font-bold text-[#960DF2] dark:text-[#EACFFC] hover:border-purple-400"
         >
-          <span>Account Menu</span>
+          <span>Menu</span>
           <svg
             className={`w-4 h-4 transition-transform ${mobileMenuOpen ? "rotate-180" : ""}`}
             fill="none"
@@ -180,7 +225,7 @@ export default function AccountLayout({
 
       {/* Mobile Navigation Drawer / Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden mb-6 p-2 rounded-2xl border border-purple-100 dark:border-purple-800 bg-white dark:bg-[#3C0561] shadow-xl space-y-1 animate-in fade-in slide-in-from-top-2">
+        <div className="lg:hidden p-3 rounded-2xl border border-purple-100 dark:border-purple-800 bg-white dark:bg-[#1E0230] shadow-xl space-y-1 animate-in fade-in slide-in-from-top-2">
           {navLinks.map((link) => {
             const isActive = link.exact
               ? pathname === link.href
@@ -190,9 +235,9 @@ export default function AccountLayout({
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition ${
                   isActive
-                    ? "bg-purple-600 text-white font-bold shadow-md shadow-purple-600/20"
+                    ? "bg-[#960DF2] text-white shadow-md shadow-purple-600/20"
                     : "text-zinc-700 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40"
                 }`}
               >
@@ -201,18 +246,18 @@ export default function AccountLayout({
                   {link.name}
                 </span>
                 {Boolean(link.badge) && link.badge! > 0 && (
-                  <span className="px-1.5 py-0.5 rounded-full bg-red-500 text-[10px] font-black text-white">
+                  <span className="px-2 py-0.5 rounded-full bg-[#960DF2] text-[10px] font-black text-white">
                     {link.badge}
                   </span>
                 )}
               </Link>
             );
           })}
-          <div className="pt-2 border-t border-purple-100 dark:border-purple-700/60">
+          <div className="pt-2 border-t border-purple-100 dark:border-purple-800/60">
             <button
               type="button"
               onClick={handleSignOut}
-              className="flex w-full items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
+              className="flex w-full items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -223,20 +268,21 @@ export default function AccountLayout({
         </div>
       )}
 
+      {/* Main Grid: Sidebar + Content */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Desktop Sidebar */}
         <aside className="hidden lg:block lg:col-span-3 sticky top-24">
-          <div className="rounded-3xl border border-purple-100 dark:border-purple-800 bg-white/80 dark:bg-[#3C0561]/80 backdrop-blur-xl p-5 shadow-sm space-y-6">
+          <div className="rounded-3xl border border-purple-100 dark:border-purple-800 bg-white dark:bg-[#1E0230] p-5 shadow-sm space-y-6">
             {/* User Profile Summary */}
             <div className="flex items-center gap-3 pb-5 border-b border-purple-100 dark:border-purple-800/60">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#3C0561] to-[#960DF2] text-white font-black text-sm shadow-md shadow-purple-500/20">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#960DF2] to-[#AB3DF5] text-white font-black text-sm shadow-md shadow-purple-500/25">
                 {customer?.name.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-extrabold text-[#3C0561] dark:text-white truncate">
                   {customer?.name}
                 </p>
-                <p className="text-[11px] text-purple-600/70 dark:text-purple-300/70 truncate">{customer?.email}</p>
+                <p className="text-[11px] text-purple-600/80 dark:text-purple-300/70 truncate">{customer?.email}</p>
               </div>
             </div>
 
@@ -250,10 +296,10 @@ export default function AccountLayout({
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
+                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition ${
                       isActive
-                        ? "bg-purple-600 text-white font-bold shadow-md shadow-purple-600/20"
-                        : "text-zinc-600 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40 hover:text-purple-900 dark:hover:text-white"
+                        ? "bg-[#960DF2] text-white shadow-md shadow-purple-600/25"
+                        : "text-zinc-600 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40 hover:text-[#960DF2] dark:hover:text-white"
                     }`}
                   >
                     <span className="flex items-center gap-2.5">
@@ -261,7 +307,9 @@ export default function AccountLayout({
                       {link.name}
                     </span>
                     {Boolean(link.badge) && link.badge! > 0 && (
-                      <span className="px-2 py-0.5 rounded-full bg-red-500 text-[10px] font-black text-white">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                        isActive ? "bg-white text-[#960DF2]" : "bg-[#960DF2] text-white"
+                      }`}>
                         {link.badge}
                       </span>
                     )}
@@ -271,11 +319,11 @@ export default function AccountLayout({
             </nav>
 
             {/* Sign Out */}
-            <div className="pt-4 border-t border-zinc-200 dark:border-white/10">
+            <div className="pt-4 border-t border-purple-100 dark:border-purple-800/60">
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="flex w-full items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition"
+                className="flex w-full items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

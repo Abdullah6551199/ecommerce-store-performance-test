@@ -142,92 +142,92 @@ export default function AccountAddressesPage(): React.JSX.Element {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
         <div>
-          <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl font-black text-[#3C0561] dark:text-white tracking-tight">
             Saved Addresses
           </h1>
-          <p className="text-xs text-zinc-500 mt-0.5">
-            Manage your delivery addresses for rapid checkout
+          <p className="text-xs text-slate-500 dark:text-purple-300/80 mt-0.5">
+            Manage your destination shipping addresses for expedited 1-click checkout
           </p>
         </div>
 
         <button
           type="button"
           onClick={openCreateModal}
-          className="px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-extrabold text-xs shadow-md shadow-purple-400/20 transition flex items-center gap-1.5"
+          className="px-5 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-1.5 self-start sm:self-auto"
         >
-          <span>+ Add Address</span>
+          <span>+ Add New Address</span>
         </button>
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {[1, 2].map((i) => (
-            <div key={i} className="h-44 rounded-3xl bg-zinc-200 dark:bg-white/5 animate-pulse" />
+            <div key={i} className="h-44 rounded-3xl bg-purple-100/50 dark:bg-purple-950/40 animate-pulse" />
           ))}
         </div>
       ) : addresses.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a]">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-white/5 text-zinc-400 mb-3">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="p-12 text-center rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] mb-4">
+            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             </svg>
           </div>
-          <h3 className="text-sm font-bold text-zinc-900 dark:text-white">No Saved Addresses</h3>
-          <p className="text-xs text-zinc-500 mt-1 mb-4">
-            Save your home or office address to save time during checkout.
+          <h3 className="text-base font-extrabold text-[#3C0561] dark:text-white">No Saved Addresses</h3>
+          <p className="text-xs text-slate-500 dark:text-purple-300/70 mt-1 mb-6 max-w-sm mx-auto">
+            Save your home, office, or training facility address to speed up order checkouts.
           </p>
           <button
             type="button"
             onClick={openCreateModal}
-            className="px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-400/20"
+            className="inline-flex items-center px-6 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             Add First Address &rarr;
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {addresses.map((addr) => (
             <div
               key={addr.id}
-              className={`p-5 rounded-3xl border relative shadow-sm transition flex flex-col justify-between ${
+              className={`p-6 rounded-3xl border relative shadow-sm transition flex flex-col justify-between ${
                 addr.isDefault
-                  ? "border-purple-400 bg-white dark:bg-[#3C0561] ring-1 ring-purple-400/30"
-                  : "border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a]"
+                  ? "border-[#960DF2] bg-purple-50/30 dark:bg-[#2A0344]/50 ring-2 ring-[#960DF2]/25"
+                  : "border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]"
               }`}
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-zinc-100 dark:bg-white/10 text-zinc-800 dark:text-zinc-200">
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC]">
                     {addr.label || "Home"}
                   </span>
                   {addr.isDefault && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-[#960DF2] text-white shadow-sm">
                       Default
                     </span>
                   )}
                 </div>
 
-                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
+                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
                   {addr.fullName}
                 </h3>
-                <p className="text-xs text-zinc-500 mt-0.5">{addr.phone}</p>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-2 line-clamp-2">
+                <p className="text-xs text-slate-500 dark:text-purple-300/70 mt-0.5">{addr.phone}</p>
+                <p className="text-xs text-slate-600 dark:text-purple-200/90 mt-2.5 leading-relaxed">
                   {addr.address}
                 </p>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                <p className="text-xs text-slate-600 dark:text-purple-200/90 font-semibold">
                   {addr.city}, {addr.country} {addr.postalCode ? `(${addr.postalCode})` : ""}
                 </p>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-zinc-100 dark:border-white/5 flex items-center justify-between text-xs">
+              <div className="pt-4 mt-4 border-t border-purple-100 dark:border-purple-800/60 flex items-center justify-between text-xs">
                 <div>
                   {!addr.isDefault && (
                     <button
                       type="button"
                       onClick={() => handleSetDefault(addr.id)}
-                      className="text-zinc-500 hover:text-purple-600 dark:hover:text-purple-400 font-medium"
+                      className="text-xs font-bold text-slate-500 hover:text-[#960DF2] dark:text-purple-300 dark:hover:text-white transition"
                     >
                       Set as Default
                     </button>
@@ -238,14 +238,14 @@ export default function AccountAddressesPage(): React.JSX.Element {
                   <button
                     type="button"
                     onClick={() => openEditModal(addr)}
-                    className="font-bold text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white"
+                    className="font-bold text-[#960DF2] dark:text-[#EACFFC] hover:underline"
                   >
                     Edit
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDelete(addr.id)}
-                    className="font-bold text-red-600 hover:text-red-700"
+                    className="font-bold text-rose-500 hover:text-rose-700"
                   >
                     Delete
                   </button>
@@ -258,154 +258,134 @@ export default function AccountAddressesPage(): React.JSX.Element {
 
       {/* Add / Edit Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-lg rounded-3xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140e] p-6 sm:p-8 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-white/5">
-              <h2 className="text-lg font-black text-zinc-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="bg-white dark:bg-[#1E0230] border border-purple-200 dark:border-purple-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-purple-100 dark:border-purple-900/40">
+              <h3 className="text-base font-black text-[#3C0561] dark:text-white">
                 {editingAddress ? "Edit Saved Address" : "Add New Address"}
-              </h2>
+              </h3>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="p-1 rounded-lg text-zinc-400 hover:text-black dark:hover:text-white"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               >
                 ✕
               </button>
             </div>
 
             {formError && (
-              <div className="p-3 rounded-xl bg-red-500/10 text-red-500 text-xs font-semibold">
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-300">
                 {formError}
               </div>
             )}
 
             <form onSubmit={handleSave} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                    Label
+                  <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                    Label (e.g. Home, Gym)
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    required
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
-                    className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-xs text-zinc-900 dark:text-white"
-                  >
-                    <option value="Home">Home</option>
-                    <option value="Office">Office</option>
-                    <option value="Other">Other</option>
-                  </select>
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                  />
                 </div>
-
                 <div>
-                  <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                    Full Name *
+                  <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                    Full Recipient Name
                   </label>
                   <input
                     type="text"
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Recipient name"
-                    className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-xs text-zinc-900 dark:text-white"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                    Phone *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="0300-1234567"
-                    className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-xs text-zinc-900 dark:text-white"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                  Contact Phone Number
+                </label>
+                <input
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="0300-1234567"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                />
+              </div>
 
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                  Street Address
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="House #, Street, Area"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                    City *
+                  <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                    City
                   </label>
                   <input
                     type="text"
                     required
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    placeholder="Karachi, Lahore, etc."
-                    className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-xs text-zinc-900 dark:text-white"
+                    placeholder="e.g. Lahore, Karachi"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                  Street Address *
-                </label>
-                <textarea
-                  required
-                  rows={2}
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="House/Apartment #, Street, Area"
-                  className="w-full p-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-xs text-zinc-900 dark:text-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                    Country
-                  </label>
-                  <input
-                    type="text"
-                    disabled
-                    value={country}
-                    className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/10 text-xs text-zinc-500 cursor-not-allowed"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                    Postal Code
+                  <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                    Postal Code (Optional)
                   </label>
                   <input
                     type="text"
                     value={postalCode}
                     onChange={(e) => setPostalCode(e.target.value)}
-                    placeholder="Optional"
-                    className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-xs text-zinc-900 dark:text-white"
+                    placeholder="e.g. 54000"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
                   />
                 </div>
               </div>
 
-              <div className="pt-2">
-                <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-700 dark:text-zinc-300">
-                  <input
-                    type="checkbox"
-                    checked={isDefault}
-                    onChange={(e) => setIsDefault(e.target.checked)}
-                    className="w-4 h-4 rounded border-purple-300 text-purple-600 focus:ring-purple-400"
-                  />
-                  Set as default shipping address
-                </label>
-              </div>
+              <label className="flex items-center gap-2 cursor-pointer pt-1 text-xs font-bold text-slate-700 dark:text-slate-300">
+                <input
+                  type="checkbox"
+                  checked={isDefault}
+                  onChange={(e) => setIsDefault(e.target.checked)}
+                  className="w-4 h-4 rounded text-[#960DF2] border-purple-300 dark:border-purple-700 focus:ring-[#960DF2]"
+                />
+                <span>Set as default delivery address</span>
+              </label>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100 dark:border-white/5">
+              <div className="flex items-center justify-end gap-2.5 pt-3">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-zinc-200 dark:border-white/10 text-xs font-bold"
+                  disabled={submitting}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-purple-900/40 rounded-xl transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-extrabold text-xs shadow-md shadow-purple-400/20 transition disabled:opacity-50"
+                  className="px-5 py-2 text-xs font-bold bg-[#960DF2] hover:bg-[#850bd8] text-white rounded-xl shadow-md shadow-purple-500/20 transition disabled:opacity-50"
                 >
                   {submitting ? "Saving..." : "Save Address"}
                 </button>

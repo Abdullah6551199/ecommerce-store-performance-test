@@ -16,16 +16,32 @@ import {
  * ==============================================================================
  */
 
+export interface PageMetadata {
+  template?: string;
+  showInHeader?: boolean;
+  accessLevel?: "public" | "auth";
+}
+
 export interface PageInput {
   title: string;
   slug: string;
   content?: string | null;
+  template?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
   ogImage?: string | null;
+  showInHeader?: boolean;
   showInFooter?: boolean;
+  accessLevel?: "public" | "auth";
   isPublished?: boolean;
   sortOrder?: number;
+}
+
+export interface EnhancedPageRecord extends PageRecord {
+  template?: string;
+  showInHeader?: boolean;
+  accessLevel?: "public" | "auth";
+  cleanContent: string;
 }
 
 export interface FaqInput {
@@ -43,8 +59,68 @@ export interface ContactMessageInput {
   message: string;
 }
 
+export const CORE_PAGE_SLUGS = [
+  "home",
+  "about",
+  "contact",
+  "privacy-policy",
+  "terms",
+  "returns",
+  "shipping",
+  "faq",
+] as const;
+
+export type CorePageSlug = (typeof CORE_PAGE_SLUGS)[number];
+
+export function isCorePageSlug(slug: string): boolean {
+  return CORE_PAGE_SLUGS.includes(slug.toLowerCase().trim() as CorePageSlug);
+}
+
+export function parsePageContent(rawContent: string | null): { content: string; meta: PageMetadata } {
+  if (!rawContent) return { content: "", meta: {} };
+  const match = rawContent.match(/^<!--CMS_META:({.*?})-->\n?/);
+  if (match) {
+    try {
+      const meta = JSON.parse(match[1]);
+      const cleanContent = rawContent.slice(match[0].length);
+      return { content: cleanContent, meta };
+    } catch {
+      // fallback
+    }
+  }
+  return { content: rawContent, meta: {} };
+}
+
+export function embedPageContent(cleanContent: string, meta: PageMetadata): string {
+  const metaJson = JSON.stringify(meta);
+  return `<!--CMS_META:${metaJson}-->\n${cleanContent || ""}`;
+}
+
+export function enrichPageRecord(record: PageRecord): EnhancedPageRecord {
+  const { content: cleanContent, meta } = parsePageContent(record.content);
+  return {
+    ...record,
+    cleanContent,
+    template: meta.template || "standard",
+    showInHeader: Boolean(meta.showInHeader),
+    accessLevel: meta.accessLevel || "public",
+  };
+}
+
 // Default template content for core pages
-export const DEFAULT_PAGE_TEMPLATES: Record<string, { title: string; content: string; seoTitle: string; seoDescription: string }> = {
+export const DEFAULT_PAGE_TEMPLATES: Record<
+  string,
+  { title: string; content: string; seoTitle: string; seoDescription: string; showInHeader?: boolean; showInFooter?: boolean }
+> = {
+  home: {
+    title: "Home",
+    content: `<h1>Welcome to ApexStore</h1>
+<p>Engineered for peak performance, technical innovation, and timeless active elegance. Browse our latest arrivals, engineered footwear, and competition gear.</p>`,
+    seoTitle: "ApexStore | Premium Athletic Gear & Footwear",
+    seoDescription: "Discover top-tier performance activewear, footwear, and competition accessories engineered for endurance.",
+    showInHeader: true,
+    showInFooter: true,
+  },
   about: {
     title: "About Us",
     content: `<h1>About ApexStore</h1>
@@ -60,6 +136,19 @@ export const DEFAULT_PAGE_TEMPLATES: Record<string, { title: string; content: st
 </ul>`,
     seoTitle: "About Us | ApexStore Performance Gear",
     seoDescription: "Discover the engineering mission and performance craft behind ApexStore technical apparel and footwear.",
+    showInHeader: true,
+    showInFooter: true,
+  },
+  contact: {
+    title: "Contact Us",
+    content: `<h1>Contact ApexStore</h1>
+<p>Have inquiries regarding product sizing, order tracking, returns, or technical specifications? Our dedicated support staff is here to help.</p>
+<h2>Get In Touch</h2>
+<p>Email our concierge desk at support@apexstore.com or reach out via our contact phone line during business hours.</p>`,
+    seoTitle: "Contact Us | ApexStore Support",
+    seoDescription: "Get in touch with the ApexStore athlete support team for order inquiries, sizing questions, or feedback.",
+    showInHeader: true,
+    showInFooter: true,
   },
   "privacy-policy": {
     title: "Privacy Policy",
@@ -77,6 +166,8 @@ export const DEFAULT_PAGE_TEMPLATES: Record<string, { title: string; content: st
 <p>You may request inspection, correction, or deletion of your stored details at any time by contacting support@apexstore.com.</p>`,
     seoTitle: "Privacy Policy | ApexStore",
     seoDescription: "Understand how ApexStore protects your personal details, cookies, and order transactions.",
+    showInHeader: false,
+    showInFooter: true,
   },
   terms: {
     title: "Terms & Conditions",
@@ -92,6 +183,8 @@ export const DEFAULT_PAGE_TEMPLATES: Record<string, { title: string; content: st
 <p>All design assets, trademarks, photography, and text content remain the exclusive property of ApexStore.</p>`,
     seoTitle: "Terms & Conditions | ApexStore",
     seoDescription: "Review the terms and conditions governing purchases and usage at ApexStore.",
+    showInHeader: false,
+    showInFooter: true,
   },
   returns: {
     title: "Returns & Exchanges Policy",
@@ -113,6 +206,8 @@ export const DEFAULT_PAGE_TEMPLATES: Record<string, { title: string; content: st
 </ol>`,
     seoTitle: "Returns & Exchanges | ApexStore",
     seoDescription: "30-day hassle-free return and exchange instructions for ApexStore footwear and technical apparel.",
+    showInHeader: false,
+    showInFooter: true,
   },
   shipping: {
     title: "Shipping & Delivery Information",
@@ -127,13 +222,21 @@ export const DEFAULT_PAGE_TEMPLATES: Record<string, { title: string; content: st
 <p>Orders confirmed by 2:00 PM EST on business days depart our distribution hub on the same day. Tracking links are emailed immediately upon courier intake.</p>`,
     seoTitle: "Shipping & Delivery Information | ApexStore",
     seoDescription: "Review shipping costs, carrier speeds, dispatch timelines, and delivery tracking at ApexStore.",
+    showInHeader: false,
+    showInFooter: true,
   },
-  contact: {
-    title: "Contact Us",
-    content: `<h1>Contact ApexStore</h1>
-<p>Have inquiries regarding product sizing, order tracking, returns, or technical specifications? Our dedicated support staff is here to help.</p>`,
-    seoTitle: "Contact Us | ApexStore Support",
-    seoDescription: "Get in touch with the ApexStore athlete support team for order inquiries, sizing questions, or feedback.",
+  faq: {
+    title: "Frequently Asked Questions",
+    content: `<h1>Frequently Asked Questions</h1>
+<p>Find answers to common questions about ordering, delivery speeds, size guides, and returns.</p>
+<h2>How do I track my order?</h2>
+<p>You can track all order milestones directly from your Customer Account Orders page or using the tracking number sent to your email.</p>
+<h2>What payment methods do you accept?</h2>
+<p>We support Cash on Delivery (COD) as well as secure edge payment processing.</p>`,
+    seoTitle: "FAQ | ApexStore Help & Answers",
+    seoDescription: "Answers to common questions about shipping, payments, returns, and athlete gear.",
+    showInHeader: false,
+    showInFooter: true,
   },
 };
 
@@ -144,9 +247,46 @@ export const DEFAULT_PAGE_TEMPLATES: Record<string, { title: string; content: st
  */
 
 /**
+ * Helper to build synthesized default page record
+ */
+function buildDefaultPageRecord(slug: string): PageRecord {
+  const tpl = DEFAULT_PAGE_TEMPLATES[slug] || {
+    title: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " "),
+    content: `<h1>${slug}</h1>`,
+    seoTitle: `${slug} | ApexStore`,
+    seoDescription: `Information page for ${slug}`,
+    showInHeader: false,
+    showInFooter: true,
+  };
+
+  const meta: PageMetadata = {
+    template: slug === "faq" ? "faq" : slug === "contact" ? "contact" : slug === "about" ? "about" : "standard",
+    showInHeader: tpl.showInHeader ?? false,
+    accessLevel: "public",
+  };
+
+  return {
+    id: `default-${slug}`,
+    tenantId: "default",
+    slug,
+    title: tpl.title,
+    content: embedPageContent(tpl.content, meta),
+    seoTitle: tpl.seoTitle,
+    seoDescription: tpl.seoDescription,
+    ogImage: null,
+    showInFooter: tpl.showInFooter ?? true,
+    isPublished: true,
+    isDefault: true,
+    sortOrder: 0,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+/**
  * Get a published page by slug (publicly cached)
  */
-export const getPageBySlug = cache(async (slug: string): Promise<PageRecord | null> => {
+export const getPageBySlug = cache(async (slug: string): Promise<EnhancedPageRecord | null> => {
   const normalized = slug.toLowerCase().trim();
   const db = getDb();
 
@@ -159,7 +299,7 @@ export const getPageBySlug = cache(async (slug: string): Promise<PageRecord | nu
         .limit(1);
 
       if (rows && rows.length > 0) {
-        return rows[0];
+        return enrichPageRecord(rows[0]);
       }
     } catch (err) {
       console.warn("[getPageBySlug] D1 query failed, using fallback:", err);
@@ -168,23 +308,7 @@ export const getPageBySlug = cache(async (slug: string): Promise<PageRecord | nu
 
   // Fallback to default template if available
   if (DEFAULT_PAGE_TEMPLATES[normalized]) {
-    const tpl = DEFAULT_PAGE_TEMPLATES[normalized];
-    return {
-      id: `default-${normalized}`,
-      tenantId: "default",
-      slug: normalized,
-      title: tpl.title,
-      content: tpl.content,
-      seoTitle: tpl.seoTitle,
-      seoDescription: tpl.seoDescription,
-      ogImage: null,
-      showInFooter: true,
-      isPublished: true,
-      isDefault: true,
-      sortOrder: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    return enrichPageRecord(buildDefaultPageRecord(normalized));
   }
 
   return null;
@@ -193,7 +317,7 @@ export const getPageBySlug = cache(async (slug: string): Promise<PageRecord | nu
 /**
  * Get any page by slug (admin view, includes drafts)
  */
-export async function getPageBySlugAdmin(slug: string): Promise<PageRecord | null> {
+export async function getPageBySlugAdmin(slug: string): Promise<EnhancedPageRecord | null> {
   const normalized = slug.toLowerCase().trim();
   const db = getDb();
 
@@ -206,7 +330,7 @@ export async function getPageBySlugAdmin(slug: string): Promise<PageRecord | nul
         .limit(1);
 
       if (rows && rows.length > 0) {
-        return rows[0];
+        return enrichPageRecord(rows[0]);
       }
     } catch (err) {
       console.warn("[getPageBySlugAdmin] D1 query failed:", err);
@@ -214,23 +338,7 @@ export async function getPageBySlugAdmin(slug: string): Promise<PageRecord | nul
   }
 
   if (DEFAULT_PAGE_TEMPLATES[normalized]) {
-    const tpl = DEFAULT_PAGE_TEMPLATES[normalized];
-    return {
-      id: `default-${normalized}`,
-      tenantId: "default",
-      slug: normalized,
-      title: tpl.title,
-      content: tpl.content,
-      seoTitle: tpl.seoTitle,
-      seoDescription: tpl.seoDescription,
-      ogImage: null,
-      showInFooter: true,
-      isPublished: true,
-      isDefault: true,
-      sortOrder: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    return enrichPageRecord(buildDefaultPageRecord(normalized));
   }
 
   return null;
@@ -239,7 +347,12 @@ export async function getPageBySlugAdmin(slug: string): Promise<PageRecord | nul
 /**
  * Get single page by ID
  */
-export async function getPageById(id: string): Promise<PageRecord | null> {
+export async function getPageById(id: string): Promise<EnhancedPageRecord | null> {
+  if (id.startsWith("default-")) {
+    const slug = id.replace("default-", "");
+    return enrichPageRecord(buildDefaultPageRecord(slug));
+  }
+
   const db = getDb();
   if (db) {
     try {
@@ -248,7 +361,9 @@ export async function getPageById(id: string): Promise<PageRecord | null> {
         .from(pages)
         .where(eq(pages.id, id))
         .limit(1);
-      return rows[0] || null;
+      if (rows[0]) {
+        return enrichPageRecord(rows[0]);
+      }
     } catch (err) {
       console.warn("[getPageById] D1 query failed:", err);
     }
@@ -258,21 +373,41 @@ export async function getPageById(id: string): Promise<PageRecord | null> {
 
 /**
  * List all pages (admin)
+ * Guaranteed to return all 8 Core Pages + all Custom Pages
  */
-export async function listAllPages(): Promise<PageRecord[]> {
+export async function listAllPages(): Promise<EnhancedPageRecord[]> {
   const db = getDb();
+  let dbRows: PageRecord[] = [];
+
   if (db) {
     try {
-      const rows = await db
+      dbRows = await db
         .select()
         .from(pages)
         .orderBy(asc(pages.sortOrder), desc(pages.updatedAt));
-      return rows;
     } catch (err) {
       console.warn("[listAllPages] D1 query failed:", err);
     }
   }
-  return [];
+
+  const existingSlugs = new Set(dbRows.map((p) => p.slug.toLowerCase()));
+  const allRecords: EnhancedPageRecord[] = dbRows.map((r) => {
+    // If a slug is in core slugs, mark isDefault true
+    const isCore = isCorePageSlug(r.slug);
+    return enrichPageRecord({
+      ...r,
+      isDefault: isCore ? true : Boolean(r.isDefault),
+    });
+  });
+
+  // Ensure every core page exists in the returned list
+  for (const coreSlug of CORE_PAGE_SLUGS) {
+    if (!existingSlugs.has(coreSlug)) {
+      allRecords.push(enrichPageRecord(buildDefaultPageRecord(coreSlug)));
+    }
+  }
+
+  return allRecords;
 }
 
 export const listPages = listAllPages;
@@ -280,17 +415,30 @@ export const listPages = listAllPages;
 /**
  * Create a new page
  */
-export async function createPage(input: PageInput): Promise<PageRecord> {
+export async function createPage(input: PageInput): Promise<EnhancedPageRecord> {
+  const normalizedSlug = input.slug.toLowerCase().trim();
+  if (isCorePageSlug(normalizedSlug)) {
+    throw new Error(`The slug "${normalizedSlug}" is reserved for a core system page.`);
+  }
+
   const db = getDb();
   const id = `page-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
   const now = new Date().toISOString();
 
+  const meta: PageMetadata = {
+    template: input.template || "standard",
+    showInHeader: Boolean(input.showInHeader),
+    accessLevel: input.accessLevel || "public",
+  };
+
+  const rawContent = embedPageContent(input.content || "", meta);
+
   const record: PageRecord = {
     id,
     tenantId: "default",
-    slug: input.slug.toLowerCase().trim(),
+    slug: normalizedSlug,
     title: input.title.trim(),
-    content: input.content || "",
+    content: rawContent,
     seoTitle: input.seoTitle || null,
     seoDescription: input.seoDescription || null,
     ogImage: input.ogImage || null,
@@ -306,83 +454,207 @@ export async function createPage(input: PageInput): Promise<PageRecord> {
     await db.insert(pages).values(record);
   }
 
-  return record;
+  return enrichPageRecord(record);
 }
 
 /**
  * Update an existing page
  */
-export async function updatePage(id: string, input: Partial<PageInput>): Promise<PageRecord | null> {
+export async function updatePage(id: string, input: Partial<PageInput>): Promise<EnhancedPageRecord | null> {
   const db = getDb();
-  if (!db) return null;
-
   const existing = await getPageById(id);
   if (!existing) return null;
 
   const now = new Date().toISOString();
-  const updated: Partial<PageRecord> = {
-    ...input,
-    slug: input.slug ? input.slug.toLowerCase().trim() : existing.slug,
-    title: input.title ? input.title.trim() : existing.title,
+  const isCore = isCorePageSlug(existing.slug);
+
+  const meta: PageMetadata = {
+    template: input.template !== undefined ? (input.template || "standard") : existing.template,
+    showInHeader: input.showInHeader !== undefined ? Boolean(input.showInHeader) : existing.showInHeader,
+    accessLevel: input.accessLevel !== undefined ? input.accessLevel : existing.accessLevel,
+  };
+
+  const contentToSave = input.content !== undefined 
+    ? embedPageContent(input.content || "", meta)
+    : embedPageContent(existing.cleanContent, meta);
+
+  const updatedFields: Partial<PageRecord> = {
+    title: input.title !== undefined ? input.title.trim() : existing.title,
+    content: contentToSave,
+    seoTitle: input.seoTitle !== undefined ? input.seoTitle : existing.seoTitle,
+    seoDescription: input.seoDescription !== undefined ? input.seoDescription : existing.seoDescription,
+    ogImage: input.ogImage !== undefined ? input.ogImage : existing.ogImage,
+    showInFooter: input.showInFooter !== undefined ? Boolean(input.showInFooter) : existing.showInFooter,
+    isPublished: input.isPublished !== undefined ? Boolean(input.isPublished) : existing.isPublished,
     updatedAt: now,
   };
 
-  await db.update(pages).set(updated).where(eq(pages.id, id));
-  return { ...existing, ...updated } as PageRecord;
+  // Do not allow changing the slug of core pages
+  if (!isCore && input.slug) {
+    const newSlug = input.slug.toLowerCase().trim();
+    if (newSlug !== existing.slug && isCorePageSlug(newSlug)) {
+      throw new Error(`The slug "${newSlug}" is reserved for a core system page.`);
+    }
+    updatedFields.slug = newSlug;
+  }
+
+  // If this was a synthesized default page that had not yet been inserted into D1
+  if (id.startsWith("default-")) {
+    const realId = `page-core-${existing.slug}`;
+    const newRecord: PageRecord = {
+      id: realId,
+      tenantId: "default",
+      slug: existing.slug,
+      title: updatedFields.title || existing.title,
+      content: contentToSave,
+      seoTitle: updatedFields.seoTitle ?? existing.seoTitle,
+      seoDescription: updatedFields.seoDescription ?? existing.seoDescription,
+      ogImage: updatedFields.ogImage ?? existing.ogImage,
+      showInFooter: updatedFields.showInFooter !== undefined ? updatedFields.showInFooter : existing.showInFooter,
+      isPublished: updatedFields.isPublished !== undefined ? updatedFields.isPublished : existing.isPublished,
+      isDefault: true,
+      sortOrder: 0,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    if (db) {
+      await db.insert(pages).values(newRecord);
+    }
+    return enrichPageRecord(newRecord);
+  }
+
+  if (db) {
+    await db.update(pages).set(updatedFields).where(eq(pages.id, id));
+  }
+
+  return enrichPageRecord({ ...existing, ...updatedFields } as PageRecord);
 }
 
 /**
  * Reset a page to its default template
  */
-export async function resetPageToDefault(id: string): Promise<PageRecord | null> {
-  const db = getDb();
-  if (!db) return null;
-
+export async function resetPageToDefault(id: string): Promise<EnhancedPageRecord | null> {
   const existing = await getPageById(id);
   if (!existing) return null;
+
+  if (!isCorePageSlug(existing.slug)) {
+    throw new Error(`Reset to default template is only available for core system pages.`);
+  }
 
   const tpl = DEFAULT_PAGE_TEMPLATES[existing.slug];
   if (!tpl) {
     throw new Error(`No default template exists for slug: ${existing.slug}`);
   }
 
-  const now = new Date().toISOString();
-  await db
-    .update(pages)
-    .set({
-      title: tpl.title,
-      content: tpl.content,
-      seoTitle: tpl.seoTitle,
-      seoDescription: tpl.seoDescription,
-      updatedAt: now,
-    })
-    .where(eq(pages.id, id));
+  const meta: PageMetadata = {
+    template: existing.slug === "faq" ? "faq" : existing.slug === "contact" ? "contact" : existing.slug === "about" ? "about" : "standard",
+    showInHeader: tpl.showInHeader ?? false,
+    accessLevel: "public",
+  };
 
-  return {
-    ...existing,
+  const rawContent = embedPageContent(tpl.content, meta);
+  const now = new Date().toISOString();
+
+  const resetFields = {
     title: tpl.title,
-    content: tpl.content,
+    content: rawContent,
     seoTitle: tpl.seoTitle,
     seoDescription: tpl.seoDescription,
+    showInFooter: tpl.showInFooter ?? true,
+    isPublished: true,
     updatedAt: now,
   };
+
+  const db = getDb();
+  if (id.startsWith("default-")) {
+    const realId = `page-core-${existing.slug}`;
+    const newRecord: PageRecord = {
+      id: realId,
+      tenantId: "default",
+      slug: existing.slug,
+      ...resetFields,
+      ogImage: null,
+      isDefault: true,
+      sortOrder: 0,
+      createdAt: now,
+    };
+    if (db) {
+      await db.insert(pages).values(newRecord);
+    }
+    return enrichPageRecord(newRecord);
+  }
+
+  if (db) {
+    await db.update(pages).set(resetFields).where(eq(pages.id, id));
+  }
+
+  return enrichPageRecord({
+    ...existing,
+    ...resetFields,
+  });
 }
 
 /**
- * Delete a custom page (default pages cannot be deleted)
+ * Delete a custom page (core system pages cannot be deleted)
  */
 export async function deletePage(id: string): Promise<boolean> {
-  const db = getDb();
-  if (!db) return false;
-
   const existing = await getPageById(id);
   if (!existing) return false;
-  if (existing.isDefault) {
-    throw new Error("System default pages cannot be deleted.");
+
+  if (existing.isDefault || isCorePageSlug(existing.slug)) {
+    throw new Error("Core system pages cannot be deleted.");
   }
 
-  await db.delete(pages).where(eq(pages.id, id));
+  const db = getDb();
+  if (db) {
+    await db.delete(pages).where(eq(pages.id, id));
+  }
   return true;
+}
+
+/**
+ * Get active navigation pages (for header and footer)
+ */
+export async function getNavigationPages(): Promise<{
+  headerPages: Array<{ title: string; slug: string; href: string }>;
+  footerPages: Array<{ title: string; slug: string; href: string }>;
+}> {
+  const all = await listAllPages();
+  const published = all.filter((p) => p.isPublished);
+
+  const getHref = (slug: string) => {
+    switch (slug) {
+      case "home":
+        return "/";
+      case "about":
+        return "/about";
+      case "contact":
+        return "/contact";
+      case "privacy-policy":
+        return "/privacy-policy";
+      case "terms":
+        return "/terms";
+      case "returns":
+        return "/returns";
+      case "shipping":
+        return "/shipping";
+      case "faq":
+        return "/faq";
+      default:
+        return `/pages/${slug}`;
+    }
+  };
+
+  const headerPages = published
+    .filter((p) => p.showInHeader && p.slug !== "home")
+    .map((p) => ({ title: p.title, slug: p.slug, href: getHref(p.slug) }));
+
+  const footerPages = published
+    .filter((p) => p.showInFooter && p.slug !== "home")
+    .map((p) => ({ title: p.title, slug: p.slug, href: getHref(p.slug) }));
+
+  return { headerPages, footerPages };
 }
 
 export const DEFAULT_FAQS: FaqRecord[] = [

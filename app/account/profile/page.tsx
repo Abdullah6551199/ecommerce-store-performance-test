@@ -149,35 +149,35 @@ export default function AccountProfilePage(): React.JSX.Element {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="h-64 rounded-3xl bg-zinc-200 dark:bg-white/5 animate-pulse" />
+      <div className="space-y-6 max-w-2xl">
+        <div className="h-64 rounded-3xl bg-purple-100/50 dark:bg-purple-950/40 animate-pulse" />
       </div>
     );
   }
 
   return (
     <div className="space-y-8 max-w-2xl">
-      <div>
-        <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+      <div className="pb-2">
+        <h1 className="text-2xl font-black text-[#3C0561] dark:text-white tracking-tight">
           Profile Settings
         </h1>
-        <p className="text-xs text-zinc-500 mt-0.5">
-          Manage your personal account details and security settings
+        <p className="text-xs text-slate-500 dark:text-purple-300/80 mt-0.5">
+          Manage your personal customer profile details and security credentials
         </p>
       </div>
 
       {/* 1. Personal Information */}
-      <div className="p-6 sm:p-8 rounded-3xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a] shadow-sm space-y-6">
-        <h2 className="text-base font-extrabold text-zinc-900 dark:text-white">
+      <div className="p-6 sm:p-8 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm space-y-6">
+        <h2 className="text-base font-extrabold text-[#3C0561] dark:text-white">
           Personal Information
         </h2>
 
         {profileMsg && (
           <div
-            className={`p-3.5 rounded-2xl text-xs font-semibold ${
+            className={`p-3.5 rounded-2xl text-xs font-bold border ${
               profileMsg.type === "success"
-                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                : "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20"
+                ? "bg-purple-50 text-[#960DF2] border-purple-200 dark:bg-purple-950/40 dark:text-[#EACFFC] dark:border-purple-800"
+                : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800"
             }`}
           >
             {profileMsg.text}
@@ -186,7 +186,7 @@ export default function AccountProfilePage(): React.JSX.Element {
 
         <form onSubmit={handleUpdateProfile} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
               Full Name
             </label>
             <input
@@ -194,27 +194,27 @@ export default function AccountProfilePage(): React.JSX.Element {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+              className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
               Email Address (Account ID)
             </label>
             <input
               type="email"
               disabled
               value={email}
-              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/10 text-sm text-zinc-500 cursor-not-allowed"
+              className="w-full h-11 px-4 rounded-xl border border-purple-200/50 dark:border-purple-900/50 bg-slate-100 dark:bg-purple-950/40 text-sm text-slate-400 cursor-not-allowed font-mono"
             />
-            <p className="text-[10px] text-zinc-400 mt-1">
-              Contact support if you need to transfer this account to a different email.
+            <p className="text-[10px] text-slate-400 mt-1">
+              Contact store support if you need to transfer this account to a different email.
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
               Phone Number
             </label>
             <input
@@ -222,14 +222,14 @@ export default function AccountProfilePage(): React.JSX.Element {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="0300-1234567"
-              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+              className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSavingProfile}
-            className="px-5 py-2.5 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-extrabold text-xs shadow-md shadow-purple-400/20 transition disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
           >
             {isSavingProfile ? "Saving..." : "Save Profile Details"}
           </button>
@@ -237,17 +237,17 @@ export default function AccountProfilePage(): React.JSX.Element {
       </div>
 
       {/* 2. Security & Password */}
-      <div className="p-6 sm:p-8 rounded-3xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a] shadow-sm space-y-6">
-        <h2 className="text-base font-extrabold text-zinc-900 dark:text-white">
+      <div className="p-6 sm:p-8 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm space-y-6">
+        <h2 className="text-base font-extrabold text-[#3C0561] dark:text-white">
           Change Password
         </h2>
 
         {passwordMsg && (
           <div
-            className={`p-3.5 rounded-2xl text-xs font-semibold ${
+            className={`p-3.5 rounded-2xl text-xs font-bold border ${
               passwordMsg.type === "success"
-                ? "bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700"
-                : "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20"
+                ? "bg-purple-50 text-[#960DF2] border-purple-200 dark:bg-purple-950/40 dark:text-[#EACFFC] dark:border-purple-800"
+                : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800"
             }`}
           >
             {passwordMsg.text}
@@ -256,7 +256,7 @@ export default function AccountProfilePage(): React.JSX.Element {
 
         <form onSubmit={handleChangePassword} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
               Current Password
             </label>
             <input
@@ -264,14 +264,13 @@ export default function AccountProfilePage(): React.JSX.Element {
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+              className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
                 New Password
               </label>
               <input
@@ -280,22 +279,23 @@ export default function AccountProfilePage(): React.JSX.Element {
                 minLength={8}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Min 8 characters"
-                className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+                placeholder="Min. 8 characters"
+                className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
                 Confirm New Password
               </label>
               <input
                 type="password"
                 required
+                minLength={8}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Repeat password"
-                className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+                placeholder="Repeat new password"
+                className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
               />
             </div>
           </div>
@@ -303,48 +303,41 @@ export default function AccountProfilePage(): React.JSX.Element {
           <button
             type="submit"
             disabled={isChangingPassword}
-            className="px-5 py-2.5 rounded-xl border border-purple-200 dark:border-purple-700 hover:border-purple-400 text-zinc-800 dark:text-purple-200 font-extrabold text-xs hover:text-purple-600 dark:hover:text-purple-300 transition disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
           >
-            {isChangingPassword ? "Updating Password..." : "Update Password"}
+            {isChangingPassword ? "Updating..." : "Update Password"}
           </button>
         </form>
       </div>
 
-      {/* 3. Delete Account (Danger Zone) */}
-      <div className="p-6 sm:p-8 rounded-3xl border border-red-500/20 bg-red-500/5 shadow-sm space-y-4">
-        <h2 className="text-base font-extrabold text-red-600 dark:text-red-400">
-          Danger Zone
+      {/* 3. Danger Zone: Delete Account */}
+      <div className="p-6 sm:p-8 rounded-3xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/30 dark:bg-rose-950/20 shadow-sm space-y-4">
+        <h2 className="text-base font-extrabold text-rose-600 dark:text-rose-400">
+          Delete Customer Account
         </h2>
-        <p className="text-xs text-zinc-600 dark:text-zinc-400">
-          Permanently delete your customer account, saved addresses, notifications, and preferences.
-          Past order receipts will remain for legal store auditing.
+        <p className="text-xs text-slate-600 dark:text-rose-200/80 leading-relaxed">
+          Permanently erase your customer profile, saved addresses, order history, and product wishlist. This action cannot be reversed.
         </p>
         <button
           type="button"
-          onClick={() => {
-            setDeletePassword("");
-            setDeleteError(null);
-            setDeleteModalOpen(true);
-          }}
-          className="px-4 py-2 rounded-xl bg-red-600 text-white font-extrabold text-xs hover:bg-red-700 transition"
+          onClick={() => setDeleteModalOpen(true)}
+          className="px-5 py-2.5 rounded-xl border border-rose-300 dark:border-rose-800 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white font-extrabold text-xs transition"
         >
-          Delete Account Permanently
+          Delete Account...
         </button>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Account Confirmation Modal */}
       {deleteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-md rounded-3xl border border-red-500/30 bg-white dark:bg-[#0e0909] p-6 sm:p-8 shadow-2xl space-y-4">
-            <h2 className="text-base font-black text-red-600 dark:text-red-400">
-              Confirm Account Deletion
-            </h2>
-            <p className="text-xs text-zinc-600 dark:text-zinc-400">
-              This action cannot be undone. Please enter your account password to confirm:
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="bg-white dark:bg-[#1E0230] border border-rose-200 dark:border-rose-900/50 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <h3 className="text-base font-black text-rose-600 dark:text-rose-400">Confirm Account Deletion</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Please enter your current account password to authorize the permanent deletion of your profile:
             </p>
 
             {deleteError && (
-              <div className="p-3 rounded-xl bg-red-500/10 text-red-500 text-xs font-semibold">
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-300">
                 {deleteError}
               </div>
             )}
@@ -356,21 +349,26 @@ export default function AccountProfilePage(): React.JSX.Element {
                 value={deletePassword}
                 onChange={(e) => setDeletePassword(e.target.value)}
                 placeholder="Enter your current password"
-                className="w-full h-11 px-4 rounded-xl border border-red-500/30 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white"
+                className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-rose-200 dark:border-rose-800 bg-rose-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-rose-500"
               />
 
-              <div className="flex items-center justify-end gap-3 pt-3">
+              <div className="flex items-center justify-end gap-2.5 pt-2">
                 <button
                   type="button"
-                  onClick={() => setDeleteModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-zinc-200 dark:border-white/10 text-xs font-bold"
+                  onClick={() => {
+                    setDeleteModalOpen(false);
+                    setDeleteError(null);
+                    setDeletePassword("");
+                  }}
+                  disabled={isDeleting}
+                  className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-purple-900/40 rounded-xl transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isDeleting}
-                  className="px-5 py-2 rounded-xl bg-red-600 text-white font-extrabold text-xs hover:bg-red-700 transition disabled:opacity-50"
+                  className="px-5 py-2 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-md transition disabled:opacity-50"
                 >
                   {isDeleting ? "Deleting..." : "Permanently Delete"}
                 </button>

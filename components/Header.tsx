@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
 import { getActiveCategories } from "@/lib/categories";
 import { normalizeImageUrl } from "@/lib/utils";
+import { getNavigationPages } from "@/lib/cms";
 import TopAnnouncementBar from "@/components/TopAnnouncementBar";
 import SubNavBar from "@/components/SubNavBar";
 import HeaderSearch from "@/components/HeaderSearch";
@@ -85,7 +86,13 @@ const MEN_COLUMNS: MegaMenuColumn[] = [
 export default async function Header({
   settings = DEFAULT_STORE_SETTINGS,
 }: HeaderProps): Promise<React.JSX.Element> {
-  const activeCategories = await getActiveCategories();
+  const [activeCategories, navigation] = await Promise.all([
+    getActiveCategories(),
+    getNavigationPages().catch(() => ({ headerPages: [], footerPages: [] })),
+  ]);
+  const headerPages = (navigation.headerPages || []).filter(
+    (hp) => !["about", "contact"].includes(hp.slug)
+  );
 
   return (
     <>
@@ -182,6 +189,18 @@ export default async function Header({
               <span>Accessories</span>
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
             </Link>
+
+            {/* Dynamic Custom Header Pages */}
+            {headerPages.map((hp) => (
+              <Link
+                key={hp.slug}
+                href={hp.href}
+                className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group"
+              >
+                <span>{hp.title}</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
+              </Link>
+            ))}
 
             {/* Blog / Story */}
             <Link href="/about" className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group">

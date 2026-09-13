@@ -62,7 +62,7 @@ export default async function ContactPage(): Promise<React.JSX.Element> {
 
         {/* Header Intro */}
         <div className="max-w-2xl mb-12">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#18C729]/10 text-[#18C729] border border-[#18C729]/20 mb-3">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700 mb-3">
             💬 Customer Support
           </span>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
@@ -88,14 +88,14 @@ export default async function ContactPage(): Promise<React.JSX.Element> {
               <p className="text-xs text-zinc-500 mt-1">Our team replies within 24 business hours.</p>
               <a
                 href={`mailto:${email}`}
-                className="mt-3 inline-block font-mono text-xs font-semibold text-[#18C729] hover:underline"
+                className="mt-3 inline-block font-mono text-xs font-semibold text-purple-600 dark:text-purple-300 hover:underline"
               >
                 {email}
               </a>
             </div>
 
             <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-6 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4">
+              <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-4">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
@@ -121,7 +121,7 @@ export default async function ContactPage(): Promise<React.JSX.Element> {
             {/* Link to FAQs */}
             <div className="p-4 rounded-2xl bg-zinc-100 dark:bg-white/5 text-xs text-zinc-600 dark:text-zinc-300 flex items-center justify-between">
               <span>Have immediate questions?</span>
-              <Link href="/faq" className="font-bold text-[#18C729] hover:underline">
+              <Link href="/faq" className="font-bold text-purple-600 dark:text-purple-300 hover:underline">
                 View FAQs &rarr;
               </Link>
             </div>

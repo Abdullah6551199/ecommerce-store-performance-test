@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartContext";
 import { normalizeImageUrl } from "@/lib/utils";
 import CouponsSection from "@/components/CouponsSection";
+import TrustBar from "@/components/homepage/TrustBar";
 
 export default function CheckoutPage(): React.JSX.Element {
   const router = useRouter();
@@ -249,9 +250,9 @@ export default function CheckoutPage(): React.JSX.Element {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center py-20 px-4 text-zinc-900 dark:text-white">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-zinc-300 dark:border-white/20 border-t-[#18C729]" />
-        <p className="mt-4 text-xs font-mono text-zinc-500 dark:text-white/50 tracking-wider">PREPARING SECURE CHECKOUT...</p>
+      <div className="min-h-[70vh] flex flex-col items-center justify-center py-20 px-4 text-zinc-900 dark:text-purple-100">
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-purple-200 dark:border-purple-800 border-t-purple-600" />
+        <p className="mt-4 text-xs font-mono text-purple-600 dark:text-purple-300 tracking-wider">PREPARING SECURE CHECKOUT...</p>
       </div>
     );
   }
@@ -259,19 +260,19 @@ export default function CheckoutPage(): React.JSX.Element {
   // Empty cart state
   if (!items || items.length === 0) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center py-20 px-4 text-center text-zinc-900 dark:text-white">
-        <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-zinc-400 dark:text-white/40 mb-6">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center py-20 px-4 text-center text-zinc-900 dark:text-purple-100">
+        <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800 text-purple-400 mb-6">
           <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </div>
-        <h1 className="text-2xl font-black tracking-tight text-zinc-900 dark:text-white mb-2">Your Cart is Empty</h1>
-        <p className="text-sm text-zinc-500 dark:text-white/50 max-w-md mb-8">
+        <h1 className="text-2xl font-black tracking-tight text-[#3C0561] dark:text-[#EACFFC] mb-2">Your Cart is Empty</h1>
+        <p className="text-sm text-purple-700/80 dark:text-purple-300/80 max-w-md mb-8">
           You don&apos;t have any products in your cart to checkout. Explore our high-performance gear to get started.
         </p>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#18C729] to-[#12a822] px-8 py-3.5 text-sm font-bold text-black hover:brightness-110 shadow-lg shadow-[#18C729]/20 transition-all"
+          className="inline-flex items-center gap-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white px-8 py-3.5 text-sm font-bold shadow-lg shadow-purple-500/25 transition-all"
         >
           <span>Return to Storefront</span>
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -283,26 +284,26 @@ export default function CheckoutPage(): React.JSX.Element {
   }
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 text-zinc-900 dark:text-white">
+    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 text-zinc-900 dark:text-purple-100">
       <div className="max-w-6xl mx-auto">
         {/* Navigation Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs text-zinc-500 dark:text-white/50 mb-8">
-          <Link href="/" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
+        <nav className="flex items-center gap-2 text-xs text-purple-600/70 dark:text-purple-300/70 mb-8 font-medium">
+          <Link href="/" className="hover:text-purple-900 dark:hover:text-white transition-colors">
             Home
           </Link>
           <span>/</span>
-          <Link href="/cart" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
+          <Link href="/cart" className="hover:text-purple-900 dark:hover:text-white transition-colors">
             Shopping Cart
           </Link>
           <span>/</span>
-          <span className="text-[#18C729] font-medium">Checkout</span>
+          <span className="text-[#3C0561] dark:text-[#EACFFC] font-bold">Checkout</span>
         </nav>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white sm:text-4xl">
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#3C0561] dark:text-[#EACFFC] sm:text-4xl">
             Complete Your Order
           </h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-white/60">
+          <p className="mt-1 text-sm text-purple-700/80 dark:text-purple-300/80">
             Enter your shipping details. Pay securely with Cash on Delivery when your package arrives.
           </p>
         </div>
@@ -321,244 +322,246 @@ export default function CheckoutPage(): React.JSX.Element {
         )}
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Customer & Shipping Form (7 cols) */}
+          {/* Customer & Shipping Form (7 cols) - Wrapped in Big White Card */}
           <div className="lg:col-span-7 space-y-6">
-            {/* Step 1: Contact & Delivery Information */}
-            <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-6 shadow-xl dark:shadow-none space-y-5">
-              <div className="flex items-center gap-3 border-b border-zinc-200 dark:border-white/10 pb-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#18C729]/15 text-[#18C729] font-mono font-bold text-sm">
-                  1
+            <div className="rounded-2xl border border-purple-100 dark:border-purple-700 bg-white dark:bg-[#3C0561] p-6 sm:p-8 shadow-lg shadow-purple-100/50 dark:shadow-purple-900/30 space-y-6">
+              {/* Step 1: Contact & Delivery Information */}
+              <div className="space-y-5">
+                <div className="flex items-center gap-3 border-b border-purple-100 dark:border-purple-700/60 pb-4">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-mono font-bold text-sm">
+                    1
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-[#3C0561] dark:text-[#EACFFC] tracking-tight">Delivery Details</h2>
+                    <p className="text-xs text-purple-600/70 dark:text-purple-300/70">Where should we deliver your package?</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-base font-bold text-zinc-900 dark:text-white tracking-tight">Delivery Details</h2>
-                  <p className="text-xs text-zinc-500 dark:text-white/50">Where should we deliver your package?</p>
-                </div>
-              </div>
 
-              {/* Saved Addresses Selector (for authenticated customers) */}
-              {isCustomerLoggedIn && savedAddresses.length > 0 && (
-                <div className="p-3.5 rounded-2xl border border-[#18C729]/30 bg-[#18C729]/5 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-zinc-900 dark:text-white">
-                      Select Delivery Address
-                    </label>
-                    <Link
-                      href="/account/addresses"
-                      target="_blank"
-                      className="text-[11px] font-bold text-[#18C729] hover:underline"
+                {/* Saved Addresses Selector (for authenticated customers) */}
+                {isCustomerLoggedIn && savedAddresses.length > 0 && (
+                  <div className="p-3.5 rounded-2xl border border-purple-200 dark:border-purple-700 bg-purple-50/60 dark:bg-purple-900/30 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">
+                        Select Delivery Address
+                      </label>
+                      <Link
+                        href="/account/addresses"
+                        target="_blank"
+                        className="text-[11px] font-bold text-purple-600 dark:text-purple-300 hover:underline"
+                      >
+                        Manage Addresses &rarr;
+                      </Link>
+                    </div>
+                    <select
+                      value={selectedAddressId}
+                      onChange={(e) => handleAddressSelect(e.target.value)}
+                      className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
                     >
-                      Manage Addresses &rarr;
-                    </Link>
+                      {savedAddresses.map((a) => (
+                        <option key={a.id} value={a.id}>
+                          {a.label} &bull; {a.fullName} - {a.address}, {a.city} {a.isDefault ? "(Default)" : ""}
+                        </option>
+                      ))}
+                      <option value="manual">+ Enter a different delivery address</option>
+                    </select>
                   </div>
-                  <select
-                    value={selectedAddressId}
-                    onChange={(e) => handleAddressSelect(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-[#080e0a] px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#18C729]"
-                  >
-                    {savedAddresses.map((a) => (
-                      <option key={a.id} value={a.id}>
-                        {a.label} &bull; {a.fullName} - {a.address}, {a.city} {a.isDefault ? "(Default)" : ""}
-                      </option>
-                    ))}
-                    <option value="manual">+ Enter a different delivery address</option>
-                  </select>
-                </div>
-              )}
-
-              {/* Full Name */}
-              <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/80 mb-1.5">
-                  Full Customer Name <span className="text-[#18C729]">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="customerName"
-                  value={formData.customerName}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Alex Johnson"
-                  className={`w-full rounded-xl border bg-zinc-50 dark:bg-black/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none transition-colors ${
-                    formErrors.customerName
-                      ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
-                      : "border-zinc-300 dark:border-white/15 focus:border-[#18C729]"
-                  }`}
-                />
-                {formErrors.customerName && (
-                  <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.customerName}</p>
                 )}
-              </div>
 
-              {/* Phone & Email grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Full Name */}
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-white/80 mb-1.5">
-                    Phone Number <span className="text-[#18C729]">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="e.g. +1 555-0199 or 03001234567"
-                    className={`w-full rounded-xl border bg-zinc-50 dark:bg-black/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none transition-colors ${
-                      formErrors.phone
-                        ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
-                        : "border-zinc-300 dark:border-white/15 focus:border-[#18C729]"
-                    }`}
-                  />
-                  {formErrors.phone && (
-                    <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.phone}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-white/80 mb-1.5">
-                    Email Address <span className="text-zinc-500 dark:text-white/40 font-normal">(Optional for tracking)</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="alex@example.com"
-                    className={`w-full rounded-xl border bg-zinc-50 dark:bg-black/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none transition-colors ${
-                      formErrors.email
-                        ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
-                        : "border-zinc-300 dark:border-white/15 focus:border-[#18C729]"
-                    }`}
-                  />
-                  {formErrors.email && (
-                    <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.email}</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Street Address */}
-              <div>
-                <label className="block text-xs font-semibold text-zinc-700 dark:text-white/80 mb-1.5">
-                  Complete Street Address <span className="text-[#18C729]">*</span>
-                </label>
-                <textarea
-                  name="address"
-                  rows={2}
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  placeholder="House / Apartment #, Street name, Area or Landmark"
-                  className={`w-full rounded-xl border bg-zinc-50 dark:bg-black/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none transition-colors resize-none ${
-                    formErrors.address
-                      ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
-                      : "border-zinc-300 dark:border-white/15 focus:border-[#18C729]"
-                  }`}
-                />
-                {formErrors.address && (
-                  <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.address}</p>
-                )}
-              </div>
-
-              {/* City & Notes */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-white/80 mb-1.5">
-                    City <span className="text-[#18C729]">*</span>
+                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1.5">
+                    Full Customer Name <span className="text-purple-500">*</span>
                   </label>
                   <input
                     type="text"
-                    name="city"
-                    value={formData.city}
+                    name="customerName"
+                    value={formData.customerName}
                     onChange={handleInputChange}
-                    placeholder="e.g. New York, London, Dubai"
-                    className={`w-full rounded-xl border bg-zinc-50 dark:bg-black/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:outline-none transition-colors ${
-                      formErrors.city
+                    placeholder="e.g. Alex Johnson"
+                    className={`w-full rounded-xl border bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-purple-300/40 focus:outline-none transition-colors ${
+                      formErrors.customerName
                         ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
-                        : "border-zinc-300 dark:border-white/15 focus:border-[#18C729]"
+                        : "border-purple-200 dark:border-purple-700 focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
                     }`}
                   />
-                  {formErrors.city && (
-                    <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.city}</p>
+                  {formErrors.customerName && (
+                    <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.customerName}</p>
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-white/80 mb-1.5">
-                    Delivery Instructions <span className="text-zinc-500 dark:text-white/40 font-normal">(Optional)</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="notes"
-                    value={formData.notes}
-                    onChange={handleInputChange}
-                    placeholder="e.g. Leave with security guard"
-                    className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none transition-colors"
-                  />
-                </div>
-              </div>
-
-              {/* Save Address Checkbox */}
-              {isCustomerLoggedIn && (selectedAddressId === "manual" || savedAddresses.length === 0) && (
-                <div className="pt-2 border-t border-zinc-100 dark:border-white/5">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-zinc-700 dark:text-white/80 select-none">
+                {/* Phone & Email grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1.5">
+                      Phone Number <span className="text-purple-500">*</span>
+                    </label>
                     <input
-                      type="checkbox"
-                      checked={saveAddressForFuture}
-                      onChange={(e) => setSaveAddressForFuture(e.target.checked)}
-                      className="w-4 h-4 rounded border-zinc-300 text-[#18C729] focus:ring-[#18C729]"
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="e.g. +1 555-0199 or 03001234567"
+                      className={`w-full rounded-xl border bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-purple-300/40 focus:outline-none transition-colors ${
+                        formErrors.phone
+                          ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
+                          : "border-purple-200 dark:border-purple-700 focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+                      }`}
                     />
-                    Save this address to my account for faster future checkouts
-                  </label>
-                </div>
-              )}
-            </div>
-
-            {/* Step 2: Payment Method (Cash on Delivery) */}
-            <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-6 shadow-xl dark:shadow-none space-y-4">
-              <div className="flex items-center gap-3 border-b border-zinc-200 dark:border-white/10 pb-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#18C729]/15 text-[#18C729] font-mono font-bold text-sm">
-                  2
-                </div>
-                <div>
-                  <h2 className="text-base font-bold text-zinc-900 dark:text-white tracking-tight">Payment Method</h2>
-                  <p className="text-xs text-zinc-500 dark:text-white/50">Select your payment preference</p>
-                </div>
-              </div>
-
-              {/* Cash On Delivery Option Box */}
-              <div className="relative flex items-start gap-4 rounded-xl border-2 border-[#18C729] bg-[#18C729]/10 p-4.5 cursor-pointer">
-                <div className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#18C729] bg-[#18C729] text-black mt-0.5 shrink-0">
-                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-extrabold text-zinc-900 dark:text-white flex items-center gap-2">
-                      <span>Cash on Delivery (COD)</span>
-                      <span className="rounded-full bg-[#18C729]/20 px-2 py-0.5 text-[10px] font-bold text-[#18C729]">
-                        Zero Prepayment
-                      </span>
-                    </span>
-                    <span className="text-xs font-mono text-emerald-600 dark:text-[#FEF500]">Pay at Doorstep</span>
+                    {formErrors.phone && (
+                      <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.phone}</p>
+                    )}
                   </div>
-                  <p className="mt-1 text-xs text-zinc-600 dark:text-white/60 leading-relaxed">
-                    Pay the total amount in cash directly to the courier agent when your package arrives at your doorstep. No online credit card or bank credentials needed.
-                  </p>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1.5">
+                      Email Address <span className="text-purple-600/60 dark:text-purple-300/50 font-normal">(Optional for tracking)</span>
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="alex@example.com"
+                      className={`w-full rounded-xl border bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-purple-300/40 focus:outline-none transition-colors ${
+                        formErrors.email
+                          ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
+                          : "border-purple-200 dark:border-purple-700 focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+                      }`}
+                    />
+                    {formErrors.email && (
+                      <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.email}</p>
+                    )}
+                  </div>
                 </div>
+
+                {/* Street Address */}
+                <div>
+                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1.5">
+                    Complete Street Address <span className="text-purple-500">*</span>
+                  </label>
+                  <textarea
+                    name="address"
+                    rows={2}
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    placeholder="House / Apartment #, Street name, Area or Landmark"
+                    className={`w-full rounded-xl border bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-purple-300/40 focus:outline-none transition-colors resize-none ${
+                      formErrors.address
+                        ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
+                        : "border-purple-200 dark:border-purple-700 focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+                    }`}
+                  />
+                  {formErrors.address && (
+                    <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.address}</p>
+                  )}
+                </div>
+
+                {/* City & Notes */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1.5">
+                      City <span className="text-purple-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      placeholder="e.g. New York, London, Dubai"
+                      className={`w-full rounded-xl border bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-purple-300/40 focus:outline-none transition-colors ${
+                        formErrors.city
+                          ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
+                          : "border-purple-200 dark:border-purple-700 focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+                      }`}
+                    />
+                    {formErrors.city && (
+                      <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.city}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1.5">
+                      Delivery Instructions <span className="text-purple-600/60 dark:text-purple-300/50 font-normal">(Optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="notes"
+                      value={formData.notes}
+                      onChange={handleInputChange}
+                      placeholder="e.g. Leave with security guard"
+                      className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-purple-300/40 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 focus:outline-none transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Save Address Checkbox */}
+                {isCustomerLoggedIn && (selectedAddressId === "manual" || savedAddresses.length === 0) && (
+                  <div className="pt-2 border-t border-purple-100 dark:border-purple-700/50">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#3C0561] dark:text-purple-200 select-none">
+                      <input
+                        type="checkbox"
+                        checked={saveAddressForFuture}
+                        onChange={(e) => setSaveAddressForFuture(e.target.checked)}
+                        className="w-4 h-4 rounded border-purple-300 text-purple-600 focus:ring-purple-400"
+                      />
+                      Save this address to my account for faster future checkouts
+                    </label>
+                  </div>
+                )}
               </div>
 
-              <div className="flex items-center gap-2 text-[11px] text-zinc-500 dark:text-white/40 pt-2">
-                <svg className="h-4 w-4 text-[#18C729]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span>Encrypted 256-bit Secure Checkout • Inspect parcel before receipt</span>
+              {/* Step 2: Payment Method (Cash on Delivery) */}
+              <div className="space-y-4 pt-4 border-t border-purple-100 dark:border-purple-700/60">
+                <div className="flex items-center gap-3 pb-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-mono font-bold text-sm">
+                    2
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-[#3C0561] dark:text-[#EACFFC] tracking-tight">Payment Method</h2>
+                    <p className="text-xs text-purple-600/70 dark:text-purple-300/70">Select your payment preference</p>
+                  </div>
+                </div>
+
+                {/* Cash On Delivery Option Box - Purple theme */}
+                <div className="relative flex items-start gap-4 rounded-xl border-2 border-purple-400 bg-purple-50 dark:bg-purple-900/20 p-4.5 cursor-pointer">
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-purple-500 bg-purple-500 text-white mt-0.5 shrink-0">
+                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-extrabold text-[#3C0561] dark:text-white flex items-center gap-2">
+                        <span>Cash on Delivery (COD)</span>
+                        <span className="rounded-full bg-purple-100 dark:bg-purple-800 px-2 py-0.5 text-[10px] font-bold text-purple-700 dark:text-purple-200">
+                          Zero Prepayment
+                        </span>
+                      </span>
+                      <span className="text-xs font-mono font-bold text-purple-600 dark:text-purple-300">Pay at Doorstep</span>
+                    </div>
+                    <p className="mt-1 text-xs text-purple-800/80 dark:text-purple-200/80 leading-relaxed">
+                      Pay the total amount in cash directly to the courier agent when your package arrives at your doorstep. No online credit card or bank credentials needed.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-[11px] text-purple-600 dark:text-purple-300 pt-2 font-medium">
+                  <svg className="h-4 w-4 text-purple-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                  <span>Encrypted 256-bit Secure Checkout • Inspect parcel before receipt</span>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Order Summary Column (5 cols) */}
           <div className="lg:col-span-5">
-            <div className="sticky top-24 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-6 shadow-xl dark:shadow-2xl space-y-6">
-              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4">
-                <h2 className="text-base font-bold text-zinc-900 dark:text-white tracking-tight">Order Summary</h2>
-                <span className="text-xs font-mono text-zinc-500 dark:text-white/50">
+            <div className="sticky top-24 rounded-2xl border border-purple-100 dark:border-purple-700 bg-white dark:bg-[#3C0561] p-6 shadow-lg shadow-purple-100/50 dark:shadow-purple-900/30 space-y-6">
+              <div className="flex items-center justify-between border-b border-purple-100 dark:border-purple-700/60 pb-4">
+                <h2 className="text-base font-bold text-[#3C0561] dark:text-[#EACFFC] tracking-tight">Order Summary</h2>
+                <span className="text-xs font-mono text-purple-600 dark:text-purple-300 font-semibold">
                   {items.length} {items.length === 1 ? "Product" : "Products"}
                 </span>
               </div>
@@ -567,7 +570,7 @@ export default function CheckoutPage(): React.JSX.Element {
               <div className="max-h-72 overflow-y-auto space-y-3 pr-1">
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-3 items-center">
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-black/40">
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-purple-100 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/50">
                       <Image
                         src={normalizeImageUrl(item.imageUrl, { width: 112, quality: 75 })}
                         alt={item.productName}
@@ -576,25 +579,25 @@ export default function CheckoutPage(): React.JSX.Element {
                         loading="lazy"
                         className="h-full w-full object-cover"
                       />
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#18C729] text-[9px] font-black text-black z-10">
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 text-[9px] font-black text-white z-10">
                         {item.quantity}
                       </span>
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-zinc-900 dark:text-white truncate">{item.productName}</p>
+                      <p className="text-xs font-bold text-[#3C0561] dark:text-white truncate">{item.productName}</p>
                       {item.variantOptions && Object.keys(item.variantOptions).length > 0 && (
-                        <p className="text-[10px] text-zinc-500 dark:text-white/50 truncate">
+                        <p className="text-[10px] text-purple-600/70 dark:text-purple-300/70 truncate">
                           {Object.values(item.variantOptions).join(" / ")}
                         </p>
                       )}
-                      <p className="text-[10px] text-zinc-500 dark:text-white/40 font-mono">
+                      <p className="text-[10px] text-purple-600/60 dark:text-purple-300/60 font-mono">
                         Qty: {item.quantity} × ${item.unitPrice.toFixed(2)}
                       </p>
                     </div>
 
                     <div className="text-right">
-                      <span className="text-xs font-bold text-zinc-900 dark:text-white font-mono">
+                      <span className="text-xs font-bold text-[#3C0561] dark:text-white font-mono">
                         ${item.lineTotal.toFixed(2)}
                       </span>
                     </div>
@@ -603,19 +606,19 @@ export default function CheckoutPage(): React.JSX.Element {
               </div>
 
               {/* Coupons & Discounts Promo Section */}
-              <div className="pt-2 border-t border-zinc-200 dark:border-white/10">
+              <div className="pt-2 border-t border-purple-100 dark:border-purple-700/60">
                 <CouponsSection />
               </div>
 
               {/* Pricing breakdown */}
-              <div className="border-t border-zinc-200 dark:border-white/10 pt-4 space-y-2 text-xs">
-                <div className="flex justify-between text-zinc-600 dark:text-white/70">
+              <div className="border-t border-purple-100 dark:border-purple-700/60 pt-4 space-y-2 text-xs">
+                <div className="flex justify-between text-purple-700/80 dark:text-purple-200/80">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-zinc-900 dark:text-white font-mono">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-[#3C0561] dark:text-white font-mono">${subtotal.toFixed(2)}</span>
                 </div>
 
                 {appliedCoupon && (
-                  <div className="flex justify-between text-[#18C729] font-bold">
+                  <div className="flex justify-between text-purple-600 dark:text-purple-400 font-bold">
                     <span>Discount ({appliedCoupon.code})</span>
                     <span>
                       {freeShippingCoupon
@@ -625,38 +628,38 @@ export default function CheckoutPage(): React.JSX.Element {
                   </div>
                 )}
 
-                <div className="flex justify-between text-zinc-600 dark:text-white/70">
+                <div className="flex justify-between text-purple-700/80 dark:text-purple-200/80">
                   <span>Standard Shipping</span>
                   <span>
                     {cart?.shipping === 0 ? (
-                      <span className="font-bold text-[#18C729]">FREE</span>
+                      <span className="font-bold text-purple-600 dark:text-purple-400">FREE</span>
                     ) : (
-                      <span className="font-mono text-zinc-900 dark:text-white">${(cart?.shipping || 15).toFixed(2)}</span>
+                      <span className="font-mono text-[#3C0561] dark:text-white">${(cart?.shipping || 15).toFixed(2)}</span>
                     )}
                   </span>
                 </div>
-                <div className="flex justify-between text-zinc-600 dark:text-white/70">
+                <div className="flex justify-between text-purple-700/80 dark:text-purple-200/80">
                   <span>Payment Method</span>
-                  <span className="font-semibold text-zinc-900 dark:text-white">Cash on Delivery</span>
+                  <span className="font-semibold text-[#3C0561] dark:text-white">Cash on Delivery</span>
                 </div>
 
-                <div className="flex justify-between text-base font-extrabold text-zinc-900 dark:text-white pt-3 border-t border-zinc-200 dark:border-white/10">
+                <div className="flex justify-between text-base font-extrabold text-[#3C0561] dark:text-[#EACFFC] pt-3 border-t border-purple-100 dark:border-purple-700/60">
                   <span>Total Due</span>
-                  <span className="text-xl font-mono font-black text-emerald-600 dark:text-[#FEF500]">
+                  <span className="text-xl font-mono font-black text-purple-600 dark:text-purple-300">
                     ${total.toFixed(2)}
                   </span>
                 </div>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit Button - PURPLE */}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#18C729] to-[#12a822] py-4 text-sm font-extrabold text-black hover:brightness-110 shadow-xl shadow-[#18C729]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white dark:bg-purple-500 dark:hover:bg-purple-400 py-4 text-sm font-extrabold shadow-xl shadow-purple-400/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                     <span>Placing Your Order...</span>
                   </>
                 ) : (
@@ -672,7 +675,7 @@ export default function CheckoutPage(): React.JSX.Element {
               <div className="text-center">
                 <Link
                   href="/cart"
-                  className="text-xs text-zinc-500 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                  className="text-xs text-purple-600/70 dark:text-purple-300/70 hover:text-[#3C0561] dark:hover:text-white transition-colors"
                 >
                   ← Edit Cart Items
                 </Link>
@@ -680,6 +683,11 @@ export default function CheckoutPage(): React.JSX.Element {
             </div>
           </div>
         </form>
+
+        {/* Store Trust Bar */}
+        <div className="mt-12">
+          <TrustBar />
+        </div>
       </div>
     </div>
   );

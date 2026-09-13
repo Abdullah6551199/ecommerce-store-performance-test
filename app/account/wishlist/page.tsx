@@ -93,7 +93,7 @@ export default function AccountWishlistPage(): React.JSX.Element {
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center px-4 py-2 rounded-xl bg-[#18C729] text-black font-bold text-xs hover:bg-[#15af24]"
+            className="inline-flex items-center px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-400/20"
           >
             Discover Products &rarr;
           </Link>
@@ -131,13 +131,13 @@ export default function AccountWishlistPage(): React.JSX.Element {
 
                 <Link
                   href={`/product/${product.slug || product.id}`}
-                  className="text-xs font-bold text-zinc-900 dark:text-white hover:text-[#18C729] line-clamp-2"
+                  className="text-xs font-bold text-zinc-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-300 line-clamp-2"
                 >
                   {product.name}
                 </Link>
 
                 <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-sm font-black text-[#18C729]">
+                  <span className="text-sm font-black text-purple-600 dark:text-purple-300">
                     Rs. {Number(product.price).toFixed(2)}
                   </span>
                   {product.compareAtPrice && product.compareAtPrice > product.price && (
@@ -151,7 +151,7 @@ export default function AccountWishlistPage(): React.JSX.Element {
               <button
                 type="button"
                 onClick={() => handleAddToCart(product)}
-                className="w-full py-2 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-black font-extrabold text-xs hover:bg-[#18C729] dark:hover:bg-[#18C729] hover:text-black transition flex items-center justify-center gap-1.5"
+                className="w-full py-2 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-black font-extrabold text-xs hover:bg-purple-600 dark:hover:bg-purple-600 hover:text-white dark:hover:text-white transition flex items-center justify-center gap-1.5"
               >
                 <span>Add to Cart</span>
               </button>

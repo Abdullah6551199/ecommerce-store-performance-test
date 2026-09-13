@@ -315,13 +315,13 @@ export default function ProductPurchaseSection({
               isOutOfStock
                 ? "bg-zinc-200 dark:bg-white/10 text-zinc-400 dark:text-white/40 cursor-not-allowed border border-zinc-300 dark:border-white/10"
                 : addedNotice
-                ? "bg-[#18C729] text-black shadow-[#18C729]/30 scale-[1.02]"
-                : "bg-gradient-to-r from-[#18C729] to-[#12a822] text-black shadow-[#18C729]/25 hover:brightness-110 active:scale-[0.98]"
+                ? "bg-purple-600 text-white shadow-purple-600/30 scale-[1.02]"
+                : "bg-purple-400 hover:bg-purple-500 text-white shadow-purple-400/25 active:scale-[0.98]"
             }`}
           >
             {addedNotice ? (
               <>
-                <svg className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Added to Cart ({quantity})</span>

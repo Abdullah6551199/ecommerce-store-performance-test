@@ -138,12 +138,12 @@ export default function AccountLayout({
   if (isLoading) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur-md">
-          <svg className="w-5 h-5 animate-spin text-[#18C729]" fill="none" viewBox="0 0 24 24">
+        <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl border border-purple-100 dark:border-purple-800 bg-white/80 dark:bg-purple-950/40 backdrop-blur-md">
+          <svg className="w-5 h-5 animate-spin text-purple-600" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
           </svg>
-          <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
+          <span className="text-xs font-semibold text-purple-700 dark:text-purple-300">
             Loading your customer account...
           </span>
         </div>
@@ -154,17 +154,17 @@ export default function AccountLayout({
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
       {/* Mobile Account Navigation Trigger */}
-      <div className="lg:hidden mb-6 flex items-center justify-between p-4 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a] shadow-sm">
+      <div className="lg:hidden mb-6 flex items-center justify-between p-4 rounded-2xl border border-purple-100 dark:border-purple-800 bg-white dark:bg-[#3C0561] shadow-sm">
         <div>
-          <p className="text-xs text-zinc-500">Logged in as</p>
-          <p className="text-sm font-bold text-zinc-900 dark:text-white truncate">
+          <p className="text-xs text-purple-600/70 dark:text-purple-300/70">Logged in as</p>
+          <p className="text-sm font-bold text-[#3C0561] dark:text-white truncate">
             {customer?.name}
           </p>
         </div>
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 text-xs font-bold text-zinc-700 dark:text-zinc-200 hover:border-[#18C729]"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-purple-200 dark:border-purple-700 text-xs font-bold text-[#3C0561] dark:text-purple-200 hover:border-purple-400"
         >
           <span>Account Menu</span>
           <svg
@@ -180,7 +180,7 @@ export default function AccountLayout({
 
       {/* Mobile Navigation Drawer / Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden mb-6 p-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a] shadow-xl space-y-1 animate-in fade-in slide-in-from-top-2">
+        <div className="lg:hidden mb-6 p-2 rounded-2xl border border-purple-100 dark:border-purple-800 bg-white dark:bg-[#3C0561] shadow-xl space-y-1 animate-in fade-in slide-in-from-top-2">
           {navLinks.map((link) => {
             const isActive = link.exact
               ? pathname === link.href
@@ -192,8 +192,8 @@ export default function AccountLayout({
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
                   isActive
-                    ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
-                    : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5"
+                    ? "bg-purple-600 text-white font-bold shadow-md shadow-purple-600/20"
+                    : "text-zinc-700 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40"
                 }`}
               >
                 <span className="flex items-center gap-2.5">
@@ -208,7 +208,7 @@ export default function AccountLayout({
               </Link>
             );
           })}
-          <div className="pt-2 border-t border-zinc-100 dark:border-white/5">
+          <div className="pt-2 border-t border-purple-100 dark:border-purple-700/60">
             <button
               type="button"
               onClick={handleSignOut}
@@ -226,17 +226,17 @@ export default function AccountLayout({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Desktop Sidebar */}
         <aside className="hidden lg:block lg:col-span-3 sticky top-24">
-          <div className="rounded-3xl border border-zinc-200 dark:border-white/10 bg-white/70 dark:bg-black/30 backdrop-blur-xl p-5 shadow-sm space-y-6">
+          <div className="rounded-3xl border border-purple-100 dark:border-purple-800 bg-white/80 dark:bg-[#3C0561]/80 backdrop-blur-xl p-5 shadow-sm space-y-6">
             {/* User Profile Summary */}
-            <div className="flex items-center gap-3 pb-5 border-b border-zinc-200 dark:border-white/10">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#18C729] to-[#FEF500] text-black font-black text-sm shadow-md shadow-[#18C729]/20">
+            <div className="flex items-center gap-3 pb-5 border-b border-purple-100 dark:border-purple-800/60">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#3C0561] to-[#960DF2] text-white font-black text-sm shadow-md shadow-purple-500/20">
                 {customer?.name.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-extrabold text-zinc-900 dark:text-white truncate">
+                <p className="text-sm font-extrabold text-[#3C0561] dark:text-white truncate">
                   {customer?.name}
                 </p>
-                <p className="text-[11px] text-zinc-500 truncate">{customer?.email}</p>
+                <p className="text-[11px] text-purple-600/70 dark:text-purple-300/70 truncate">{customer?.email}</p>
               </div>
             </div>
 
@@ -252,8 +252,8 @@ export default function AccountLayout({
                     href={link.href}
                     className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
                       isActive
-                        ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
-                        : "text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-black dark:hover:text-white"
+                        ? "bg-purple-600 text-white font-bold shadow-md shadow-purple-600/20"
+                        : "text-zinc-600 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40 hover:text-purple-900 dark:hover:text-white"
                     }`}
                   >
                     <span className="flex items-center gap-2.5">

@@ -155,7 +155,7 @@ export default function AccountAddressesPage(): React.JSX.Element {
         <button
           type="button"
           onClick={openCreateModal}
-          className="px-4 py-2 rounded-xl bg-[#18C729] text-black font-extrabold text-xs hover:bg-[#15af24] shadow-md shadow-[#18C729]/20 transition flex items-center gap-1.5"
+          className="px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-extrabold text-xs shadow-md shadow-purple-400/20 transition flex items-center gap-1.5"
         >
           <span>+ Add Address</span>
         </button>
@@ -181,7 +181,7 @@ export default function AccountAddressesPage(): React.JSX.Element {
           <button
             type="button"
             onClick={openCreateModal}
-            className="px-4 py-2 rounded-xl bg-[#18C729] text-black font-bold text-xs hover:bg-[#15af24]"
+            className="px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-400/20"
           >
             Add First Address &rarr;
           </button>
@@ -193,7 +193,7 @@ export default function AccountAddressesPage(): React.JSX.Element {
               key={addr.id}
               className={`p-5 rounded-3xl border relative shadow-sm transition flex flex-col justify-between ${
                 addr.isDefault
-                  ? "border-[#18C729] bg-white dark:bg-[#080e0a] ring-1 ring-[#18C729]/30"
+                  ? "border-purple-400 bg-white dark:bg-[#3C0561] ring-1 ring-purple-400/30"
                   : "border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a]"
               }`}
             >
@@ -203,7 +203,7 @@ export default function AccountAddressesPage(): React.JSX.Element {
                     {addr.label || "Home"}
                   </span>
                   {addr.isDefault && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#18C729]/20 text-[#18C729]">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">
                       Default
                     </span>
                   )}
@@ -227,7 +227,7 @@ export default function AccountAddressesPage(): React.JSX.Element {
                     <button
                       type="button"
                       onClick={() => handleSetDefault(addr.id)}
-                      className="text-zinc-500 hover:text-[#18C729] font-medium"
+                      className="text-zinc-500 hover:text-purple-600 dark:hover:text-purple-400 font-medium"
                     >
                       Set as Default
                     </button>
@@ -388,7 +388,7 @@ export default function AccountAddressesPage(): React.JSX.Element {
                     type="checkbox"
                     checked={isDefault}
                     onChange={(e) => setIsDefault(e.target.checked)}
-                    className="w-4 h-4 rounded border-zinc-300 text-[#18C729] focus:ring-[#18C729]"
+                    className="w-4 h-4 rounded border-purple-300 text-purple-600 focus:ring-purple-400"
                   />
                   Set as default shipping address
                 </label>
@@ -405,7 +405,7 @@ export default function AccountAddressesPage(): React.JSX.Element {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 rounded-xl bg-[#18C729] text-black font-extrabold text-xs hover:bg-[#15af24] shadow-md shadow-[#18C729]/20 transition disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-extrabold text-xs shadow-md shadow-purple-400/20 transition disabled:opacity-50"
                 >
                   {submitting ? "Saving..." : "Save Address"}
                 </button>

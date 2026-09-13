@@ -41,7 +41,7 @@ function getNotificationIcon(type: string) {
       );
     default:
       return (
-        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#18C729]/10 text-[#18C729] shrink-0">
+        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 shrink-0">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
@@ -151,7 +151,7 @@ export default function AccountNotificationsPage(): React.JSX.Element {
             <button
               type="button"
               onClick={handleMarkAllRead}
-              className="px-3.5 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 hover:border-[#18C729] text-xs font-bold text-zinc-700 dark:text-zinc-200 transition"
+              className="px-3.5 py-1.5 rounded-xl border border-zinc-200 dark:border-white/10 hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-300 text-xs font-bold text-zinc-700 dark:text-zinc-200 transition"
             >
               Mark All Read
             </button>
@@ -216,7 +216,7 @@ export default function AccountNotificationsPage(): React.JSX.Element {
               key={notif.id}
               className={`p-4 sm:p-5 rounded-3xl border transition shadow-sm flex items-start gap-4 ${
                 !notif.isRead
-                  ? "border-[#18C729]/40 bg-[#18C729]/5 dark:bg-[#18C729]/5"
+                  ? "border-purple-200 dark:border-purple-700 bg-purple-50/60 dark:bg-purple-900/20"
                   : "border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a]"
               }`}
             >
@@ -249,7 +249,7 @@ export default function AccountNotificationsPage(): React.JSX.Element {
                         onClick={() => {
                           if (!notif.isRead) handleMarkRead(notif.id);
                         }}
-                        className="font-bold text-[#18C729] hover:underline inline-flex items-center gap-1"
+                        className="font-bold text-purple-600 dark:text-purple-400 hover:underline inline-flex items-center gap-1"
                       >
                         <span>View Details</span>
                         <span>&rarr;</span>

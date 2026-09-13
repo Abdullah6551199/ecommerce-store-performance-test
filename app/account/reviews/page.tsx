@@ -138,7 +138,7 @@ export default function AccountReviewsPage(): React.JSX.Element {
           </p>
           <Link
             href="/account/orders"
-            className="inline-flex items-center px-4 py-2 rounded-xl bg-[#18C729] text-black font-bold text-xs hover:bg-[#15af24]"
+            className="inline-flex items-center px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-400/20 transition"
           >
             Check Orders to Review &rarr;
           </Link>
@@ -169,7 +169,7 @@ export default function AccountReviewsPage(): React.JSX.Element {
                   <div>
                     <Link
                       href={`/product/${rev.productSlug || rev.productId}`}
-                      className="text-xs font-bold text-zinc-900 dark:text-white hover:text-[#18C729]"
+                      className="text-xs font-bold text-zinc-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-300"
                     >
                       {rev.productName || "Product"}
                     </Link>
@@ -207,7 +207,7 @@ export default function AccountReviewsPage(): React.JSX.Element {
 
               {rev.adminReply && (
                 <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/10 text-xs">
-                  <span className="font-bold text-emerald-600 dark:text-[#18C729] block mb-1">
+                  <span className="font-bold text-purple-600 dark:text-purple-300 block mb-1">
                     Store Response:
                   </span>
                   <p className="text-zinc-600 dark:text-zinc-400">{rev.adminReply}</p>
@@ -318,7 +318,7 @@ export default function AccountReviewsPage(): React.JSX.Element {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 rounded-xl bg-[#18C729] text-black font-extrabold text-xs hover:bg-[#15af24] shadow-md shadow-[#18C729]/20 transition disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-extrabold text-xs shadow-md shadow-purple-400/20 transition disabled:opacity-50"
                 >
                   {submitting ? "Updating..." : "Save Review"}
                 </button>

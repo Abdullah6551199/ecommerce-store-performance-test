@@ -194,7 +194,7 @@ export default function AccountProfilePage(): React.JSX.Element {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-[#18C729]"
+              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
             />
           </div>
 
@@ -222,14 +222,14 @@ export default function AccountProfilePage(): React.JSX.Element {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="0300-1234567"
-              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-[#18C729]"
+              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
             />
           </div>
 
           <button
             type="submit"
             disabled={isSavingProfile}
-            className="px-5 py-2.5 rounded-xl bg-[#18C729] text-black font-extrabold text-xs hover:bg-[#15af24] shadow-md shadow-[#18C729]/20 transition disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-extrabold text-xs shadow-md shadow-purple-400/20 transition disabled:opacity-50"
           >
             {isSavingProfile ? "Saving..." : "Save Profile Details"}
           </button>
@@ -246,7 +246,7 @@ export default function AccountProfilePage(): React.JSX.Element {
           <div
             className={`p-3.5 rounded-2xl text-xs font-semibold ${
               passwordMsg.type === "success"
-                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                ? "bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700"
                 : "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20"
             }`}
           >
@@ -265,7 +265,7 @@ export default function AccountProfilePage(): React.JSX.Element {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-[#18C729]"
+              className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
             />
           </div>
 
@@ -281,7 +281,7 @@ export default function AccountProfilePage(): React.JSX.Element {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Min 8 characters"
-                className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-[#18C729]"
+                className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
               />
             </div>
 
@@ -295,7 +295,7 @@ export default function AccountProfilePage(): React.JSX.Element {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Repeat password"
-                className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-[#18C729]"
+                className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
               />
             </div>
           </div>
@@ -303,7 +303,7 @@ export default function AccountProfilePage(): React.JSX.Element {
           <button
             type="submit"
             disabled={isChangingPassword}
-            className="px-5 py-2.5 rounded-xl border border-zinc-200 dark:border-white/10 hover:border-[#18C729] text-zinc-800 dark:text-zinc-200 font-extrabold text-xs hover:text-[#18C729] transition disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl border border-purple-200 dark:border-purple-700 hover:border-purple-400 text-zinc-800 dark:text-purple-200 font-extrabold text-xs hover:text-purple-600 dark:hover:text-purple-300 transition disabled:opacity-50"
           >
             {isChangingPassword ? "Updating Password..." : "Update Password"}
           </button>

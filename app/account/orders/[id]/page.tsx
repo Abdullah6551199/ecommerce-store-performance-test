@@ -141,7 +141,7 @@ export default function OrderDetailPage({
         </p>
         <Link
           href="/account/orders"
-          className="inline-flex items-center px-4 py-2 rounded-xl bg-[#18C729] text-black font-bold text-xs hover:bg-[#15af24]"
+          className="inline-flex items-center px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-400/20 transition"
         >
           &larr; Back to Order History
         </Link>
@@ -156,7 +156,7 @@ export default function OrderDetailPage({
         <div>
           <Link
             href="/account/orders"
-            className="text-xs font-bold text-[#18C729] hover:underline mb-2 inline-flex items-center gap-1"
+            className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline mb-2 inline-flex items-center gap-1"
           >
             &larr; All Orders
           </Link>
@@ -180,7 +180,7 @@ export default function OrderDetailPage({
             type="button"
             onClick={handleReorder}
             disabled={isReordering}
-            className="px-4 py-2 rounded-xl bg-[#18C729] text-black font-extrabold text-xs hover:bg-[#15af24] shadow-md shadow-[#18C729]/20 transition disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-extrabold text-xs shadow-md shadow-purple-400/20 transition disabled:opacity-50"
           >
             {isReordering ? "Adding to Cart..." : "Reorder All Items"}
           </button>
@@ -190,7 +190,7 @@ export default function OrderDetailPage({
       {/* Visual Status Timeline */}
       <div className="p-6 rounded-3xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#080e0a] shadow-sm">
         <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-6">
-          Order Status: <span className="text-[#18C729] font-black">{order.status.toUpperCase()}</span>
+          Order Status: <span className="text-purple-600 dark:text-purple-400 font-black">{order.status.toUpperCase()}</span>
         </h2>
 
         <div className="grid grid-cols-5 gap-2 relative">
@@ -205,9 +205,9 @@ export default function OrderDetailPage({
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-black transition-all ${
                     isDone
-                      ? "bg-[#18C729] text-black ring-4 ring-[#18C729]/20"
+                      ? "bg-purple-600 text-white ring-4 ring-purple-500/20"
                       : isCurrent
-                      ? "bg-black text-[#18C729] border-2 border-[#18C729] ring-4 ring-[#18C729]/20 animate-pulse"
+                      ? "bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-300 border-2 border-purple-500 ring-4 ring-purple-500/20 animate-pulse"
                       : "bg-zinc-100 dark:bg-white/5 text-zinc-400"
                   }`}
                 >
@@ -306,7 +306,7 @@ export default function OrderDetailPage({
 
               <div className="pt-3 border-t border-zinc-100 dark:border-white/5 flex justify-between text-sm font-black text-zinc-900 dark:text-white">
                 <span>Total</span>
-                <span className="text-[#18C729]">Rs. {Number(order.total).toFixed(2)}</span>
+                <span className="text-purple-600 dark:text-purple-400">Rs. {Number(order.total).toFixed(2)}</span>
               </div>
             </div>
 

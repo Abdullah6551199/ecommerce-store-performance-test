@@ -252,4 +252,42 @@ The homepage is organized into a sequence of responsive sections:
 - **"Recently Viewed" Carousel**: User history tracked in `localStorage` (`recently_viewed_v1`) and fetched via batch API.
 - **Mobile Sticky Bar**: Floating bottom bar on mobile (< 640px) when scrolled past main image card.
 
+---
+
+## 9. Stage 18.4 Patterns: Checkout, Order Success & Auth
+
+### 9.1 Checkout Page Design Standards
+- **Container**: Big White Card (`bg-white dark:bg-[#3C0561] rounded-2xl shadow-lg border border-purple-100 dark:border-purple-700 p-6 sm:p-8`).
+- **Form Controls**:
+  - Focus state: `focus:border-purple-400 focus:ring-1 focus:ring-purple-400`.
+  - Background: `bg-purple-50/30 dark:bg-purple-950/40`.
+  - Required indicators: `text-purple-500`.
+- **Payment Method Card**:
+  - Selected state: `border-2 border-purple-400 bg-purple-50/80 dark:bg-purple-900/30`.
+  - Checkbox/Radio: `bg-purple-500 border-purple-500 text-white`.
+- **Action Button**:
+  - "Place Order (COD)": `bg-purple-400 hover:bg-purple-500 text-white py-4 text-sm font-extrabold shadow-xl shadow-purple-500/25`.
+- **Sticky Order Summary**:
+  - Position: `sticky top-24`.
+  - Pricing totals: `font-mono font-black text-purple-600 dark:text-purple-300 text-xl`.
+
+### 9.2 Order Success Standards
+- **Celebration Badge**: `bg-purple-100 dark:bg-purple-900/60 border border-purple-200 text-purple-600 animate-bounce`.
+- **Delivery Calculation**: Formatted estimated arrival date (`+5 days`).
+- **COD Instructions**: `border-2 border-purple-300 bg-purple-50/80 dark:bg-purple-900/30`.
+- **Receipt Card**: Alternating item breakdown, shipping status, and customer receipt info.
+
+### 9.3 Authentication Patterns (Login, Signup, Recovery)
+- **Split Brand Showcase (Desktop)**:
+  - Left panel: `bg-gradient-to-br from-[#3C0561] via-[#5A0891] to-[#960DF2] text-white`.
+  - Right form: `bg-white dark:bg-[#3C0561] p-8 sm:p-10`.
+- **Password Controls**:
+  - Password visibility toggle: Interactive eye SVG toggling `type="password"` / `type="text"`.
+  - Password strength meter: 4-level dynamic purple progress bars (Weak, Fair, Good, Strong).
+- **Buttons**:
+  - Primary CTA: `bg-purple-400 hover:bg-purple-500 text-white font-extrabold py-3.5 rounded-xl shadow-lg`.
+- **Form Links**:
+  - Interactive links: `font-bold text-purple-600 dark:text-purple-300 hover:underline`.
+
+
 

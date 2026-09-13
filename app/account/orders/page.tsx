@@ -154,7 +154,7 @@ export default function AccountOrdersPage(): React.JSX.Element {
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center px-4 py-2 rounded-xl bg-[#18C729] text-black font-bold text-xs hover:bg-[#15af24]"
+            className="inline-flex items-center px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-400/20 transition"
           >
             Start Shopping &rarr;
           </Link>
@@ -206,14 +206,14 @@ export default function AccountOrdersPage(): React.JSX.Element {
                     type="button"
                     onClick={() => handleReorder(order.id)}
                     disabled={reorderingId === order.id}
-                    className="px-3.5 py-2 rounded-xl border border-zinc-200 dark:border-white/10 hover:border-[#18C729] text-xs font-bold text-zinc-800 dark:text-zinc-200 hover:text-[#18C729] transition disabled:opacity-50"
+                    className="px-3.5 py-2 rounded-xl border border-purple-200 dark:border-purple-700/60 hover:border-purple-400 text-xs font-bold text-zinc-800 dark:text-purple-200 hover:text-purple-600 dark:hover:text-purple-300 transition disabled:opacity-50"
                   >
                     {reorderingId === order.id ? "Adding..." : "Reorder"}
                   </button>
 
                   <Link
                     href={`/account/orders/${order.id}`}
-                    className="px-3.5 py-2 rounded-xl bg-[#18C729] text-black text-xs font-bold hover:bg-[#15af24] shadow-md shadow-[#18C729]/20 transition"
+                    className="px-3.5 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white text-xs font-bold shadow-md shadow-purple-400/20 transition"
                   >
                     View Details &rarr;
                   </Link>

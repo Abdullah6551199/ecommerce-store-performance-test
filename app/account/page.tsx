@@ -133,28 +133,28 @@ export default function AccountDashboardPage(): React.JSX.Element {
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl border border-zinc-200 dark:border-white/10 bg-gradient-to-br from-[#18C729]/10 via-zinc-100 to-transparent dark:from-[#18C729]/15 dark:via-[#080e0a] dark:to-[#080e0a] relative overflow-hidden shadow-sm">
+      <div className="p-6 sm:p-8 rounded-3xl border border-purple-100 dark:border-purple-800 bg-gradient-to-br from-purple-50 via-purple-100/40 to-transparent dark:from-purple-900/40 dark:via-[#3C0561] dark:to-[#3C0561] relative overflow-hidden shadow-sm">
         <div className="relative z-10">
-          <span className="inline-block px-3 py-1 rounded-full bg-[#18C729]/20 text-xs font-bold text-emerald-700 dark:text-[#18C729] mb-3">
+          <span className="inline-block px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/60 text-xs font-bold text-purple-700 dark:text-purple-300 mb-3">
             Customer Dashboard
           </span>
-          <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#3C0561] dark:text-white tracking-tight">
             Welcome back, {customerName}!
           </h1>
-          <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-1 max-w-xl">
+          <p className="text-xs sm:text-sm text-purple-700/80 dark:text-purple-300/80 mt-1 max-w-xl">
             Track your deliveries, review past purchases, manage shipping addresses, and explore saved favorites all from your account.
           </p>
 
           <div className="flex flex-wrap items-center gap-3 mt-5">
             <Link
               href="/shop"
-              className="px-4 py-2 rounded-xl bg-[#18C729] text-black font-bold text-xs hover:bg-[#15af24] shadow-md shadow-[#18C729]/20 transition"
+              className="px-4 py-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-400/20 transition"
             >
               Browse Store &rarr;
             </Link>
             <Link
               href="/account/orders"
-              className="px-4 py-2 rounded-xl border border-zinc-300 dark:border-white/10 bg-white/50 dark:bg-white/5 text-zinc-800 dark:text-white font-bold text-xs hover:border-[#18C729] transition"
+              className="px-4 py-2 rounded-xl border border-purple-200 dark:border-purple-700 bg-white/50 dark:bg-white/5 text-[#3C0561] dark:text-white font-bold text-xs hover:border-purple-400 transition"
             >
               View All Orders
             </Link>
@@ -203,7 +203,7 @@ export default function AccountDashboardPage(): React.JSX.Element {
             </h2>
             <Link
               href="/account/orders"
-              className="text-xs font-bold text-[#18C729] hover:underline"
+              className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline"
             >
               View All &rarr;
             </Link>
@@ -260,7 +260,7 @@ export default function AccountDashboardPage(): React.JSX.Element {
             </h2>
             <Link
               href="/account/notifications"
-              className="text-xs font-bold text-[#18C729] hover:underline"
+              className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline"
             >
               View All &rarr;
             </Link>

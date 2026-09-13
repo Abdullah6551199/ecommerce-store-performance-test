@@ -3,76 +3,142 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary-green: #18C729;
-  --color-secondary-yellow: #FEF500;
-  --color-brand-green: #18C729;
-  --color-brand-yellow: #FEF500;
-  --color-brand-dark: #0d1a12;
-  --color-primary: #18C729;
-  --color-secondary: #FEF500;
+  --color-purple-50: #EACFFC;
+  --color-purple-100: #D59EFA;
+  --color-purple-200: #C06EF7;
+  --color-purple-300: #AB3DF5;
+  --color-purple-400: #960DF2;
+  --color-purple-500: #780AC2;
+  --color-purple-600: #5A0891;
+  --color-purple-700: #3C0561;
+
+  --color-primary: #960DF2;
+  --color-primary-hover: #780AC2;
+  --color-secondary: #AB3DF5;
+  --color-accent: #C06EF7;
+  --color-brand-purple: #960DF2;
+  --color-brand-lavender: #EACFFC;
+  --color-brand-dark: #3C0561;
 }
 
 :root {
-  --primary-green: #18C729;
-  --secondary-yellow: #FEF500;
-  --background: #f8fafc;
-  --foreground: #09090b;
+  /* Purple Brand Palette (8 Shades) */
+  --purple-50: #EACFFC;
+  --purple-100: #D59EFA;
+  --purple-200: #C06EF7;
+  --purple-300: #AB3DF5;
+  --purple-400: #960DF2;
+  --purple-500: #780AC2;
+  --purple-600: #5A0891;
+  --purple-700: #3C0561;
+
+  /* Light Mode (Default) */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #EACFFC;
+  --surface: #FFFFFF;
+  --surface-hover: #EACFFC;
+  --primary: #960DF2;
+  --primary-hover: #780AC2;
+  --secondary: #AB3DF5;
+  --accent: #C06EF7;
+  --text-heading: #3C0561;
+  --text-body: #5A0891;
+  --text-muted: #780AC2;
+  --border: #D59EFA;
+  --border-subtle: #EACFFC;
+
+  --background: var(--bg-primary);
+  --foreground: var(--text-body);
 }
 
 :root.dark, html.dark {
-  --background: #0d1410;
-  --foreground: #f4f7f5;
+  /* Dark Mode (Toggle) */
+  --bg-primary: #3C0561;
+  --bg-secondary: #5A0891;
+  --surface: #5A0891;
+  --surface-hover: #780AC2;
+  --primary: #960DF2;
+  --primary-hover: #AB3DF5;
+  --secondary: #AB3DF5;
+  --accent: #C06EF7;
+  --text-heading: #EACFFC;
+  --text-body: #D59EFA;
+  --text-muted: #C06EF7;
+  --border: #780AC2;
+  --border-subtle: #5A0891;
+
+  --background: var(--bg-primary);
+  --foreground: var(--text-body);
 }
 
-/* 
- * 270-Degree Vertical Brand Gradient:
- * Green (#18C729) at top -> Yellow (#FEF500) at bottom.
- * In design tools (Figma/Photoshop), 270° indicates top-to-bottom.
- * Standard CSS syntax: linear-gradient(180deg, #18C729 0%, #FEF500 100%).
- */
-.bg-brand-gradient,
-.bg-brand-gradient-270 {
-  background: linear-gradient(180deg, var(--color-primary, #18C729) 0%, var(--color-accent, #FEF500) 100%);
+/* Brand Gradients */
+.bg-brand-gradient {
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
 }
 
-/* Subtle overlay version for content readability while preserving vibrant ambient branding */
+.bg-brand-hero {
+  background: linear-gradient(135deg, var(--purple-100) 0%, var(--purple-50) 100%);
+}
+
+html.dark .bg-brand-hero {
+  background: linear-gradient(135deg, var(--purple-700) 0%, var(--purple-600) 100%);
+}
+
+/* Ambient overlay version */
 .bg-brand-ambient {
   background: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--color-primary, #18C729) 25%, transparent), transparent),
-    radial-gradient(ellipse 80% 50% at 50% 120%, color-mix(in srgb, var(--color-accent, #FEF500) 20%, transparent), transparent),
-    var(--color-background, #0d1410);
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(150, 13, 242, 0.12), transparent),
+    radial-gradient(ellipse 80% 50% at 50% 120%, rgba(192, 110, 247, 0.10), transparent),
+    var(--background);
+}
+
+/* Soft Purple Shadows */
+.shadow-purple-soft {
+  box-shadow: 0 10px 25px -5px rgba(150, 13, 242, 0.12), 0 8px 10px -6px rgba(150, 13, 242, 0.08);
+}
+
+.shadow-purple-card {
+  box-shadow: 0 4px 20px -2px rgba(150, 13, 242, 0.07);
+}
+
+.shadow-purple-card:hover {
+  box-shadow: 0 20px 30px -10px rgba(150, 13, 242, 0.18), 0 10px 15px -5px rgba(120, 10, 194, 0.12);
 }
 
 /* Glassmorphic utility surfaces */
 .glass-panel {
-  background: rgba(13, 20, 16, 0.75);
+  background: rgba(60, 5, 97, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(213, 158, 250, 0.2);
 }
 
 html:not(.dark) .glass-panel {
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(213, 158, 250, 0.4);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(90, 8, 145, 0.65);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(213, 158, 250, 0.18);
 }
 
 html:not(.dark) .glass-card {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+  background: #FFFFFF;
+  border: 1px solid #EACFFC;
+  box-shadow: 0 4px 20px -2px rgba(150, 13, 242, 0.06);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
 }
 
 body {
   min-height: 100vh;
-  color: var(--foreground);
-  background-color: var(--background);
+  color: var(--text-body);
+  background-color: var(--bg-primary);
   font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }

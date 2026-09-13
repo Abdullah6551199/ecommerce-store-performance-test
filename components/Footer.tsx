@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
 import { normalizeImageUrl } from "@/lib/utils";
-
 import { listPages } from "@/lib/cms";
 
 interface FooterProps {
@@ -11,37 +10,28 @@ interface FooterProps {
 }
 
 /**
- * Dynamic Storefront Footer Component
- * Rendered from Cloudflare D1 settings & CMS pages with contact details, social links,
- * multi-column navigation, and dynamic copyright year.
+ * Stage 18.1 Chronicles-Style 5-Column Storefront Footer
+ * Features brand info, category & collection links, company, support, legal,
+ * social links, dynamic copyright year, and payment method badges.
  */
-export default async function Footer({ settings = DEFAULT_STORE_SETTINGS }: FooterProps): Promise<React.JSX.Element> {
+export default async function Footer({
+  settings = DEFAULT_STORE_SETTINGS,
+}: FooterProps): Promise<React.JSX.Element> {
   const currentYear = new Date().getFullYear();
-  let footerLinks = settings.footerLinks && settings.footerLinks.length > 0
-    ? settings.footerLinks
-    : DEFAULT_STORE_SETTINGS.footerLinks;
 
-  // Append any custom pages created in CMS marked showInFooter
+  // Load custom pages from CMS marked showInFooter
+  let customCompanyLinks: Array<{ label: string; url: string }> = [];
+  let customLegalLinks: Array<{ label: string; url: string }> = [];
+
   try {
     const cmsPages = await listPages();
-    const customFooterPages = cmsPages.filter((p: any) => !p.isDefault && p.showInFooter && p.isPublished);
-    if (customFooterPages.length > 0) {
-      footerLinks = footerLinks.map((col) => {
-        if (col.title === "Legal" || col.title === "Company") {
-          return {
-            ...col,
-            links: [
-              ...col.links,
-              ...customFooterPages.map((p: any) => ({
-                label: p.title,
-                url: `/pages/${p.slug}`,
-              })),
-            ],
-          };
-        }
-        return col;
-      });
-    }
+    const activeCustom = cmsPages.filter((p: any) => !p.isDefault && p.showInFooter && p.isPublished);
+    customCompanyLinks = activeCustom
+      .filter((p: any) => p.slug.includes("about") || p.slug.includes("story") || p.slug.includes("career"))
+      .map((p: any) => ({ label: p.title, url: `/pages/${p.slug}` }));
+    customLegalLinks = activeCustom
+      .filter((p: any) => p.slug.includes("terms") || p.slug.includes("privacy") || p.slug.includes("cookie"))
+      .map((p: any) => ({ label: p.title, url: `/pages/${p.slug}` }));
   } catch (err) {
     console.warn("Could not load dynamic footer CMS pages:", err);
   }
@@ -49,12 +39,13 @@ export default async function Footer({ settings = DEFAULT_STORE_SETTINGS }: Foot
   const social = settings.socialLinks || DEFAULT_STORE_SETTINGS.socialLinks;
 
   return (
-    <footer className="w-full border-t border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-[#070c09] text-zinc-600 dark:text-white/70">
+    <footer className="w-full border-t border-purple-200/60 dark:border-purple-900/40 bg-purple-50/40 dark:bg-[#25033d] text-zinc-700 dark:text-purple-200/80 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 space-y-12">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-5 lg:gap-12">
-          {/* Brand & Contact Column */}
-          <div className="md:col-span-2 space-y-5">
-            <Link href="/" className="flex items-center gap-3">
+        {/* 5-Column Navigation Grid */}
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
+          {/* Column 1: Brand Info & Social Icons */}
+          <div className="space-y-4 sm:col-span-2 lg:col-span-1">
+            <Link href="/" className="flex items-center gap-2.5">
               {settings.logoUrl ? (
                 <Image
                   src={normalizeImageUrl(settings.logoUrl, { width: 160, quality: 80 })}
@@ -62,66 +53,33 @@ export default async function Footer({ settings = DEFAULT_STORE_SETTINGS }: Foot
                   width={120}
                   height={36}
                   loading="lazy"
-                  className="h-9 w-auto max-h-9 object-contain rounded-lg"
+                  className="h-8 w-auto max-h-8 object-contain rounded-lg"
                 />
               ) : (
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#18C729] to-[#FEF500] shadow-md shadow-[#18C729]/20">
-                  <svg className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[#960DF2] to-[#AB3DF5] shadow-md shadow-purple-500/20">
+                  <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
               )}
-              <span className="text-base font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                {settings.storeName}
+              <span className="text-base font-black tracking-tight text-[#3C0561] dark:text-white">
+                {settings.storeName || "ApexStore"}
               </span>
             </Link>
 
-            <p className="text-xs text-zinc-600 dark:text-white/60 leading-relaxed max-w-sm">
-              {settings.description}
+            <p className="text-xs text-zinc-600 dark:text-purple-200/70 leading-relaxed max-w-xs">
+              {settings.description || "Discover premium apparel and high-performance collections engineered for everyday elegance and dynamic lifestyle."}
             </p>
 
-            {/* Dynamic Contact Details from Settings */}
-            <div className="space-y-2 pt-1 text-xs text-zinc-600 dark:text-white/70">
-              {settings.contactEmail && (
-                <div className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-[#18C729] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <a href={`mailto:${settings.contactEmail}`} className="hover:text-zinc-900 dark:hover:text-white transition-colors">
-                    {settings.contactEmail}
-                  </a>
-                </div>
-              )}
-
-              {settings.contactPhone && (
-                <div className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-[#18C729] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <span>{settings.contactPhone}</span>
-                </div>
-              )}
-
-              {settings.contactAddress && (
-                <div className="flex items-start gap-2">
-                  <svg className="h-4 w-4 text-[#18C729] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span>{settings.contactAddress}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Social Media Links from Settings */}
-            <div className="flex items-center gap-3 pt-2">
+            {/* Social Icons */}
+            <div className="flex items-center gap-2.5 pt-2">
               {social.twitter && (
                 <a
                   href={social.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Twitter / X"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-200/70 dark:bg-white/5 text-zinc-600 dark:text-white/60 hover:bg-[#18C729]/20 hover:text-[#18C729] transition-all"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-purple-200 dark:border-purple-800/60 bg-white dark:bg-[#3C0561] text-purple-700 dark:text-purple-300 hover:bg-[#960DF2] hover:text-white dark:hover:bg-[#960DF2] transition-all"
                 >
                   <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -134,7 +92,7 @@ export default async function Footer({ settings = DEFAULT_STORE_SETTINGS }: Foot
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-200/70 dark:bg-white/5 text-zinc-600 dark:text-white/60 hover:bg-[#18C729]/20 hover:text-[#18C729] transition-all"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-purple-200 dark:border-purple-800/60 bg-white dark:bg-[#3C0561] text-purple-700 dark:text-purple-300 hover:bg-[#960DF2] hover:text-white dark:hover:bg-[#960DF2] transition-all"
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
@@ -149,64 +107,180 @@ export default async function Footer({ settings = DEFAULT_STORE_SETTINGS }: Foot
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-200/70 dark:bg-white/5 text-zinc-600 dark:text-white/60 hover:bg-[#18C729]/20 hover:text-[#18C729] transition-all"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-purple-200 dark:border-purple-800/60 bg-white dark:bg-[#3C0561] text-purple-700 dark:text-purple-300 hover:bg-[#960DF2] hover:text-white dark:hover:bg-[#960DF2] transition-all"
                 >
                   <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 011-1h3V2.5h-3.333C8.423 2.5 7.198 4.07 7.198 6.99v2.52H4.198v3.98h3v8.01z" />
                   </svg>
                 </a>
               )}
-              {social.github && (
-                <a
-                  href={social.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-200/70 dark:bg-white/5 text-zinc-600 dark:text-white/60 hover:bg-[#18C729]/20 hover:text-[#18C729] transition-all"
-                >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                  </svg>
-                </a>
-              )}
             </div>
           </div>
 
-          {/* Navigation Columns from Settings */}
-          {footerLinks.map((col, idx) => (
-            <div key={`${col.title}-${idx}`} className="space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-white">
-                {col.title}
-              </h3>
-              <ul className="space-y-2.5 text-xs">
-                {col.links.map((link, linkIdx) => (
-                  <li key={`${link.url}-${linkIdx}`}>
-                    <Link
-                      href={link.url}
-                      prefetch={false}
-                      className="text-zinc-600 dark:text-white/60 hover:text-emerald-600 dark:hover:text-[#18C729] transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Column 2: Shop */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#3C0561] dark:text-white border-b border-purple-200/50 dark:border-purple-800/40 pb-1.5">
+              Shop
+            </h3>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link href="/shop" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  All Products
+                </Link>
+              </li>
+              <li>
+                <Link href="/search?q=arrivals" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  New Arrivals
+                </Link>
+              </li>
+              <li>
+                <Link href="/search?q=best+seller" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Best Sellers
+                </Link>
+              </li>
+              <li>
+                <Link href="/search?q=women" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Women&apos;s Collection
+                </Link>
+              </li>
+              <li>
+                <Link href="/search?q=men" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Men&apos;s Collection
+                </Link>
+              </li>
+              <li>
+                <Link href="/search?q=accessories" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Accessories &amp; Gear
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Company */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#3C0561] dark:text-white border-b border-purple-200/50 dark:border-purple-800/40 pb-1.5">
+              Company
+            </h3>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link href="/about" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Blog &amp; Story
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Careers
+                </Link>
+              </li>
+              {customCompanyLinks.map((p, idx) => (
+                <li key={idx}>
+                  <Link href={p.url} className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                    {p.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4: Support */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#3C0561] dark:text-white border-b border-purple-200/50 dark:border-purple-800/40 pb-1.5">
+              Support
+            </h3>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link href="/faq" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Help &amp; FAQ
+                </Link>
+              </li>
+              <li>
+                <Link href="/returns" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Returns &amp; Exchanges
+                </Link>
+              </li>
+              <li>
+                <Link href="/shipping" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Shipping Information
+                </Link>
+              </li>
+              <li>
+                <Link href="/account/orders" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Track Your Order
+                </Link>
+              </li>
+              <li>
+                <Link href="/account" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Customer Account
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 5: Legal */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#3C0561] dark:text-white border-b border-purple-200/50 dark:border-purple-800/40 pb-1.5">
+              Legal
+            </h3>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <Link href="/privacy-policy" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Cookie Settings
+                </Link>
+              </li>
+              {customLegalLinks.map((p, idx) => (
+                <li key={idx}>
+                  <Link href={p.url} className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                    {p.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        {/* Bottom Bar: Copyright & Accents */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-zinc-200 dark:border-white/10 pt-8 text-xs text-zinc-600 dark:text-white/50">
+        {/* Bottom Bar: Copyright & Payment Icons */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-purple-200/60 dark:border-purple-900/50 pt-8 text-xs text-zinc-600 dark:text-purple-200/60">
           <div className="flex items-center gap-2">
-            <span>&copy; {currentYear}</span>
-            <span className="h-1 w-1 rounded-full bg-[#18C729]" />
-            <span>{settings.copyrightText || `${settings.storeName}. All rights reserved.`}</span>
+            <span>&copy; {currentYear} {settings.storeName || "ApexStore"}. All rights reserved.</span>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px]">
-            <span className="text-[#18C729] font-medium">⚡ Premium Athletic Gear</span>
-            <span className="text-zinc-400 dark:text-white/30">•</span>
-            <span>Worldwide Shipping • Secure Checkout</span>
+          {/* Payment Method Badges */}
+          <div className="flex items-center gap-2 text-[10px] font-bold">
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+              VISA
+            </span>
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+              MC
+            </span>
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+              AMEX
+            </span>
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+              PayPal
+            </span>
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+              Apple Pay
+            </span>
           </div>
         </div>
       </div>

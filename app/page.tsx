@@ -1,13 +1,16 @@
 import React from "react";
 import { listHomepageSections, seedDefaultSectionsIfEmpty } from "@/lib/homepage";
 import { getActiveCategories } from "@/lib/categories";
-import { getFeaturedProducts } from "@/lib/products";
+import {
+  getFeaturedProducts,
+  getBestSellerProducts,
+  getNewArrivalProducts,
+  getTopRatedProducts,
+} from "@/lib/products";
 import { renderHomepageSection } from "@/components/homepage/HomepageSections";
-
 import type { Metadata } from "next";
 import { getStoreSettings } from "@/lib/settings";
 import { getBaseUrl } from "@/lib/seo";
-
 import { normalizeImageUrl } from "@/lib/utils";
 
 export const revalidate = 300;
@@ -16,11 +19,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getStoreSettings();
   const baseUrl = getBaseUrl();
   const title = settings.storeName
-    ? `${settings.storeName} | Premium E-Commerce Experience`
-    : "Apex Store | Premium E-Commerce Experience";
+    ? `${settings.storeName} | Chronicles Luxury & Athletic Store`
+    : "Chronicles Store | Luxury Performance Apparel";
   const description =
     settings.description ||
-    "Discover next-generation high-performance athletic apparel and footwear engineered for peak human performance.";
+    "Discover the new Purple Collection — engineered luxury athletic wear and high-performance footwear crafted for effortless style and peak endurance.";
 
   return {
     title,
@@ -51,15 +54,19 @@ export default async function HomePage(): Promise<React.JSX.Element> {
   }
 
   // Pre-fetch catalog data for sections that require relational records
-  const [categories, featuredProducts] = await Promise.all([
+  const [categories, featuredProducts, bestSellers, newArrivals, topRated] = await Promise.all([
     getActiveCategories(),
-    getFeaturedProducts(8),
+    getFeaturedProducts(10),
+    getBestSellerProducts(10),
+    getNewArrivalProducts(10),
+    getTopRatedProducts(10),
   ]);
 
-  // Identify LCP hero image for high-priority preloading
-  const heroSection = sections.find((s) => s.type === "hero" && s.imageUrl);
-  const heroImageUrl = heroSection?.imageUrl
-    ? normalizeImageUrl(heroSection.imageUrl, { hero: true, width: 700, quality: 70 })
+  // Identify LCP candidate hero image for high-priority preloading
+  const heroSection = sections.find((s) => (s.type === "hero" || s.type === "hero_carousel") && s.isActive);
+  const firstSlideImage = heroSection?.content?.slides?.[0]?.imageUrl || heroSection?.imageUrl;
+  const heroImageUrl = firstSlideImage
+    ? normalizeImageUrl(firstSlideImage, { hero: true, width: 900, quality: 80 })
     : null;
 
   return (
@@ -72,15 +79,19 @@ export default async function HomePage(): Promise<React.JSX.Element> {
           fetchPriority="high"
         />
       )}
-      <div
-        className="mx-auto px-4 py-10 sm:px-6 lg:px-8 space-y-24"
-        style={{ maxWidth: "var(--container-max-width, 1280px)" }}
-      >
-      {sections.map((section) => (
-        <React.Fragment key={section.id}>
-          {renderHomepageSection(section, categories, featuredProducts)}
-        </React.Fragment>
-      ))}
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-16 sm:space-y-20">
+        {sections.map((section) => (
+          <React.Fragment key={section.id}>
+            {renderHomepageSection(
+              section,
+              categories,
+              featuredProducts,
+              bestSellers,
+              newArrivals,
+              topRated
+            )}
+          </React.Fragment>
+        ))}
       </div>
     </>
   );

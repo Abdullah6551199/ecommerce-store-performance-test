@@ -13,6 +13,7 @@ interface QuickAddToCartProps {
   price?: number;
   imageUrl?: string | null;
   stockQuantity?: number;
+  className?: string;
 }
 
 /**
@@ -30,6 +31,7 @@ export default function QuickAddToCart({
   price,
   imageUrl,
   stockQuantity,
+  className = "",
 }: QuickAddToCartProps): React.JSX.Element {
   const { addItem } = useCart();
   const [addedNotice, setAddedNotice] = useState(false);
@@ -65,20 +67,17 @@ export default function QuickAddToCart({
       onClick={handleQuickAdd}
       disabled={isOutOfStock}
       title={isOutOfStock ? "Out of Stock" : "Add to Cart"}
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+      className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
         isOutOfStock
-          ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
+          ? "bg-zinc-100 dark:bg-purple-950/40 text-zinc-400 dark:text-purple-400 cursor-not-allowed border border-zinc-200 dark:border-purple-800/40"
           : addedNotice
-          ? "bg-[#18C729] text-black shadow-lg shadow-[#18C729]/30"
-          : "bg-white/10 text-white hover:bg-[#18C729] hover:text-black hover:shadow-lg hover:shadow-[#18C729]/20 active:scale-95"
-      }`}
-      style={{
-        borderRadius: "var(--radius-btn, 0.75rem)",
-      }}
+          ? "bg-[#780AC2] text-white shadow-md shadow-purple-500/30"
+          : "bg-[#960DF2] hover:bg-[#780AC2] text-white shadow-sm hover:shadow-md hover:shadow-purple-500/25 active:scale-95"
+      } ${className}`}
     >
       {addedNotice ? (
         <>
-          <svg className="h-3.5 w-3.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+          <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
           <span>Added!</span>
@@ -88,7 +87,7 @@ export default function QuickAddToCart({
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
-          <span className="hidden sm:inline">Add</span>
+          <span>Add</span>
         </>
       )}
     </button>

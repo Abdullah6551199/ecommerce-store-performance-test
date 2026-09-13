@@ -3,6 +3,7 @@ import { getCurrentAdmin } from "@/lib/auth";
 import {
   listHomepageSections,
   createHomepageSection,
+  deleteHomepageSection,
   seedDefaultSectionsIfEmpty,
   DEFAULT_HOMEPAGE_SECTIONS,
 } from "@/lib/homepage";
@@ -79,11 +80,17 @@ export async function POST(req: NextRequest) {
 
     // Handle reset defaults
     if (body?.action === "reset_defaults") {
+      const existing = await listHomepageSections({ activeOnly: false });
+      for (const s of existing) {
+        await deleteHomepageSection(s.id);
+      }
       const createdList = [];
-      for (const tpl of DEFAULT_HOMEPAGE_SECTIONS) {
+      for (let i = 0; i < DEFAULT_HOMEPAGE_SECTIONS.length; i++) {
+        const tpl = DEFAULT_HOMEPAGE_SECTIONS[i];
         const item = await createHomepageSection({
           ...tpl,
-          id: `sec-${tpl.type}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          id: `sec-${tpl.type}-${Date.now()}-${i}`,
+          sortOrder: i + 1,
         });
         createdList.push(item);
       }

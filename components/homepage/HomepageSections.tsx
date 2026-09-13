@@ -9,6 +9,12 @@ import ProductCard from "@/components/ProductCard";
 import { normalizeImageUrl } from "@/lib/utils";
 
 const NewsletterForm = dynamic(() => import("./NewsletterForm"), { ssr: true });
+import HeroCarousel from "./HeroCarousel";
+import CategoryCardsRow from "./CategoryCardsRow";
+import TrendingProductsSection from "./TrendingProductsSection";
+import TrustBar from "./TrustBar";
+import NewArrivalsSection from "./NewArrivalsSection";
+import BrandLogosRow from "./BrandLogosRow";
 
 
 /**
@@ -587,44 +593,33 @@ export function NewsletterSection({ section }: { section: HomepageSectionRecord 
   return (
     <section
       id="newsletter-section"
-      className="relative overflow-hidden border border-white/15 bg-gradient-to-br from-[#0c150e] via-[#09100c] to-[#121c13] p-8 sm:p-14 text-center shadow-2xl"
-      style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
+      className="relative overflow-hidden rounded-3xl border border-purple-200/80 dark:border-purple-800/60 bg-gradient-to-br from-[#780AC2] via-[#5A0891] to-[#3C0561] p-8 sm:p-14 text-center shadow-xl shadow-purple-500/20 text-white"
     >
-      <div
-        className="pointer-events-none absolute left-1/2 -top-24 -translate-x-1/2 h-72 w-72 rounded-full blur-3xl opacity-20"
-        style={{ backgroundColor: "var(--color-primary, #18C729)" }}
-      />
+      <div className="pointer-events-none absolute left-1/2 -top-24 -translate-x-1/2 h-72 w-72 rounded-full bg-[#AB3DF5]/20 blur-3xl" />
 
       <div className="relative max-w-2xl mx-auto space-y-4">
         {content?.badgeText && (
-          <span
-            className="inline-block rounded-full border px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider"
-            style={{
-              borderColor: "color-mix(in srgb, var(--color-primary, #18C729) 30%, transparent)",
-              backgroundColor: "color-mix(in srgb, var(--color-primary, #18C729) 10%, transparent)",
-              color: "var(--color-primary, #18C729)",
-            }}
-          >
+          <span className="inline-block rounded-full bg-[#EACFFC] text-[#3C0561] px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider shadow-sm">
             {content.badgeText}
           </span>
         )}
 
-        <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-          {content?.heading || section.title}
+        <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+          {content?.heading || "Subscribe to Our Newsletter"}
         </h2>
 
-        <p className="text-xs sm:text-sm text-white/70 max-w-xl mx-auto leading-relaxed">
-          {content?.subheading}
+        <p className="text-xs sm:text-sm text-purple-100/80 max-w-xl mx-auto leading-relaxed">
+          {content?.subheading || "Unlock private access codes, training insights, and limited-edition colorway launches directly to your inbox."}
         </p>
 
         <NewsletterForm
-          placeholderText={content?.placeholderText}
-          buttonText={content?.buttonText}
+          placeholderText={content?.placeholderText || "Enter your email address..."}
+          buttonText={content?.buttonText || "Subscribe"}
         />
 
-        {content?.disclaimer && (
-          <p className="text-[10px] text-white/40 pt-2">{content.disclaimer}</p>
-        )}
+        <p className="text-[11px] text-purple-200/60 pt-2">
+          {content?.disclaimer || "We respect your privacy. Unsubscribe at any time with one click."}
+        </p>
       </div>
     </section>
   );
@@ -638,11 +633,11 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
 
   return (
     <section
-      className="border border-zinc-200 dark:border-white/10 bg-white/95 dark:bg-[#0c140f]/80 p-8 backdrop-blur-md space-y-4 shadow-xl dark:shadow-none"
+      className="border border-purple-200/80 dark:border-purple-800/60 bg-white/95 dark:bg-[#3C0561]/80 p-8 backdrop-blur-md space-y-4 shadow-xl dark:shadow-none"
       style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
     >
-      <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white">{content?.heading || title}</h2>
-      {content?.subheading && <p className="text-xs sm:text-sm text-zinc-600 dark:text-white/60">{content.subheading}</p>}
+      <h2 className="text-xl sm:text-2xl font-bold text-[#3C0561] dark:text-white">{content?.heading || title}</h2>
+      {content?.subheading && <p className="text-xs sm:text-sm text-[#5A0891]/80 dark:text-purple-200/70">{content.subheading}</p>}
 
       {imageUrl && (
         <div className="relative overflow-hidden rounded-xl h-64 sm:h-96 w-full">
@@ -659,7 +654,7 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
 
       {content?.html && (
         <div
-          className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-zinc-700 dark:text-white/80"
+          className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-zinc-700 dark:text-purple-100/90"
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       )}
@@ -668,11 +663,7 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
         <div className="pt-2">
           <a
             href={content.buttonUrl}
-            className="inline-block px-5 py-2.5 text-xs font-semibold text-black hover:brightness-110"
-            style={{
-              borderRadius: "var(--radius-btn, 0.75rem)",
-              backgroundColor: "var(--color-primary, #18C729)",
-            }}
+            className="inline-block px-5 py-2.5 text-xs font-bold text-white rounded-lg bg-[#960DF2] hover:bg-[#780AC2] transition-colors"
           >
             {content.buttonText}
           </a>
@@ -688,23 +679,91 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
 export function renderHomepageSection(
   section: HomepageSectionRecord,
   categories: CategoryRecord[] = [],
-  featuredProducts: ProductWithImagesAndCategory[] = []
+  featuredProducts: ProductWithImagesAndCategory[] = [],
+  bestSellers: ProductWithImagesAndCategory[] = [],
+  newArrivals: ProductWithImagesAndCategory[] = [],
+  topRated: ProductWithImagesAndCategory[] = []
 ): React.JSX.Element {
   switch (section.type) {
     case "hero":
-      return <HeroSection section={section} />;
+    case "hero_carousel": {
+      const slides = Array.isArray(section.content?.slides) && section.content.slides.length > 0
+        ? section.content.slides
+        : [
+            {
+              badge: section.content?.badgeText || "Special Offer",
+              heading: section.content?.heading || section.title,
+              subheading: section.content?.subheading,
+              primaryButtonText: section.content?.buttonText || "Shop Collection",
+              primaryButtonUrl: section.content?.buttonUrl || "/shop",
+              secondaryButtonText: section.content?.secondaryButtonText || "Explore Categories",
+              secondaryButtonUrl: section.content?.secondaryButtonUrl || "#category-cards",
+              imageUrl: section.imageUrl || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop",
+              imageAlt: section.content?.heading || section.title,
+            },
+          ];
+      return <HeroCarousel slides={slides} />;
+    }
+
     case "categories":
-      return <CategoriesSection section={section} categories={categories} />;
+    case "category_cards":
+      return (
+        <CategoryCardsRow
+          categories={categories}
+          heading={section.content?.heading || section.title}
+          badge={section.content?.badgeText}
+        />
+      );
+
+    case "trending_products":
+    case "trending_tabs":
     case "featured_products":
-      return <FeaturedProductsSection section={section} products={featuredProducts} />;
+      return (
+        <TrendingProductsSection
+          bestSellers={bestSellers.length > 0 ? bestSellers : featuredProducts}
+          newArrivals={newArrivals.length > 0 ? newArrivals : featuredProducts}
+          topRated={topRated.length > 0 ? topRated : featuredProducts}
+          heading={section.content?.heading || section.title}
+          badge={section.content?.badgeText}
+        />
+      );
+
+    case "trust_bar":
+      return <TrustBar items={section.content?.items} />;
+
+    case "new_arrivals":
+      return (
+        <NewArrivalsSection
+          badge={section.content?.badge || "New Collection"}
+          heading={section.content?.heading || "New Arrivals Just For You"}
+          subheading={section.content?.subheading}
+          discountText={section.content?.discountText || "Save up to 40% OFF"}
+          buttonText={section.content?.buttonText || "Shop Collection"}
+          buttonUrl={section.content?.buttonUrl || "/shop"}
+          imageUrl={section.imageUrl || section.content?.imageUrl}
+        />
+      );
+
+    case "brand_logos":
+      return (
+        <BrandLogosRow
+          heading={section.content?.heading}
+          logos={section.content?.logos}
+        />
+      );
+
     case "promo_banner":
       return <PromoBannerSection section={section} />;
+
     case "brand_story":
       return <BrandStorySection section={section} />;
+
     case "testimonials":
       return <TestimonialsSection section={section} />;
+
     case "newsletter":
       return <NewsletterSection section={section} />;
+
     case "custom_html":
     case "custom":
     default:

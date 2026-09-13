@@ -10,17 +10,21 @@ interface MobileNavProps {
 }
 
 /**
- * Stage 15 Mobile Navigation with Accordion Category Menu and Dedicated Pages Links.
+ * Mobile Navigation Drawer with Accordion Menus and Purple Brand Styling.
  */
 export default function MobileNav({
   categories = [],
 }: MobileNavProps): React.JSX.Element {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoriesExpanded, setCategoriesExpanded] = useState(false);
+  const [womenExpanded, setWomenExpanded] = useState(false);
+  const [menExpanded, setMenExpanded] = useState(false);
 
   const closeMenu = () => {
     setMobileMenuOpen(false);
     setCategoriesExpanded(false);
+    setWomenExpanded(false);
+    setMenExpanded(false);
   };
 
   return (
@@ -28,7 +32,7 @@ export default function MobileNav({
       <button
         type="button"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="md:hidden flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-800 dark:text-white"
+        className="lg:hidden flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-purple-200 dark:border-purple-800/60 bg-purple-50/50 dark:bg-[#5A0891]/50 text-[#3C0561] dark:text-purple-100 hover:text-[#960DF2] transition-colors"
         aria-label="Toggle Navigation Menu"
       >
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -41,12 +45,12 @@ export default function MobileNav({
       </button>
 
       {mobileMenuOpen && (
-        <div className="absolute top-16 left-0 right-0 md:hidden border-b border-zinc-200 dark:border-white/10 bg-white/95 dark:bg-[#080e0a]/95 backdrop-blur-xl px-4 py-4 space-y-1.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute top-16 left-0 right-0 lg:hidden border-b border-purple-200 dark:border-purple-800/60 bg-white/95 dark:bg-[#3C0561]/95 backdrop-blur-xl px-4 py-4 space-y-1.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
           {/* 1. Home */}
           <Link
             href="/"
             onClick={closeMenu}
-            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-800 dark:text-white hover:text-[#18C729] rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition"
+            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
           >
             Home
           </Link>
@@ -55,7 +59,7 @@ export default function MobileNav({
           <Link
             href="/shop"
             onClick={closeMenu}
-            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-800 dark:text-white hover:text-[#18C729] rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition"
+            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
           >
             Shop All Products
           </Link>
@@ -65,11 +69,11 @@ export default function MobileNav({
             <button
               type="button"
               onClick={() => setCategoriesExpanded((prev) => !prev)}
-              className="flex w-full min-h-[42px] items-center justify-between px-3 py-2 text-sm font-semibold text-zinc-800 dark:text-white hover:text-[#18C729] rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition"
+              className="flex w-full min-h-[42px] items-center justify-between px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
             >
               <span>Categories</span>
               <svg
-                className={`w-4 h-4 transition-transform ${categoriesExpanded ? "rotate-180 text-[#18C729]" : "text-zinc-400"}`}
+                className={`w-4 h-4 transition-transform ${categoriesExpanded ? "rotate-180 text-[#960DF2]" : "text-purple-400"}`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -79,13 +83,13 @@ export default function MobileNav({
             </button>
 
             {categoriesExpanded && (
-              <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-zinc-200 dark:border-white/10 ml-3 mt-1">
+              <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-purple-200 dark:border-purple-800 ml-3 mt-1">
                 {categories.map((cat) => (
                   <Link
                     key={cat.id}
                     href={`/category/${cat.slug}`}
                     onClick={closeMenu}
-                    className="flex min-h-[36px] items-center px-3 py-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:text-[#18C729] rounded-lg hover:bg-zinc-100 dark:hover:bg-white/5 transition"
+                    className="flex min-h-[36px] items-center px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-purple-200 hover:text-[#960DF2] rounded-lg hover:bg-purple-50 dark:hover:bg-[#5A0891]/40 transition"
                   >
                     {cat.name}
                   </Link>
@@ -93,7 +97,7 @@ export default function MobileNav({
                 <Link
                   href="/shop"
                   onClick={closeMenu}
-                  className="flex min-h-[36px] items-center px-3 py-1.5 text-xs font-bold text-[#18C729] rounded-lg transition"
+                  className="flex min-h-[36px] items-center px-3 py-1.5 text-xs font-bold text-[#960DF2] dark:text-[#EACFFC] rounded-lg transition"
                 >
                   View All Categories &rarr;
                 </Link>
@@ -101,59 +105,131 @@ export default function MobileNav({
             )}
           </div>
 
-          {/* 4. About */}
+          {/* 4. Women Accordion */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setWomenExpanded((prev) => !prev)}
+              className="flex w-full min-h-[42px] items-center justify-between px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
+            >
+              <span>Women</span>
+              <svg
+                className={`w-4 h-4 transition-transform ${womenExpanded ? "rotate-180 text-[#960DF2]" : "text-purple-400"}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {womenExpanded && (
+              <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-purple-200 dark:border-purple-800 ml-3 mt-1">
+                <Link href="/search?q=women+top" onClick={closeMenu} className="block px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-purple-200 hover:text-[#960DF2]">
+                  Tops &amp; Tees
+                </Link>
+                <Link href="/search?q=leggings" onClick={closeMenu} className="block px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-purple-200 hover:text-[#960DF2]">
+                  Leggings &amp; Tights
+                </Link>
+                <Link href="/search?q=women+shoes" onClick={closeMenu} className="block px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-purple-200 hover:text-[#960DF2]">
+                  Running Shoes
+                </Link>
+                <Link href="/search?q=women" onClick={closeMenu} className="block px-3 py-1.5 text-xs font-bold text-[#960DF2] dark:text-[#EACFFC]">
+                  Shop All Women &rarr;
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* 5. Men Accordion */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setMenExpanded((prev) => !prev)}
+              className="flex w-full min-h-[42px] items-center justify-between px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
+            >
+              <span>Men</span>
+              <svg
+                className={`w-4 h-4 transition-transform ${menExpanded ? "rotate-180 text-[#960DF2]" : "text-purple-400"}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {menExpanded && (
+              <div className="pl-4 pr-2 py-1 space-y-1 border-l-2 border-purple-200 dark:border-purple-800 ml-3 mt-1">
+                <Link href="/search?q=men+tee" onClick={closeMenu} className="block px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-purple-200 hover:text-[#960DF2]">
+                  Performance Tees
+                </Link>
+                <Link href="/search?q=men+shorts" onClick={closeMenu} className="block px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-purple-200 hover:text-[#960DF2]">
+                  Running Shorts
+                </Link>
+                <Link href="/search?q=men+shoes" onClick={closeMenu} className="block px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-purple-200 hover:text-[#960DF2]">
+                  Athletic Shoes
+                </Link>
+                <Link href="/search?q=men" onClick={closeMenu} className="block px-3 py-1.5 text-xs font-bold text-[#960DF2] dark:text-[#EACFFC]">
+                  Shop All Men &rarr;
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* 6. Accessories */}
+          <Link
+            href="/search?q=accessories"
+            onClick={closeMenu}
+            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
+          >
+            Accessories
+          </Link>
+
+          {/* 7. Blog / About */}
           <Link
             href="/about"
             onClick={closeMenu}
-            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-800 dark:text-white hover:text-[#18C729] rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition"
+            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
           >
-            About Us
+            Blog &amp; Story
           </Link>
 
-          {/* 5. Contact */}
+          {/* 8. Contact */}
           <Link
             href="/contact"
             onClick={closeMenu}
-            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-800 dark:text-white hover:text-[#18C729] rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition"
+            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
           >
             Contact
           </Link>
 
-          {/* 6. FAQ */}
-          <Link
-            href="/faq"
-            onClick={closeMenu}
-            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-800 dark:text-white hover:text-[#18C729] rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition"
-          >
-            FAQ & Support
-          </Link>
-
-          <div className="pt-2 border-t border-zinc-200 dark:border-white/10 space-y-1">
+          <div className="pt-3 border-t border-purple-200 dark:border-purple-800/60 space-y-1">
             {/* Wishlist */}
             <Link
               href="/wishlist"
               onClick={closeMenu}
-              className="flex min-h-[40px] items-center px-3 py-2 text-xs font-semibold text-rose-500 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/20 transition"
+              className="flex min-h-[40px] items-center px-3 py-2 text-xs font-semibold text-purple-600 dark:text-purple-300 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-950/40 transition"
             >
-              My Wishlist
+              ❤️ My Wishlist
             </Link>
 
             {/* Notifications */}
             <Link
               href="/account/notifications"
               onClick={closeMenu}
-              className="flex min-h-[40px] items-center px-3 py-2 text-xs font-semibold text-emerald-600 dark:text-[#18C729] rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition"
+              className="flex min-h-[40px] items-center px-3 py-2 text-xs font-semibold text-purple-600 dark:text-purple-300 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-950/40 transition"
             >
-              Notifications
+              🔔 Notifications
             </Link>
 
             {/* Account */}
             <Link
               href="/account"
               onClick={closeMenu}
-              className="flex min-h-[40px] items-center px-3 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-300 rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition"
+              className="flex min-h-[40px] items-center px-3 py-2 text-xs font-semibold text-zinc-800 dark:text-purple-100 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-950/40 transition"
             >
-              My Account / Login
+              👤 My Account / Login
             </Link>
 
             {/* Admin */}
@@ -161,9 +237,9 @@ export default function MobileNav({
               href="/admin/products"
               prefetch={false}
               onClick={closeMenu}
-              className="flex min-h-[40px] items-center px-3 py-2 text-xs font-bold text-indigo-600 dark:text-[#FEF500] rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 transition"
+              className="flex min-h-[40px] items-center px-3 py-2 text-xs font-bold text-[#960DF2] dark:text-[#C06EF7] rounded-xl hover:bg-purple-100/50 dark:hover:bg-purple-950/40 transition"
             >
-              Admin Dashboard
+              ⚡ Admin Dashboard
             </Link>
           </div>
         </div>

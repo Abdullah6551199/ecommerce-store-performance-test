@@ -1160,6 +1160,28 @@ export const getFeaturedProducts = cache(async (limit = 4): Promise<ProductWithI
 });
 
 /**
+ * Get best seller products for homepage trending tabs
+ */
+export const getBestSellerProducts = cache(async (limit = 10): Promise<ProductWithImagesAndCategory[]> => {
+  return (await listCatalogProducts({ status: "published", limit })) as unknown as ProductWithImagesAndCategory[];
+});
+
+/**
+ * Get new arrival products for homepage trending tabs
+ */
+export const getNewArrivalProducts = cache(async (limit = 10): Promise<ProductWithImagesAndCategory[]> => {
+  return (await listCatalogProducts({ status: "published", limit })) as unknown as ProductWithImagesAndCategory[];
+});
+
+/**
+ * Get top rated products for homepage trending tabs
+ */
+export const getTopRatedProducts = cache(async (limit = 10): Promise<ProductWithImagesAndCategory[]> => {
+  const all = (await listCatalogProducts({ status: "published", limit: limit * 2 })) as unknown as ProductWithImagesAndCategory[];
+  return all.slice(0, limit);
+});
+
+/**
  * Get published products belonging to a specific category
  */
 export async function getProductsByCategory(

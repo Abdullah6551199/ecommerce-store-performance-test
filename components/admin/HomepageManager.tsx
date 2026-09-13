@@ -15,6 +15,7 @@ export default function HomepageManager(): React.JSX.Element {
   const [editingSection, setEditingSection] = useState<HomepageSectionRecord | null>(null);
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingSlideIndex, setUploadingSlideIndex] = useState<number | null>(null);
 
   // Fetch sections from API
   const fetchSections = async () => {
@@ -77,7 +78,6 @@ export default function HomepageManager(): React.JSX.Element {
     newSections[index] = newSections[targetIdx];
     newSections[targetIdx] = temp;
 
-    // Optimistically update order
     const updatedWithOrder = newSections.map((s, idx) => ({ ...s, sortOrder: idx + 1 }));
     setSections(updatedWithOrder);
 
@@ -124,7 +124,7 @@ export default function HomepageManager(): React.JSX.Element {
   const handleResetDefaults = async () => {
     if (
       !confirm(
-        "Are you sure you want to restore default template sections? Default sections will be populated into Cloudflare D1."
+        "Are you sure you want to restore default Chronicles template sections? Current homepage sections in Cloudflare D1 will be replaced with the default purple layout."
       )
     )
       return;
@@ -138,7 +138,7 @@ export default function HomepageManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (json.success) {
         fetchSections();
-        showNotification("Default homepage sections restored successfully.");
+        showNotification("Default Chronicles homepage sections restored successfully.");
       } else {
         alert(json.error || "Failed to restore defaults.");
       }
@@ -147,7 +147,7 @@ export default function HomepageManager(): React.JSX.Element {
     }
   };
 
-  // Upload image to Cloudflare R2
+  // Upload main image to Cloudflare R2
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !editingSection) return;
@@ -175,6 +175,43 @@ export default function HomepageManager(): React.JSX.Element {
       alert("Error uploading image to R2.");
     } finally {
       setUploadingImage(false);
+    }
+  };
+
+  // Upload image for a specific carousel slide
+  const handleSlideImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, slideIdx: number) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingSection) return;
+
+    setUploadingSlideIndex(slideIdx);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/media", {
+        method: "POST",
+        body: formData,
+      });
+      const json = (await res.json()) as any;
+      if (json.success && json.data?.url) {
+        const slides = Array.isArray(editingSection.content?.slides)
+          ? [...editingSection.content.slides]
+          : [];
+        if (slides[slideIdx]) {
+          slides[slideIdx] = { ...slides[slideIdx], imageUrl: json.data.url };
+          setEditingSection({
+            ...editingSection,
+            content: { ...editingSection.content, slides },
+          });
+        }
+        showNotification(`Slide #${slideIdx + 1} image uploaded to Cloudflare R2.`);
+      } else {
+        alert(json.error || "Image upload failed.");
+      }
+    } catch (err) {
+      alert("Error uploading slide image to R2.");
+    } finally {
+      setUploadingSlideIndex(null);
     }
   };
 
@@ -212,115 +249,247 @@ export default function HomepageManager(): React.JSX.Element {
     }
   };
 
-  // Testimonial Item helpers
-  const handleAddTestimonial = () => {
+  // Hero Carousel Slide Helpers
+  const handleAddSlide = () => {
     if (!editingSection) return;
-    const currentList = Array.isArray(editingSection.content?.testimonials)
-      ? [...editingSection.content.testimonials]
+    const slides = Array.isArray(editingSection.content?.slides)
+      ? [...editingSection.content.slides]
       : [];
-    currentList.push({
-      quote: "Outstanding athletic performance and edge speed.",
-      author: "Alex Rivera",
-      role: "Pro Athlete",
-      rating: 5,
-      avatar: "",
+    slides.push({
+      badge: "Special Offer",
+      heading: "New Exclusive Drop",
+      subheading: "High-performance precision athletic engineering crafted for superior velocity.",
+      primaryButtonText: "Shop Collection",
+      primaryButtonUrl: "/shop",
+      secondaryButtonText: "Explore Categories",
+      secondaryButtonUrl: "#category-cards",
+      imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop",
+      imageAlt: "New Collection Drop",
     });
     setEditingSection({
       ...editingSection,
-      content: { ...editingSection.content, testimonials: currentList },
-    });
-  };
-
-  const handleUpdateTestimonial = (idx: number, field: string, value: any) => {
-    if (!editingSection) return;
-    const currentList = Array.isArray(editingSection.content?.testimonials)
-      ? [...editingSection.content.testimonials]
-      : [];
-    currentList[idx] = { ...currentList[idx], [field]: value };
-    setEditingSection({
-      ...editingSection,
-      content: { ...editingSection.content, testimonials: currentList },
+      content: { ...editingSection.content, slides },
     });
   };
 
-  const handleRemoveTestimonial = (idx: number) => {
+  const handleUpdateSlide = (idx: number, field: string, value: any) => {
     if (!editingSection) return;
-    const currentList = Array.isArray(editingSection.content?.testimonials)
-      ? [...editingSection.content.testimonials]
+    const slides = Array.isArray(editingSection.content?.slides)
+      ? [...editingSection.content.slides]
       : [];
-    currentList.splice(idx, 1);
+    slides[idx] = { ...slides[idx], [field]: value };
     setEditingSection({
       ...editingSection,
-      content: { ...editingSection.content, testimonials: currentList },
+      content: { ...editingSection.content, slides },
+    });
+  };
+
+  const handleRemoveSlide = (idx: number) => {
+    if (!editingSection) return;
+    const slides = Array.isArray(editingSection.content?.slides)
+      ? [...editingSection.content.slides]
+      : [];
+    slides.splice(idx, 1);
+    setEditingSection({
+      ...editingSection,
+      content: { ...editingSection.content, slides },
+    });
+  };
+
+  // Trust Bar Item Helpers
+  const handleAddTrustItem = () => {
+    if (!editingSection) return;
+    const items = Array.isArray(editingSection.content?.items)
+      ? [...editingSection.content.items]
+      : [];
+    items.push({
+      icon: "shipping",
+      title: "New Trust Benefit",
+      description: "Fast customer delivery and satisfaction guarantee",
+    });
+    setEditingSection({
+      ...editingSection,
+      content: { ...editingSection.content, items },
+    });
+  };
+
+  const handleUpdateTrustItem = (idx: number, field: string, value: any) => {
+    if (!editingSection) return;
+    const items = Array.isArray(editingSection.content?.items)
+      ? [...editingSection.content.items]
+      : [];
+    items[idx] = { ...items[idx], [field]: value };
+    setEditingSection({
+      ...editingSection,
+      content: { ...editingSection.content, items },
+    });
+  };
+
+  const handleRemoveTrustItem = (idx: number) => {
+    if (!editingSection) return;
+    const items = Array.isArray(editingSection.content?.items)
+      ? [...editingSection.content.items]
+      : [];
+    items.splice(idx, 1);
+    setEditingSection({
+      ...editingSection,
+      content: { ...editingSection.content, items },
+    });
+  };
+
+  // Brand Logo Helpers
+  const handleAddLogo = () => {
+    if (!editingSection) return;
+    const logos = Array.isArray(editingSection.content?.logos)
+      ? [...editingSection.content.logos]
+      : [];
+    logos.push({
+      name: "Partner Brand",
+      logoText: "BRAND",
+    });
+    setEditingSection({
+      ...editingSection,
+      content: { ...editingSection.content, logos },
+    });
+  };
+
+  const handleUpdateLogo = (idx: number, field: string, value: any) => {
+    if (!editingSection) return;
+    const logos = Array.isArray(editingSection.content?.logos)
+      ? [...editingSection.content.logos]
+      : [];
+    logos[idx] = { ...logos[idx], [field]: value };
+    setEditingSection({
+      ...editingSection,
+      content: { ...editingSection.content, logos },
+    });
+  };
+
+  const handleRemoveLogo = (idx: number) => {
+    if (!editingSection) return;
+    const logos = Array.isArray(editingSection.content?.logos)
+      ? [...editingSection.content.logos]
+      : [];
+    logos.splice(idx, 1);
+    setEditingSection({
+      ...editingSection,
+      content: { ...editingSection.content, logos },
     });
   };
 
   // Add section preset helper
-  const handleOpenAddModal = (presetType: HomepageSectionType = "promo_banner") => {
+  const handleOpenAddModal = (presetType: HomepageSectionType = "hero") => {
     let initialContent: Record<string, any> = {};
+    let initialImageUrl: string | null = null;
 
     switch (presetType) {
       case "hero":
+      case "hero_carousel":
         initialContent = {
-          heading: "Engineered for Peak Athletic Velocity",
-          subheading: "Discover precision athletic gear crafted for high-intensity training and endurance.",
-          badgeText: "New Season Collection",
-          buttonText: "Shop Featured Gear",
-          buttonUrl: "#featured-products",
-          secondaryButtonText: "Explore Collections",
-          secondaryButtonUrl: "#categories-section",
-          alignment: "left",
-        };
-        break;
-      case "testimonials":
-        initialContent = {
-          badgeText: "Athlete Endorsements",
-          heading: "Proven by Elite Competitors",
-          subheading: "Real feedback from world-class athletes training with Apex gear.",
-          testimonials: [
+          slides: [
             {
-              quote: "The lightness and energy return shaved seconds off my sprint times.",
-              author: "Taylor Reed",
-              role: "Track & Field Sprinter",
-              rating: 5,
-              avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
-            },
-            {
-              quote: "Hyper-durable materials that withstand daily high-intensity workouts.",
-              author: "Samir Patel",
-              role: "Olympic Lifting Coach",
-              rating: 5,
-              avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
+              badge: "Special Offer • New Season",
+              heading: "Elevate Your Motion with Pure Precision",
+              subheading: "Explore the new Spring Purple Collection. Engineered with micro-knit breathable fabrics.",
+              primaryButtonText: "Shop Collection",
+              primaryButtonUrl: "/shop",
+              secondaryButtonText: "Explore Categories",
+              secondaryButtonUrl: "#category-cards",
+              imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop",
             },
           ],
         };
+        initialImageUrl = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop";
         break;
+
+      case "categories":
+      case "category_cards":
+        initialContent = {
+          heading: "Featured Collections",
+          badgeText: "Curated Categories",
+          maxItems: 5,
+        };
+        break;
+
+      case "trending_products":
+      case "trending_tabs":
+        initialContent = {
+          heading: "Trending Products",
+          badgeText: "Customer Favorites",
+          maxItems: 10,
+        };
+        break;
+
+      case "trust_bar":
+        initialContent = {
+          items: [
+            { icon: "shipping", title: "Free Worldwide Shipping", description: "On all orders over $50 with live tracking" },
+            { icon: "return", title: "30-Day Return Policy", description: "Hassle-free exchange & money back guarantee" },
+            { icon: "secure", title: "Secure Payment", description: "256-bit encrypted checkout protection" },
+            { icon: "support", title: "24/7 Customer Support", description: "Dedicated concierge team ready to help" },
+          ],
+        };
+        break;
+
+      case "new_arrivals":
+        initialContent = {
+          badge: "New Collection",
+          heading: "New Arrivals Just For You",
+          discountText: "Save up to 40% OFF",
+          subheading: "Experience cutting-edge athletic engineering designed for fluid movement and modern luxury.",
+          buttonText: "Shop Collection",
+          buttonUrl: "/shop",
+          imageUrl: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop",
+        };
+        initialImageUrl = "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop";
+        break;
+
+      case "brand_logos":
+        initialContent = {
+          heading: "Trusted by World-Class Champions & Athletic Leaders",
+          logos: [
+            { name: "Vanguard Sport", logoText: "VANGUARD" },
+            { name: "Apex Athletics", logoText: "APEX//LAB" },
+            { name: "Kinetics Lab", logoText: "KINETICS" },
+            { name: "Aero Velocity", logoText: "AERO VELOCITY" },
+          ],
+        };
+        break;
+
       case "newsletter":
         initialContent = {
-          badgeText: "VIP Access",
-          heading: "Unlock Early Access to Limited Edition Drops",
-          subheading: "Subscribe to receive private launch alerts and member discounts.",
-          buttonText: "Join Apex VIP",
+          badgeText: "VIP Membership",
+          heading: "Subscribe to Our Newsletter",
+          subheading: "Unlock private access codes, training insights, and limited-edition colorway launches.",
+          buttonText: "Subscribe",
           placeholderText: "Enter your email address...",
-          disclaimer: "No spam. Unsubscribe anytime with one click.",
+          disclaimer: "We respect your privacy. Unsubscribe at any time with one click.",
         };
         break;
+
+      case "promo_banner":
+        initialContent = {
+          badgeText: "Limited Time",
+          heading: "Seasonal Flash Sale",
+          subheading: "Take an extra 20% off all performance footwear and apparel this week.",
+          buttonText: "Claim Discount",
+          buttonUrl: "/shop",
+        };
+        break;
+
       case "custom_html":
         initialContent = {
-          heading: "Custom Brand Showcase",
-          subheading: "Special dynamic content block.",
-          html: "<div style='padding: 20px; background: rgba(24,199,41,0.08); border-radius: 12px; border: 1px solid rgba(24,199,41,0.2);'><p style='color: #18C729; font-weight: bold;'>⚡ Custom HTML section rendered safely with edge performance.</p></div>",
-          buttonText: "Learn More",
-          buttonUrl: "/search",
+          heading: "Custom Brand Banner",
+          html: "<div style='padding: 24px; background: rgba(150, 13, 242, 0.08); border-radius: 16px; border: 1px solid rgba(150, 13, 242, 0.2); text-align: center;'><h3 style='color: #960DF2; font-weight: 700;'>⚡ Custom Purple Chronicles Block</h3><p style='color: #5A0891; font-size: 14px; margin-top: 8px;'>Safely rendered from Cloudflare D1 database.</p></div>",
         };
         break;
+
       default:
         initialContent = {
-          heading: "New Showcase Announcement",
-          subheading: "Discover innovative new releases.",
-          badgeText: "New Arrival",
-          buttonText: "Shop Now",
-          buttonUrl: "/search",
+          heading: "Showcase Section",
+          subheading: "Explore innovative new releases.",
+          buttonText: "Explore More",
+          buttonUrl: "/shop",
         };
     }
 
@@ -328,7 +497,7 @@ export default function HomepageManager(): React.JSX.Element {
       id: `new-${Date.now()}`,
       type: presetType,
       title: `New ${presetType.replace("_", " ")} Section`,
-      imageUrl: "",
+      imageUrl: initialImageUrl,
       sortOrder: sections.length + 1,
       isActive: true,
       content: initialContent,
@@ -343,9 +512,11 @@ export default function HomepageManager(): React.JSX.Element {
       {/* Top Header Controls */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Dynamic Homepage Manager</h1>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-white/60">
-            Control storefront sections, content, images, reordering, and visibility in real time.
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-purple-100">
+            Homepage Layout Manager
+          </h1>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-purple-300/70">
+            Control Chronicles purple storefront sections, hero carousel slides, products, and order in real time.
           </p>
         </div>
 
@@ -353,54 +524,82 @@ export default function HomepageManager(): React.JSX.Element {
           <button
             type="button"
             onClick={handleResetDefaults}
-            className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-2 text-xs font-medium text-zinc-700 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all"
+            className="rounded-xl border border-purple-200 dark:border-purple-800/60 bg-purple-50 dark:bg-purple-950/40 px-3 py-2 text-xs font-medium text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/60 transition-all"
           >
-            Restore Default Templates
+            Restore Chronicles Layout
           </button>
 
-          <div className="relative group">
-            <button
-              type="button"
-              onClick={() => handleOpenAddModal("promo_banner")}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#18C729] to-[#12a822] px-4 py-2 text-xs font-semibold text-black shadow-lg shadow-[#18C729]/20 hover:brightness-110 active:scale-95 transition-all"
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Add Section
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => handleOpenAddModal("hero")}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 text-xs font-semibold shadow-lg shadow-purple-500/25 active:scale-95 transition-all"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Section
+          </button>
         </div>
       </div>
 
       {/* Quick Add Presets Strip */}
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3">
-        <span className="text-xs font-semibold text-zinc-600 dark:text-white/70 mr-1">Quick Add:</span>
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-purple-100 dark:border-purple-900/40 bg-purple-50/50 dark:bg-purple-950/20 p-3">
+        <span className="text-xs font-semibold text-purple-900 dark:text-purple-200 mr-1">
+          Quick Add:
+        </span>
         <button
           type="button"
-          onClick={() => handleOpenAddModal("testimonials")}
-          className="rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] px-2.5 py-1 text-xs text-zinc-800 dark:text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
+          onClick={() => handleOpenAddModal("hero")}
+          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
         >
-          + Testimonials
+          + Hero Carousel
+        </button>
+        <button
+          type="button"
+          onClick={() => handleOpenAddModal("categories")}
+          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+        >
+          + Categories Row
+        </button>
+        <button
+          type="button"
+          onClick={() => handleOpenAddModal("trending_products")}
+          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+        >
+          + Trending Products
+        </button>
+        <button
+          type="button"
+          onClick={() => handleOpenAddModal("trust_bar")}
+          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+        >
+          + Trust Bar
+        </button>
+        <button
+          type="button"
+          onClick={() => handleOpenAddModal("new_arrivals")}
+          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+        >
+          + New Arrivals
+        </button>
+        <button
+          type="button"
+          onClick={() => handleOpenAddModal("brand_logos")}
+          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+        >
+          + Brand Logos
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("newsletter")}
-          className="rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] px-2.5 py-1 text-xs text-zinc-800 dark:text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
+          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
         >
           + Newsletter
         </button>
         <button
           type="button"
-          onClick={() => handleOpenAddModal("promo_banner")}
-          className="rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] px-2.5 py-1 text-xs text-zinc-800 dark:text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
-        >
-          + Promo Banner
-        </button>
-        <button
-          type="button"
           onClick={() => handleOpenAddModal("custom_html")}
-          className="rounded-lg border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] px-2.5 py-1 text-xs text-zinc-800 dark:text-white hover:border-[#18C729] hover:text-[#18C729] transition-colors"
+          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
         >
           + Custom HTML
         </button>
@@ -408,8 +607,8 @@ export default function HomepageManager(): React.JSX.Element {
 
       {/* Success Notification */}
       {successMessage && (
-        <div className="rounded-xl border border-[#18C729]/40 bg-[#18C729]/10 p-3 text-xs font-medium text-[#18C729] flex items-center gap-2">
-          <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="rounded-xl border border-purple-400/40 bg-purple-50 dark:bg-purple-950/60 p-3 text-xs font-medium text-purple-700 dark:text-purple-300 flex items-center gap-2">
+          <svg className="h-4 w-4 shrink-0 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           <span>{successMessage}</span>
@@ -418,12 +617,12 @@ export default function HomepageManager(): React.JSX.Element {
 
       {/* Error Banner */}
       {error && (
-        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs text-red-500 dark:text-red-300 flex items-center justify-between">
+        <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs text-red-600 dark:text-red-300 flex items-center justify-between">
           <span>{error}</span>
           <button
             type="button"
             onClick={fetchSections}
-            className="underline hover:text-red-600 dark:hover:text-white"
+            className="underline hover:text-red-700 dark:hover:text-white"
           >
             Retry
           </button>
@@ -432,18 +631,20 @@ export default function HomepageManager(): React.JSX.Element {
 
       {/* Sections List */}
       {loading ? (
-        <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0d1611] p-12 text-center text-xs text-zinc-500 dark:text-white/50 animate-pulse">
-          Loading homepage sections from Cloudflare D1...
+        <div className="rounded-2xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-purple-950/30 p-12 text-center text-xs text-purple-700/60 dark:text-purple-300/50 animate-pulse">
+          Loading Chronicles homepage sections from Cloudflare D1...
         </div>
       ) : sections.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-[#0c140f]/60 p-12 text-center">
-          <p className="text-sm font-semibold text-zinc-900 dark:text-white">No sections currently configured.</p>
+        <div className="rounded-2xl border border-dashed border-purple-300 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/20 p-12 text-center">
+          <p className="text-sm font-semibold text-purple-900 dark:text-purple-100">
+            No sections currently configured in Cloudflare D1.
+          </p>
           <button
             type="button"
             onClick={handleResetDefaults}
-            className="mt-4 rounded-xl bg-[#18C729] px-4 py-2 text-xs font-semibold text-black"
+            className="mt-4 rounded-xl bg-purple-600 hover:bg-purple-700 px-4 py-2 text-xs font-semibold text-white transition-all shadow-md shadow-purple-500/20"
           >
-            Populate Default Templates
+            Populate Default Chronicles Sections
           </button>
         </div>
       ) : (
@@ -453,11 +654,11 @@ export default function HomepageManager(): React.JSX.Element {
               key={sec.id}
               className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border transition-all p-4 ${
                 sec.isActive
-                  ? "border-zinc-200 dark:border-white/15 bg-white dark:bg-[#0d1611] hover:border-[#18C729]/40 shadow-sm"
-                  : "border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-[#090e0b]/60 opacity-60"
+                  ? "border-purple-100 dark:border-purple-900/50 bg-white dark:bg-purple-950/30 hover:border-purple-400 shadow-sm"
+                  : "border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-purple-950/10 opacity-60"
               }`}
             >
-              {/* Left Column: Sort controls + Badge + Title */}
+              {/* Left Column: Sort controls + Index + Badge + Title */}
               <div className="flex items-center gap-3">
                 {/* Reorder Up/Down arrows */}
                 <div className="flex flex-col gap-1">
@@ -465,7 +666,7 @@ export default function HomepageManager(): React.JSX.Element {
                     type="button"
                     disabled={idx === 0}
                     onClick={() => handleMove(idx, "up")}
-                    className="h-6 w-6 rounded bg-zinc-100 dark:bg-white/5 flex items-center justify-center text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white disabled:opacity-20"
+                    className="h-6 w-6 rounded bg-purple-50 dark:bg-purple-900/40 flex items-center justify-center text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900 disabled:opacity-20"
                     title="Move Up"
                   >
                     ▲
@@ -474,7 +675,7 @@ export default function HomepageManager(): React.JSX.Element {
                     type="button"
                     disabled={idx === sections.length - 1}
                     onClick={() => handleMove(idx, "down")}
-                    className="h-6 w-6 rounded bg-zinc-100 dark:bg-white/5 flex items-center justify-center text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white disabled:opacity-20"
+                    className="h-6 w-6 rounded bg-purple-50 dark:bg-purple-900/40 flex items-center justify-center text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900 disabled:opacity-20"
                     title="Move Down"
                   >
                     ▼
@@ -482,27 +683,32 @@ export default function HomepageManager(): React.JSX.Element {
                 </div>
 
                 {/* Section Index */}
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 dark:bg-white/5 text-xs font-mono font-bold text-emerald-600 dark:text-[#18C729]">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/60 text-xs font-mono font-bold text-purple-700 dark:text-purple-200">
                   {idx + 1}
                 </div>
 
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="rounded-md border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-amber-600 dark:text-[#FEF500]">
+                    <span className="rounded-md border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/30 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-purple-700 dark:text-purple-300">
                       {sec.type}
                     </span>
                     <span
                       className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
                         sec.isActive
-                          ? "bg-[#18C729]/15 text-[#18C729]"
+                          ? "bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300"
                           : "bg-zinc-200 dark:bg-white/10 text-zinc-500 dark:text-white/40"
                       }`}
                     >
                       {sec.isActive ? "Visible" : "Hidden"}
                     </span>
+                    {sec.type === "hero" && Array.isArray(sec.content?.slides) && (
+                      <span className="text-[10px] text-purple-600 dark:text-purple-400 font-medium">
+                        ({sec.content.slides.length} slides)
+                      </span>
+                    )}
                   </div>
-                  <h3 className="mt-1 text-sm font-semibold text-zinc-900 dark:text-white">{sec.title}</h3>
-                  <p className="text-xs text-zinc-500 dark:text-white/50 truncate max-w-md">
+                  <h3 className="mt-1 text-sm font-semibold text-zinc-900 dark:text-purple-100">{sec.title}</h3>
+                  <p className="text-xs text-zinc-500 dark:text-purple-300/70 truncate max-w-md">
                     {sec.content?.heading || sec.content?.subheading || "Custom dynamic content"}
                   </p>
                 </div>
@@ -515,8 +721,8 @@ export default function HomepageManager(): React.JSX.Element {
                   onClick={() => handleToggleActive(sec)}
                   className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition-colors ${
                     sec.isActive
-                      ? "border-[#18C729]/30 bg-[#18C729]/10 text-[#18C729] hover:bg-[#18C729]/20"
-                      : "border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-white/50 hover:bg-zinc-200 dark:hover:bg-white/10"
+                      ? "border-purple-300 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-900/40 dark:text-purple-300 hover:bg-purple-100"
+                      : "border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-white/50 hover:bg-zinc-200"
                   }`}
                 >
                   {sec.isActive ? "Visible" : "Hidden"}
@@ -528,7 +734,7 @@ export default function HomepageManager(): React.JSX.Element {
                     setEditingSection(JSON.parse(JSON.stringify(sec)));
                     setActiveTab("edit");
                   }}
-                  className="rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1.5 text-xs font-medium text-zinc-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10 hover:border-[#18C729]/40 transition-all flex items-center gap-1.5"
+                  className="rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-900/30 px-3 py-1.5 text-xs font-medium text-purple-800 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/60 hover:border-purple-400 transition-all flex items-center gap-1.5"
                 >
                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -555,27 +761,27 @@ export default function HomepageManager(): React.JSX.Element {
       {/* Edit Section Modal with Live Preview */}
       {editingSection && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-4xl rounded-3xl border border-zinc-200 dark:border-white/20 bg-white dark:bg-[#0d1611] p-6 sm:p-8 shadow-2xl my-8 flex flex-col max-h-[90vh]">
-            {/* Modal Header with Edit / Live Preview Tabs */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-white/10 pb-4">
+          <div className="relative w-full max-w-5xl rounded-3xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950 p-6 sm:p-8 shadow-2xl my-8 flex flex-col max-h-[90vh]">
+            {/* Modal Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 dark:border-purple-900 pb-4">
               <div>
-                <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
-                  {editingSection.id.startsWith("new-") ? "Create New Section" : "Edit Homepage Section"}
+                <h2 className="text-lg font-bold text-zinc-900 dark:text-purple-100">
+                  {editingSection.id.startsWith("new-") ? "Create New Section" : "Edit Section"}
                 </h2>
-                <p className="text-xs text-zinc-500 dark:text-white/50">
-                  Type: <span className="font-mono text-amber-600 dark:text-[#FEF500] uppercase">{editingSection.type}</span>
+                <p className="text-xs text-purple-700 dark:text-purple-300">
+                  Type: <span className="font-mono font-semibold uppercase">{editingSection.type}</span>
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 p-1">
+                <div className="flex rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/40 p-1">
                   <button
                     type="button"
                     onClick={() => setActiveTab("edit")}
                     className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
                       activeTab === "edit"
-                        ? "bg-[#18C729] text-black"
-                        : "text-zinc-700 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white"
+                        ? "bg-purple-600 text-white shadow-sm"
+                        : "text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-white"
                     }`}
                   >
                     Form Editor
@@ -585,8 +791,8 @@ export default function HomepageManager(): React.JSX.Element {
                     onClick={() => setActiveTab("preview")}
                     className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
                       activeTab === "preview"
-                        ? "bg-[#18C729] text-black"
-                        : "text-zinc-700 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white"
+                        ? "bg-purple-600 text-white shadow-sm"
+                        : "text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-white"
                     }`}
                   >
                     Live Preview
@@ -596,7 +802,7 @@ export default function HomepageManager(): React.JSX.Element {
                 <button
                   type="button"
                   onClick={() => setEditingSection(null)}
-                  className="rounded-lg p-1.5 text-zinc-500 dark:text-white/50 hover:bg-zinc-100 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
+                  className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-purple-900/40 hover:text-zinc-700 dark:hover:text-white"
                 >
                   ✕
                 </button>
@@ -607,11 +813,13 @@ export default function HomepageManager(): React.JSX.Element {
             <div className="flex-1 overflow-y-auto py-4 pr-1">
               {activeTab === "preview" ? (
                 <div className="space-y-4">
-                  <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-black/40 p-4 text-xs text-zinc-600 dark:text-white/60 flex items-center justify-between">
+                  <div className="rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/60 p-4 text-xs text-purple-900 dark:text-purple-200 flex items-center justify-between">
                     <span>⚡ Live rendering of this section as it appears on the storefront:</span>
-                    <span className="font-mono text-[#18C729] uppercase font-bold">{editingSection.type}</span>
+                    <span className="font-mono text-purple-600 dark:text-purple-400 uppercase font-bold">
+                      {editingSection.type}
+                    </span>
                   </div>
-                  <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-[#080e0a] p-4 sm:p-6 overflow-hidden">
+                  <div className="rounded-2xl border border-purple-100 dark:border-purple-900 bg-white dark:bg-[#3C0561] p-4 sm:p-6 overflow-hidden">
                     {renderHomepageSection(editingSection)}
                   </div>
                 </div>
@@ -620,30 +828,39 @@ export default function HomepageManager(): React.JSX.Element {
                   {/* Basic Metadata */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Section Title (Admin Reference)</label>
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                        Section Title (Admin Reference)
+                      </label>
                       <input
                         type="text"
                         required
                         value={editingSection.title}
                         onChange={(e) => setEditingSection({ ...editingSection, title: e.target.value })}
-                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
+                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Section Type</label>
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                        Section Type
+                      </label>
                       <select
                         value={editingSection.type}
-                        onChange={(e) => setEditingSection({ ...editingSection, type: e.target.value as HomepageSectionType })}
-                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-[#0d1611] px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
+                        onChange={(e) =>
+                          setEditingSection({ ...editingSection, type: e.target.value as HomepageSectionType })
+                        }
+                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
                       >
-                        <option value="hero">Hero Showcase</option>
-                        <option value="categories">Categories Grid</option>
-                        <option value="featured_products">Featured Products</option>
+                        <option value="hero">Hero Carousel</option>
+                        <option value="categories">Category Cards Row</option>
+                        <option value="trending_products">Trending Products Tabs</option>
+                        <option value="trust_bar">Trust Bar</option>
+                        <option value="new_arrivals">New Arrivals Section</option>
+                        <option value="brand_logos">Brand Logos Row</option>
+                        <option value="newsletter">Newsletter Subscription</option>
                         <option value="promo_banner">Promotional Banner</option>
                         <option value="brand_story">Brand Story & Stats</option>
                         <option value="testimonials">Testimonials Section</option>
-                        <option value="newsletter">Newsletter Subscription</option>
                         <option value="custom_html">Custom HTML / Block</option>
                       </select>
                     </div>
@@ -656,274 +873,295 @@ export default function HomepageManager(): React.JSX.Element {
                       id="modal-active"
                       checked={editingSection.isActive}
                       onChange={(e) => setEditingSection({ ...editingSection, isActive: e.target.checked })}
-                      className="h-4 w-4 rounded border-zinc-300 dark:border-white/20 bg-white dark:bg-white/5 text-[#18C729] focus:ring-[#18C729]"
+                      className="h-4 w-4 rounded border-purple-300 dark:border-purple-700 text-purple-600 focus:ring-purple-500"
                     />
-                    <label htmlFor="modal-active" className="text-xs text-zinc-800 dark:text-white font-medium cursor-pointer">
+                    <label
+                      htmlFor="modal-active"
+                      className="text-xs text-zinc-800 dark:text-purple-200 font-medium cursor-pointer"
+                    >
                       Active (Visible on Storefront Homepage)
                     </label>
                   </div>
 
-                  {/* Image URL & R2 Upload */}
-                  <div className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <label className="text-xs font-semibold text-zinc-800 dark:text-white">Section Image (Cloudflare R2)</label>
-                      <label className="cursor-pointer rounded-lg bg-[#18C729]/20 px-2.5 py-1 text-[11px] font-semibold text-[#18C729] hover:bg-[#18C729]/30 transition-colors">
-                        {uploadingImage ? "Uploading to R2..." : "Upload Image to R2"}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          disabled={uploadingImage}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="https://... or upload image directly"
-                      value={editingSection.imageUrl || ""}
-                      onChange={(e) => setEditingSection({ ...editingSection, imageUrl: e.target.value })}
-                      className="w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                    />
-                    {editingSection.imageUrl && (
-                      <div className="mt-2 flex items-center gap-3">
-                        <img
-                          src={editingSection.imageUrl}
-                          alt="Preview"
-                          className="h-14 w-24 rounded-lg object-cover border border-zinc-300 dark:border-white/20"
-                        />
+                  {/* =========================================================================
+                      HERO CAROUSEL: Multi-Slide Management
+                     ========================================================================= */}
+                  {(editingSection.type === "hero" || editingSection.type === "hero_carousel") && (
+                    <div className="space-y-4 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4 sm:p-5">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-sm font-bold text-purple-950 dark:text-purple-100">
+                            Hero Carousel Slides
+                          </h4>
+                          <p className="text-xs text-purple-700 dark:text-purple-300/80">
+                            Manage each slide with heading, badge, CTA buttons, and high-res image.
+                          </p>
+                        </div>
                         <button
                           type="button"
-                          onClick={() => setEditingSection({ ...editingSection, imageUrl: null })}
-                          className="text-xs text-red-500 dark:text-red-400 hover:underline"
+                          onClick={handleAddSlide}
+                          className="rounded-lg bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-all"
                         >
-                          Remove image
+                          + Add Slide
                         </button>
                       </div>
-                    )}
-                  </div>
 
-                  {/* Common Heading & Subheading Fields */}
-                  <div className="space-y-4 pt-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-[#FEF500]">
-                      Content & Copy Fields
-                    </h4>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Main Heading</label>
-                        <input
-                          type="text"
-                          value={editingSection.content?.heading || ""}
-                          onChange={(e) =>
-                            setEditingSection({
-                              ...editingSection,
-                              content: { ...editingSection.content, heading: e.target.value },
-                            })
-                          }
-                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Badge Text (Tag / Pill)</label>
-                        <input
-                          type="text"
-                          value={editingSection.content?.badgeText || ""}
-                          onChange={(e) =>
-                            setEditingSection({
-                              ...editingSection,
-                              content: { ...editingSection.content, badgeText: e.target.value },
-                            })
-                          }
-                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Subheading / Description</label>
-                      <textarea
-                        rows={2}
-                        value={editingSection.content?.subheading || ""}
-                        onChange={(e) =>
-                          setEditingSection({
-                            ...editingSection,
-                            content: { ...editingSection.content, subheading: e.target.value },
-                          })
-                        }
-                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                      />
-                    </div>
-
-                    {/* Hero Specific Fields */}
-                    {editingSection.type === "hero" && (
-                      <div className="space-y-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
-                        <h5 className="text-xs font-bold text-zinc-900 dark:text-white">Hero Buttons & Alignment</h5>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Primary Button Label</label>
-                            <input
-                              type="text"
-                              value={editingSection.content?.buttonText || ""}
-                              onChange={(e) =>
-                                setEditingSection({
-                                  ...editingSection,
-                                  content: { ...editingSection.content, buttonText: e.target.value },
-                                })
-                              }
-                              className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Primary Button URL</label>
-                            <input
-                              type="text"
-                              value={editingSection.content?.buttonUrl || ""}
-                              onChange={(e) =>
-                                setEditingSection({
-                                  ...editingSection,
-                                  content: { ...editingSection.content, buttonUrl: e.target.value },
-                                })
-                              }
-                              className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Secondary Button Label</label>
-                            <input
-                              type="text"
-                              value={editingSection.content?.secondaryButtonText || ""}
-                              onChange={(e) =>
-                                setEditingSection({
-                                  ...editingSection,
-                                  content: { ...editingSection.content, secondaryButtonText: e.target.value },
-                                })
-                              }
-                              className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Secondary Button URL</label>
-                            <input
-                              type="text"
-                              value={editingSection.content?.secondaryButtonUrl || ""}
-                              onChange={(e) =>
-                                setEditingSection({
-                                  ...editingSection,
-                                  content: { ...editingSection.content, secondaryButtonUrl: e.target.value },
-                                })
-                              }
-                              className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Promo Banner Fields */}
-                    {editingSection.type === "promo_banner" && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
-                        <div>
-                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Button Label</label>
-                          <input
-                            type="text"
-                            value={editingSection.content?.buttonText || ""}
-                            onChange={(e) =>
-                              setEditingSection({
-                                ...editingSection,
-                                content: { ...editingSection.content, buttonText: e.target.value },
-                              })
-                            }
-                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Button URL</label>
-                          <input
-                            type="text"
-                            value={editingSection.content?.buttonUrl || ""}
-                            onChange={(e) =>
-                              setEditingSection({
-                                ...editingSection,
-                                content: { ...editingSection.content, buttonUrl: e.target.value },
-                              })
-                            }
-                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Testimonials Fields */}
-                    {editingSection.type === "testimonials" && (
-                      <div className="space-y-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
-                        <div className="flex items-center justify-between">
-                          <h5 className="text-xs font-bold text-zinc-900 dark:text-white">Testimonial Quotes</h5>
-                          <button
-                            type="button"
-                            onClick={handleAddTestimonial}
-                            className="rounded-lg bg-[#18C729]/20 px-2.5 py-1 text-xs font-semibold text-[#18C729] hover:bg-[#18C729]/30"
+                      {Array.isArray(editingSection.content?.slides) && editingSection.content.slides.length > 0 ? (
+                        editingSection.content.slides.map((slide: any, sIdx: number) => (
+                          <div
+                            key={sIdx}
+                            className="space-y-3 rounded-xl border border-purple-200 dark:border-purple-800/80 bg-white dark:bg-purple-950/60 p-4 text-xs"
                           >
-                            + Add Testimonial
-                          </button>
-                        </div>
+                            <div className="flex items-center justify-between border-b border-purple-100 dark:border-purple-900 pb-2">
+                              <span className="font-bold text-purple-900 dark:text-purple-200">
+                                Slide #{sIdx + 1}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveSlide(sIdx)}
+                                className="text-red-500 hover:text-red-700 font-medium"
+                              >
+                                Remove Slide
+                              </button>
+                            </div>
 
-                        {Array.isArray(editingSection.content?.testimonials) &&
-                          editingSection.content.testimonials.map((t: any, idx: number) => (
-                            <div
-                              key={idx}
-                              className="space-y-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-black/40 p-3 text-xs"
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-semibold text-zinc-800 dark:text-white">Item #{idx + 1}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveTestimonial(idx)}
-                                  className="text-red-500 dark:text-red-400 hover:underline"
-                                >
-                                  Remove
-                                </button>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div>
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Badge Text</label>
+                                <input
+                                  type="text"
+                                  value={slide.badge || ""}
+                                  onChange={(e) => handleUpdateSlide(sIdx, "badge", e.target.value)}
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                                />
                               </div>
-                              <textarea
-                                rows={2}
-                                placeholder="Quote statement..."
-                                value={t.quote || ""}
-                                onChange={(e) => handleUpdateTestimonial(idx, "quote", e.target.value)}
-                                className="w-full rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-                              />
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                              <div>
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Slide Heading</label>
                                 <input
                                   type="text"
-                                  placeholder="Author Name"
-                                  value={t.author || ""}
-                                  onChange={(e) => handleUpdateTestimonial(idx, "author", e.target.value)}
-                                  className="rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white"
-                                />
-                                <input
-                                  type="text"
-                                  placeholder="Role / Sport"
-                                  value={t.role || ""}
-                                  onChange={(e) => handleUpdateTestimonial(idx, "role", e.target.value)}
-                                  className="rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white"
-                                />
-                                <input
-                                  type="text"
-                                  placeholder="Avatar Image URL"
-                                  value={t.avatar || ""}
-                                  onChange={(e) => handleUpdateTestimonial(idx, "avatar", e.target.value)}
-                                  className="rounded-lg border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-white"
+                                  value={slide.heading || ""}
+                                  onChange={(e) => handleUpdateSlide(sIdx, "heading", e.target.value)}
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
                                 />
                               </div>
                             </div>
-                          ))}
-                      </div>
-                    )}
 
-                    {/* Newsletter Specific Fields */}
-                    {editingSection.type === "newsletter" && (
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
+                            <div>
+                              <label className="block font-medium text-zinc-700 dark:text-purple-200">Subheading / Description</label>
+                              <textarea
+                                rows={2}
+                                value={slide.subheading || ""}
+                                onChange={(e) => handleUpdateSlide(sIdx, "subheading", e.target.value)}
+                                className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                              />
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                              <div>
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Primary CTA Text</label>
+                                <input
+                                  type="text"
+                                  value={slide.primaryButtonText || ""}
+                                  onChange={(e) => handleUpdateSlide(sIdx, "primaryButtonText", e.target.value)}
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                />
+                              </div>
+                              <div>
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Primary CTA URL</label>
+                                <input
+                                  type="text"
+                                  value={slide.primaryButtonUrl || ""}
+                                  onChange={(e) => handleUpdateSlide(sIdx, "primaryButtonUrl", e.target.value)}
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                />
+                              </div>
+                              <div>
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Secondary CTA Text</label>
+                                <input
+                                  type="text"
+                                  value={slide.secondaryButtonText || ""}
+                                  onChange={(e) => handleUpdateSlide(sIdx, "secondaryButtonText", e.target.value)}
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                />
+                              </div>
+                              <div>
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Secondary CTA URL</label>
+                                <input
+                                  type="text"
+                                  value={slide.secondaryButtonUrl || ""}
+                                  onChange={(e) => handleUpdateSlide(sIdx, "secondaryButtonUrl", e.target.value)}
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Slide Image + R2 Upload */}
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
+                              <div className="flex-1">
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Slide Image URL</label>
+                                <input
+                                  type="text"
+                                  value={slide.imageUrl || ""}
+                                  onChange={(e) => handleUpdateSlide(sIdx, "imageUrl", e.target.value)}
+                                  placeholder="https://images.unsplash.com/..."
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                />
+                              </div>
+                              <label className="cursor-pointer self-start sm:self-end rounded-lg bg-purple-100 dark:bg-purple-900 px-3 py-1.5 text-xs font-semibold text-purple-700 dark:text-purple-200 hover:bg-purple-200 transition-colors">
+                                {uploadingSlideIndex === sIdx ? "Uploading..." : "Upload R2"}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => handleSlideImageUpload(e, sIdx)}
+                                  disabled={uploadingSlideIndex === sIdx}
+                                  className="hidden"
+                                />
+                              </label>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-xs text-purple-600 dark:text-purple-400">
+                          No slides added yet. Click &quot;+ Add Slide&quot; above.
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* =========================================================================
+                      TRUST BAR: 4 Columns
+                     ========================================================================= */}
+                  {editingSection.type === "trust_bar" && (
+                    <div className="space-y-4 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4 sm:p-5">
+                      <div className="flex items-center justify-between">
                         <div>
-                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Button Text</label>
+                          <h4 className="text-sm font-bold text-purple-950 dark:text-purple-100">
+                            Trust Bar Items (4 Columns)
+                          </h4>
+                          <p className="text-xs text-purple-700 dark:text-purple-300/80">
+                            Configure trust assurances (shipping, returns, security, 24/7 support).
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleAddTrustItem}
+                          className="rounded-lg bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-all"
+                        >
+                          + Add Benefit
+                        </button>
+                      </div>
+
+                      {Array.isArray(editingSection.content?.items) &&
+                        editingSection.content.items.map((item: any, tIdx: number) => (
+                          <div
+                            key={tIdx}
+                            className="space-y-2 rounded-xl border border-purple-200 dark:border-purple-800/80 bg-white dark:bg-purple-950/60 p-3 text-xs"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-purple-900 dark:text-purple-200">
+                                Column #{tIdx + 1}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveTrustItem(tIdx)}
+                                className="text-red-500 hover:text-red-700 font-medium"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                              <div>
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Icon Type</label>
+                                <select
+                                  value={item.icon || "shipping"}
+                                  onChange={(e) => handleUpdateTrustItem(tIdx, "icon", e.target.value)}
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                >
+                                  <option value="shipping">Shipping (Truck)</option>
+                                  <option value="return">Return (30-Day Badge)</option>
+                                  <option value="secure">Security (Shield Lock)</option>
+                                  <option value="support">Support (Headset)</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Title</label>
+                                <input
+                                  type="text"
+                                  value={item.title || ""}
+                                  onChange={(e) => handleUpdateTrustItem(tIdx, "title", e.target.value)}
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                />
+                              </div>
+                              <div>
+                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Description</label>
+                                <input
+                                  type="text"
+                                  value={item.description || ""}
+                                  onChange={(e) => handleUpdateTrustItem(tIdx, "description", e.target.value)}
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+
+                  {/* =========================================================================
+                      NEW ARRIVALS SECTION
+                     ========================================================================= */}
+                  {editingSection.type === "new_arrivals" && (
+                    <div className="space-y-4 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4 sm:p-5">
+                      <h4 className="text-sm font-bold text-purple-950 dark:text-purple-100">
+                        New Arrivals Showcase Settings
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block font-medium text-zinc-700 dark:text-purple-200">Badge Text</label>
+                          <input
+                            type="text"
+                            value={editingSection.content?.badge || ""}
+                            onChange={(e) =>
+                              setEditingSection({
+                                ...editingSection,
+                                content: { ...editingSection.content, badge: e.target.value },
+                              })
+                            }
+                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-2.5 py-1.5 text-xs"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-medium text-zinc-700 dark:text-purple-200">Discount Pill</label>
+                          <input
+                            type="text"
+                            value={editingSection.content?.discountText || ""}
+                            onChange={(e) =>
+                              setEditingSection({
+                                ...editingSection,
+                                content: { ...editingSection.content, discountText: e.target.value },
+                              })
+                            }
+                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-2.5 py-1.5 text-xs"
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block font-medium text-zinc-700 dark:text-purple-200">Heading</label>
+                          <input
+                            type="text"
+                            value={editingSection.content?.heading || ""}
+                            onChange={(e) =>
+                              setEditingSection({
+                                ...editingSection,
+                                content: { ...editingSection.content, heading: e.target.value },
+                              })
+                            }
+                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-2.5 py-1.5 text-xs"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-medium text-zinc-700 dark:text-purple-200">Button Text</label>
                           <input
                             type="text"
                             value={editingSection.content?.buttonText || ""}
@@ -933,73 +1171,264 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, buttonText: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Placeholder Text</label>
-                          <input
-                            type="text"
-                            value={editingSection.content?.placeholderText || ""}
-                            onChange={(e) =>
-                              setEditingSection({
-                                ...editingSection,
-                                content: { ...editingSection.content, placeholderText: e.target.value },
-                              })
-                            }
-                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">Disclaimer</label>
-                          <input
-                            type="text"
-                            value={editingSection.content?.disclaimer || ""}
-                            onChange={(e) =>
-                              setEditingSection({
-                                ...editingSection,
-                                content: { ...editingSection.content, disclaimer: e.target.value },
-                              })
-                            }
-                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/30 px-3 py-2 text-xs text-zinc-900 dark:text-white"
+                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-2.5 py-1.5 text-xs"
                           />
                         </div>
                       </div>
-                    )}
+                    </div>
+                  )}
 
-                    {/* Custom HTML Specific Fields */}
-                    {editingSection.type === "custom_html" && (
-                      <div className="space-y-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-4">
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-white/70">HTML Content</label>
+                  {/* =========================================================================
+                      BRAND LOGOS ROW
+                     ========================================================================= */}
+                  {editingSection.type === "brand_logos" && (
+                    <div className="space-y-4 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4 sm:p-5">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-sm font-bold text-purple-950 dark:text-purple-100">
+                            Partner / Brand Logos
+                          </h4>
+                          <p className="text-xs text-purple-700 dark:text-purple-300/80">
+                            Displays marquee row of partner brands in grayscale.
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleAddLogo}
+                          className="rounded-lg bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-all"
+                        >
+                          + Add Brand
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {Array.isArray(editingSection.content?.logos) &&
+                          editingSection.content.logos.map((logo: any, lIdx: number) => (
+                            <div
+                              key={lIdx}
+                              className="flex items-center gap-2 rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950 p-2.5 text-xs"
+                            >
+                              <input
+                                type="text"
+                                value={logo.logoText || ""}
+                                placeholder="Logo Monogram / Name"
+                                onChange={(e) => handleUpdateLogo(lIdx, "logoText", e.target.value)}
+                                className="flex-1 rounded-lg border border-zinc-300 dark:border-purple-850 bg-zinc-50 dark:bg-purple-950 px-2 py-1 text-xs"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveLogo(lIdx)}
+                                className="text-red-500 hover:text-red-700 font-bold px-1"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* =========================================================================
+                      GENERIC / SHARED IMAGE & R2 UPLOAD (for sections with main image)
+                     ========================================================================= */}
+                  {editingSection.type !== "hero" && editingSection.type !== "hero_carousel" && (
+                    <div className="rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/20 p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-semibold text-zinc-800 dark:text-purple-200">
+                          Section Image (Cloudflare R2)
+                        </label>
+                        <label className="cursor-pointer rounded-lg bg-purple-100 dark:bg-purple-900 px-2.5 py-1 text-[11px] font-semibold text-purple-700 dark:text-purple-200 hover:bg-purple-200 transition-colors">
+                          {uploadingImage ? "Uploading to R2..." : "Upload Image to R2"}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            disabled={uploadingImage}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="https://... or upload image directly"
+                        value={editingSection.imageUrl || ""}
+                        onChange={(e) => setEditingSection({ ...editingSection, imageUrl: e.target.value })}
+                        className="w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-1.5 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                      />
+                      {editingSection.imageUrl && (
+                        <div className="mt-2 flex items-center gap-3">
+                          <img
+                            src={editingSection.imageUrl}
+                            alt="Preview"
+                            className="h-14 w-24 rounded-lg object-cover border border-purple-200 dark:border-purple-800"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setEditingSection({ ...editingSection, imageUrl: null })}
+                            className="text-xs text-red-500 hover:underline"
+                          >
+                            Remove image
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* =========================================================================
+                      GENERAL COPY FIELDS (Heading, Subheading, Badge)
+                     ========================================================================= */}
+                  {editingSection.type !== "hero" && editingSection.type !== "hero_carousel" && (
+                    <div className="space-y-4 pt-2">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-purple-800 dark:text-purple-300">
+                        Content & Text Fields
+                      </h4>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                            Main Heading
+                          </label>
+                          <input
+                            type="text"
+                            value={editingSection.content?.heading || ""}
+                            onChange={(e) =>
+                              setEditingSection({
+                                ...editingSection,
+                                content: { ...editingSection.content, heading: e.target.value },
+                              })
+                            }
+                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                            Badge Text (Pill)
+                          </label>
+                          <input
+                            type="text"
+                            value={editingSection.content?.badgeText || ""}
+                            onChange={(e) =>
+                              setEditingSection({
+                                ...editingSection,
+                                content: { ...editingSection.content, badgeText: e.target.value },
+                              })
+                            }
+                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                          Subheading / Description
+                        </label>
                         <textarea
-                          rows={5}
-                          value={editingSection.content?.html || ""}
+                          rows={2}
+                          value={editingSection.content?.subheading || ""}
                           onChange={(e) =>
                             setEditingSection({
                               ...editingSection,
-                              content: { ...editingSection.content, html: e.target.value },
+                              content: { ...editingSection.content, subheading: e.target.value },
                             })
                           }
-                          className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-black/40 p-3 font-mono text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
                         />
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+
+                  {/* =========================================================================
+                      NEWSLETTER SPECIFIC FIELDS
+                     ========================================================================= */}
+                  {editingSection.type === "newsletter" && (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4">
+                      <div>
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                          Button Text
+                        </label>
+                        <input
+                          type="text"
+                          value={editingSection.content?.buttonText || ""}
+                          onChange={(e) =>
+                            setEditingSection({
+                              ...editingSection,
+                              content: { ...editingSection.content, buttonText: e.target.value },
+                            })
+                          }
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-3 py-2 text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                          Placeholder Text
+                        </label>
+                        <input
+                          type="text"
+                          value={editingSection.content?.placeholderText || ""}
+                          onChange={(e) =>
+                            setEditingSection({
+                              ...editingSection,
+                              content: { ...editingSection.content, placeholderText: e.target.value },
+                            })
+                          }
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-3 py-2 text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                          Privacy Disclaimer
+                        </label>
+                        <input
+                          type="text"
+                          value={editingSection.content?.disclaimer || ""}
+                          onChange={(e) =>
+                            setEditingSection({
+                              ...editingSection,
+                              content: { ...editingSection.content, disclaimer: e.target.value },
+                            })
+                          }
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-3 py-2 text-xs"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* =========================================================================
+                      CUSTOM HTML SPECIFIC FIELDS
+                     ========================================================================= */}
+                  {editingSection.type === "custom_html" && (
+                    <div className="space-y-3 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                        HTML Content
+                      </label>
+                      <textarea
+                        rows={5}
+                        value={editingSection.content?.html || ""}
+                        onChange={(e) =>
+                          setEditingSection({
+                            ...editingSection,
+                            content: { ...editingSection.content, html: e.target.value },
+                          })
+                        }
+                        className="w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 p-3 font-mono text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                      />
+                    </div>
+                  )}
                 </form>
               )}
             </div>
 
-            {/* Modal Buttons */}
-            <div className="mt-4 flex justify-between items-center border-t border-zinc-200 dark:border-white/10 pt-4">
-              <div className="text-xs text-zinc-500 dark:text-white/50">
-                {editingSection.isActive ? "🟢 Visible on storefront" : "⚪ Hidden from storefront"}
+            {/* Modal Footer Buttons */}
+            <div className="mt-4 flex justify-between items-center border-t border-purple-100 dark:border-purple-900 pt-4">
+              <div className="text-xs text-purple-700 dark:text-purple-300">
+                {editingSection.isActive ? "🟣 Visible on storefront" : "⚪ Hidden from storefront"}
               </div>
 
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => setEditingSection(null)}
-                  className="rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-4 py-2 text-xs font-medium text-zinc-700 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
+                  className="rounded-xl border border-zinc-300 dark:border-purple-800 bg-zinc-100 dark:bg-purple-950/60 px-4 py-2 text-xs font-medium text-zinc-700 dark:text-purple-200 hover:bg-zinc-200 transition-colors"
                 >
                   Cancel
                 </button>
@@ -1007,7 +1436,7 @@ export default function HomepageManager(): React.JSX.Element {
                   type="button"
                   onClick={handleSaveSection}
                   disabled={saving}
-                  className="rounded-xl bg-gradient-to-r from-[#18C729] to-[#12a822] px-5 py-2 text-xs font-semibold text-black shadow-lg shadow-[#18C729]/20 hover:brightness-110 active:scale-95 disabled:opacity-50"
+                  className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 text-xs font-semibold shadow-lg shadow-purple-500/25 active:scale-95 disabled:opacity-50 transition-all"
                 >
                   {saving ? "Saving to D1..." : "Save Section"}
                 </button>

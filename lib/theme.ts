@@ -43,13 +43,13 @@ export interface ThemeSettings {
 
 export const DEFAULT_THEME_SETTINGS: ThemeSettings = {
   colors: {
-    primary: "#18C729",
-    secondary: "#12a822",
-    accent: "#FEF500",
-    background: "#080e0a",
-    text: "#f4f7f5",
-    mutedText: "#9ca3af",
-    border: "rgba(255, 255, 255, 0.15)",
+    primary: "#960DF2",
+    secondary: "#AB3DF5",
+    accent: "#C06EF7",
+    background: "#FFFFFF",
+    text: "#3C0561",
+    mutedText: "#780AC2",
+    border: "#D59EFA",
     success: "#10b981",
     error: "#ef4444",
   },
@@ -60,16 +60,16 @@ export const DEFAULT_THEME_SETTINGS: ThemeSettings = {
   },
   design: {
     containerWidth: "1280px",
-    borderRadius: "12px",
-    cardRadius: "24px",
-    buttonRadius: "12px",
-    shadows: "medium",
+    borderRadius: "8px",
+    cardRadius: "12px",
+    buttonRadius: "8px",
+    shadows: "soft",
     spacing: "normal",
   },
   other: {
     storeLogo: "",
     favicon: "",
-    announcementBarText: "🚀 Flash Launch — Free Express Shipping on Orders Over $100",
+    announcementBarText: "Free Shipping on Orders Over $50",
   },
 };
 
@@ -82,9 +82,9 @@ export interface ThemePreset {
 
 export const THEME_PRESETS: ThemePreset[] = [
   {
-    id: "apex-default",
-    name: "Apex Neon (Default)",
-    description: "Signature high-velocity athletic branding with vibrant green and speed yellow accents.",
+    id: "chronicles-purple",
+    name: "Chronicles Purple (Default)",
+    description: "Signature modern luxury purple aesthetic with vibrant violet accents and elegant lavender surfaces.",
     settings: DEFAULT_THEME_SETTINGS,
   },
   {
@@ -335,9 +335,9 @@ export async function updateThemeSettings(
 export function generateThemeCss(theme: ThemeSettings): string {
   const shadowMap = {
     none: "none",
-    soft: "0 4px 20px -2px rgba(0, 0, 0, 0.25)",
-    medium: "0 10px 30px -4px rgba(0, 0, 0, 0.45)",
-    intense: "0 20px 40px -6px rgba(0, 0, 0, 0.65), 0 0 25px 0px rgba(24, 199, 41, 0.15)",
+    soft: "0 10px 25px -5px rgba(150, 13, 242, 0.12), 0 8px 10px -6px rgba(150, 13, 242, 0.08)",
+    medium: "0 15px 30px -5px rgba(150, 13, 242, 0.18), 0 10px 15px -5px rgba(120, 10, 194, 0.12)",
+    intense: "0 20px 40px -6px rgba(150, 13, 242, 0.25), 0 0 25px 0px rgba(150, 13, 242, 0.15)",
   };
 
   return `
@@ -345,9 +345,6 @@ export function generateThemeCss(theme: ThemeSettings): string {
   --color-primary: ${theme.colors.primary};
   --color-secondary: ${theme.colors.secondary};
   --color-accent: ${theme.colors.accent};
-  --color-background: ${theme.colors.background};
-  --color-text: ${theme.colors.text};
-  --color-muted: ${theme.colors.mutedText};
   --color-border: ${theme.colors.border};
   --color-success: ${theme.colors.success};
   --color-error: ${theme.colors.error};
@@ -360,12 +357,10 @@ export function generateThemeCss(theme: ThemeSettings): string {
   --radius-base: ${theme.design.borderRadius};
   --radius-card: ${theme.design.cardRadius};
   --radius-btn: ${theme.design.buttonRadius};
-  --theme-shadow: ${shadowMap[theme.design.shadows] || shadowMap.medium};
+  --theme-shadow: ${shadowMap[theme.design.shadows] || shadowMap.soft};
 }
 
 body {
-  background-color: var(--color-background) !important;
-  color: var(--color-text) !important;
   font-family: var(--font-body);
 }
 
@@ -375,17 +370,6 @@ h1, h2, h3, h4, h5, h6 {
 
 button {
   font-family: var(--font-button);
-}
-
-.bg-brand-gradient {
-  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-accent) 100%) !important;
-}
-
-.bg-brand-ambient {
-  background: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--color-primary) 25%, transparent), transparent),
-    radial-gradient(ellipse 80% 50% at 50% 120%, color-mix(in srgb, var(--color-accent) 20%, transparent), transparent),
-    var(--color-background) !important;
 }
   `.trim();
 }

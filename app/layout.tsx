@@ -74,8 +74,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#18C729" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d1410" },
+    { media: "(prefers-color-scheme: light)", color: "#960DF2" },
+    { media: "(prefers-color-scheme: dark)", color: "#3C0561" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -98,11 +98,11 @@ export default async function RootLayout({
   const themeCss = generateThemeCss(theme);
 
   return (
-    <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("apex_theme");if(t==="light"){document.documentElement.classList.remove("dark");}else if(t==="dark"){document.documentElement.classList.add("dark");}else if(window.matchMedia&&!window.matchMedia("(prefers-color-scheme: dark)").matches){document.documentElement.classList.remove("dark");}else{document.documentElement.classList.add("dark");}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem("apex_theme");if(t==="dark"){document.documentElement.classList.add("dark");}else if(t==="light"){document.documentElement.classList.remove("dark");}else if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})();`,
           }}
         />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
@@ -112,14 +112,11 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: themeCss }}
         />
       </head>
-      <body className={`${inter.className} min-h-screen flex flex-col antialiased selection:bg-[#FEF500] selection:text-black`}>
+      <body className={`${inter.className} min-h-screen flex flex-col antialiased selection:bg-[#960DF2] selection:text-white bg-[var(--bg-primary)] text-[var(--text-body)]`}>
         <CartProvider>
           <WishlistProvider>
-            {/* Main Background Wrapper applying the dynamic Brand Gradient */}
-            <div className="relative flex min-h-screen flex-col bg-brand-gradient">
-              {/* Subtle ambient contrast layer ensuring readability while branding shines through */}
-              <div className="absolute inset-0 bg-white/60 dark:bg-black/45 pointer-events-none backdrop-blur-[1px] transition-colors duration-300" />
-
+            {/* Main Background Wrapper */}
+            <div className="relative flex min-h-screen flex-col bg-[var(--bg-primary)] transition-colors duration-300">
               {/* Foreground content stack */}
               <div className="relative z-10 flex min-h-screen flex-col">
                 <Header settings={mergedSettings} />

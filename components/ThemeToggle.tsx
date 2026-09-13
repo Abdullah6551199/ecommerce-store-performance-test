@@ -87,7 +87,7 @@ export default function ThemeToggle({
         </svg>
       </span>
 
-      <span className="absolute right-1.5 flex h-5 w-5 items-center justify-center text-[#FEF500]">
+      <span className="absolute right-1.5 flex h-5 w-5 items-center justify-center text-[#C06EF7]">
         <svg
           className={`h-3.5 w-3.5 transition-opacity duration-200 ${isDark ? "opacity-100" : "opacity-40"}`}
           fill="none"

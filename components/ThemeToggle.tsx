@@ -63,9 +63,9 @@ export default function ThemeToggle({
       aria-checked={isDark}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
       onClick={toggleTheme}
-      className={`group relative inline-flex h-8 w-16 shrink-0 cursor-pointer items-center rounded-full border transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#18C729] focus:ring-offset-2 focus:ring-offset-black ${
+      className={`group relative inline-flex h-8 w-16 shrink-0 cursor-pointer items-center rounded-full border transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-black ${
         isDark
-          ? "border-white/15 bg-zinc-900 text-[#FEF500]"
+          ? "border-purple-800/40 bg-purple-950/80 text-purple-200"
           : "border-zinc-300 bg-amber-50 text-amber-500"
       } ${className}`}
       title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}

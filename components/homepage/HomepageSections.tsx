@@ -33,11 +33,11 @@ export function HeroSection({ section }: { section: HomepageSectionRecord }): Re
       {/* Ambient ambient glow decorations */}
       <div
         className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full blur-3xl opacity-20"
-        style={{ backgroundColor: "var(--color-primary, #18C729)" }}
+        style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
       />
       <div
         className="pointer-events-none absolute -right-20 -bottom-20 h-72 w-72 rounded-full blur-3xl opacity-15"
-        style={{ backgroundColor: "var(--color-accent, #FEF500)" }}
+        style={{ backgroundColor: "var(--color-accent, #C06EF7)" }}
       />
 
       <div className={`relative grid grid-cols-1 ${imageUrl ? "lg:grid-cols-12 gap-10 items-center" : "max-w-4xl"}`}>
@@ -46,14 +46,14 @@ export function HeroSection({ section }: { section: HomepageSectionRecord }): Re
             <div
               className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-wider"
               style={{
-                borderColor: "color-mix(in srgb, var(--color-primary, #18C729) 30%, transparent)",
-                backgroundColor: "color-mix(in srgb, var(--color-primary, #18C729) 10%, transparent)",
-                color: "var(--color-primary, #18C729)",
+                borderColor: "color-mix(in srgb, var(--color-primary, #960DF2) 30%, transparent)",
+                backgroundColor: "color-mix(in srgb, var(--color-primary, #960DF2) 10%, transparent)",
+                color: "var(--color-primary, #960DF2)",
               }}
             >
               <span
                 className="h-2 w-2 rounded-full animate-pulse"
-                style={{ backgroundColor: "var(--color-primary, #18C729)" }}
+                style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
               />
               <span>{content.badgeText}</span>
             </div>
@@ -71,10 +71,10 @@ export function HeroSection({ section }: { section: HomepageSectionRecord }): Re
             {content?.buttonText && content?.buttonUrl && (
               <a
                 href={content.buttonUrl}
-                className="inline-flex items-center gap-2 px-6 py-3.5 text-xs sm:text-sm font-semibold text-black shadow-lg hover:brightness-110 active:scale-95 transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3.5 text-xs sm:text-sm font-semibold text-white shadow-lg hover:brightness-110 active:scale-95 transition-all"
                 style={{
                   borderRadius: "var(--radius-btn, 0.75rem)",
-                  background: "linear-gradient(135deg, var(--color-primary, #18C729), var(--color-secondary, #12a822))",
+                  background: "linear-gradient(135deg, var(--color-primary, #960DF2), var(--color-secondary, #780AC2))",
                 }}
               >
                 <span>{content.buttonText}</span>
@@ -160,7 +160,7 @@ export function CategoriesSection({
           <Link
             href={content.viewAllUrl}
             className="text-xs font-semibold hover:underline flex items-center gap-1 shrink-0"
-            style={{ color: "var(--color-primary, #18C729)" }}
+            style={{ color: "var(--color-primary, #960DF2)" }}
           >
             <span>View All Categories &rarr;</span>
           </Link>
@@ -173,9 +173,9 @@ export function CategoriesSection({
           <div className="mt-4">
             <Link
               href="/admin/categories"
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-black hover:brightness-110"
+              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white hover:brightness-110"
               style={{
-                backgroundColor: "var(--color-accent, #FEF500)",
+                backgroundColor: "var(--color-accent, #C06EF7)",
                 borderRadius: "var(--radius-btn, 0.75rem)",
               }}
             >
@@ -208,7 +208,7 @@ export function CategoriesSection({
                   <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-zinc-100 dark:from-white/5 to-zinc-50 dark:to-white/[0.02] p-4 text-center">
                     <span
                       className="text-xl font-bold uppercase"
-                      style={{ color: "var(--color-primary, #18C729)" }}
+                      style={{ color: "var(--color-primary, #960DF2)" }}
                     >
                       {category.name.substring(0, 2)}
                     </span>
@@ -224,7 +224,7 @@ export function CategoriesSection({
 
               <div className="mt-4 flex flex-1 flex-col justify-between space-y-2">
                 <div>
-                  <h3 className="text-base font-bold text-zinc-900 dark:text-white group-hover:text-[#18C729] transition-colors">
+                  <h3 className="text-base font-bold text-zinc-900 dark:text-white group-hover:text-[#960DF2] transition-colors">
                     {category.name}
                   </h3>
                   {category.description && (
@@ -236,7 +236,7 @@ export function CategoriesSection({
 
                 <div
                   className="flex items-center justify-between pt-3 border-t border-zinc-200 dark:border-white/10 text-xs font-semibold"
-                  style={{ color: "var(--color-primary, #18C729)" }}
+                  style={{ color: "var(--color-primary, #960DF2)" }}
                 >
                   <span className="group-hover:underline">Explore Collection</span>
                   <svg className="h-4 w-4 transform transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -273,11 +273,11 @@ export function FeaturedProductsSection({
           {content?.badgeText && (
             <div
               className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"
-              style={{ color: "var(--color-primary, #18C729)" }}
+              style={{ color: "var(--color-primary, #960DF2)" }}
             >
               <span
                 className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: "var(--color-primary, #18C729)" }}
+                style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
               />
               <span>{content.badgeText}</span>
             </div>
@@ -294,7 +294,7 @@ export function FeaturedProductsSection({
           <Link
             href={content.viewAllUrl}
             className="text-xs font-semibold hover:underline flex items-center gap-1 shrink-0"
-            style={{ color: "var(--color-primary, #18C729)" }}
+            style={{ color: "var(--color-primary, #960DF2)" }}
           >
             <span>View All Products &rarr;</span>
           </Link>
@@ -307,9 +307,9 @@ export function FeaturedProductsSection({
           <div className="mt-4">
             <Link
               href="/admin/products"
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-black hover:brightness-110"
+              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white hover:brightness-110"
               style={{
-                backgroundColor: "var(--color-primary, #18C729)",
+                backgroundColor: "var(--color-primary, #960DF2)",
                 borderRadius: "var(--radius-btn, 0.75rem)",
               }}
             >
@@ -336,39 +336,31 @@ export function PromoBannerSection({ section }: { section: HomepageSectionRecord
 
   return (
     <section
-      className="relative overflow-hidden border border-white/15 bg-gradient-to-r from-[#0d1611] via-[#09110c] to-[#121c14] p-8 sm:p-12 shadow-2xl"
-      style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
+      className="relative overflow-hidden border border-purple-100 dark:border-purple-700 bg-gradient-to-r from-purple-50 via-purple-50 to-purple-100 dark:from-[#3C0561] dark:via-[#4c077b] dark:to-[#2b0346] p-8 sm:p-12 shadow-2xl rounded-3xl"
     >
       {/* Decorative Glow */}
       <div
-        className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full blur-3xl opacity-15"
-        style={{ backgroundColor: "var(--color-primary, #18C729)" }}
+        className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full blur-3xl opacity-20 bg-purple-300 dark:bg-purple-600"
       />
       <div
-        className="pointer-events-none absolute left-0 bottom-0 h-64 w-64 rounded-full blur-3xl opacity-15"
-        style={{ backgroundColor: "var(--color-accent, #FEF500)" }}
+        className="pointer-events-none absolute left-0 bottom-0 h-64 w-64 rounded-full blur-3xl opacity-20 bg-purple-200 dark:bg-purple-700"
       />
 
       <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className={`${imageUrl ? "lg:col-span-7" : "lg:col-span-12"} space-y-5`}>
           {content?.badgeText && (
             <span
-              className="inline-block rounded-full border px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider"
-              style={{
-                borderColor: "color-mix(in srgb, var(--color-accent, #FEF500) 30%, transparent)",
-                backgroundColor: "color-mix(in srgb, var(--color-accent, #FEF500) 10%, transparent)",
-                color: "var(--color-accent, #FEF500)",
-              }}
+              className="inline-block rounded-full border border-purple-300 dark:border-purple-400/40 bg-purple-200/50 dark:bg-purple-400/20 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-purple-700 dark:text-[#EACFFC]"
             >
               {content.badgeText}
             </span>
           )}
 
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-snug">
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#3C0561] dark:text-[#EACFFC] leading-snug">
             {content?.heading || section.title}
           </h2>
 
-          <p className="text-xs sm:text-sm text-white/70 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#5A0891] dark:text-[#EACFFC]/80 max-w-xl leading-relaxed">
             {content?.subheading}
           </p>
 
@@ -376,11 +368,7 @@ export function PromoBannerSection({ section }: { section: HomepageSectionRecord
             <div className="pt-2">
               <a
                 href={content.buttonUrl}
-                className="inline-flex items-center gap-2 px-6 py-3 text-xs sm:text-sm font-semibold text-black shadow-lg hover:brightness-110 active:scale-95 transition-all"
-                style={{
-                  borderRadius: "var(--radius-btn, 0.75rem)",
-                  background: "linear-gradient(135deg, var(--color-primary, #18C729), var(--color-secondary, #12a822))",
-                }}
+                className="inline-flex items-center gap-2 px-6 py-3 text-xs sm:text-sm font-semibold text-white bg-purple-400 hover:bg-purple-500 shadow-lg active:scale-95 transition-all rounded-xl cursor-pointer"
               >
                 <span>{content.buttonText}</span>
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -393,7 +381,7 @@ export function PromoBannerSection({ section }: { section: HomepageSectionRecord
 
         {imageUrl && (
           <div className="lg:col-span-5 relative">
-            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/40 shadow-xl">
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-purple-200 dark:border-purple-700/60 bg-purple-100/50 dark:bg-black/40 shadow-xl">
               <Image
                 src={normalizeImageUrl(imageUrl, { width: 1200, quality: 75 })}
                 alt={content?.heading || "Promotional Banner"}
@@ -402,7 +390,7 @@ export function PromoBannerSection({ section }: { section: HomepageSectionRecord
                 loading="lazy"
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
             </div>
           </div>
         )}
@@ -429,11 +417,11 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
           {content?.subheading && (
             <div
               className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"
-              style={{ color: "var(--color-primary, #18C729)" }}
+              style={{ color: "var(--color-primary, #960DF2)" }}
             >
               <span
                 className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: "var(--color-primary, #18C729)" }}
+                style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
               />
               <span>{content.subheading}</span>
             </div>
@@ -485,7 +473,7 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
             <div key={`${stat.label}-${idx}`} className="rounded-2xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-white/5 p-4 text-center">
               <span
                 className="text-2xl sm:text-3xl font-extrabold"
-                style={{ color: "var(--color-primary, #18C729)" }}
+                style={{ color: "var(--color-primary, #960DF2)" }}
               >
                 {stat.value}
               </span>
@@ -516,11 +504,11 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
         {content?.badgeText && (
           <div
             className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"
-            style={{ color: "var(--color-accent, #FEF500)" }}
+            style={{ color: "var(--color-accent, #C06EF7)" }}
           >
             <span
               className="h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: "var(--color-accent, #FEF500)" }}
+              style={{ backgroundColor: "var(--color-accent, #C06EF7)" }}
             />
             <span>{content.badgeText}</span>
           </div>
@@ -542,7 +530,7 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
           >
             <div className="space-y-3">
               {/* Star Rating */}
-              <div className="flex items-center gap-1 text-[#FEF500]">
+              <div className="flex items-center gap-1 text-amber-400">
                 {Array.from({ length: t.rating || 5 }).map((_, i) => (
                   <svg key={i} className="h-4 w-4 fill-current" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -566,8 +554,8 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
                 />
               ) : (
                 <div
-                  className="flex h-10 w-10 items-center justify-center rounded-full font-bold text-black text-xs"
-                  style={{ backgroundColor: "var(--color-primary, #18C729)" }}
+                  className="flex h-10 w-10 items-center justify-center rounded-full font-bold text-white text-xs"
+                  style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
                 >
                   {t.author?.substring(0, 2) || "AP"}
                 </div>

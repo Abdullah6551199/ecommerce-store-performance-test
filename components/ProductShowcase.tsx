@@ -1,86 +1,80 @@
-import React from "react";
-import Link from "next/link";
+"use client";
+
+import React, { useState } from "react";
+import ProductGallery from "@/components/product/ProductGallery";
+import ProductInfoPanel from "@/components/product/ProductInfoPanel";
 import type { ProductWithImagesAndCategory } from "@/lib/products";
-import ProductGallery from "@/components/ProductGallery";
-import ProductPurchaseSection from "@/components/ProductPurchaseSection";
 
 interface ProductShowcaseProps {
   product: ProductWithImagesAndCategory;
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 /**
- * Server Component for Product Showcase / Detail Page.
- * Title, brand, short description, catalog tags, and surrounding layout are rendered at the server/edge.
- * Interactive gallery and variant/purchase options are client islands.
+ * Big White Card Product Showcase component (Stage 18.3 Redesign).
+ * Encapsulates:
+ * - 3-column desktop layout (thumbnails | main image with Walmart zoom | sticky info panel)
+ * - State synchronization between variant selections and gallery photos
+ * - Smooth scroll coordination to product tabs
  */
-export default function ProductShowcase({ product }: ProductShowcaseProps): React.JSX.Element {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-      {/* Gallery Column (7 cols on lg) - Client Island */}
-      <div className="lg:col-span-7">
-        <ProductGallery
-          mainImage={product.mainImage}
-          images={product.images}
-          variants={product.variants}
-          productName={product.name}
-        />
-      </div>
+export default function ProductShowcase({
+  product,
+  averageRating = 4.8,
+  reviewCount = 24,
+}: ProductShowcaseProps): React.JSX.Element {
+  const [activeVariantImage, setActiveVariantImage] = useState<string | null>(null);
 
-      {/* Product Details & Purchase Column (5 cols on lg) */}
-      <div className="lg:col-span-5 space-y-6">
-        <div className="space-y-2">
-          {product.brand && (
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-[#FEF500]">
-              {product.brand}
-            </span>
-          )}
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-            {product.name}
-          </h1>
+  const hasSale = Boolean(product.salePrice && product.salePrice < product.price);
+  const discountPercent = hasSale
+    ? Math.round(((product.price - Number(product.salePrice)) / product.price) * 100)
+    : 0;
+
+  const handleReviewsClick = () => {
+    const el = document.getElementById("product-tabs");
+    el?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <div
+      className="rounded-3xl bg-white dark:bg-[#3C0561] shadow-lg shadow-purple-100/50 dark:shadow-purple-900/30 p-6 md:p-8 border border-purple-100 dark:border-purple-700"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        {/* Left Column (7 cols on lg): Thumbnails & Main Image with Walmart Hover Zoom */}
+        <div className="lg:col-span-7">
+          <ProductGallery
+            mainImage={product.mainImage}
+            images={product.images}
+            variants={product.variants}
+            productName={product.name}
+            discountPercent={discountPercent}
+            activeVariantImage={activeVariantImage}
+          />
         </div>
 
-        {/* Short Description (Server-rendered) */}
-        {product.shortDescription && (
-          <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
-            {product.shortDescription}
-          </p>
-        )}
-
-        {/* Interactive Variant Selection & Add to Cart (Client Island) */}
-        <ProductPurchaseSection
-          productId={product.id}
-          productName={product.name}
-          basePrice={product.price}
-          baseSalePrice={product.salePrice}
-          compareAtPrice={product.compareAtPrice}
-          stockStatus={product.stockStatus}
-          stockQuantity={product.stockQuantity}
-          trackInventory={product.trackInventory}
-          allowBackorders={product.allowBackorders}
-          lowStockThreshold={product.lowStockThreshold}
-          baseSku={product.sku}
-          variants={product.variants}
-        />
-
-        {/* Catalog Tags (Server-rendered) */}
-        {product.tags && product.tags.length > 0 && (
-          <div className="pt-2">
-            <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider block mb-2">
-              Catalog Tags
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {product.tags.map((tag, idx) => (
-                <Link
-                  key={idx}
-                  href={`/search?q=${encodeURIComponent(tag)}`}
-                  className="rounded-lg border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-2.5 py-1 text-xs text-zinc-700 dark:text-zinc-300 hover:border-[#18C729]/50 hover:text-zinc-900 dark:hover:text-white transition-colors"
-                >
-                  #{tag}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Right Column (5 cols on lg): Sticky Product Info Panel */}
+        <div className="lg:col-span-5">
+          <ProductInfoPanel
+            productId={product.id}
+            productName={product.name}
+            brand={product.brand}
+            basePrice={product.price}
+            baseSalePrice={product.salePrice}
+            compareAtPrice={product.compareAtPrice}
+            stockStatus={product.stockStatus}
+            stockQuantity={product.stockQuantity}
+            trackInventory={product.trackInventory}
+            allowBackorders={product.allowBackorders}
+            lowStockThreshold={product.lowStockThreshold}
+            baseSku={product.sku}
+            shortDescription={product.shortDescription}
+            averageRating={averageRating}
+            reviewCount={reviewCount}
+            variants={product.variants}
+            onSelectVariantImage={setActiveVariantImage}
+            onReviewsClick={handleReviewsClick}
+          />
+        </div>
       </div>
     </div>
   );

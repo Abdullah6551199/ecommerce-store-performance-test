@@ -1353,3 +1353,92 @@ export async function getRelatedProducts(
   const all = await getFeaturedProducts(limit + 1);
   return all.filter((p) => p.id !== productId).slice(0, limit);
 }
+
+/**
+ * Retrieve multiple products by an array of IDs.
+ * Used for recently viewed products, batch catalog retrieval, etc.
+ */
+export async function getProductsByIds(
+  ids: string[]
+): Promise<ProductWithImagesAndCategory[]> {
+  if (!ids || ids.length === 0) return [];
+  const db = getDb();
+  if (db) {
+    try {
+      const rows = await db
+        .select({
+          id: products.id,
+          name: products.name,
+          slug: products.slug,
+          price: products.price,
+          salePrice: products.salePrice,
+          brand: products.brand,
+          stockStatus: products.stockStatus,
+          stockQuantity: products.stockQuantity,
+          trackInventory: products.trackInventory,
+          allowBackorders: products.allowBackorders,
+          lowStockThreshold: products.lowStockThreshold,
+          shortDescription: products.shortDescription,
+          categoryId: products.categoryId,
+          categoryName: categories.name,
+          categorySlug: categories.slug,
+        })
+        .from(products)
+        .leftJoin(categories, eq(products.categoryId, categories.id))
+        .where(and(eq(products.status, "published"), inArray(products.id, ids)))
+        .limit(ids.length);
+
+      if (rows.length === 0) return [];
+
+      const productIds = rows.map((r) => r.id);
+      const mainImages = await db
+        .select({
+          productId: productImages.productId,
+          imageUrl: productImages.imageUrl,
+          isMain: productImages.isMain,
+        })
+        .from(productImages)
+        .where(inArray(productImages.productId, productIds))
+        .orderBy(asc(productImages.sortOrder));
+
+      const mainImageMap = new Map<string, string>();
+      for (const img of mainImages) {
+        if (!mainImageMap.has(img.productId) || img.isMain) {
+          mainImageMap.set(img.productId, img.imageUrl);
+        }
+      }
+
+      const mapped = rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        slug: r.slug,
+        price: Number(r.price),
+        salePrice: r.salePrice !== null && r.salePrice !== undefined ? Number(r.salePrice) : null,
+        brand: r.brand || null,
+        stockStatus: r.stockStatus,
+        stockQuantity: Number(r.stockQuantity) || 0,
+        trackInventory: Boolean(r.trackInventory),
+        allowBackorders: Boolean(r.allowBackorders),
+        lowStockThreshold: Number(r.lowStockThreshold) || 5,
+        mainImage: mainImageMap.get(r.id) || null,
+        categoryName: r.categoryName || null,
+        categorySlug: r.categorySlug || null,
+        shortDescription: r.shortDescription || null,
+        images: mainImageMap.has(r.id)
+          ? [{ id: `img-${r.id}`, productId: r.id, imageUrl: mainImageMap.get(r.id)!, altText: r.name, sortOrder: 0, isMain: true }]
+          : [],
+        variants: [],
+      })) as unknown as ProductWithImagesAndCategory[];
+
+      return mapped.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+    } catch (err) {
+      console.warn("[Products] D1 getProductsByIds failed, falling back:", err);
+    }
+  }
+
+  const matches = memoryProducts.filter((p) => ids.includes(p.id) && p.status === "published");
+  return matches.map((p) => {
+    const img = memoryProductImages.find((i) => i.productId === p.id);
+    return formatProduct(p, img ? [img] : [], null, []);
+  });
+}

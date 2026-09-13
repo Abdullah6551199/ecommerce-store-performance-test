@@ -4,10 +4,11 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProductBySlug, getRelatedProducts, listCatalogProducts } from "@/lib/products";
 import ProductShowcase from "@/components/ProductShowcase";
-import ProductCard from "@/components/ProductCard";
-import ProductReviewsSection from "@/components/reviews/ProductReviewsSection";
+import ProductTabs from "@/components/product/ProductTabs";
+import RelatedProductsCarousel from "@/components/product/RelatedProductsCarousel";
+import RecentlyViewedCarousel from "@/components/product/RecentlyViewedCarousel";
+import MobileStickyCartBar from "@/components/product/MobileStickyCartBar";
 import { getProductRatingSummary, getProductReviews } from "@/lib/reviews";
-
 import { getAbsoluteUrl, generateProductJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 import { normalizeImageUrl } from "@/lib/utils";
 
@@ -32,16 +33,20 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   if (!product || product.status !== "published") {
     return {
-      title: "Product Not Found",
+      title: "Product Not Found | Apex Store",
     };
   }
 
-  const title = product.seoTitle || `${product.name} | Apex Store`;
+  const effectivePrice = product.salePrice && product.salePrice < product.price
+    ? Number(product.salePrice).toFixed(2)
+    : Number(product.price).toFixed(2);
+
+  const title = `${product.name} - $${effectivePrice} | Apex Store`;
   const description =
     product.seoDescription ||
     product.shortDescription ||
     product.description ||
-    `Buy ${product.name} at the best price with instant shipping.`;
+    `Buy ${product.name} for $${effectivePrice} at Apex Store with fast shipping, 30-day returns, and full warranty.`;
   const canonicalUrl = getAbsoluteUrl(`/product/${product.slug}`);
   const mainImage = product.mainImage?.startsWith("http")
     ? product.mainImage
@@ -100,12 +105,12 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
     { name: "Home", url: "/" },
     ...(product.categorySlug && product.categoryName
       ? [{ name: product.categoryName, url: `/category/${product.categorySlug}` }]
-      : [{ name: "Catalog", url: "/search" }]),
+      : [{ name: "Catalog", url: "/shop" }]),
     { name: product.name, url: `/product/${product.slug}` },
   ];
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
   const productMainImageUrl = product.mainImage
-    ? normalizeImageUrl(product.mainImage, { width: 700, quality: 75 })
+    ? normalizeImageUrl(product.mainImage, { width: 900, quality: 80 })
     : null;
 
   return (
@@ -118,7 +123,7 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
           fetchPriority="high"
         />
       )}
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-16">
+
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
@@ -129,76 +134,69 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs text-zinc-500 dark:text-white/50">
-        <Link href="/" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
-          Home
-        </Link>
-        <span>/</span>
-        {product.categorySlug && product.categoryName ? (
-          <>
-            <Link href={`/category/${product.categorySlug}`} className="hover:text-zinc-900 dark:hover:text-white transition-colors">
-              {product.categoryName}
-            </Link>
-            <span>/</span>
-          </>
-        ) : (
-          <>
-            <Link href="/search" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
-              Products
-            </Link>
-            <span>/</span>
-          </>
-        )}
-        <span className="text-[#18C729] font-medium truncate max-w-xs">{product.name}</span>
-      </nav>
-
-      {/* Main Interactive Product Showcase Grid */}
-      <ProductShowcase product={product} />
-
-      {/* Full Description / Details Accordion */}
-      {product.description && (
-        <section className="rounded-3xl border border-zinc-200 dark:border-white/10 bg-white/90 dark:bg-[#0c140f]/60 p-6 sm:p-8 backdrop-blur-md shadow-xl dark:shadow-none space-y-4">
-          <h2 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-            <svg className="h-5 w-5 text-[#18C729]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Product Description & Specifications
-          </h2>
-          <div className="prose dark:prose-invert max-w-none text-sm text-zinc-700 dark:text-white/70 whitespace-pre-line leading-relaxed">
-            {product.description}
-          </div>
-        </section>
-      )}
-
-      {/* Customer Reviews & Ratings Section */}
-      <ProductReviewsSection productId={product.id} productName={product.name} />
-
-      {/* Related Products Section */}
-      {relatedProducts.length > 0 && (
-        <section className="space-y-6 pt-6 border-t border-zinc-200 dark:border-white/10">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Related Products</h2>
-              <p className="text-xs text-zinc-500 dark:text-white/50">Other popular items from this category.</p>
-            </div>
-            {product.categorySlug && (
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
+        {/* B7: Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs text-purple-700/80 dark:text-purple-300">
+          <Link href="/" className="hover:text-purple-900 dark:hover:text-white transition-colors">
+            Home
+          </Link>
+          <span className="text-purple-300 dark:text-purple-600">/</span>
+          {product.categorySlug && product.categoryName ? (
+            <>
               <Link
                 href={`/category/${product.categorySlug}`}
-                className="text-xs font-semibold text-emerald-600 dark:text-[#18C729] hover:underline"
+                className="hover:text-purple-900 dark:hover:text-white transition-colors"
               >
-                View Category &rarr;
+                {product.categoryName}
               </Link>
-            )}
-          </div>
+              <span className="text-purple-300 dark:text-purple-600">/</span>
+            </>
+          ) : (
+            <>
+              <Link href="/shop" className="hover:text-purple-900 dark:hover:text-white transition-colors">
+                Shop
+              </Link>
+              <span className="text-purple-300 dark:text-purple-600">/</span>
+            </>
+          )}
+          <span className="text-purple-500 dark:text-purple-200 font-semibold truncate max-w-xs sm:max-w-md">
+            {product.name}
+          </span>
+        </nav>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {relatedProducts.map((rel) => (
-              <ProductCard key={rel.id} product={rel} />
-            ))}
-          </div>
-        </section>
-      )}
+        {/* B1-B3: Main Product Showcase (Big White Card with 3-Column Layout & Walmart Hover Zoom) */}
+        <ProductShowcase
+          product={product}
+          averageRating={ratingSummary.averageRating || 4.8}
+          reviewCount={ratingSummary.totalReviews || approvedReviews.length || 24}
+        />
+
+        {/* B4: Product Tabs Section (Description, Specifications, Reviews, Shipping & Returns) */}
+        <ProductTabs
+          product={product}
+          reviewCount={ratingSummary.totalReviews || approvedReviews.length || 0}
+        />
+
+        {/* B5: Related Products Carousel ("You May Also Like") */}
+        {relatedProducts.length > 0 && (
+          <RelatedProductsCarousel
+            products={relatedProducts}
+            categorySlug={product.categorySlug}
+          />
+        )}
+
+        {/* B6: Recently Viewed Carousel ("Recently Viewed") */}
+        <RecentlyViewedCarousel currentProductId={product.id} />
+
+        {/* B9: Mobile Sticky Add-to-Cart Bar */}
+        <MobileStickyCartBar
+          productId={product.id}
+          productName={product.name}
+          price={product.price}
+          salePrice={product.salePrice}
+          mainImage={product.mainImage}
+          stockStatus={product.stockStatus}
+        />
       </div>
     </>
   );

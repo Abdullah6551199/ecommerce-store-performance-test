@@ -161,7 +161,7 @@ export default function BroadcastPopup(): React.JSX.Element | null {
     >
       <div className="relative w-full max-w-md rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-purple-500/30 shadow-2xl shadow-purple-500/15 transform transition-all animate-in zoom-in-95 duration-200">
         {/* Purple gradient top highlight */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-[#18C729]" />
+        <div className="h-1.5 w-full bg-gradient-to-r from-purple-600 via-purple-400 to-purple-200" />
 
         {/* Close "X" Button */}
         <button

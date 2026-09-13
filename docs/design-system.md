@@ -216,3 +216,40 @@ The homepage is organized into a sequence of responsive sections:
 - **Subcategory Cards**: Clean cards with hover scale and purple border transitions.
 - **Category SEO Card**: Structured footer card highlighting category background copy and search metadata.
 
+---
+
+## 8. Product Detail Page Patterns (Stage 18.3)
+
+### 8.1 Big White Card Architecture
+- **Card Container**: `rounded-3xl`, `bg-white dark:bg-[#3C0561]`, `border border-purple-100 dark:border-purple-700`, `shadow-lg shadow-purple-100/50 dark:shadow-purple-900/30`, `p-6 md:p-8`.
+- **3-Column Desktop Grid**:
+  - Column 1: Thumbnails strip (`w-20` on desktop, horizontal on mobile).
+  - Column 2: 1:1 Aspect ratio square Main Image with Walmart-style hover zoom.
+  - Column 3: Sticky Product Info Panel (`sticky top-28`).
+
+### 8.2 Walmart-Style Hover Zoom & Lightbox
+- **Dynamic Cursor Zoom**: On desktop hover, `transformOrigin: '${x}% ${y}%'` and `transform: 'scale(2.5)'` track cursor movement with zero layout shift inside an `overflow-hidden` container.
+- **Fullscreen Lightbox Modal**: Tap or click image to open modal with dark backdrop blur overlay, zoom +/- stepper, drag pan, previous/next image navigation, and keyboard listeners (`ESC` to exit, Left/Right arrow keys).
+
+### 8.3 Product Info Panel & Purchase Controls
+- **Rating Summary**: 5-star display with numeric rating and clickable review count scrolling to the reviews tab.
+- **Price Block**: Current price in `text-purple-600 dark:text-purple-300`, strikethrough original/MSRP price, and discount badge "Save $X.XX".
+- **Trust Badges Row**: 🚚 Free Shipping, ↩️ 30-Day Returns, and 🛡️ 1-Year Warranty in purple container.
+- **Variant Selectors**: Circular color swatches with active `ring-2 ring-purple-400 ring-offset-2` and size button pills with purple active state.
+- **Add to Cart**: Full-width purple CTA (`bg-purple-400 hover:bg-purple-500 text-white py-4 rounded-xl font-bold`) with optimistic state and drawer opening.
+- **Buy Now**: Full-width dark purple CTA (`bg-[#3C0561] hover:bg-[#5A0891] text-white py-4 rounded-xl font-bold mt-3`) redirecting directly to checkout.
+- **Social Proof**: Simulated real-time viewer count and low-stock urgency alerts.
+
+### 8.4 Tabbed Content
+- **Horizontal Tab Header**: Purple underline indicator (`border-b-2 border-purple-400 text-purple-600 dark:text-[#EACFFC] font-bold`).
+- **Description Tab**: Full rich-text copy and feature highlight cards.
+- **Specifications Tab**: Two-column key-value table with alternating purple rows (`even:bg-purple-50/50 dark:even:bg-purple-900/20`).
+- **Reviews Tab**: Customer review engine with star distribution bars, verified purchase badges, review submission modal, and purple accents.
+- **Shipping & Returns Tab**: Dynamic delivery estimation ("Get it by [Date + 5 Days]") and return policies.
+
+### 8.5 Carousels & Mobile Sticky Bar
+- **"You May Also Like" Carousel**: 4 category-matched companion products with carousel controls.
+- **"Recently Viewed" Carousel**: User history tracked in `localStorage` (`recently_viewed_v1`) and fetched via batch API.
+- **Mobile Sticky Bar**: Floating bottom bar on mobile (< 640px) when scrolled past main image card.
+
+

@@ -43,7 +43,7 @@ export default async function Footer({
   const social = settings.socialLinks || DEFAULT_STORE_SETTINGS.socialLinks;
 
   return (
-    <footer className="w-full border-t border-purple-200/60 dark:border-purple-900/40 bg-purple-50/40 dark:bg-[#25033d] text-zinc-700 dark:text-purple-200/80 transition-colors duration-300">
+    <footer className="w-full border-t border-purple-200/70 dark:border-purple-900/40 bg-purple-50 dark:bg-[#3C0561] text-[#3C0561] dark:text-[#EACFFC] transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 space-y-12">
         {/* 5-Column Navigation Grid */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
@@ -71,7 +71,7 @@ export default async function Footer({
               </span>
             </Link>
 
-            <p className="text-xs text-zinc-600 dark:text-purple-200/70 leading-relaxed max-w-xs">
+            <p className="text-xs text-[#5A0891]/80 dark:text-[#EACFFC]/80 leading-relaxed max-w-xs">
               {settings.description || "Discover premium apparel and high-performance collections engineered for everyday elegance and dynamic lifestyle."}
             </p>
 
@@ -263,26 +263,26 @@ export default async function Footer({
         </div>
 
         {/* Bottom Bar: Copyright & Payment Icons */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-purple-200/60 dark:border-purple-900/50 pt-8 text-xs text-zinc-600 dark:text-purple-200/60">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-purple-200/60 dark:border-purple-900/50 pt-8 text-xs text-[#3C0561]/80 dark:text-[#EACFFC]/70">
           <div className="flex items-center gap-2">
             <span>&copy; {currentYear} {settings.storeName || "ApexStore"}. All rights reserved.</span>
           </div>
 
           {/* Payment Method Badges */}
           <div className="flex items-center gap-2 text-[10px] font-bold">
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
               VISA
             </span>
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
               MC
             </span>
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
               AMEX
             </span>
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
               PayPal
             </span>
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-purple-900 dark:text-purple-200">
+            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
               Apple Pay
             </span>
           </div>

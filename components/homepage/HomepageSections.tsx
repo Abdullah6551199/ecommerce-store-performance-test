@@ -139,11 +139,11 @@ export function CategoriesSection({
           {content?.badgeText && (
             <div
               className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"
-              style={{ color: "var(--color-accent, #FEF500)" }}
+              style={{ color: "var(--color-accent, #C06EF7)" }}
             >
               <span
                 className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: "var(--color-accent, #FEF500)" }}
+                style={{ backgroundColor: "var(--color-accent, #C06EF7)" }}
               />
               <span>{content.badgeText}</span>
             </div>
@@ -368,7 +368,7 @@ export function PromoBannerSection({ section }: { section: HomepageSectionRecord
             <div className="pt-2">
               <a
                 href={content.buttonUrl}
-                className="inline-flex items-center gap-2 px-6 py-3 text-xs sm:text-sm font-semibold text-white bg-purple-400 hover:bg-purple-500 shadow-lg active:scale-95 transition-all rounded-xl cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 text-xs sm:text-sm font-bold text-white bg-[#960DF2] hover:bg-[#780AC2] shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 active:scale-95 transition-all rounded-xl cursor-pointer"
               >
                 <span>{content.buttonText}</span>
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -409,29 +409,27 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
   return (
     <section
       id="brand-story"
-      className="relative space-y-10 border border-zinc-200 dark:border-white/10 bg-white/95 dark:bg-[#090e0b]/90 p-8 sm:p-14 backdrop-blur-lg shadow-xl dark:shadow-none"
+      className="relative space-y-10 border border-purple-100 dark:border-purple-800/60 bg-purple-50 dark:bg-[#4c077b] p-8 sm:p-14 backdrop-blur-lg shadow-xl dark:shadow-none transition-colors"
       style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         <div className={`${imageUrl ? "lg:col-span-7" : "lg:col-span-12"} space-y-6`}>
           {content?.subheading && (
             <div
-              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"
-              style={{ color: "var(--color-primary, #960DF2)" }}
+              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-purple-600 dark:text-purple-200"
             >
               <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
+                className="h-1.5 w-1.5 rounded-full bg-purple-500 dark:bg-purple-200"
               />
               <span>{content.subheading}</span>
             </div>
           )}
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#3C0561] dark:text-white leading-tight">
             {content?.heading || section.title}
           </h2>
 
-          <p className="text-xs sm:text-sm text-zinc-700 dark:text-white/70 leading-relaxed max-w-2xl whitespace-pre-line">
+          <p className="text-xs sm:text-sm text-[#5A0891]/90 dark:text-purple-100/90 leading-relaxed max-w-2xl whitespace-pre-line">
             {content?.narrativeText}
           </p>
 
@@ -439,7 +437,7 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
             <div className="pt-2">
               <a
                 href={content.ctaUrl}
-                className="inline-flex items-center gap-2 border border-zinc-300 dark:border-white/20 bg-zinc-100 dark:bg-white/5 px-5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10 hover:border-zinc-400 dark:hover:border-white/30 transition-all"
+                className="inline-flex items-center gap-2 border border-purple-300 dark:border-purple-600/40 bg-white/80 dark:bg-white/10 px-5 py-2.5 text-xs font-semibold text-[#3C0561] dark:text-white hover:bg-white dark:hover:bg-white/20 hover:border-purple-400 dark:hover:border-white/30 transition-all shadow-sm"
                 style={{ borderRadius: "var(--radius-btn, 0.75rem)" }}
               >
                 <span>{content.ctaText}</span>
@@ -451,7 +449,7 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
 
         {imageUrl && (
           <div className="lg:col-span-5 relative">
-            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/15 bg-zinc-100 dark:bg-black/40 shadow-xl">
+            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-purple-200 dark:border-purple-700/60 bg-white/40 dark:bg-black/40 shadow-xl">
               <Image
                 src={normalizeImageUrl(imageUrl, { width: 1200, quality: 75 })}
                 alt={content?.heading || "Brand Story"}
@@ -468,17 +466,16 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
 
       {/* Dynamic Stats Grid */}
       {statItems.length > 0 && (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 border-t border-zinc-200 dark:border-white/10 pt-8">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 border-t border-purple-200/80 dark:border-purple-700/60 pt-8">
           {statItems.map((stat: { label: string; value: string; desc?: string }, idx: number) => (
-            <div key={`${stat.label}-${idx}`} className="rounded-2xl border border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-white/5 p-4 text-center">
+            <div key={`${stat.label}-${idx}`} className="rounded-2xl border border-purple-200/70 dark:border-purple-700/50 bg-white/90 dark:bg-[#3C0561]/60 p-4 text-center shadow-sm">
               <span
-                className="text-2xl sm:text-3xl font-extrabold"
-                style={{ color: "var(--color-primary, #960DF2)" }}
+                className="text-2xl sm:text-3xl font-extrabold text-purple-600 dark:text-purple-300"
               >
                 {stat.value}
               </span>
-              <p className="mt-1 text-xs font-semibold text-zinc-900 dark:text-white">{stat.label}</p>
-              {stat.desc && <p className="mt-0.5 text-[10px] text-zinc-500 dark:text-white/40">{stat.desc}</p>}
+              <p className="mt-1 text-xs font-semibold text-[#3C0561] dark:text-white">{stat.label}</p>
+              {stat.desc && <p className="mt-0.5 text-[10px] text-[#5A0891]/70 dark:text-purple-200/60">{stat.desc}</p>}
             </div>
           ))}
         </div>
@@ -725,8 +722,8 @@ export function renderHomepageSection(
           badge={section.content?.badge || "New Collection"}
           heading={section.content?.heading || "New Arrivals Just For You"}
           subheading={section.content?.subheading}
-          discountText={section.content?.discountText || "Save up to 40% OFF"}
-          buttonText={section.content?.buttonText || "Shop Collection"}
+          discountText={section.content?.discountText || "Save up to 40% OFF on first order"}
+          buttonText={section.content?.buttonText || "Shop Now"}
           buttonUrl={section.content?.buttonUrl || "/shop"}
           imageUrl={section.imageUrl || section.content?.imageUrl}
         />

@@ -36,7 +36,7 @@ export default function TrendingProductsSection({
     }
   };
 
-  const displayedProducts = getActiveList().slice(0, 10);
+  const displayedProducts = getActiveList().slice(0, 5);
 
   return (
     <section id="trending-products" className="space-y-8">

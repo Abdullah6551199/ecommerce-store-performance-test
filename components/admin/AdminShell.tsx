@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "./LogoutButton";
-import ThemeToggle from "@/components/ThemeToggle";
 
 interface AdminSidebarProps {
   userEmail: string;
@@ -256,9 +255,6 @@ export default function AdminShell({
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Theme Toggle for Admin Panel */}
-            <ThemeToggle storageKey="apex_admin_theme" />
-
             <Link
               href="/"
               target="_blank"

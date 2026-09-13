@@ -32,7 +32,7 @@ export default function MobileNav({
       <button
         type="button"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="lg:hidden flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-purple-200 dark:border-purple-800/60 bg-purple-50/50 dark:bg-[#5A0891]/50 text-[#3C0561] dark:text-purple-100 hover:text-[#960DF2] transition-colors"
+        className="lg:hidden flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-purple-300/60 dark:border-purple-800/60 bg-white/50 dark:bg-[#5A0891]/50 text-[#3C0561] dark:text-purple-100 hover:text-[#960DF2] transition-colors shadow-sm"
         aria-label="Toggle Navigation Menu"
       >
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -45,12 +45,12 @@ export default function MobileNav({
       </button>
 
       {mobileMenuOpen && (
-        <div className="absolute top-16 left-0 right-0 lg:hidden border-b border-purple-200 dark:border-purple-800/60 bg-white/95 dark:bg-[#3C0561]/95 backdrop-blur-xl px-4 py-4 space-y-1.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute top-16 left-0 right-0 lg:hidden border-b border-purple-200 dark:border-purple-800/60 bg-[#EACFFC]/98 dark:bg-[#3C0561]/98 backdrop-blur-xl px-4 py-4 space-y-1.5 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-150">
           {/* 1. Home */}
           <Link
             href="/"
             onClick={closeMenu}
-            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
+            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-[#3C0561] dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-white/60 dark:hover:bg-[#5A0891]/60 transition"
           >
             Home
           </Link>
@@ -59,7 +59,7 @@ export default function MobileNav({
           <Link
             href="/shop"
             onClick={closeMenu}
-            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
+            className="flex min-h-[42px] items-center px-3 py-2 text-sm font-semibold text-[#3C0561] dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-white/60 dark:hover:bg-[#5A0891]/60 transition"
           >
             Shop All Products
           </Link>
@@ -69,7 +69,7 @@ export default function MobileNav({
             <button
               type="button"
               onClick={() => setCategoriesExpanded((prev) => !prev)}
-              className="flex w-full min-h-[42px] items-center justify-between px-3 py-2 text-sm font-semibold text-zinc-900 dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-purple-50 dark:hover:bg-[#5A0891]/60 transition"
+              className="flex w-full min-h-[42px] items-center justify-between px-3 py-2 text-sm font-semibold text-[#3C0561] dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-white/60 dark:hover:bg-[#5A0891]/60 transition"
             >
               <span>Categories</span>
               <svg

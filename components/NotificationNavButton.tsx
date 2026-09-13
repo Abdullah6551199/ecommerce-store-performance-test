@@ -182,7 +182,7 @@ export default function NotificationNavButton(): React.JSX.Element {
       <button
         type="button"
         onClick={handleToggle}
-        className="relative flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:text-zinc-900 dark:hover:text-white hover:border-purple-400/40 transition-all"
+        className="relative flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-purple-300/60 dark:border-white/10 bg-white/50 dark:bg-white/5 text-[#3C0561] dark:text-white/70 hover:text-[#960DF2] dark:hover:text-white hover:border-purple-400/60 hover:bg-white/80 dark:hover:bg-white/10 transition-all shadow-sm"
         title="Notifications"
         aria-label={`Notifications, ${unreadCount} unread`}
       >

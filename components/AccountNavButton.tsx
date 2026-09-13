@@ -70,8 +70,8 @@ export default function AccountNavButton(): React.JSX.Element {
 
   if (loading) {
     return (
-      <div className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 opacity-50">
-        <svg className="h-4 w-4 animate-spin text-zinc-400" fill="none" viewBox="0 0 24 24">
+      <div className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-purple-300/60 dark:border-white/10 bg-white/50 dark:bg-white/5 opacity-50 shadow-sm">
+        <svg className="h-4 w-4 animate-spin text-purple-400" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
         </svg>
@@ -84,10 +84,10 @@ export default function AccountNavButton(): React.JSX.Element {
     return (
       <Link
         href="/login"
-        className="flex items-center gap-1.5 h-10 px-3 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-xs font-semibold text-zinc-700 dark:text-zinc-200 hover:text-black dark:hover:text-white hover:border-purple-400/50 transition-all"
+        className="flex items-center gap-1.5 h-10 px-3 rounded-xl border border-purple-300/60 dark:border-white/10 bg-white/50 dark:bg-white/5 text-xs font-semibold text-[#3C0561] dark:text-zinc-200 hover:text-[#960DF2] dark:hover:text-white hover:border-purple-400 hover:bg-white/80 dark:hover:bg-white/10 transition-all shadow-sm"
         title="Sign In to Your Account"
       >
-        <svg className="h-4 w-4 text-purple-600 dark:text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg className="h-4 w-4 text-[#960DF2] dark:text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
         </svg>
         <span className="hidden sm:inline">Sign In</span>
@@ -103,16 +103,16 @@ export default function AccountNavButton(): React.JSX.Element {
       <button
         type="button"
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center gap-1.5 h-10 px-3 rounded-xl border border-purple-400/30 bg-purple-400/10 text-xs font-bold text-zinc-900 dark:text-white hover:bg-purple-400/20 transition-all cursor-pointer"
+        className="flex items-center gap-1.5 h-10 px-3 rounded-xl border border-purple-300/60 bg-white/50 dark:bg-purple-400/10 text-xs font-bold text-[#3C0561] dark:text-white hover:bg-white/80 dark:hover:bg-purple-400/20 transition-all cursor-pointer shadow-sm"
         aria-expanded={dropdownOpen}
         aria-haspopup="true"
       >
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-400 text-[11px] font-black text-white">
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#960DF2] text-[11px] font-black text-white">
           {firstName.charAt(0).toUpperCase()}
         </span>
         <span className="hidden sm:inline truncate max-w-[90px]">Hi, {firstName}</span>
         <svg
-          className={`h-3 w-3 text-zinc-500 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+          className={`h-3 w-3 text-[#3C0561] dark:text-zinc-400 transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

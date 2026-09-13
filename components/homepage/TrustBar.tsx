@@ -67,8 +67,8 @@ export default function TrustBar({ items = DEFAULT_TRUST_ITEMS }: TrustBarProps)
   };
 
   return (
-    <section className="rounded-2xl border border-purple-200/80 dark:border-purple-800/60 bg-[#EACFFC]/40 dark:bg-[#3C0561]/60 p-6 sm:p-8 backdrop-blur-sm shadow-sm transition-colors">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+    <section className="rounded-2xl border border-purple-200/80 dark:border-purple-800/60 bg-purple-50 dark:bg-purple-900/20 p-5 sm:p-8 backdrop-blur-sm shadow-sm transition-colors">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
         {activeItems.map((item, idx) => (
           <div key={idx} className="flex items-start gap-3.5">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-[#5A0891] border border-purple-200 dark:border-purple-700/60 shadow-sm">

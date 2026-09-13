@@ -17,13 +17,13 @@ export default function NewArrivalsSection({
   badge = "New Collection",
   heading = "New Arrivals Just For You",
   subheading = "Experience cutting-edge athletic engineering designed for fluid movement and modern luxury.",
-  discountText = "Save up to 40% OFF",
-  buttonText = "Shop Collection",
+  discountText = "Save up to 40% OFF on first order",
+  buttonText = "Shop Now",
   buttonUrl = "/shop",
   imageUrl = "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop",
 }: NewArrivalsSectionProps): React.JSX.Element {
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-purple-200/80 dark:border-purple-800/60 bg-gradient-to-r from-[#EACFFC]/60 via-[#D59EFA]/20 to-white dark:from-[#5A0891] dark:via-[#3C0561] dark:to-[#25033d] p-6 sm:p-10 lg:p-14 shadow-xl shadow-purple-500/10 transition-colors">
+    <section className="relative overflow-hidden rounded-3xl border border-purple-200/80 dark:border-purple-800/60 bg-gradient-to-r from-purple-50 via-purple-100 to-purple-50 dark:from-[#3C0561] dark:via-[#4c077b] dark:to-[#3C0561] p-6 sm:p-10 lg:p-14 shadow-xl shadow-purple-500/10 transition-colors">
       {/* Decorative ambient spots */}
       <div className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full bg-[#C06EF7]/20 blur-3xl" />
 
@@ -51,7 +51,7 @@ export default function NewArrivalsSection({
           <div className="pt-2">
             <Link
               href={buttonUrl}
-              className="inline-flex items-center gap-2 rounded-lg bg-[#960DF2] hover:bg-[#780AC2] text-white px-6 py-3.5 text-xs sm:text-sm font-bold shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 active:scale-95 transition-all"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#960DF2] hover:bg-[#780AC2] text-white px-6 py-3.5 text-xs sm:text-sm font-bold shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 active:scale-95 transition-all"
             >
               <span>{buttonText}</span>
               <span aria-hidden="true">&rarr;</span>

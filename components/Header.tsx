@@ -103,7 +103,7 @@ export default async function Header({
       />
 
       {/* 2. Main Navigation Header (Sticky on scroll) */}
-      <header className="sticky top-0 z-40 w-full border-b border-purple-200/70 dark:border-purple-800/50 bg-white/95 dark:bg-[#3C0561]/95 backdrop-blur-md shadow-sm transition-colors duration-300">
+      <header className="sticky top-0 z-40 w-full border-b border-purple-200/70 dark:border-purple-800/50 bg-[#EACFFC]/95 dark:bg-[#3C0561]/95 backdrop-blur-md shadow-sm transition-colors duration-300">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 gap-3 sm:gap-4">
           {/* Logo Area */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
@@ -140,7 +140,7 @@ export default async function Header({
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold text-zinc-700 dark:text-purple-100">
+          <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold text-[#3C0561] dark:text-purple-100">
             {/* Home */}
             <Link href="/" className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group">
               <span>Home</span>

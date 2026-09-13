@@ -185,3 +185,34 @@ The homepage is organized into a sequence of responsive sections:
 9. **Brand Logos Row**: Grayscale partner brand marquee strip.
 10. **Newsletter Section**: Gradient purple banner with email subscription and privacy reassurance.
 11. **Footer**: Rich 5-column layout (Brand, Shop, Company, Support, Legal) + bottom bar with credit card and digital wallet payment icons.
+
+---
+
+## 7. Cart, Shop & Category Page Patterns (Stage 18.2)
+
+### 7.1 Cart Drawer & Coupons
+- **Zero-Green Rule**: All green/emerald accents (`#18C729`, `text-emerald-*`) replaced with the Chronicles purple tokens.
+- **Free Shipping Bar**: Purple gradient from `#C06EF7` (`--purple-200`) to `#960DF2` (`--purple-400`) over a `--purple-50` background.
+- **"Apply Best Coupon" Button**: Prominent gradient (`from-purple-600 via-purple-500 to-purple-400 text-white font-extrabold`).
+- **Applied Coupon Badges**: Soft purple tint (`bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700`).
+
+### 7.2 Cart Page (`/cart`)
+- **Two-Column Layout**: Left-hand 8-column products table + Right-hand 4-column sticky order summary card.
+- **Products Table**: Columns for Remove, Product (1:1 square media, name, SKU, variant pills), Unit Price, Quantity Stepper, and Line Subtotal in bold purple.
+- **Order Summary**: Clear breakdown of subtotal, coupon discounts, shipping threshold indicators, sales tax estimate, and grand total.
+- **Integration**: Reusable `TrustBar` and `CouponsSection` components embedded directly into the page flow.
+- **Empty State**: Friendly illustration card with primary purple CTA to browse the catalog.
+
+### 7.3 Shop Page (`/shop`)
+- **Hero Banner**: Purple gradient header (`from-purple-700 via-purple-800 to-[#3C0561]`) with high-contrast typography and catalog badge.
+- **Filter Controls**: Multi-facet sidebar with Categories, Brands, Price Range slider/inputs, In-Stock filter, and Tags pills.
+- **View Toggle**: Quick switch between responsive Grid view and horizontal List view.
+- **Active Filter Chips**: Dismissable filter chips with active purple indicators.
+- **Pagination**: High-contrast purple active page controls (`bg-purple-600 text-white font-bold`).
+
+### 7.4 Category Page (`/category/[slug]`)
+- **Category Hero**: Dynamic background with ambient glow and optional category banner image overlay.
+- **Breadcrumb Navigation**: Home > Categories > [Category Name] in purple tones.
+- **Subcategory Cards**: Clean cards with hover scale and purple border transitions.
+- **Category SEO Card**: Structured footer card highlighting category background copy and search metadata.
+

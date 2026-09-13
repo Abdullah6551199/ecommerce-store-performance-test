@@ -77,7 +77,6 @@ export async function generateMetadata({ searchParams }: ShopPageProps): Promise
 
 export default async function ShopPage({ searchParams }: ShopPageProps): Promise<React.JSX.Element> {
   const sp = await searchParams;
-  const settings = await getStoreSettings();
 
   const minPrice = sp.minPrice && !isNaN(Number(sp.minPrice)) ? Number(sp.minPrice) : undefined;
   const maxPrice = sp.maxPrice && !isNaN(Number(sp.maxPrice)) ? Number(sp.maxPrice) : undefined;
@@ -113,7 +112,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps): Promise
     : null;
 
   return (
-    <>
+    <div className="min-h-screen bg-white dark:bg-[#3C0561]">
       {firstProductImage && (
         <link
           rel="preload"
@@ -124,16 +123,20 @@ export default async function ShopPage({ searchParams }: ShopPageProps): Promise
       )}
 
       {/* Shop Hero Header Banner */}
-      <section className="border-b border-zinc-200 dark:border-white/10 bg-gradient-to-b from-zinc-100/80 to-zinc-50/20 dark:from-[#0c140f] dark:to-[#080e0a] py-8 sm:py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#18C729]/10 text-[#18C729] border border-[#18C729]/20 mb-3">
+      <section className="relative overflow-hidden border-b border-purple-100 dark:border-purple-800/80 bg-gradient-to-r from-purple-700 via-purple-800 to-[#3C0561] py-10 sm:py-14 text-white">
+        {/* Subtle ambient light glow */}
+        <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-purple-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-purple-400/15 blur-3xl" />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl space-y-3">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-500/30 text-purple-200 border border-purple-400/40 backdrop-blur-sm">
               ⚡ Full Store Catalog
             </span>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
               Shop All Products
             </h1>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="text-sm sm:text-base text-purple-100/80 leading-relaxed max-w-xl">
               Browse our complete collection of engineered athletic footwear, technical training apparel, and performance gear.
             </p>
           </div>
@@ -149,6 +152,6 @@ export default async function ShopPage({ searchParams }: ShopPageProps): Promise
           initialParams={advancedParams}
         />
       </main>
-    </>
+    </div>
   );
 }

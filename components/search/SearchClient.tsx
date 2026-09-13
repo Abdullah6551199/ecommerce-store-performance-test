@@ -2,7 +2,10 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
+import QuickAddToCart from "@/components/QuickAddToCart";
+import { normalizeImageUrl } from "@/lib/utils";
 import type { ProductWithImagesAndCategory, SearchFacets, AdvancedSearchParams } from "@/lib/products";
 
 interface SearchClientProps {
@@ -18,7 +21,6 @@ export default function SearchClient({
   initialFacets,
   initialParams,
 }: SearchClientProps): React.JSX.Element {
-
   // Local state initialized from initialParams
   const [query, setQuery] = useState(initialParams.query || "");
   const [category, setCategory] = useState(initialParams.category || "");
@@ -32,6 +34,7 @@ export default function SearchClient({
   const [selectedTags, setSelectedTags] = useState<string[]>(initialParams.tags || []);
   const [inStock, setInStock] = useState<boolean>(Boolean(initialParams.inStock));
   const [sort, setSort] = useState<string>(initialParams.sort || "newest");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState<number>(
     initialParams.offset ? Math.floor(initialParams.offset / (initialParams.limit || 12)) + 1 : 1
   );
@@ -114,7 +117,7 @@ export default function SearchClient({
     }
   }, []);
 
-  // Update URL & fetch on filter changes (excluding first mount)
+  // Update URL & fetch on filter changes
   const applyFilters = useCallback(
     (overrides?: Partial<{
       query: string;
@@ -130,7 +133,7 @@ export default function SearchClient({
       const pageToUse = overrides?.page !== undefined ? overrides.page : 1;
       setCurrentPage(pageToUse);
       const qs = buildQueryString({ ...overrides, page: pageToUse });
-      const newUrl = qs ? `/search?${qs}` : "/search";
+      const newUrl = qs ? `/shop?${qs}` : "/shop";
       window.history.replaceState(null, "", newUrl);
       fetchResults(qs);
     },
@@ -148,7 +151,7 @@ export default function SearchClient({
     }, 300);
   };
 
-  // Immediate filter changes
+  // Filter handlers
   const handleCategorySelect = (newCat: string) => {
     const val = category === newCat ? "" : newCat;
     setCategory(val);
@@ -156,8 +159,9 @@ export default function SearchClient({
   };
 
   const handleBrandSelect = (newBrand: string) => {
-    setBrand(newBrand);
-    applyFilters({ brand: newBrand });
+    const val = brand === newBrand ? "" : newBrand;
+    setBrand(val);
+    applyFilters({ brand: val });
   };
 
   const handlePriceApply = () => {
@@ -192,11 +196,10 @@ export default function SearchClient({
     setSelectedTags([]);
     setInStock(false);
     setSort("newest");
-    window.history.replaceState(null, "", "/search");
+    window.history.replaceState(null, "", "/shop");
     fetchResults("");
   };
 
-  // Active filters count
   const activeFiltersCount =
     (query ? 1 : 0) +
     (category ? 1 : 0) +
@@ -206,580 +209,630 @@ export default function SearchClient({
     (inStock ? 1 : 0) +
     (sort !== "newest" ? 1 : 0);
 
-  return (
-    <div className="space-y-8">
-      {/* Search Header Banner */}
-      <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-[#0e1611]/80 to-[#080e0a]/90 p-6 sm:p-10 backdrop-blur-xl shadow-2xl">
-        <div className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#18C729]/30 bg-[#18C729]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#18C729]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#18C729]" />
-            <span>Storefront Search &amp; Discovery</span>
-          </div>
+  // Sidebar Filter Form Content
+  const renderFilterSidebar = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between border-b border-purple-100 dark:border-purple-900 pb-3">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-purple-950 dark:text-purple-100">
+          Filters
+        </h2>
+        {activeFiltersCount > 0 && (
+          <button
+            type="button"
+            onClick={handleClearAll}
+            className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline"
+          >
+            Reset All
+          </button>
+        )}
+      </div>
 
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            {query ? (
-              <>
-                Search Results for <span className="text-[#18C729]">&quot;{query}&quot;</span>
-              </>
-            ) : (
-              "Explore Catalog"
-            )}
-          </h1>
+      {/* Availability Filter */}
+      <div>
+        <label className="flex items-center gap-3 cursor-pointer group">
+          <input
+            type="checkbox"
+            id="in-stock-filter"
+            checked={inStock}
+            onChange={handleStockToggle}
+            className="h-4 w-4 rounded border-purple-300 dark:border-purple-700 text-purple-600 focus:ring-purple-500"
+          />
+          <span className="text-xs font-semibold text-zinc-800 dark:text-purple-200 group-hover:text-purple-600 transition-colors">
+            In Stock Only
+          </span>
+        </label>
+      </div>
 
-          <p className="text-xs sm:text-sm text-white/60">
-            Find items by keyword, price range, brand, category, or real-time warehouse availability.
-          </p>
-
-          {/* Search Input */}
-          <div className="relative max-w-xl pt-2">
-            <input
-              type="text"
-              id="search-input-field"
-              value={query}
-              onChange={(e) => handleQueryChange(e.target.value)}
-              placeholder="Search by product name, SKU, brand, or tag..."
-              className="w-full rounded-2xl border border-white/15 bg-white/5 pl-11 pr-10 py-3.5 text-sm text-white placeholder-white/40 focus:border-[#18C729] focus:outline-none focus:ring-2 focus:ring-[#18C729]/30 transition-all shadow-inner"
-            />
-            <svg
-              className="absolute left-4 top-5.5 h-5 w-5 text-white/40"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+      {/* Price Range Filter */}
+      <div className="space-y-3 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-200">
+            Price Range
+          </h3>
+          {(minPrice || maxPrice) && (
+            <button
+              type="button"
+              onClick={() => {
+                setMinPrice("");
+                setMaxPrice("");
+                applyFilters({ minPrice: "", maxPrice: "" });
+              }}
+              className="text-[10px] text-zinc-400 hover:text-purple-600"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            {query && (
-              <button
-                type="button"
-                onClick={() => {
-                  setQuery("");
-                  applyFilters({ query: "" });
-                }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-white/40 hover:text-white transition-colors"
-                title="Clear input"
-                aria-label="Clear search input"
-              >
-                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            )}
+              Clear
+            </button>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <span className="absolute left-2.5 top-2 text-xs text-zinc-400">$</span>
+            <input
+              type="number"
+              placeholder="Min"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handlePriceApply()}
+              className="w-full rounded-xl border border-zinc-200 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950/60 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-purple-100 placeholder-zinc-400 focus:border-purple-500 focus:outline-none"
+            />
           </div>
+          <span className="text-xs text-zinc-400">-</span>
+          <div className="relative flex-1">
+            <span className="absolute left-2.5 top-2 text-xs text-zinc-400">$</span>
+            <input
+              type="number"
+              placeholder="Max"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handlePriceApply()}
+              className="w-full rounded-xl border border-zinc-200 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950/60 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-purple-100 placeholder-zinc-400 focus:border-purple-500 focus:outline-none"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handlePriceApply}
+            className="rounded-xl bg-purple-600 hover:bg-purple-700 px-3 py-1.5 text-xs font-bold text-white transition-all shadow-sm shadow-purple-500/20"
+          >
+            Go
+          </button>
         </div>
       </div>
 
-      {/* Main Content Layout: Sidebar + Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-        {/* Mobile Filter Toggle Button */}
-        <div className="lg:hidden flex items-center justify-between pb-2 border-b border-zinc-200 dark:border-white/10">
+      {/* Category Filter */}
+      {facets.categories && facets.categories.length > 0 && (
+        <div className="space-y-3 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-200">
+              Categories
+            </h3>
+            {category && (
+              <button
+                type="button"
+                onClick={() => handleCategorySelect("")}
+                className="text-[10px] text-zinc-400 hover:text-purple-600"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+            {facets.categories.map((cat) => {
+              const isSelected = category === cat.slug || category === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => handleCategorySelect(cat.slug)}
+                  className={`flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-xs transition-colors ${
+                    isSelected
+                      ? "bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-bold border border-purple-300 dark:border-purple-700"
+                      : "text-zinc-700 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-700"
+                  }`}
+                >
+                  <span className="truncate">{cat.name}</span>
+                  <span className="ml-2 rounded-full bg-purple-50 dark:bg-purple-900/40 px-2 py-0.5 text-[10px] text-purple-600 dark:text-purple-300 font-mono">
+                    {cat.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Brand Filter */}
+      {facets.brands && facets.brands.length > 0 && (
+        <div className="space-y-3 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-200">
+              Brands
+            </h3>
+            {brand && (
+              <button
+                type="button"
+                onClick={() => handleBrandSelect("")}
+                className="text-[10px] text-zinc-400 hover:text-purple-600"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <div className="space-y-1 max-h-40 overflow-y-auto pr-1">
+            {facets.brands.map((b) => {
+              const isSelected = brand.toLowerCase() === b.name.toLowerCase();
+              return (
+                <button
+                  key={b.name}
+                  type="button"
+                  onClick={() => handleBrandSelect(isSelected ? "" : b.name)}
+                  className={`flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-xs transition-colors ${
+                    isSelected
+                      ? "bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-bold border border-purple-300 dark:border-purple-700"
+                      : "text-zinc-700 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-700"
+                  }`}
+                >
+                  <span className="truncate">{b.name}</span>
+                  <span className="ml-2 rounded-full bg-purple-50 dark:bg-purple-900/40 px-2 py-0.5 text-[10px] text-purple-600 dark:text-purple-300 font-mono">
+                    {b.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Tags Filter */}
+      {facets.tags && facets.tags.length > 0 && (
+        <div className="space-y-3 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-200">
+              Tags
+            </h3>
+            {selectedTags.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedTags([]);
+                  applyFilters({ tags: [] });
+                }}
+                className="text-[10px] text-zinc-400 hover:text-purple-600"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto">
+            {facets.tags.map((t) => {
+              const isSelected = selectedTags.includes(t.name);
+              return (
+                <button
+                  key={t.name}
+                  type="button"
+                  onClick={() => handleTagToggle(t.name)}
+                  className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] transition-all ${
+                    isSelected
+                      ? "bg-purple-600 text-white font-bold shadow-sm shadow-purple-500/25"
+                      : "border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/40 text-purple-800 dark:text-purple-200 hover:border-purple-400"
+                  }`}
+                >
+                  <span>{t.name}</span>
+                  <span className="text-[9px] opacity-70">({t.count})</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Top Search & Filter Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-2xl border border-purple-100 dark:border-purple-800/80 bg-white dark:bg-purple-950/40 p-3 sm:p-4 shadow-sm">
+        {/* Search Input Field */}
+        <div className="relative flex-1 max-w-lg">
+          <input
+            type="text"
+            id="search-input-field"
+            value={query}
+            onChange={(e) => handleQueryChange(e.target.value)}
+            placeholder="Search by product name, category, or SKU..."
+            className="w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950/60 pl-10 pr-9 py-2.5 text-xs sm:text-sm text-zinc-900 dark:text-purple-100 placeholder-zinc-400 dark:placeholder-purple-400/40 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-all"
+          />
+          <svg
+            className="absolute left-3.5 top-3 h-4 w-4 text-purple-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          {query && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                applyFilters({ query: "" });
+              }}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-purple-600 p-1"
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* Right Controls: Sort Dropdown + Grid/List Toggle + Mobile Filters Button */}
+        <div className="flex items-center justify-between sm:justify-end gap-3">
+          {/* Mobile Filter Toggle Button */}
           <button
             type="button"
-            onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-            className="inline-flex items-center gap-2 rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-4 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10"
+            onClick={() => setMobileFilterOpen(true)}
+            className="lg:hidden inline-flex items-center gap-1.5 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/40 px-3 py-2 text-xs font-semibold text-purple-800 dark:text-purple-200"
           >
-            <svg className="h-4 w-4 text-[#18C729]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-4 w-4 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
             <span>Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}</span>
           </button>
 
-          <span className="text-xs text-zinc-500 dark:text-white/50">{total} Results</span>
-        </div>
-
-        {/* Sidebar Filters */}
-        <aside
-          className={`lg:block ${
-            mobileFilterOpen ? "block" : "hidden"
-          } space-y-6 rounded-3xl border border-zinc-200 dark:border-white/10 bg-white/95 dark:bg-[#0c140f]/90 p-6 backdrop-blur-md shadow-xl lg:sticky lg:top-24`}
-        >
-          <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-white">Filters</h2>
-            {activeFiltersCount > 0 && (
-              <button
-                type="button"
-                onClick={handleClearAll}
-                className="text-xs font-semibold text-emerald-600 dark:text-[#FEF500] hover:underline"
-              >
-                Reset All
-              </button>
-            )}
-          </div>
-
-          {/* Sort Filter (also available in sidebar) */}
-          <div className="space-y-2">
-            <label htmlFor="sort-select" className="text-xs font-semibold text-zinc-700 dark:text-white/70">
-              Sort By
-            </label>
+          {/* Sort Dropdown */}
+          <div className="flex items-center gap-1.5 text-xs">
+            <span className="hidden sm:inline text-zinc-500 dark:text-purple-300/70">Sort:</span>
             <select
-              id="sort-select"
-              aria-label="Sort By"
+              aria-label="Sort products by"
               value={sort}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
+              className="rounded-xl border border-purple-200 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
             >
-              <option value="newest" className="bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white">Newest Arrivals</option>
-              <option value="price_asc" className="bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white">Price: Low to High</option>
-              <option value="price_desc" className="bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white">Price: High to Low</option>
-              <option value="popular" className="bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white">Popularity &amp; Stock</option>
+              <option value="newest">Newest Arrivals</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="popular">Popularity &amp; Stock</option>
             </select>
           </div>
 
-          {/* Availability Filter */}
-          <div className="pt-2 border-t border-zinc-200 dark:border-white/10">
-            <label className="flex items-center gap-3 cursor-pointer group">
-              <input
-                type="checkbox"
-                id="in-stock-filter"
-                checked={inStock}
-                onChange={handleStockToggle}
-                className="h-4 w-4 rounded border-zinc-300 dark:border-white/20 bg-white dark:bg-white/5 text-[#18C729] focus:ring-[#18C729] focus:ring-offset-black"
-              />
-              <span className="text-xs font-medium text-zinc-700 dark:text-white/80 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
-                In Stock Only
-              </span>
-            </label>
+          {/* Grid / List View Toggle */}
+          <div className="flex rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-900/40 p-1">
+            <button
+              type="button"
+              onClick={() => setViewMode("grid")}
+              className={`p-1.5 rounded-lg transition-colors ${
+                viewMode === "grid"
+                  ? "bg-purple-600 text-white shadow-sm"
+                  : "text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800"
+              }`}
+              title="Grid View"
+              aria-label="Grid View"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("list")}
+              className={`p-1.5 rounded-lg transition-colors ${
+                viewMode === "list"
+                  ? "bg-purple-600 text-white shadow-sm"
+                  : "text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800"
+              }`}
+              title="List View"
+              aria-label="List View"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
+        </div>
+      </div>
 
-          {/* Price Range Filter */}
-          <div className="space-y-3 pt-2 border-t border-zinc-200 dark:border-white/10">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-white/70">Price Range</h3>
-              {(minPrice || maxPrice) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMinPrice("");
-                    setMaxPrice("");
-                    applyFilters({ minPrice: "", maxPrice: "" });
-                  }}
-                  className="text-[10px] text-zinc-500 dark:text-white/40 hover:text-zinc-900 dark:hover:text-white"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <span className="absolute left-2.5 top-2 text-xs text-zinc-400 dark:text-white/40">$</span>
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handlePriceApply()}
-                  className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
-                />
+      {/* Active Filter Chips */}
+      {activeFiltersCount > 0 && (
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <span className="text-xs text-zinc-500 dark:text-purple-300/70">Active filters:</span>
+
+          {query && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                applyFilters({ query: "" });
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+            >
+              <span>Query: &quot;{query}&quot;</span>
+              <span className="text-purple-400 hover:text-red-500">&times;</span>
+            </button>
+          )}
+
+          {category && (
+            <button
+              type="button"
+              onClick={() => {
+                setCategory("");
+                applyFilters({ category: "" });
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+            >
+              <span>
+                Category:{" "}
+                {facets.categories?.find((c) => c.slug === category || c.id === category)?.name || category}
+              </span>
+              <span className="text-purple-400 hover:text-red-500">&times;</span>
+            </button>
+          )}
+
+          {brand && (
+            <button
+              type="button"
+              onClick={() => {
+                setBrand("");
+                applyFilters({ brand: "" });
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+            >
+              <span>Brand: {brand}</span>
+              <span className="text-purple-400 hover:text-red-500">&times;</span>
+            </button>
+          )}
+
+          {(minPrice || maxPrice) && (
+            <button
+              type="button"
+              onClick={() => {
+                setMinPrice("");
+                setMaxPrice("");
+                applyFilters({ minPrice: "", maxPrice: "" });
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+            >
+              <span>
+                Price: {minPrice ? `$${minPrice}` : "$0"} – {maxPrice ? `$${maxPrice}` : "Any"}
+              </span>
+              <span className="text-purple-400 hover:text-red-500">&times;</span>
+            </button>
+          )}
+
+          {selectedTags.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => handleTagToggle(tag)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+            >
+              <span>Tag: {tag}</span>
+              <span className="text-purple-400 hover:text-red-500">&times;</span>
+            </button>
+          ))}
+
+          {inStock && (
+            <button
+              type="button"
+              onClick={handleStockToggle}
+              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+            >
+              <span>In Stock Only</span>
+              <span className="text-purple-400 hover:text-red-500">&times;</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={handleClearAll}
+            className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline ml-1"
+          >
+            Clear All
+          </button>
+        </div>
+      )}
+
+      {/* Main Grid Layout: Sidebar (Desktop) + Products Area */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+        {/* Left Sidebar (Desktop Only) */}
+        <aside className="hidden lg:block rounded-3xl border border-purple-100 dark:border-purple-800/80 bg-white dark:bg-purple-950/30 p-6 shadow-sm sticky top-28">
+          {renderFilterSidebar()}
+        </aside>
+
+        {/* Mobile Slide-in Drawer */}
+        {mobileFilterOpen && (
+          <div className="fixed inset-0 z-50 flex bg-black/60 backdrop-blur-sm lg:hidden">
+            <div className="relative ml-auto w-full max-w-xs h-full bg-white dark:bg-purple-950 p-6 overflow-y-auto shadow-2xl flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between pb-4 border-b border-purple-100 dark:border-purple-800">
+                  <h3 className="text-sm font-bold text-purple-950 dark:text-purple-100">Filter Catalog</h3>
+                  <button
+                    type="button"
+                    onClick={() => setMobileFilterOpen(false)}
+                    className="p-1 text-zinc-400 hover:text-purple-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="py-4">
+                  {renderFilterSidebar()}
+                </div>
               </div>
-              <span className="text-xs text-zinc-400 dark:text-white/40">-</span>
-              <div className="relative flex-1">
-                <span className="absolute left-2.5 top-2 text-xs text-zinc-400 dark:text-white/40">$</span>
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handlePriceApply()}
-                  className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/30 focus:border-[#18C729] focus:outline-none"
-                />
-              </div>
+
               <button
                 type="button"
-                onClick={handlePriceApply}
-                className="rounded-xl bg-[#18C729]/20 border border-[#18C729]/40 px-3 py-1.5 text-xs font-bold text-[#18C729] hover:bg-[#18C729] hover:text-black transition-all"
+                onClick={() => setMobileFilterOpen(false)}
+                className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 py-3 text-xs font-bold text-white shadow-lg shadow-purple-500/25"
               >
-                Go
+                Show {total} Results
               </button>
             </div>
-            {facets.priceRange && (
-              <p className="text-[11px] text-zinc-500 dark:text-white/40">
-                Range: ${facets.priceRange.min} – ${facets.priceRange.max}
-              </p>
+          </div>
+        )}
+
+        {/* Products Results Area (3 cols) */}
+        <section className="lg:col-span-3 space-y-6">
+          {/* Header Count & Loading Indicator */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-zinc-500 dark:text-purple-300/70">
+              Showing {products.length} of {total} products
+            </span>
+            {isLoading && (
+              <span className="inline-flex items-center gap-1.5 text-xs text-purple-600 dark:text-purple-400 font-semibold animate-pulse">
+                <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                Filtering...
+              </span>
             )}
           </div>
 
-          {/* Category Filter */}
-          {facets.categories && facets.categories.length > 0 && (
-            <div className="space-y-3 pt-2 border-t border-zinc-200 dark:border-white/10">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-white/70">Category</h3>
-                {category && (
-                  <button
-                    type="button"
-                    onClick={() => handleCategorySelect("")}
-                    className="text-[10px] text-zinc-500 dark:text-white/40 hover:text-zinc-900 dark:hover:text-white"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-              <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
-                {facets.categories.map((cat) => {
-                  const isSelected = category === cat.slug || category === cat.id;
-                  return (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => handleCategorySelect(cat.slug)}
-                      className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
-                        isSelected
-                          ? "bg-[#18C729]/15 text-[#18C729] font-bold border border-[#18C729]/30"
-                          : "text-zinc-700 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-zinc-900 dark:hover:text-white"
-                      }`}
-                    >
-                      <span className="truncate">{cat.name}</span>
-                      <span className="ml-2 rounded-full bg-zinc-100 dark:bg-white/5 px-2 py-0.5 text-[10px] text-zinc-600 dark:text-white/40">
-                        {cat.count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Brand Filter */}
-          {facets.brands && facets.brands.length > 0 && (
-            <div className="space-y-3 pt-2 border-t border-zinc-200 dark:border-white/10">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-white/70">Brand</h3>
-                {brand && (
-                  <button
-                    type="button"
-                    onClick={() => handleBrandSelect("")}
-                    className="text-[10px] text-zinc-500 dark:text-white/40 hover:text-zinc-900 dark:hover:text-white"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-              <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
-                {facets.brands.map((b) => {
-                  const isSelected = brand.toLowerCase() === b.name.toLowerCase();
-                  return (
-                    <button
-                      key={b.name}
-                      type="button"
-                      onClick={() => handleBrandSelect(isSelected ? "" : b.name)}
-                      className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
-                        isSelected
-                          ? "bg-[#18C729]/15 text-[#18C729] font-bold border border-[#18C729]/30"
-                          : "text-zinc-700 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/5 hover:text-zinc-900 dark:hover:text-white"
-                      }`}
-                    >
-                      <span className="truncate">{b.name}</span>
-                      <span className="ml-2 rounded-full bg-zinc-100 dark:bg-white/5 px-2 py-0.5 text-[10px] text-zinc-600 dark:text-white/40">
-                        {b.count}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Tag Filter */}
-          {facets.tags && facets.tags.length > 0 && (
-            <div className="space-y-3 pt-2 border-t border-zinc-200 dark:border-white/10">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-white/70">Tags</h3>
-                {selectedTags.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedTags([]);
-                      applyFilters({ tags: [] });
-                    }}
-                    className="text-[10px] text-zinc-500 dark:text-white/40 hover:text-zinc-900 dark:hover:text-white"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto">
-                {facets.tags.map((t) => {
-                  const isSelected = selectedTags.includes(t.name);
-                  return (
-                    <button
-                      key={t.name}
-                      type="button"
-                      onClick={() => handleTagToggle(t.name)}
-                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] transition-all ${
-                        isSelected
-                          ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/30"
-                          : "border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:border-zinc-400 dark:hover:border-white/30 hover:text-zinc-900 dark:hover:text-white"
-                      }`}
-                    >
-                      <span>{t.name}</span>
-                      <span className="text-[9px] opacity-60">({t.count})</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </aside>
-
-        {/* Results Section */}
-        <section className="lg:col-span-3 space-y-6">
-          <h2 className="sr-only">Search Results</h2>
-          {/* Active Filter Chips & Results Count Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 dark:border-white/10 pb-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-zinc-900 dark:text-white">
-                {total} {total === 1 ? "Product" : "Products"}
-              </span>
-              {isLoading && (
-                <span className="inline-flex items-center gap-1 text-xs text-[#18C729]">
-                  <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                  </svg>
-                  Updating...
-                </span>
-              )}
-            </div>
-
-            {/* Desktop Sort Dropdown */}
-            <div className="hidden sm:flex items-center gap-2 text-xs">
-              <label htmlFor="desktop-sort-select" className="text-zinc-500 dark:text-white/50">Sort by:</label>
-              <select
-                id="desktop-sort-select"
-                aria-label="Sort search results by"
-                value={sort}
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-[#0c140f] px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
-              >
-                <option value="newest">Newest Arrivals</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-                <option value="popular">Popularity &amp; Stock</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Active Filter Badges */}
-          {activeFiltersCount > 0 && (
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-zinc-500 dark:text-white/50">Active filters:</span>
-
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setQuery("");
-                    applyFilters({ query: "" });
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
-                >
-                  <span>Query: &quot;{query}&quot;</span>
-                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
-                </button>
-              )}
-
-              {category && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCategory("");
-                    applyFilters({ category: "" });
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
-                >
-                  <span>
-                    Category:{" "}
-                    {facets.categories.find((c) => c.slug === category || c.id === category)?.name || category}
-                  </span>
-                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
-                </button>
-              )}
-
-              {brand && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setBrand("");
-                    applyFilters({ brand: "" });
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
-                >
-                  <span>Brand: {brand}</span>
-                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
-                </button>
-              )}
-
-              {(minPrice || maxPrice) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMinPrice("");
-                    setMaxPrice("");
-                    applyFilters({ minPrice: "", maxPrice: "" });
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
-                >
-                  <span>
-                    Price: {minPrice ? `$${minPrice}` : "$0"} – {maxPrice ? `$${maxPrice}` : "Any"}
-                  </span>
-                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
-                </button>
-              )}
-
-              {selectedTags.map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => handleTagToggle(tag)}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
-                >
-                  <span>Tag: {tag}</span>
-                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
-                </button>
-              ))}
-
-              {inStock && (
-                <button
-                  type="button"
-                  onClick={handleStockToggle}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
-                >
-                  <span>In Stock Only</span>
-                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
-                </button>
-              )}
-
-              {sort !== "newest" && (
-                <button
-                  type="button"
-                  onClick={() => handleSortChange("newest")}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-900 dark:text-white hover:border-red-500/50 hover:bg-red-500/10 transition-colors"
-                >
-                  <span>Sort: {sort}</span>
-                  <span className="text-zinc-400 dark:text-white/50 hover:text-red-500">&times;</span>
-                </button>
-              )}
-
-              <button
-                type="button"
-                onClick={handleClearAll}
-                className="text-xs font-semibold text-emerald-600 dark:text-[#FEF500] hover:underline ml-1"
-              >
-                Clear All
-              </button>
-            </div>
-          )}
-
-          {/* Product Grid / Empty State */}
+          {/* Products View: Grid vs List */}
           {products.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-[#0c140f]/60 p-16 text-center backdrop-blur-md">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 dark:bg-white/5 text-emerald-600 dark:text-[#FEF500]">
+            <div className="rounded-3xl border border-dashed border-purple-200 dark:border-purple-800/80 bg-purple-50/30 dark:bg-purple-950/20 p-12 sm:p-16 text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-300">
                 <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-white">No Matching Products Found</h3>
-              <p className="mt-1 text-xs text-zinc-500 dark:text-white/50 max-w-sm mx-auto">
-                No items match your active filters and search query. Try removing filters or searching for something else.
+              <h3 className="mt-4 text-base font-bold text-purple-950 dark:text-purple-100">
+                No Matching Products Found
+              </h3>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-purple-300/70 max-w-sm mx-auto">
+                No items match your active filters or search terms. Try adjusting your parameters.
               </p>
               <div className="mt-6 flex justify-center gap-3">
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-white/5 px-4 py-2 text-xs font-semibold text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors"
+                  className="rounded-xl bg-purple-600 hover:bg-purple-700 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-purple-500/25 transition-all"
                 >
                   Reset All Filters
                 </button>
-                <Link
-                  href="/"
-                  className="rounded-xl bg-[#18C729] px-4 py-2 text-xs font-semibold text-black hover:brightness-110 transition-all"
-                >
-                  Return to Home
-                </Link>
               </div>
             </div>
+          ) : viewMode === "grid" ? (
+            /* Grid View (3 columns on lg, 4 on xl) */
+            <div
+              className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 transition-opacity duration-200 ${
+                isLoading ? "opacity-60" : "opacity-100"
+              }`}
+            >
+              {products.map((prod, idx) => (
+                <ProductCard key={prod.id} product={prod} isPriority={idx === 0} />
+              ))}
+            </div>
           ) : (
-            <>
-              <div
-                className={`grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 transition-opacity duration-200 ${
-                  isLoading ? "opacity-60" : "opacity-100"
-                }`}
-              >
-                {products.map((prod, idx) => (
-                  <ProductCard key={prod.id} product={prod} isPriority={idx === 0} />
-                ))}
-              </div>
+            /* List View */
+            <div className={`space-y-4 transition-opacity duration-200 ${isLoading ? "opacity-60" : "opacity-100"}`}>
+              {products.map((prod) => (
+                <div
+                  key={prod.id}
+                  className="flex flex-col sm:flex-row items-center gap-4 rounded-2xl border border-purple-100 dark:border-purple-800/80 bg-white dark:bg-purple-950/30 p-4 hover:border-purple-300 transition-all shadow-sm"
+                >
+                  <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl border border-purple-100 dark:border-purple-800 bg-purple-50 dark:bg-purple-950">
+                    <Image
+                      src={normalizeImageUrl(prod.mainImage, { width: 220, quality: 75 })}
+                      alt={prod.name}
+                      fill
+                      sizes="112px"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
 
-              {totalPages > 1 && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-zinc-200 dark:border-white/10 mt-8">
-                  <p className="text-xs text-zinc-500 dark:text-white/50">
-                    Showing <span className="text-zinc-900 dark:text-white font-medium">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
-                    <span className="text-zinc-900 dark:text-white font-medium">{Math.min(currentPage * PAGE_SIZE, total)}</span> of{" "}
-                    <span className="text-zinc-900 dark:text-white font-medium">{total}</span> items
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      disabled={currentPage <= 1 || isLoading}
-                      onClick={() => {
-                        const prev = currentPage - 1;
-                        applyFilters({ page: prev });
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                      className="rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-800 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  <div className="flex-1 min-w-0 space-y-1 text-center sm:text-left">
+                    <span className="text-[10px] font-bold uppercase text-purple-600 dark:text-purple-400">
+                      {prod.categoryName || "Athletic Collection"}
+                    </span>
+                    <Link
+                      href={`/product/${prod.slug}`}
+                      className="block text-sm sm:text-base font-bold text-zinc-900 dark:text-purple-100 hover:text-purple-600 transition-colors truncate"
                     >
-                      ← Previous
-                    </button>
+                      {prod.name}
+                    </Link>
+                    {prod.shortDescription && (
+                      <p className="text-xs text-zinc-500 dark:text-purple-300/70 line-clamp-2">
+                        {prod.shortDescription}
+                      </p>
+                    )}
+                  </div>
 
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pNum) => (
-                        <button
-                          key={pNum}
-                          type="button"
-                          disabled={isLoading}
-                          onClick={() => {
-                            applyFilters({ page: pNum });
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                          className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
-                            pNum === currentPage
-                              ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
-                              : "border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
-                          }`}
-                        >
-                          {pNum}
-                        </button>
-                      ))}
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-purple-50 dark:border-purple-900">
+                    <div className="text-right">
+                      <span className="text-base font-black text-purple-900 dark:text-purple-100">
+                        ${Number(prod.price).toFixed(2)}
+                      </span>
                     </div>
-
-                    <button
-                      type="button"
-                      disabled={currentPage >= totalPages || isLoading}
-                      onClick={() => {
-                        const next = currentPage + 1;
-                        applyFilters({ page: next });
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                      className="rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-1.5 text-xs font-semibold text-zinc-800 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                      Next →
-                    </button>
+                    <QuickAddToCart
+                      productId={prod.id}
+                      productSlug={prod.slug}
+                      productName={prod.name}
+                      price={Number(prod.price)}
+                      imageUrl={prod.mainImage}
+                      isOutOfStock={prod.stockQuantity <= 0}
+                    />
                   </div>
                 </div>
-              )}
-            </>
+              ))}
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-purple-100 dark:border-purple-900/60 mt-8">
+              <p className="text-xs text-zinc-500 dark:text-purple-300/70">
+                Showing <span className="text-purple-900 dark:text-purple-100 font-bold">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
+                <span className="text-purple-900 dark:text-purple-100 font-bold">{Math.min(currentPage * PAGE_SIZE, total)}</span> of{" "}
+                <span className="text-purple-900 dark:text-purple-100 font-bold">{total}</span> items
+              </p>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={currentPage <= 1 || isLoading}
+                  onClick={() => {
+                    const prev = currentPage - 1;
+                    applyFilters({ page: prev });
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/60 px-3.5 py-2 text-xs font-semibold text-purple-800 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  ← Previous
+                </button>
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pNum) => (
+                    <button
+                      key={pNum}
+                      type="button"
+                      disabled={isLoading}
+                      onClick={() => {
+                        applyFilters({ page: pNum });
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className={`h-8 w-8 rounded-xl flex items-center justify-center text-xs font-bold transition-all ${
+                        pNum === currentPage
+                          ? "bg-purple-600 text-white shadow-md shadow-purple-500/25"
+                          : "border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/60 text-purple-800 dark:text-purple-200 hover:bg-purple-50"
+                      }`}
+                    >
+                      {pNum}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  disabled={currentPage >= totalPages || isLoading}
+                  onClick={() => {
+                    const next = currentPage + 1;
+                    applyFilters({ page: next });
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/60 px-3.5 py-2 text-xs font-semibold text-purple-800 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
           )}
         </section>
       </div>

@@ -87,12 +87,18 @@ export async function PUT(
       );
     }
 
-    const updated = await updateAdminOrderStatus(id, parseResult.data.status);
+    const { status, courierName, trackingNumber, estimatedDelivery, statusNotes } = parseResult.data;
+    const updated = await updateAdminOrderStatus(id, status, {
+      courierName,
+      trackingNumber,
+      estimatedDelivery,
+      statusNotes,
+    });
 
     return NextResponse.json({
       success: true,
       data: updated,
-      message: `Order status updated to "${parseResult.data.status}"`,
+      message: `Order status updated to "${status}"`,
     });
   } catch (error) {
     console.error("Admin update order status error:", error);

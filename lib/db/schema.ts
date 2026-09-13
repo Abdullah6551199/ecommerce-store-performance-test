@@ -347,6 +347,7 @@ export const orders = sqliteTable("orders", {
       "confirmed",
       "processing",
       "shipped",
+      "out_for_delivery",
       "delivered",
       "cancelled",
       "returned",
@@ -356,6 +357,10 @@ export const orders = sqliteTable("orders", {
     .notNull(),
   hasReview: integer("has_review").default(0).notNull(),
   customerId: text("customer_id"),
+  courierName: text("courier_name"),
+  trackingNumber: text("tracking_number"),
+  estimatedDelivery: text("estimated_delivery"),
+  statusNotes: text("status_notes"),
   createdAt: text("created_at")
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),

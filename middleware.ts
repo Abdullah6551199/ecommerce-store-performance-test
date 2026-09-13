@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifyAdminSessionToken } from "@/lib/auth";
 
 export const config = {
   matcher: [
+    "/admin",
     "/admin/:path*",
     "/api/admin/:path*",
     "/cart",
@@ -26,10 +28,11 @@ function addNoStoreHeaders(response: NextResponse): NextResponse {
 
 /**
  * Next.js Edge Middleware for Admin Route Protection & Private Route Cache Bypass
- * - Protects `/admin/*` and `/api/admin/*`
- * - Injects strict no-cache/no-store headers for /cart, /checkout, /admin/*, /api/admin/*, /api/cart/*, /api/orders/*
+ * - Protects `/admin`, `/admin/*`, and `/api/admin/*`
+ * - Strictly verifies `admin_session` token against D1 and verifies admin role
+ * - Injects strict no-cache/no-store headers for sensitive routes
  */
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // For cart, checkout, cart API, and orders API: allow through with strict no-store headers
@@ -52,10 +55,11 @@ export function middleware(request: NextRequest) {
     return addNoStoreHeaders(NextResponse.next());
   }
 
-  // Check for presence of admin session cookie
+  // Check for presence of admin session cookie (strictly ignore customer_session)
   const sessionCookie = request.cookies.get("admin_session");
+  const token = sessionCookie?.value?.trim();
 
-  if (!sessionCookie || !sessionCookie.value) {
+  if (!token) {
     if (pathname.startsWith("/api/admin")) {
       return addNoStoreHeaders(
         NextResponse.json(
@@ -66,9 +70,45 @@ export function middleware(request: NextRequest) {
     }
 
     const loginUrl = new URL("/admin/login", request.url);
+    if (pathname !== "/admin" && pathname !== "/admin/dashboard") {
+      loginUrl.searchParams.set("from", pathname);
+    }
     return addNoStoreHeaders(NextResponse.redirect(loginUrl));
+  }
+
+  // Validate session token and admin role in D1
+  const isValidAdmin = await verifyAdminSessionToken(token).catch(() => false);
+
+  if (!isValidAdmin) {
+    if (pathname.startsWith("/api/admin")) {
+      const response = NextResponse.json(
+        { success: false, error: "Unauthorized. Invalid or expired admin session." },
+        { status: 401 }
+      );
+      response.cookies.set("admin_session", "", {
+        path: "/",
+        maxAge: 0,
+        expires: new Date(0),
+        httpOnly: true,
+      });
+      return addNoStoreHeaders(response);
+    }
+
+    const loginUrl = new URL("/admin/login", request.url);
+    if (pathname !== "/admin" && pathname !== "/admin/dashboard") {
+      loginUrl.searchParams.set("from", pathname);
+    }
+    const response = NextResponse.redirect(loginUrl);
+    response.cookies.set("admin_session", "", {
+      path: "/",
+      maxAge: 0,
+      expires: new Date(0),
+      httpOnly: true,
+    });
+    return addNoStoreHeaders(response);
   }
 
   return addNoStoreHeaders(NextResponse.next());
 }
+
 

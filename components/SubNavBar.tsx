@@ -14,6 +14,7 @@ const SUB_NAV_ITEMS = [
   { label: "Shoes Store", href: "/search?q=shoes" },
   { label: "Bags Store", href: "/search?q=bags" },
   { label: "Jewelry Store", href: "/search?q=jewelry" },
+  { label: "Track Order", href: "/track-order" },
 ];
 
 export default function SubNavBar({ onChatClick }: SubNavProps): React.JSX.Element {

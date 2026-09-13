@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminRootPage() {
   const admin = await getCurrentAdmin();
-  if (admin) {
+  if (admin && admin.role === "admin") {
     redirect("/admin/dashboard");
   } else {
     redirect("/admin/login");

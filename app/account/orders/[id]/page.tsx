@@ -4,6 +4,7 @@ import React, { useState, useEffect, use } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/components/CartContext";
+import OrderStatusTimeline from "@/components/OrderStatusTimeline";
 
 interface OrderDetailItem {
   id: string;
@@ -24,6 +25,10 @@ interface OrderDetailRecord {
   address: string;
   city: string;
   status: string;
+  courierName?: string | null;
+  trackingNumber?: string | null;
+  estimatedDelivery?: string | null;
+  statusNotes?: string | null;
   subtotal: number;
   shipping: number;
   discountAmount: number;
@@ -31,23 +36,8 @@ interface OrderDetailRecord {
   total: number;
   paymentMethod: string;
   createdAt: string;
+  updatedAt?: string | null;
   items: OrderDetailItem[];
-}
-
-const TIMELINE_STEPS = ["pending", "confirmed", "processing", "shipped", "delivered"];
-
-function getStepStatus(currentStatus: string, step: string): "completed" | "current" | "upcoming" {
-  const normCurrent = currentStatus.toLowerCase();
-  const currentIndex = TIMELINE_STEPS.indexOf(normCurrent);
-  const stepIndex = TIMELINE_STEPS.indexOf(step);
-
-  if (normCurrent === "cancelled" || normCurrent === "returned") {
-    return "upcoming";
-  }
-
-  if (stepIndex < currentIndex) return "completed";
-  if (stepIndex === currentIndex) return "current";
-  return "upcoming";
 }
 
 export default function OrderDetailPage({
@@ -202,54 +192,7 @@ export default function OrderDetailPage({
       </div>
 
       {/* Visual Status Timeline */}
-      <div className="p-6 sm:p-7 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-purple-300/70">
-            Order Milestone Progress
-          </h2>
-          <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] border border-purple-200 dark:border-purple-700">
-            {order.status.toUpperCase()}
-          </span>
-        </div>
-
-        {/* Timeline with connecting track */}
-        <div className="relative">
-          {/* Background Track Line */}
-          <div className="absolute top-4 left-6 right-6 h-1 bg-purple-100 dark:bg-purple-900/40 -translate-y-1/2 z-0 hidden sm:block" />
-
-          <div className="grid grid-cols-5 gap-2 relative z-10">
-            {TIMELINE_STEPS.map((step, idx) => {
-              const status = getStepStatus(order.status, step);
-              const isDone = status === "completed";
-              const isCurrent = status === "current";
-
-              return (
-                <div key={step} className="flex flex-col items-center text-center">
-                  {/* Node circle */}
-                  <div
-                    className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-black transition-all ${
-                      isDone
-                        ? "bg-[#960DF2] text-white ring-4 ring-purple-500/20"
-                        : isCurrent
-                        ? "bg-purple-50 dark:bg-[#2A0344] text-[#960DF2] dark:text-[#EACFFC] border-2 border-[#960DF2] ring-4 ring-purple-500/20 animate-pulse"
-                        : "bg-slate-100 dark:bg-purple-950/40 text-slate-400 dark:text-purple-400/50"
-                    }`}
-                  >
-                    {isDone ? "✓" : idx + 1}
-                  </div>
-                  <span
-                    className={`text-[11px] font-extrabold mt-2.5 capitalize ${
-                      isDone || isCurrent ? "text-[#3C0561] dark:text-white" : "text-slate-400 dark:text-purple-300/40"
-                    }`}
-                  >
-                    {step}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <OrderStatusTimeline order={order} />
 
       {/* Two Column Layout: Items & Order Summary */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

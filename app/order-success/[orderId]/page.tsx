@@ -291,13 +291,20 @@ export default function OrderSuccessPage(): React.JSX.Element {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
           <Link
-            href="/"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white px-8 py-3.5 text-sm font-bold shadow-lg shadow-purple-400/25 transition-all cursor-pointer"
+            href={`/track-order?id=${encodeURIComponent(order.id)}`}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#960DF2] to-[#AB3DF5] hover:from-[#780AC2] hover:to-[#960DF2] text-white px-8 py-3.5 text-sm font-bold shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all cursor-pointer"
           >
-            <span>Continue Shopping</span>
+            <span>Track Order Status</span>
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
+          </Link>
+
+          <Link
+            href="/"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-900/30 text-purple-900 dark:text-purple-200 px-6 py-3.5 text-xs font-bold hover:bg-purple-100 dark:hover:bg-purple-900/60 transition-all cursor-pointer"
+          >
+            <span>Continue Shopping</span>
           </Link>
 
           <button

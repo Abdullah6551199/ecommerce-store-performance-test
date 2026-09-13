@@ -317,6 +317,7 @@ export async function destroySession(token: string): Promise<void> {
 
 /**
  * Retrieve current authenticated admin from HTTP-only session cookie
+ * Strictly enforces that user exists and user.role === "admin"
  */
 export async function getCurrentAdmin(sessionToken?: string): Promise<UserRecord | null> {
   let token = sessionToken;
@@ -331,7 +332,22 @@ export async function getCurrentAdmin(sessionToken?: string): Promise<UserRecord
     }
   }
 
-  if (!token) return null;
+  if (!token || typeof token !== "string" || token.trim().length === 0) return null;
 
-  return validateSession(token);
+  const user = await validateSession(token.trim());
+  if (!user || user.role !== "admin") {
+    return null;
+  }
+
+  return user;
 }
+
+/**
+ * Fast edge & middleware check to verify an admin session token is valid and belongs to an admin
+ */
+export async function verifyAdminSessionToken(token: string): Promise<boolean> {
+  if (!token || typeof token !== "string" || token.trim().length === 0) return false;
+  const user = await validateSession(token.trim());
+  return !!(user && user.role === "admin");
+}
+

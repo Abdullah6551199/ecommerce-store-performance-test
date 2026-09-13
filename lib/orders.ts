@@ -60,6 +60,7 @@ export const ORDER_STATUSES = [
   "confirmed",
   "processing",
   "shipped",
+  "out_for_delivery",
   "delivered",
   "cancelled",
   "returned",
@@ -69,6 +70,10 @@ export type OrderStatus = (typeof ORDER_STATUSES)[number];
 
 export const updateOrderStatusSchema = z.object({
   status: z.enum(ORDER_STATUSES),
+  courierName: z.string().trim().optional().nullable(),
+  trackingNumber: z.string().trim().optional().nullable(),
+  estimatedDelivery: z.string().trim().optional().nullable(),
+  statusNotes: z.string().trim().optional().nullable(),
 });
 
 export interface OrderWithItems extends OrderRecord {
@@ -324,6 +329,10 @@ export async function createOrderFromCart(
     paymentMethod: "cod",
     status: "pending",
     hasReview: 0,
+    courierName: null,
+    trackingNumber: null,
+    estimatedDelivery: null,
+    statusNotes: null,
     createdAt: now,
     updatedAt: now,
   };
@@ -438,27 +447,57 @@ export async function createOrderFromCart(
 }
 
 /**
- * Get an order by ID (with items) for storefront confirmation
+ * Get an order by ID (with items) for storefront confirmation and order tracking
+ * Resiliently handles full UUID, short 8-character ID prefix (e.g. #APX-XXXX), or tracking number
  */
-export async function getStorefrontOrder(orderId: string): Promise<OrderWithItems | null> {
+export async function getStorefrontOrder(orderIdOrCode: string): Promise<OrderWithItems | null> {
+  if (!orderIdOrCode || typeof orderIdOrCode !== "string") return null;
+  const clean = orderIdOrCode.trim().replace(/^#/, "").replace(/^APX-/i, "");
+  if (!clean) return null;
+
   const db = getDb();
   if (db) {
-    const [orderRows, itemsRows] = await Promise.all([
-      db.select().from(orders).where(eq(orders.id, orderId)).limit(1),
-      db.select().from(orderItems).where(eq(orderItems.orderId, orderId)),
-    ]);
+    // 1. Try exact match by ID
+    let orderRows = await db.select().from(orders).where(eq(orders.id, clean)).limit(1);
+
+    // 2. If not found, try matching by prefix or tracking number
+    if (orderRows.length === 0) {
+      orderRows = await db
+        .select()
+        .from(orders)
+        .where(
+          or(
+            like(orders.id, `${clean}%`),
+            like(orders.id, `%${clean}%`),
+            eq(orders.trackingNumber, clean)
+          )
+        )
+        .limit(1);
+    }
 
     if (orderRows.length === 0) return null;
 
+    const targetOrder = orderRows[0];
+    const itemsRows = await db
+      .select()
+      .from(orderItems)
+      .where(eq(orderItems.orderId, targetOrder.id));
+
     return {
-      ...orderRows[0],
+      ...targetOrder,
       items: itemsRows,
     };
   }
 
-  const found = memoryOrders.find((o) => o.id === orderId);
+  // Memory fallback
+  const found = memoryOrders.find(
+    (o) =>
+      o.id.toLowerCase() === clean.toLowerCase() ||
+      o.id.toLowerCase().startsWith(clean.toLowerCase()) ||
+      (o.trackingNumber && o.trackingNumber.toLowerCase() === clean.toLowerCase())
+  );
   if (!found) return null;
-  const items = memoryOrderItems.filter((oi) => oi.orderId === orderId);
+  const items = memoryOrderItems.filter((oi) => oi.orderId === found.id);
   return {
     ...found,
     items,
@@ -588,22 +627,126 @@ export async function getAdminOrderById(orderId: string): Promise<OrderWithItems
 }
 
 /**
- * Update an order's fulfillment status
+ * Helper to trigger in-app customer notifications when order status changes
+ */
+export async function onOrderStatusChange(
+  orderId: string,
+  newStatus: OrderStatus,
+  details?: { courierName?: string | null; trackingNumber?: string | null }
+): Promise<void> {
+  const db = getDb();
+  let customerId: string | null = null;
+  let orderShortId = orderId.slice(0, 8).toUpperCase();
+
+  if (db) {
+    try {
+      const found = await db
+        .select({ customerId: orders.customerId, id: orders.id })
+        .from(orders)
+        .where(eq(orders.id, orderId))
+        .limit(1);
+      if (found.length > 0) {
+        customerId = found[0].customerId;
+        orderShortId = found[0].id.slice(0, 8).toUpperCase();
+      }
+    } catch (err) {
+      console.warn("[Orders] Failed to query customer for order status notification:", err);
+    }
+  } else {
+    const memOrder = memoryOrders.find((o) => o.id === orderId);
+    if (memOrder) {
+      customerId = memOrder.customerId;
+    }
+  }
+
+  if (!customerId) return;
+
+  const statusDisplayMap: Record<OrderStatus, string> = {
+    pending: "Pending",
+    confirmed: "Confirmed",
+    processing: "Processing",
+    shipped: "Shipped",
+    out_for_delivery: "Out for Delivery",
+    delivered: "Delivered",
+    cancelled: "Cancelled",
+    returned: "Returned",
+  };
+
+  const statusTitle = `Your order #${orderShortId} is now ${statusDisplayMap[newStatus] || newStatus}`;
+  let statusMessage = `Your order status has been updated to ${statusDisplayMap[newStatus] || newStatus}.`;
+
+  switch (newStatus) {
+    case "confirmed":
+      statusMessage = "Your order has been confirmed and is being prepared.";
+      break;
+    case "processing":
+      statusMessage = "We're preparing your order for shipment.";
+      break;
+    case "shipped":
+      statusMessage = details?.trackingNumber
+        ? `Good news! Your order has been shipped via ${details.courierName || "courier"} (Tracking #${details.trackingNumber}).`
+        : "Good news! Your order has been shipped.";
+      break;
+    case "out_for_delivery":
+      statusMessage = "Your order is out for delivery. Please be available.";
+      break;
+    case "delivered":
+      statusMessage = "Your order has been delivered. Enjoy!";
+      break;
+    case "cancelled":
+      statusMessage = "Your order has been cancelled.";
+      break;
+    case "returned":
+      statusMessage = "Your order has been marked as returned.";
+      break;
+  }
+
+  try {
+    await createCustomerNotification({
+      customerId,
+      type: "order_status",
+      title: statusTitle,
+      message: statusMessage,
+      link: `/account/orders/${orderId}`,
+    });
+    console.log(`[Orders] Notification sent to customer ${customerId} for order ${orderId} (${newStatus})`);
+  } catch (err) {
+    console.warn(`[Orders] Failed to send order status notification for ${orderId}:`, err);
+  }
+}
+
+/**
+ * Update an order's fulfillment status and optional tracking metadata
  */
 export async function updateAdminOrderStatus(
   orderId: string,
-  newStatus: OrderStatus
+  newStatus: OrderStatus,
+  trackingDetails?: {
+    courierName?: string | null;
+    trackingNumber?: string | null;
+    estimatedDelivery?: string | null;
+    statusNotes?: string | null;
+  }
 ): Promise<OrderRecord> {
   const db = getDb();
   const now = new Date().toISOString();
 
+  const updateFields: Record<string, any> = {
+    status: newStatus,
+    updatedAt: now,
+  };
+
+  if (trackingDetails) {
+    if (trackingDetails.courierName !== undefined) updateFields.courierName = trackingDetails.courierName;
+    if (trackingDetails.trackingNumber !== undefined) updateFields.trackingNumber = trackingDetails.trackingNumber;
+    if (trackingDetails.estimatedDelivery !== undefined) updateFields.estimatedDelivery = trackingDetails.estimatedDelivery;
+    if (trackingDetails.statusNotes !== undefined) updateFields.statusNotes = trackingDetails.statusNotes;
+  }
+
   if (db) {
     const updated = await db
       .update(orders)
-      .set({
-        status: newStatus,
-        updatedAt: now,
-      })
+      .set(updateFields)
       .where(eq(orders.id, orderId))
       .returning();
 
@@ -612,26 +755,10 @@ export async function updateAdminOrderStatus(
     }
 
     const updatedOrder = updated[0];
-    if (updatedOrder.customerId) {
-      let title = `Order #${orderId.slice(0, 8).toUpperCase()} Status Updated`;
-      let msg = `Your order status is now: ${newStatus.toUpperCase()}.`;
-      if (newStatus === "shipped") {
-        title = `Your Order #${orderId.slice(0, 8).toUpperCase()} has Shipped!`;
-        msg = "Great news! Your package is on its way to you.";
-      } else if (newStatus === "delivered") {
-        title = `Order #${orderId.slice(0, 8).toUpperCase()} Delivered`;
-        msg = "Your order has been delivered. Thank you for shopping with us!";
-      }
-      try {
-        await createCustomerNotification({
-          customerId: updatedOrder.customerId,
-          type: "order_status",
-          title,
-          message: msg,
-          link: `/account/orders/${orderId}`,
-        });
-      } catch {}
-    }
+    await onOrderStatusChange(orderId, newStatus, {
+      courierName: updatedOrder.courierName,
+      trackingNumber: updatedOrder.trackingNumber,
+    });
 
     return updatedOrder;
   }
@@ -643,9 +770,13 @@ export async function updateAdminOrderStatus(
 
   memoryOrders[idx] = {
     ...memoryOrders[idx],
-    status: newStatus,
-    updatedAt: now,
+    ...updateFields,
   };
+
+  await onOrderStatusChange(orderId, newStatus, {
+    courierName: memoryOrders[idx].courierName,
+    trackingNumber: memoryOrders[idx].trackingNumber,
+  });
 
   return memoryOrders[idx];
 }
@@ -671,6 +802,10 @@ export async function updateBulkAdminOrderStatus(
       .where(inArray(orders.id, orderIds))
       .returning({ id: orders.id });
 
+    for (const r of res) {
+      await onOrderStatusChange(r.id, newStatus).catch(() => {});
+    }
+
     return res.length;
   }
 
@@ -682,6 +817,7 @@ export async function updateBulkAdminOrderStatus(
         status: newStatus,
         updatedAt: now,
       };
+      await onOrderStatusChange(memoryOrders[i].id, newStatus).catch(() => {});
       count++;
     }
   }

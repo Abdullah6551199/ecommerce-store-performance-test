@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
       userRecord = {
         id: "admin-init-user",
         email: "admin@example.com",
-        passwordHash: "$2b$10$ObV9nwqz.wYdS.Hmck6J.eeeIbGm1jfR8Cu7WsVksjJKSwgfyH6kC",
+        passwordHash: "$2b$10$Ptj0gh6MezgQJsDnl5iIFesL4aG086CB3qVhZfW1q/8dJaZBf7/Vm",
         role: "admin",
         createdAt: new Date().toISOString(),
       };

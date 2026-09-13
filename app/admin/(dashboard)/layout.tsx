@@ -12,7 +12,7 @@ export default async function AdminDashboardLayout({
 }) {
   const admin = await getCurrentAdmin();
 
-  if (!admin) {
+  if (!admin || admin.role !== "admin") {
     redirect("/admin/login");
   }
 

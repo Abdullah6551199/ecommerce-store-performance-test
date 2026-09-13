@@ -218,7 +218,7 @@ export default async function Footer({
                 </Link>
               </li>
               <li>
-                <Link href="/account/orders" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                <Link href="/track-order" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
                   Track Your Order
                 </Link>
               </li>

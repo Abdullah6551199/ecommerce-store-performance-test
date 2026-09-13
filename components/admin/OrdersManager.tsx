@@ -8,7 +8,8 @@ const STATUS_COLORS: Record<string, { bg: string; text: string; border: string }
   confirmed: { bg: "bg-blue-500/10", text: "text-blue-600 dark:text-blue-400", border: "border-blue-500/30" },
   processing: { bg: "bg-purple-500/10", text: "text-purple-600 dark:text-purple-400", border: "border-purple-500/30" },
   shipped: { bg: "bg-cyan-500/10", text: "text-cyan-600 dark:text-cyan-400", border: "border-cyan-500/30" },
-  delivered: { bg: "bg-[#18C729]/15", text: "text-emerald-700 dark:text-[#18C729]", border: "border-[#18C729]/40" },
+  out_for_delivery: { bg: "bg-indigo-500/10", text: "text-indigo-600 dark:text-indigo-400", border: "border-indigo-500/30" },
+  delivered: { bg: "bg-[#960DF2]/15", text: "text-[#960DF2] dark:text-[#EACFFC]", border: "border-[#960DF2]/40" },
   cancelled: { bg: "bg-red-500/10", text: "text-red-600 dark:text-red-400", border: "border-red-500/30" },
   returned: { bg: "bg-orange-500/10", text: "text-orange-600 dark:text-orange-400", border: "border-orange-500/30" },
 };
@@ -18,6 +19,7 @@ const ALL_STATUSES: OrderStatus[] = [
   "confirmed",
   "processing",
   "shipped",
+  "out_for_delivery",
   "delivered",
   "cancelled",
   "returned",
@@ -36,6 +38,13 @@ export default function OrdersManager(): React.JSX.Element {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState<OrderWithItems | null>(null);
   const [isDetailsLoading, setIsDetailsLoading] = useState(false);
+
+  // Tracking details state for modal
+  const [modalCourierName, setModalCourierName] = useState("");
+  const [modalTrackingNumber, setModalTrackingNumber] = useState("");
+  const [modalEstimatedDelivery, setModalEstimatedDelivery] = useState("");
+  const [modalStatusNotes, setModalStatusNotes] = useState("");
+  const [isSavingTracking, setIsSavingTracking] = useState(false);
 
   // Part 4: Inline Status Auto-Update
   const [activeDropdownOrderId, setActiveDropdownOrderId] = useState<string | null>(null);
@@ -147,6 +156,10 @@ export default function OrdersManager(): React.JSX.Element {
         throw new Error(json.error || "Failed to fetch order details");
       }
       setSelectedOrderDetails(json.data);
+      setModalCourierName(json.data.courierName || "");
+      setModalTrackingNumber(json.data.trackingNumber || "");
+      setModalEstimatedDelivery(json.data.estimatedDelivery || "");
+      setModalStatusNotes(json.data.statusNotes || "");
     } catch (err) {
       console.error("Error loading order details:", err);
       showToast(err instanceof Error ? err.message : "Failed to load order details", "error");
@@ -158,6 +171,60 @@ export default function OrdersManager(): React.JSX.Element {
   const handleCloseDetails = () => {
     setSelectedOrderId(null);
     setSelectedOrderDetails(null);
+  };
+
+  // Save Tracking metadata
+  const handleSaveTracking = async () => {
+    if (!selectedOrderDetails) return;
+    try {
+      setIsSavingTracking(true);
+      const res = await fetch(`/api/admin/orders/${selectedOrderDetails.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: selectedOrderDetails.status,
+          courierName: modalCourierName.trim() || null,
+          trackingNumber: modalTrackingNumber.trim() || null,
+          estimatedDelivery: modalEstimatedDelivery.trim() || null,
+          statusNotes: modalStatusNotes.trim() || null,
+        }),
+      });
+
+      const json = (await res.json()) as any;
+      if (!res.ok || !json.success) {
+        throw new Error(json.error || "Failed to update tracking");
+      }
+
+      showToast("Order tracking details updated successfully!", "success");
+      setSelectedOrderDetails((prev) =>
+        prev
+          ? {
+              ...prev,
+              courierName: modalCourierName.trim() || null,
+              trackingNumber: modalTrackingNumber.trim() || null,
+              estimatedDelivery: modalEstimatedDelivery.trim() || null,
+              statusNotes: modalStatusNotes.trim() || null,
+            }
+          : null
+      );
+      setOrdersList((prev) =>
+        prev.map((o) =>
+          o.id === selectedOrderDetails.id
+            ? {
+                ...o,
+                courierName: modalCourierName.trim() || null,
+                trackingNumber: modalTrackingNumber.trim() || null,
+                estimatedDelivery: modalEstimatedDelivery.trim() || null,
+                statusNotes: modalStatusNotes.trim() || null,
+              }
+            : o
+        )
+      );
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to update tracking", "error");
+    } finally {
+      setIsSavingTracking(false);
+    }
   };
 
   // Part 4: Inline Auto-Update Status on Selection
@@ -317,7 +384,7 @@ export default function OrdersManager(): React.JSX.Element {
           aria-live="polite"
           className={`fixed top-4 right-4 z-50 flex items-center gap-2 rounded-xl px-4 py-3 text-xs font-bold shadow-2xl transition-all duration-300 ${
             toast.type === "success"
-              ? "bg-[#18C729] text-black shadow-[#18C729]/30"
+              ? "bg-[#960DF2] text-white shadow-[#960DF2]/30"
               : "bg-red-500 text-white shadow-red-500/30"
           }`}
         >
@@ -339,7 +406,7 @@ export default function OrdersManager(): React.JSX.Element {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
             <span>Orders & Fulfillment</span>
-            <span className="rounded-full bg-[#18C729]/15 border border-[#18C729]/30 px-2.5 py-0.5 text-xs font-mono text-[#18C729]">
+            <span className="rounded-full bg-purple-100 dark:bg-purple-900/40 border border-purple-200 dark:border-purple-700 px-2.5 py-0.5 text-xs font-mono text-[#960DF2] dark:text-[#EACFFC]">
               Live D1 Pipeline
             </span>
           </h1>
@@ -355,7 +422,7 @@ export default function OrdersManager(): React.JSX.Element {
             className="flex items-center gap-2 rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-white/80 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-all cursor-pointer"
           >
             <svg
-              className={`h-4 w-4 ${isLoading ? "animate-spin text-[#18C729]" : ""}`}
+              className={`h-4 w-4 ${isLoading ? "animate-spin text-[#960DF2]" : ""}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -387,8 +454,8 @@ export default function OrdersManager(): React.JSX.Element {
           <p className="mt-1 text-2xl font-bold font-mono text-cyan-600 dark:text-cyan-400">{metrics.shipped}</p>
         </div>
         <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-4 shadow-lg">
-          <p className="text-[11px] font-mono uppercase tracking-wider text-[#18C729]">Delivered (Paid)</p>
-          <p className="mt-1 text-2xl font-bold font-mono text-[#18C729]">{metrics.delivered}</p>
+          <p className="text-[11px] font-mono uppercase tracking-wider text-[#960DF2] dark:text-[#EACFFC]">Delivered (Paid)</p>
+          <p className="mt-1 text-2xl font-bold font-mono text-[#960DF2] dark:text-[#EACFFC]">{metrics.delivered}</p>
         </div>
       </div>
 
@@ -404,7 +471,7 @@ export default function OrdersManager(): React.JSX.Element {
               setCurrentPage(1);
             }}
             placeholder="Search by customer name, phone, city, order ID..."
-            className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 pl-9 pr-4 py-2 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/40 focus:border-[#18C729] focus:outline-none transition-colors"
+            className="w-full rounded-xl border border-zinc-300 dark:border-white/15 bg-zinc-50 dark:bg-black/40 pl-9 pr-4 py-2 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-white/40 focus:border-[#960DF2] focus:outline-none transition-colors"
           />
           <svg
             className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400 dark:text-white/40"
@@ -428,7 +495,7 @@ export default function OrdersManager(): React.JSX.Element {
               }}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
                 statusFilter === st
-                  ? "bg-[#18C729] text-black shadow-md shadow-[#18C729]/20"
+                  ? "bg-[#960DF2] text-white shadow-md shadow-[#960DF2]/20"
                   : "bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
@@ -461,7 +528,7 @@ export default function OrdersManager(): React.JSX.Element {
                     }}
                     onChange={handleToggleSelectAll}
                     aria-label="Select all visible orders"
-                    className="h-4 w-4 rounded border-zinc-300 dark:border-white/30 text-[#18C729] focus:ring-[#18C729] accent-[#18C729] cursor-pointer"
+                    className="h-4 w-4 rounded border-zinc-300 dark:border-white/30 text-[#960DF2] focus:ring-[#960DF2] accent-[#960DF2] cursor-pointer"
                   />
                 </th>
                 <th className="px-5 py-3.5">Order ID</th>
@@ -479,7 +546,7 @@ export default function OrdersManager(): React.JSX.Element {
               {isLoading ? (
                 <tr>
                   <td colSpan={10} className="py-16 text-center text-zinc-400 dark:text-white/40">
-                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-zinc-300 dark:border-white/20 border-t-[#18C729] mb-2" />
+                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-zinc-300 dark:border-white/20 border-t-[#960DF2] mb-2" />
                     <p className="font-mono text-[11px]">LOADING ORDERS FROM DATABASE...</p>
                   </td>
                 </tr>
@@ -513,7 +580,7 @@ export default function OrdersManager(): React.JSX.Element {
                       key={order.id}
                       className={`transition-colors ${
                         isRowSelected
-                          ? "bg-[#18C729]/10 dark:bg-[#18C729]/10"
+                          ? "bg-purple-500/10 dark:bg-purple-500/10"
                           : "hover:bg-zinc-50 dark:hover:bg-white/[0.02]"
                       }`}
                     >
@@ -524,7 +591,7 @@ export default function OrdersManager(): React.JSX.Element {
                           checked={isRowSelected}
                           onChange={() => handleToggleSelectRow(order.id)}
                           aria-label={`Select order ${shortId}`}
-                          className="h-4 w-4 rounded border-zinc-300 dark:border-white/30 text-[#18C729] focus:ring-[#18C729] accent-[#18C729] cursor-pointer"
+                          className="h-4 w-4 rounded border-zinc-300 dark:border-white/30 text-[#960DF2] focus:ring-[#960DF2] accent-[#960DF2] cursor-pointer"
                         />
                       </td>
 
@@ -533,7 +600,7 @@ export default function OrdersManager(): React.JSX.Element {
                         <button
                           type="button"
                           onClick={() => handleOpenDetails(order.id)}
-                          className="text-emerald-700 dark:text-[#FEF500] hover:underline cursor-pointer"
+                          className="text-[#960DF2] dark:text-[#EACFFC] hover:underline cursor-pointer"
                         >
                           #{shortId}
                         </button>
@@ -562,8 +629,8 @@ export default function OrdersManager(): React.JSX.Element {
                       </td>
 
                       {/* Total */}
-                      <td className="px-5 py-4 text-right font-mono font-bold text-sm text-emerald-600 dark:text-[#FEF500]">
-                        ${order.total.toFixed(2)}
+                      <td className="px-5 py-4 text-right font-mono font-bold text-sm text-[#960DF2] dark:text-[#EACFFC]">
+                        Rs. {order.total.toFixed(2)}
                       </td>
 
                       {/* Payment */}
@@ -581,7 +648,7 @@ export default function OrdersManager(): React.JSX.Element {
                           onClick={() =>
                             setActiveDropdownOrderId(isDropdownOpen ? null : order.id)
                           }
-                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer hover:ring-2 hover:ring-[#18C729]/40 ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border} ${
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer hover:ring-2 hover:ring-[#960DF2]/40 ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border} ${
                             isRowUpdating ? "opacity-60 cursor-wait" : ""
                           }`}
                           title="Click to quickly change order status"
@@ -624,7 +691,7 @@ export default function OrdersManager(): React.JSX.Element {
                                 >
                                   <span className={style.text}>{st}</span>
                                   {isCurrent && (
-                                    <span className="h-1.5 w-1.5 rounded-full bg-[#18C729]" />
+                                    <span className="h-1.5 w-1.5 rounded-full bg-[#960DF2]" />
                                   )}
                                 </button>
                               );
@@ -678,7 +745,7 @@ export default function OrdersManager(): React.JSX.Element {
                     onClick={() => setCurrentPage(pNum)}
                     className={`h-8 w-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
                       pNum === currentPage
-                        ? "bg-[#18C729] text-black font-bold shadow-md shadow-[#18C729]/20"
+                        ? "bg-[#960DF2] text-white font-bold shadow-md shadow-[#960DF2]/20"
                         : "border border-zinc-200 dark:border-white/10 bg-white dark:bg-white/5 text-zinc-700 dark:text-white/70 hover:bg-zinc-100 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
                     }`}
                   >
@@ -705,10 +772,10 @@ export default function OrdersManager(): React.JSX.Element {
         <div
           role="region"
           aria-label="Bulk action bar"
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 rounded-2xl border border-zinc-300 dark:border-white/20 bg-white/95 dark:bg-[#0c140f]/95 px-5 py-3.5 shadow-2xl backdrop-blur-md animate-in slide-in-from-bottom-5 duration-200"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 rounded-2xl border border-purple-200 dark:border-purple-800/60 bg-white/95 dark:bg-[#1E0230]/95 px-5 py-3.5 shadow-2xl backdrop-blur-md animate-in slide-in-from-bottom-5 duration-200"
         >
           <div className="flex items-center gap-2 pr-3 border-r border-zinc-200 dark:border-white/15">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#18C729] text-black text-xs font-black">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#960DF2] text-white text-xs font-black">
               {selectedOrderIds.size}
             </span>
             <span className="text-xs font-bold text-zinc-900 dark:text-white whitespace-nowrap">
@@ -722,7 +789,7 @@ export default function OrdersManager(): React.JSX.Element {
               type="button"
               disabled={isBulkUpdating}
               onClick={() => setBulkDropdownOpen(!bulkDropdownOpen)}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#18C729] to-[#12a822] px-4 py-2 text-xs font-bold text-black hover:brightness-110 shadow-md shadow-[#18C729]/20 transition-all cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] px-4 py-2 text-xs font-bold text-white shadow-md shadow-[#960DF2]/20 transition-all cursor-pointer disabled:opacity-50"
             >
               {isBulkUpdating ? (
                 <svg className="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -768,7 +835,7 @@ export default function OrdersManager(): React.JSX.Element {
             onClick={handleExportSelectedCsv}
             className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-3 py-2 text-xs font-semibold text-zinc-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors cursor-pointer"
           >
-            <svg className="h-3.5 w-3.5 text-amber-500 dark:text-[#FEF500]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-3.5 w-3.5 text-purple-600 dark:text-[#EACFFC]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span className="hidden sm:inline">Export CSV</span>
@@ -806,7 +873,7 @@ export default function OrdersManager(): React.JSX.Element {
               <div>
                 <h3 className="text-lg font-bold tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
                   <span>Order Details</span>
-                  <span className="font-mono text-emerald-600 dark:text-[#FEF500]">
+                  <span className="font-mono text-[#960DF2] dark:text-[#EACFFC]">
                     #{selectedOrderId.slice(0, 8).toUpperCase()}
                   </span>
                 </h3>
@@ -824,7 +891,7 @@ export default function OrdersManager(): React.JSX.Element {
 
             {isDetailsLoading ? (
               <div className="py-16 text-center text-zinc-400 dark:text-white/40">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-zinc-300 dark:border-white/20 border-t-[#18C729] mb-3" />
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-zinc-300 dark:border-white/20 border-t-[#960DF2] mb-3" />
                 <p className="font-mono text-xs">LOADING ORDER BREAKDOWN...</p>
               </div>
             ) : selectedOrderDetails ? (
@@ -854,7 +921,7 @@ export default function OrdersManager(): React.JSX.Element {
                       <select
                         value={selectedOrderDetails.status}
                         onChange={(e) => handleInlineStatusSelect(selectedOrderDetails.id, e.target.value as OrderStatus)}
-                        className="rounded-xl border border-zinc-300 dark:border-white/20 bg-white dark:bg-black/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:border-[#18C729] focus:outline-none"
+                        className="rounded-xl border border-zinc-300 dark:border-white/20 bg-white dark:bg-black/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:border-[#960DF2] focus:outline-none"
                       >
                         {ALL_STATUSES.map((st) => (
                           <option key={st} value={st} className="bg-white dark:bg-[#09100c] text-zinc-900 dark:text-white">
@@ -863,6 +930,77 @@ export default function OrdersManager(): React.JSX.Element {
                         ))}
                       </select>
                     </div>
+                  </div>
+                </div>
+
+                {/* Tracking & Shipping Details Section */}
+                <div className="rounded-2xl border border-purple-200 dark:border-purple-900/50 bg-purple-50/50 dark:bg-purple-950/20 p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#3C0561] dark:text-purple-200">
+                      Live Courier &amp; Tracking Details
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleSaveTracking}
+                      disabled={isSavingTracking}
+                      className="px-3.5 py-1.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-bold text-xs shadow-sm transition disabled:opacity-50"
+                    >
+                      {isSavingTracking ? "Saving..." : "Save Tracking Info"}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-purple-300/70 mb-1">
+                        Courier Name
+                      </label>
+                      <input
+                        type="text"
+                        value={modalCourierName}
+                        onChange={(e) => setModalCourierName(e.target.value)}
+                        placeholder="e.g. TCS, Leopards, DHL"
+                        className="w-full rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/40 px-3 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-[#960DF2] focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-purple-300/70 mb-1">
+                        Tracking Number
+                      </label>
+                      <input
+                        type="text"
+                        value={modalTrackingNumber}
+                        onChange={(e) => setModalTrackingNumber(e.target.value)}
+                        placeholder="e.g. TRK-9827364"
+                        className="w-full rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/40 px-3 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-[#960DF2] focus:outline-none font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-purple-300/70 mb-1">
+                        Estimated Delivery
+                      </label>
+                      <input
+                        type="text"
+                        value={modalEstimatedDelivery}
+                        onChange={(e) => setModalEstimatedDelivery(e.target.value)}
+                        placeholder="e.g. Sep 18, 2026"
+                        className="w-full rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/40 px-3 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-[#960DF2] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-purple-300/70 mb-1">
+                      Status Remarks / Public Notes
+                    </label>
+                    <input
+                      type="text"
+                      value={modalStatusNotes}
+                      onChange={(e) => setModalStatusNotes(e.target.value)}
+                      placeholder="e.g. Package dispatched from Karachi hub, customer confirmed address"
+                      className="w-full rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/40 px-3 py-1.5 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-[#960DF2] focus:outline-none"
+                    />
                   </div>
                 </div>
 
@@ -886,7 +1024,7 @@ export default function OrdersManager(): React.JSX.Element {
                     <p className="font-medium text-zinc-900 dark:text-white">{selectedOrderDetails.address}</p>
                     <p className="font-medium text-zinc-700 dark:text-white/70">{selectedOrderDetails.city}</p>
                     {selectedOrderDetails.notes && (
-                      <p className="text-[11px] text-amber-700 dark:text-[#FEF500]/80 italic mt-1">
+                      <p className="text-[11px] text-purple-600 dark:text-purple-300 italic mt-1">
                         Note: &quot;{selectedOrderDetails.notes}&quot;
                       </p>
                     )}
@@ -907,11 +1045,11 @@ export default function OrdersManager(): React.JSX.Element {
                             <p className="text-[11px] text-zinc-500 dark:text-white/50">{it.variantName}</p>
                           )}
                           <p className="text-[10px] text-zinc-400 dark:text-white/40 font-mono mt-0.5">
-                            Qty: {it.quantity} × ${it.unitPrice.toFixed(2)}
+                            Qty: {it.quantity} × Rs. {it.unitPrice.toFixed(2)}
                           </p>
                         </div>
                         <div className="text-right font-mono font-bold text-zinc-900 dark:text-white">
-                          ${it.lineTotal.toFixed(2)}
+                          Rs. {it.lineTotal.toFixed(2)}
                         </div>
                       </div>
                     ))}
@@ -922,11 +1060,11 @@ export default function OrdersManager(): React.JSX.Element {
                 <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-black/40 p-4 space-y-2 font-mono">
                   <div className="flex justify-between text-zinc-600 dark:text-white/60">
                     <span>Subtotal</span>
-                    <span>${selectedOrderDetails.subtotal.toFixed(2)}</span>
+                    <span>Rs. {selectedOrderDetails.subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-zinc-600 dark:text-white/60">
                     <span>Shipping</span>
-                    <span>${selectedOrderDetails.shipping.toFixed(2)}</span>
+                    <span>{selectedOrderDetails.shipping === 0 ? "FREE" : `Rs. ${selectedOrderDetails.shipping.toFixed(2)}`}</span>
                   </div>
                   <div className="flex justify-between text-zinc-600 dark:text-white/60">
                     <span>Payment Method</span>
@@ -934,8 +1072,8 @@ export default function OrdersManager(): React.JSX.Element {
                   </div>
                   <div className="flex justify-between text-base font-bold text-zinc-900 dark:text-white pt-2 border-t border-zinc-200 dark:border-white/10">
                     <span>Total Due</span>
-                    <span className="text-lg font-black text-emerald-600 dark:text-[#FEF500]">
-                      ${selectedOrderDetails.total.toFixed(2)}
+                    <span className="text-lg font-black text-[#960DF2] dark:text-[#EACFFC]">
+                      Rs. {selectedOrderDetails.total.toFixed(2)}
                     </span>
                   </div>
                 </div>

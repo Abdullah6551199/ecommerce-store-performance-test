@@ -8,6 +8,8 @@ import { getStoreSettings } from "@/lib/settings";
 import { getThemeSettings, generateThemeCss } from "@/lib/theme";
 import { CartProvider } from "@/components/CartContext";
 import { WishlistProvider } from "@/components/WishlistContext";
+import { CompareProvider } from "@/components/CompareContext";
+import CompareBar from "@/components/CompareBar";
 import "./globals.css";
 
 import CartDrawerContainer from "@/components/CartDrawerContainer";
@@ -115,19 +117,23 @@ export default async function RootLayout({
       <body className={`${inter.className} min-h-screen flex flex-col antialiased selection:bg-[#960DF2] selection:text-white bg-[var(--bg-primary)] text-[var(--text-body)]`}>
         <CartProvider>
           <WishlistProvider>
-            {/* Main Background Wrapper */}
-            <div className="relative flex min-h-screen flex-col bg-[var(--bg-primary)] transition-colors duration-300">
-              {/* Foreground content stack */}
-              <div className="relative z-10 flex min-h-screen flex-col">
-                <Header settings={mergedSettings} />
-                <main className="flex-1">{children}</main>
-                <Footer settings={mergedSettings} />
+            <CompareProvider>
+              {/* Main Background Wrapper */}
+              <div className="relative flex min-h-screen flex-col bg-[var(--bg-primary)] transition-colors duration-300">
+                {/* Foreground content stack */}
+                <div className="relative z-10 flex min-h-screen flex-col">
+                  <Header settings={mergedSettings} />
+                  <main className="flex-1">{children}</main>
+                  <Footer settings={mergedSettings} />
+                </div>
               </div>
-            </div>
-            {/* Global Cart Slide-Over Drawer (Loaded on demand) */}
-            <CartDrawerContainer />
-            {/* Global Broadcast Popup Modal */}
-            <BroadcastPopup />
+              {/* Global Cart Slide-Over Drawer (Loaded on demand) */}
+              <CartDrawerContainer />
+              {/* Global Broadcast Popup Modal */}
+              <BroadcastPopup />
+              {/* Global Bottom Compare Bar */}
+              <CompareBar />
+            </CompareProvider>
           </WishlistProvider>
         </CartProvider>
       </body>

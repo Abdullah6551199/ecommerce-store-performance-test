@@ -958,6 +958,60 @@ export type NewTaxSettingRecord = typeof taxSettings.$inferInsert;
 export type ShippingZoneRecord = typeof shippingZones.$inferSelect;
 export type NewShippingZoneRecord = typeof shippingZones.$inferInsert;
 
+// 35. Product Bundles Table (Stage 21)
+export const productBundles = sqliteTable("product_bundles", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
+  bundlePrice: real("bundle_price").notNull(),
+  originalPrice: real("original_price").notNull(),
+  discountPercentage: real("discount_percentage"),
+  imageUrl: text("image_url"),
+  status: text("status", { enum: ["active", "draft"] }).default("active"),
+  isFeatured: integer("is_featured", { mode: "boolean" }).default(false),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
 
+// 36. Bundle Items Table (Stage 21)
+export const bundleItems = sqliteTable("bundle_items", {
+  id: text("id").primaryKey(),
+  bundleId: text("bundle_id")
+    .notNull()
+    .references(() => productBundles.id, { onDelete: "cascade" }),
+  productId: text("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+  variantId: text("variant_id"),
+  quantity: integer("quantity").default(1),
+  sortOrder: integer("sort_order").default(0),
+});
 
+// Bundle Relations
+export const productBundlesRelations = relations(productBundles, ({ many }) => ({
+  items: many(bundleItems),
+}));
 
+export const bundleItemsRelations = relations(bundleItems, ({ one }) => ({
+  bundle: one(productBundles, {
+    fields: [bundleItems.bundleId],
+    references: [productBundles.id],
+  }),
+  product: one(products, {
+    fields: [bundleItems.productId],
+    references: [products.id],
+  }),
+}));
+
+export type ProductBundleRecord = typeof productBundles.$inferSelect;
+export type NewProductBundleRecord = typeof productBundles.$inferInsert;
+
+export type BundleItemRecord = typeof bundleItems.$inferSelect;
+export type NewBundleItemRecord = typeof bundleItems.$inferInsert;

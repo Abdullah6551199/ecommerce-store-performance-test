@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProductBySlug, getRelatedProducts, listCatalogProducts } from "@/lib/products";
+import { getProductBundles } from "@/lib/bundles";
 import ProductShowcase from "@/components/ProductShowcase";
+import ProductBundleCrossSell from "@/components/product/ProductBundleCrossSell";
 import ProductTabs from "@/components/product/ProductTabs";
 import RelatedProductsCarousel from "@/components/product/RelatedProductsCarousel";
 import RecentlyViewedCarousel from "@/components/product/RecentlyViewedCarousel";
@@ -93,10 +95,11 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
     notFound();
   }
 
-  const [relatedProducts, ratingSummary, { reviews: approvedReviews }] = await Promise.all([
+  const [relatedProducts, ratingSummary, { reviews: approvedReviews }, productBundles] = await Promise.all([
     getRelatedProducts(product.id, product.categoryId, 4),
     getProductRatingSummary(product.id),
     getProductReviews(product.id, { status: "approved", limit: 10, sort: "recent" }),
+    getProductBundles(product.id),
   ]);
 
   // Structured Data (JSON-LD) with aggregate rating and reviews
@@ -170,6 +173,11 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
           averageRating={ratingSummary.averageRating || 4.8}
           reviewCount={ratingSummary.totalReviews || approvedReviews.length || 24}
         />
+
+        {/* Product Bundle Cross-Sell ("Also available in bundle") */}
+        {productBundles.length > 0 && (
+          <ProductBundleCrossSell bundles={productBundles} />
+        )}
 
         {/* B4: Product Tabs Section (Description, Specifications, Reviews, Shipping & Returns) */}
         <ProductTabs

@@ -64,6 +64,16 @@ export default function MobileNav({
             Shop All Products
           </Link>
 
+          {/* Bundles */}
+          <Link
+            href="/bundles"
+            onClick={closeMenu}
+            className="flex min-h-[42px] items-center justify-between px-3 py-2 text-sm font-semibold text-[#3C0561] dark:text-purple-100 hover:text-[#960DF2] rounded-xl hover:bg-white/60 dark:hover:bg-[#5A0891]/60 transition"
+          >
+            <span>Product Bundles</span>
+            <span className="rounded-full bg-[#960DF2] text-[10px] text-white px-2 py-0.5 font-bold">Save</span>
+          </Link>
+
           {/* 3. Categories Accordion */}
           <div>
             <button

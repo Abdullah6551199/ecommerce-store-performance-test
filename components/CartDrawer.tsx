@@ -256,6 +256,15 @@ export default function CartDrawer(): React.JSX.Element {
                     </button>
                   </div>
 
+                  {item.bundleName && (
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#960DF2]/15 dark:bg-[#960DF2]/30 px-1.5 py-0.5 text-[9px] font-bold text-[#960DF2] dark:text-[#EACFFC]">
+                        <span>Bundle:</span>
+                        <span className="truncate max-w-[140px]">{item.bundleName}</span>
+                      </span>
+                    </div>
+                  )}
+
                   {item.variantOptions && Object.keys(item.variantOptions).length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-0.5">
                       {Object.entries(item.variantOptions).map(([key, val]) => (

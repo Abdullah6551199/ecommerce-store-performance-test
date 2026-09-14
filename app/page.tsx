@@ -8,6 +8,8 @@ import {
   getTopRatedProducts,
 } from "@/lib/products";
 import { renderHomepageSection } from "@/components/homepage/HomepageSections";
+import { getFeaturedBundles } from "@/lib/bundles";
+import FeaturedBundlesSection from "@/components/homepage/FeaturedBundlesSection";
 import type { Metadata } from "next";
 import { getStoreSettings } from "@/lib/settings";
 import { getBaseUrl } from "@/lib/seo";
@@ -54,12 +56,13 @@ export default async function HomePage(): Promise<React.JSX.Element> {
   }
 
   // Pre-fetch catalog data for sections that require relational records
-  const [categories, featuredProducts, bestSellers, newArrivals, topRated] = await Promise.all([
+  const [categories, featuredProducts, bestSellers, newArrivals, topRated, featuredBundles] = await Promise.all([
     getActiveCategories(),
     getFeaturedProducts(10),
     getBestSellerProducts(10),
     getNewArrivalProducts(10),
     getTopRatedProducts(10),
+    getFeaturedBundles(4),
   ]);
 
   // Identify LCP candidate hero image for high-priority preloading
@@ -68,6 +71,10 @@ export default async function HomePage(): Promise<React.JSX.Element> {
   const heroImageUrl = firstSlideImage
     ? normalizeImageUrl(firstSlideImage, { hero: true, width: 900, quality: 80 })
     : null;
+
+  const hasTrendingSection = sections.some(
+    (s) => s.type === "trending_products" || s.type === "trending_tabs" || s.type === "featured_products"
+  );
 
   return (
     <>
@@ -80,18 +87,32 @@ export default async function HomePage(): Promise<React.JSX.Element> {
         />
       )}
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-16 sm:space-y-20">
-        {sections.map((section) => (
-          <React.Fragment key={section.id}>
-            {renderHomepageSection(
-              section,
-              categories,
-              featuredProducts,
-              bestSellers,
-              newArrivals,
-              topRated
-            )}
-          </React.Fragment>
-        ))}
+        {sections.map((section) => {
+          const isTrending =
+            section.type === "trending_products" ||
+            section.type === "trending_tabs" ||
+            section.type === "featured_products";
+
+          return (
+            <React.Fragment key={section.id}>
+              {renderHomepageSection(
+                section,
+                categories,
+                featuredProducts,
+                bestSellers,
+                newArrivals,
+                topRated
+              )}
+              {isTrending && featuredBundles.length > 0 && (
+                <FeaturedBundlesSection bundles={featuredBundles} />
+              )}
+            </React.Fragment>
+          );
+        })}
+
+        {!hasTrendingSection && featuredBundles.length > 0 && (
+          <FeaturedBundlesSection bundles={featuredBundles} />
+        )}
       </div>
     </>
   );

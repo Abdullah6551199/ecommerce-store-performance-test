@@ -153,6 +153,15 @@ export default async function Header({
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
             </Link>
 
+            {/* Bundles */}
+            <Link href="/bundles" className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group">
+              <span className="flex items-center gap-1">
+                <span>Bundles</span>
+                <span className="rounded-full bg-[#960DF2] text-[9px] text-white px-1.5 py-0.2 font-bold">Save</span>
+              </span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
+            </Link>
+
             {/* Categories Dropdown */}
             <CategoriesDropdown categories={activeCategories} />
 

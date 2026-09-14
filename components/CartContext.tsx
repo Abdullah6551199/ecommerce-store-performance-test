@@ -27,6 +27,9 @@ export interface StoredCartItem {
   imageUrl: string;
   stockQuantity: number; // snapshot for soft check
   options: Record<string, string> | null;
+  bundleId?: string | null;
+  bundleName?: string | null;
+  originalPrice?: number | null;
 }
 
 export interface StoredCart {
@@ -42,6 +45,9 @@ export interface AddItemOptions {
   salePrice?: number | null;
   stockQuantity?: number;
   variantOptions?: Record<string, string> | null;
+  bundleId?: string | null;
+  bundleName?: string | null;
+  originalPrice?: number | null;
   openOnSuccess?: boolean;
 }
 
@@ -89,6 +95,18 @@ interface CartContextType {
     items: BulkAddItemEntry[],
     openOnSuccess?: boolean
   ) => Promise<{ success: boolean; count: number }>;
+  addBundleToCart: (bundle: {
+    id: string;
+    name: string;
+    bundlePrice: number;
+    originalPrice: number;
+    items: Array<{
+      productId: string;
+      variantId?: string | null;
+      quantity?: number;
+      product?: any;
+    }>;
+  }) => Promise<boolean>;
   updateQuantity: (cartItemId: string, quantity: number) => Promise<boolean>;
   removeItem: (cartItemId: string) => Promise<boolean>;
   clearCart: () => void;
@@ -107,7 +125,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 function buildCartItemDetail(item: StoredCartItem): CartItemDetail {
   const effectivePrice = Number(item.salePrice ?? item.price);
   const lineTotal = Number((effectivePrice * item.quantity).toFixed(2));
-  const id = `${item.productId}_${item.variantId || "default"}`;
+  const id = `${item.productId}_${item.variantId || "default"}${item.bundleId ? `_${item.bundleId}` : ""}`;
 
   return {
     id,
@@ -124,6 +142,8 @@ function buildCartItemDetail(item: StoredCartItem): CartItemDetail {
     lineTotal,
     stockQuantity: item.stockQuantity,
     stockStatus: item.stockQuantity > 0 ? "in_stock" : "out_of_stock",
+    bundleId: item.bundleId || null,
+    bundleName: item.bundleName || null,
   };
 }
 
@@ -806,18 +826,85 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [showToast, persistItems]
   );
 
+  const addBundleToCart = useCallback(
+    async (bundle: {
+      id: string;
+      name: string;
+      bundlePrice: number;
+      originalPrice: number;
+      items: Array<{
+        productId: string;
+        variantId?: string | null;
+        quantity?: number;
+        product?: any;
+      }>;
+    }): Promise<boolean> => {
+      if (!bundle || !bundle.items || bundle.items.length === 0) return false;
+
+      const discountRatio =
+        bundle.originalPrice > 0 ? bundle.bundlePrice / bundle.originalPrice : 1;
+
+      const currentList = [...storedItemsRef.current];
+
+      for (const item of bundle.items) {
+        const prod = item.product;
+        const basePrice = prod ? Number(prod.price) : 0;
+        const discountedPrice = Math.round(basePrice * discountRatio * 100) / 100;
+        const qty = item.quantity && item.quantity > 0 ? item.quantity : 1;
+        const normVariant = item.variantId || null;
+
+        const existingIdx = currentList.findIndex(
+          (it) =>
+            it.productId === item.productId &&
+            (it.variantId || null) === normVariant &&
+            it.bundleId === bundle.id
+        );
+
+        if (existingIdx >= 0) {
+          currentList[existingIdx] = {
+            ...currentList[existingIdx],
+            quantity: currentList[existingIdx].quantity + qty,
+          };
+        } else {
+          currentList.push({
+            productId: item.productId,
+            variantId: normVariant,
+            quantity: qty,
+            name: prod?.name || "Product",
+            slug: prod?.slug || "",
+            price: discountedPrice,
+            salePrice: null,
+            imageUrl: prod?.mainImage || "",
+            stockQuantity: prod?.stockQuantity ?? 99,
+            options: null,
+            bundleId: bundle.id,
+            bundleName: bundle.name,
+            originalPrice: basePrice,
+          });
+        }
+      }
+
+      persistItems(currentList);
+      showToast(`Added bundle "${bundle.name}" to cart!`, "success");
+      setIsDrawerOpen(true);
+      return true;
+    },
+    [persistItems, showToast]
+  );
+
   const updateQuantity = useCallback(
     async (cartItemId: string, quantity: number): Promise<boolean> => {
       const currentList = [...storedItemsRef.current];
       let newItems: StoredCartItem[];
 
+      const getItemId = (it: StoredCartItem) =>
+        `${it.productId}_${it.variantId || "default"}${it.bundleId ? `_${it.bundleId}` : ""}`;
+
       if (quantity <= 0) {
-        newItems = currentList.filter(
-          (it) => `${it.productId}_${it.variantId || "default"}` !== cartItemId
-        );
+        newItems = currentList.filter((it) => getItemId(it) !== cartItemId);
       } else {
         newItems = currentList.map((it) => {
-          const itemId = `${it.productId}_${it.variantId || "default"}`;
+          const itemId = getItemId(it);
           if (itemId === cartItemId) {
             // Soft stock check
             if (it.stockQuantity > 0 && quantity > it.stockQuantity) {
@@ -841,8 +928,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const removeItem = useCallback(
     async (cartItemId: string): Promise<boolean> => {
+      const getItemId = (it: StoredCartItem) =>
+        `${it.productId}_${it.variantId || "default"}${it.bundleId ? `_${it.bundleId}` : ""}`;
+
       const newItems = storedItemsRef.current.filter(
-        (it) => `${it.productId}_${it.variantId || "default"}` !== cartItemId
+        (it) => getItemId(it) !== cartItemId
       );
       persistItems(newItems);
       showToast("Item removed from cart", "success");
@@ -882,6 +972,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         showToast,
         addItem,
         addItems,
+        addBundleToCart,
         updateQuantity,
         removeItem,
         clearCart,

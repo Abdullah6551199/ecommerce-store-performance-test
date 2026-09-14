@@ -5,6 +5,7 @@ import type { ProductWithImagesAndCategory, CatalogProductItem } from "@/lib/pro
 import { normalizeImageUrl } from "@/lib/utils";
 import QuickAddToCart from "@/components/QuickAddToCart";
 import WishlistHeartButton from "@/components/WishlistHeartButton";
+import CompareButton from "@/components/CompareButton";
 
 interface ProductCardProps {
   product: ProductWithImagesAndCategory | CatalogProductItem;
@@ -84,8 +85,8 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
           ) : null}
         </div>
 
-        {/* Wishlist Heart Button (Top-Right) */}
-        <div className="absolute top-2.5 right-2.5 z-20">
+        {/* Actions (Top-Right): Wishlist Heart & Compare Button */}
+        <div className="absolute top-2.5 right-2.5 z-20 flex flex-col gap-1.5 items-center">
           <WishlistHeartButton
             product={{
               productId: product.id,
@@ -96,6 +97,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
               imageUrl: resolvedImage,
             }}
           />
+          <CompareButton productId={product.id} />
         </div>
 
         {/* Quick Add To Cart overlay (slides up on hover) */}

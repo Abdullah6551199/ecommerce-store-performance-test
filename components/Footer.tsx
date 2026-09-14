@@ -133,6 +133,11 @@ export default async function Footer({
                 </Link>
               </li>
               <li>
+                <Link href="/bundles" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Product Bundles
+                </Link>
+              </li>
+              <li>
                 <Link href="/search?q=arrivals" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
                   New Arrivals
                 </Link>

@@ -21,6 +21,8 @@ export interface CartItemDetail {
   lineTotal: number;
   stockQuantity: number;
   stockStatus: string;
+  bundleId?: string | null;
+  bundleName?: string | null;
 }
 
 export interface CartSummary {

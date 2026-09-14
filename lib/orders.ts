@@ -17,6 +17,8 @@ import { getCartWithItems, clearCart, getOrCreateCart, memoryCarts, type CartSum
 import { memoryProducts } from "./products";
 import { validateCoupon, recordCouponUsage } from "./coupons";
 import { createCustomerNotification } from "./customer-notifications";
+import { detectTaxRate, calculateTax, getTaxSettings } from "./tax";
+import { calculateShipping } from "./shipping";
 
 // Validation Schemas
 export const orderItemInputSchema = z.object({
@@ -46,6 +48,8 @@ export const createOrderSchema = z.object({
     .trim()
     .min(5, "Delivery address must be at least 5 characters"),
   city: z.string().trim().min(2, "City is required"),
+  country: z.string().trim().optional().default("PK"),
+  state: z.string().trim().optional().nullable(),
   notes: z.string().trim().optional(),
   couponCode: z.string().trim().optional().or(z.literal("")),
   paymentMethod: z.literal("cod").default("cod"),
@@ -250,8 +254,14 @@ export async function createOrderFromCart(
   }
 
   calculatedSubtotal = Math.round(calculatedSubtotal * 100) / 100;
-  const freeShippingThreshold = 100;
-  let shipping = calculatedSubtotal >= freeShippingThreshold ? 0 : 15;
+  
+  // Authoritative Shipping Calculation via Shipping Zones
+  const destCountry = validated.country || "PK";
+  const destState = validated.state || null;
+  const destCity = validated.city || null;
+
+  const shippingResult = await calculateShipping(destCountry, destState, calculatedSubtotal);
+  let shipping = shippingResult.shippingCost;
 
   // Authoritative Coupon Validation
   let discountAmount = 0;
@@ -292,9 +302,32 @@ export async function createOrderFromCart(
     }
   }
 
+  // Authoritative Tax Calculation via Tax Rates & Global Settings
+  const taxSettingsData = await getTaxSettings();
+  const taxRateObj = await detectTaxRate(destCountry, destState, destCity);
+
+  let taxAmount = 0;
+  let taxRateVal = 0;
+  let taxLabelVal: string | null = null;
+  let taxTypeVal: "inclusive" | "exclusive" = "exclusive";
+
+  if (taxRateObj && taxSettingsData.isEnabled) {
+    taxRateVal = taxRateObj.rate;
+    taxLabelVal = taxRateObj.label;
+    taxTypeVal = taxRateObj.taxType;
+
+    const taxableAmount = Math.max(0, calculatedSubtotal - discountAmount) +
+      (taxSettingsData.applyToShipping ? shipping : 0);
+
+    const taxCalc = calculateTax(Math.max(0, taxableAmount), taxRateVal, taxTypeVal);
+    taxAmount = taxCalc.taxAmount;
+  }
+
   const total = Math.max(
     0,
-    Math.round((calculatedSubtotal - discountAmount + shipping) * 100) / 100
+    Math.round(
+      (calculatedSubtotal - discountAmount + shipping + (taxTypeVal === "exclusive" ? taxAmount : 0)) * 100
+    ) / 100
   );
 
   let resolvedCustomerId: string | null = validated.customerId || userId || null;
@@ -319,6 +352,12 @@ export async function createOrderFromCart(
     email: validated.email || null,
     address: validated.address,
     city: validated.city,
+    country: destCountry,
+    state: destState,
+    taxAmount,
+    taxRate: taxRateVal,
+    taxLabel: taxLabelVal,
+    shippingZoneId: shippingResult.zone?.id || null,
     notes: validated.notes || null,
     subtotal: calculatedSubtotal,
     shipping,

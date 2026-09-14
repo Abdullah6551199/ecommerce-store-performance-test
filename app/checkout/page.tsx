@@ -11,6 +11,28 @@ import { normalizeImageUrl } from "@/lib/utils";
 import CouponsSection from "@/components/CouponsSection";
 import TrustBar from "@/components/homepage/TrustBar";
 
+const CHECKOUT_COUNTRIES = [
+  { code: "PK", name: "Pakistan" },
+  { code: "IN", name: "India" },
+  { code: "US", name: "United States" },
+  { code: "GB", name: "United Kingdom" },
+  { code: "AE", name: "United Arab Emirates" },
+  { code: "SA", name: "Saudi Arabia" },
+  { code: "BD", name: "Bangladesh" },
+  { code: "CA", name: "Canada" },
+  { code: "DE", name: "Germany" },
+  { code: "FR", name: "France" },
+  { code: "AU", name: "Australia" },
+];
+
+const US_STATES = [
+  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+  "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+  "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+  "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+  "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+];
+
 export default function CheckoutPage(): React.JSX.Element {
   const router = useRouter();
   const {
@@ -32,8 +54,37 @@ export default function CheckoutPage(): React.JSX.Element {
     email: "",
     address: "",
     city: "",
+    country: "PK",
+    state: "",
     notes: "",
   });
+
+  // Shipping & Tax Dynamic Calculations state
+  interface ShippingCalcState {
+    zone: any;
+    shippingCost: number;
+    isFree: boolean;
+    deliveryTimeMin: number;
+    deliveryTimeMax: number;
+    shippingAvailable: boolean;
+    minOrderValueMet: boolean;
+    minOrderValue: number | null;
+    message?: string;
+  }
+
+  interface TaxCalcState {
+    isEnabled: boolean;
+    taxAmount: number;
+    netAmount: number;
+    rate: number;
+    label: string;
+    taxType: "inclusive" | "exclusive";
+    appliedToShipping: boolean;
+  }
+
+  const [shippingResult, setShippingResult] = useState<ShippingCalcState | null>(null);
+  const [taxResult, setTaxResult] = useState<TaxCalcState | null>(null);
+  const [isCalculatingRates, setIsCalculatingRates] = useState(false);
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -93,6 +144,7 @@ export default function CheckoutPage(): React.JSX.Element {
               phone: defaultAddr.phone,
               address: defaultAddr.address,
               city: defaultAddr.city,
+              country: (defaultAddr as any).country === "Pakistan" ? "PK" : ((defaultAddr as any).country || prev.country),
             }));
           }
         }
@@ -100,6 +152,98 @@ export default function CheckoutPage(): React.JSX.Element {
     }
     loadCustomerData();
   }, []);
+
+  // Visitor Location Auto-Detection via Cloudflare request.cf / Public Tax API
+  React.useEffect(() => {
+    async function initVisitorLocation() {
+      try {
+        const res = await fetch("/api/tax/detect");
+        const json = (await res.json()) as any;
+        if (json.success && json.resolvedLocation?.country) {
+          setFormData((prev) => {
+            // Only auto-fill if user hasn't selected another country manually
+            if (prev.country === "PK" && json.resolvedLocation.country !== "PK") {
+              return {
+                ...prev,
+                country: json.resolvedLocation.country,
+                state: json.resolvedLocation.state || prev.state,
+                city: json.resolvedLocation.city || prev.city,
+              };
+            }
+            return prev;
+          });
+        }
+      } catch (err) {
+        console.warn("Visitor location detection error:", err);
+      }
+    }
+    initVisitorLocation();
+  }, []);
+
+  // Real-time Shipping & Tax Recalculation
+  React.useEffect(() => {
+    let isCancelled = false;
+
+    async function recalculateRates() {
+      if (!formData.country) return;
+      setIsCalculatingRates(true);
+
+      try {
+        const effectiveSubtotal = Math.max(0, subtotal - discountAmount);
+
+        // 1. Calculate Shipping
+        const shipRes = await fetch("/api/shipping/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            country: formData.country,
+            state: formData.state || null,
+            orderSubtotal: effectiveSubtotal,
+          }),
+        });
+
+        const shipJson = (await shipRes.json()) as any;
+        let currentShippingCost = 0;
+
+        if (shipJson.success && shipJson.data) {
+          if (!isCancelled) setShippingResult(shipJson.data);
+          currentShippingCost = shipJson.data.shippingCost;
+        }
+
+        if (freeShippingCoupon) {
+          currentShippingCost = 0;
+        }
+
+        // 2. Calculate Tax
+        const taxRes = await fetch("/api/tax/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: effectiveSubtotal,
+            country: formData.country,
+            state: formData.state || null,
+            city: formData.city || null,
+            shippingCost: currentShippingCost,
+          }),
+        });
+
+        const taxJson = (await taxRes.json()) as any;
+        if (taxJson.success && !isCancelled) {
+          setTaxResult(taxJson);
+        }
+      } catch (err) {
+        console.warn("Failed to recalculate tax and shipping:", err);
+      } finally {
+        if (!isCancelled) setIsCalculatingRates(false);
+      }
+    }
+
+    recalculateRates();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [formData.country, formData.state, formData.city, subtotal, discountAmount, freeShippingCoupon]);
 
   const handleAddressSelect = (id: string) => {
     setSelectedAddressId(id);
@@ -119,6 +263,7 @@ export default function CheckoutPage(): React.JSX.Element {
         phone: found.phone,
         address: found.address,
         city: found.city,
+        country: (found as any).country === "Pakistan" ? "PK" : ((found as any).country || prev.country),
       }));
     }
   };
@@ -150,12 +295,24 @@ export default function CheckoutPage(): React.JSX.Element {
       errors.city = "Please enter your delivery city.";
     }
 
+    if (!formData.country || !formData.country.trim()) {
+      errors.country = "Please select your delivery country.";
+    }
+
+    if (formData.country === "US" && (!formData.state || !formData.state.trim())) {
+      errors.state = "Please select your state.";
+    }
+
+    if (shippingResult && !shippingResult.shippingAvailable) {
+      errors.country = "Shipping is not available to this destination country.";
+    }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -456,6 +613,67 @@ export default function CheckoutPage(): React.JSX.Element {
                   )}
                 </div>
 
+                {/* Country & State Selection */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1.5">
+                      Destination Country <span className="text-purple-500">*</span>
+                    </label>
+                    <select
+                      name="country"
+                      value={formData.country}
+                      onChange={handleInputChange}
+                      className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm font-semibold text-zinc-900 dark:text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-400 focus:outline-none transition-colors"
+                    >
+                      {CHECKOUT_COUNTRIES.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.name} ({c.code})
+                        </option>
+                      ))}
+                    </select>
+                    {formErrors.country && (
+                      <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.country}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1.5">
+                      State / Province {formData.country === "US" ? <span className="text-purple-500">*</span> : <span className="text-purple-600/60 dark:text-purple-300/50 font-normal">(Optional)</span>}
+                    </label>
+                    {formData.country === "US" ? (
+                      <select
+                        name="state"
+                        value={formData.state}
+                        onChange={handleInputChange}
+                        className={`w-full rounded-xl border bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm font-semibold text-zinc-900 dark:text-white focus:outline-none transition-colors ${
+                          formErrors.state
+                            ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
+                            : "border-purple-200 dark:border-purple-700 focus:border-purple-400 focus:ring-1 focus:ring-purple-400"
+                        }`}
+                      >
+                        <option value="">Select US State</option>
+                        {US_STATES.map((st) => (
+                          <option key={st} value={st}>
+                            {st}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        name="state"
+                        value={formData.state}
+                        onChange={handleInputChange}
+                        placeholder="e.g. Sindh, Punjab, California"
+                        className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-purple-300/40 focus:border-purple-400 focus:ring-1 focus:ring-purple-400 focus:outline-none transition-colors"
+                      />
+                    )}
+                    {formErrors.state && (
+                      <p className="mt-1 text-xs text-red-500 font-medium">{formErrors.state}</p>
+                    )}
+                  </div>
+                </div>
+
                 {/* City & Notes */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -467,7 +685,7 @@ export default function CheckoutPage(): React.JSX.Element {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
-                      placeholder="e.g. New York, London, Dubai"
+                      placeholder="e.g. Karachi, New York, London"
                       className={`w-full rounded-xl border bg-purple-50/30 dark:bg-purple-950/40 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-purple-300/40 focus:outline-none transition-colors ${
                         formErrors.city
                           ? "border-red-500 focus:border-red-500 ring-1 ring-red-500/50"
@@ -628,33 +846,91 @@ export default function CheckoutPage(): React.JSX.Element {
                   </div>
                 )}
 
+                {/* Dynamic Shipping Line */}
                 <div className="flex justify-between text-purple-700/80 dark:text-purple-200/80">
-                  <span>Standard Shipping</span>
+                  <div className="flex items-center gap-1.5">
+                    <span>Shipping</span>
+                    {shippingResult?.zone && (
+                      <span className="text-[10px] text-purple-600/70 dark:text-purple-300/70 font-mono">
+                        ({shippingResult.deliveryTimeMin}-{shippingResult.deliveryTimeMax} days)
+                      </span>
+                    )}
+                  </div>
                   <span>
-                    {cart?.shipping === 0 ? (
-                      <span className="font-bold text-purple-600 dark:text-purple-400">FREE</span>
+                    {!shippingResult?.shippingAvailable ? (
+                      <span className="font-bold text-red-500">Unavailable</span>
+                    ) : shippingResult?.isFree || freeShippingCoupon ? (
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-1.5 py-0.5 rounded">
+                        FREE
+                      </span>
                     ) : (
-                      <span className="font-mono text-[#3C0561] dark:text-white">${(cart?.shipping || 15).toFixed(2)}</span>
+                      <span className="font-mono text-[#3C0561] dark:text-white">
+                        ${(shippingResult?.shippingCost ?? 15).toFixed(2)}
+                      </span>
                     )}
                   </span>
                 </div>
+
+                {/* Dynamic Tax Line */}
+                {taxResult && taxResult.isEnabled && (taxResult.rate > 0 || taxResult.taxAmount > 0) && (
+                  <div className="flex justify-between text-purple-700/80 dark:text-purple-200/80">
+                    <span>
+                      {taxResult.taxType === "inclusive"
+                        ? `Tax Included (${taxResult.label} ${taxResult.rate}%)`
+                        : `Tax (${taxResult.label} ${taxResult.rate}%)`}
+                    </span>
+                    <span className="font-mono text-[#3C0561] dark:text-white font-semibold">
+                      ${taxResult.taxAmount.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+
                 <div className="flex justify-between text-purple-700/80 dark:text-purple-200/80">
                   <span>Payment Method</span>
                   <span className="font-semibold text-[#3C0561] dark:text-white">Cash on Delivery</span>
                 </div>
 
-                <div className="flex justify-between text-base font-extrabold text-[#3C0561] dark:text-[#EACFFC] pt-3 border-t border-purple-100 dark:border-purple-700/60">
-                  <span>Total Due</span>
-                  <span className="text-xl font-mono font-black text-purple-600 dark:text-purple-300">
-                    ${total.toFixed(2)}
-                  </span>
-                </div>
+                {/* Total Due */}
+                {(() => {
+                  const effectiveShipCost = shippingResult?.shippingAvailable
+                    ? (shippingResult.isFree || freeShippingCoupon ? 0 : shippingResult.shippingCost)
+                    : 0;
+
+                  const effectiveTax =
+                    taxResult && taxResult.isEnabled && taxResult.taxType === "exclusive"
+                      ? taxResult.taxAmount
+                      : 0;
+
+                  const finalTotal = Math.max(
+                    0,
+                    Math.round((subtotal - discountAmount + effectiveShipCost + effectiveTax) * 100) / 100
+                  );
+
+                  return (
+                    <div className="flex justify-between text-base font-extrabold text-[#3C0561] dark:text-[#EACFFC] pt-3 border-t border-purple-100 dark:border-purple-700/60">
+                      <span>Total Due</span>
+                      <span className="text-xl font-mono font-black text-purple-600 dark:text-purple-300">
+                        ${finalTotal.toFixed(2)}
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
+
+              {/* Shipping Unavailable Warning */}
+              {shippingResult && !shippingResult.shippingAvailable && (
+                <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-xs text-red-600 dark:text-red-300 font-bold flex items-start gap-2">
+                  <svg className="h-4 w-4 shrink-0 mt-0.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span>Shipping is not available to this location. Please choose an alternate address or country.</span>
+                </div>
+              )}
 
               {/* Submit Button - PURPLE */}
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || (shippingResult !== null && !shippingResult.shippingAvailable) || isCalculatingRates}
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-purple-400 hover:bg-purple-500 text-white dark:bg-purple-500 dark:hover:bg-purple-400 py-4 text-sm font-extrabold shadow-xl shadow-purple-400/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isSubmitting ? (
@@ -662,6 +938,10 @@ export default function CheckoutPage(): React.JSX.Element {
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                     <span>Placing Your Order...</span>
                   </>
+                ) : isCalculatingRates ? (
+                  <span>Updating Rates...</span>
+                ) : shippingResult !== null && !shippingResult.shippingAvailable ? (
+                  <span>Shipping Unavailable</span>
                 ) : (
                   <>
                     <span>Place Order (Cash on Delivery)</span>

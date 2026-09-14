@@ -36,8 +36,57 @@ export default function AdminSettingsPage(): React.JSX.Element {
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Store & System Settings</h1>
         <p className="mt-1 text-xs text-zinc-600 dark:text-white/60">
-          Manage dynamic storefront branding, contact details, social links, and admin authentication credentials.
+          Manage dynamic storefront branding, contact details, social links, tax rates, shipping zones, and admin credentials.
         </p>
+      </div>
+
+      {/* Quick Access to Tax & Shipping */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <a
+          href="/admin/settings/tax"
+          className="group rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-5 shadow-sm hover:border-purple-400 dark:hover:border-purple-600 transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center text-purple-700 dark:text-purple-300 font-bold">
+                %
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-[#3C0561] dark:text-[#EACFFC] group-hover:text-purple-600 transition-colors">
+                  Tax Management
+                </h3>
+                <p className="text-[11px] text-purple-700/70 dark:text-purple-300/70 mt-0.5">
+                  Configure country/state rates, presets, and Cloudflare IP detection
+                </p>
+              </div>
+            </div>
+            <span className="text-purple-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
+          </div>
+        </a>
+
+        <a
+          href="/admin/settings/shipping-zones"
+          className="group rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-5 shadow-sm hover:border-purple-400 dark:hover:border-purple-600 transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center text-purple-700 dark:text-purple-300">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-[#3C0561] dark:text-[#EACFFC] group-hover:text-purple-600 transition-colors">
+                  Shipping Zones
+                </h3>
+                <p className="text-[11px] text-purple-700/70 dark:text-purple-300/70 mt-0.5">
+                  Define regions, country targeting, flat/free rates, and delivery times
+                </p>
+              </div>
+            </div>
+            <span className="text-purple-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
+          </div>
+        </a>
       </div>
 
       {/* 1. Global Storefront Configuration */}

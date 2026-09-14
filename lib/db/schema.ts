@@ -361,6 +361,12 @@ export const orders = sqliteTable("orders", {
   trackingNumber: text("tracking_number"),
   estimatedDelivery: text("estimated_delivery"),
   statusNotes: text("status_notes"),
+  country: text("country"),
+  state: text("state"),
+  taxAmount: real("tax_amount").default(0),
+  taxRate: real("tax_rate").default(0),
+  taxLabel: text("tax_label"),
+  shippingZoneId: text("shipping_zone_id"),
   createdAt: text("created_at")
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
@@ -883,6 +889,75 @@ export type NewBroadcastRecord = typeof broadcasts.$inferInsert;
 
 export type BroadcastViewRecord = typeof broadcastViews.$inferSelect;
 export type NewBroadcastViewRecord = typeof broadcastViews.$inferInsert;
+
+// 32. Tax Rates Table (Stage 20)
+export const taxRates = sqliteTable("tax_rates", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  country: text("country").notNull(),
+  state: text("state"),
+  city: text("city"),
+  rate: real("rate").notNull(),
+  label: text("label"),
+  taxType: text("tax_type", { enum: ["inclusive", "exclusive"] }).default("exclusive"),
+  isActive: integer("is_active", { mode: "boolean" }).default(true),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 33. Tax Settings Table (Stage 20)
+export const taxSettings = sqliteTable("tax_settings", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  isEnabled: integer("is_enabled", { mode: "boolean" }).default(true),
+  defaultRate: real("default_rate").default(0),
+  defaultLabel: text("default_label").default("Tax"),
+  defaultTaxType: text("default_tax_type", { enum: ["inclusive", "exclusive"] }).default("exclusive"),
+  applyToShipping: integer("apply_to_shipping", { mode: "boolean" }).default(false),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+// 34. Shipping Zones Table (Stage 20)
+export const shippingZones = sqliteTable("shipping_zones", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  name: text("name").notNull(),
+  countries: text("countries").notNull(), // JSON string array of country codes
+  states: text("states"), // JSON string array of state codes (optional)
+  rateType: text("rate_type", { enum: ["flat", "percentage", "free"] }).default("flat"),
+  rate: real("rate").default(0),
+  freeShippingThreshold: real("free_shipping_threshold"),
+  minOrderValue: real("min_order_value"),
+  deliveryTimeMin: integer("delivery_time_min"),
+  deliveryTimeMax: integer("delivery_time_max"),
+  isActive: integer("is_active", { mode: "boolean" }).default(true),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export type TaxRateRecord = typeof taxRates.$inferSelect;
+export type NewTaxRateRecord = typeof taxRates.$inferInsert;
+
+export type TaxSettingRecord = typeof taxSettings.$inferSelect;
+export type NewTaxSettingRecord = typeof taxSettings.$inferInsert;
+
+export type ShippingZoneRecord = typeof shippingZones.$inferSelect;
+export type NewShippingZoneRecord = typeof shippingZones.$inferInsert;
+
 
 
 

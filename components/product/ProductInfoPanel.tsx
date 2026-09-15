@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartContext";
 import { useWishlist } from "@/components/WishlistContext";
 import CompareButton from "@/components/CompareButton";
+import TrustBadges from "@/components/TrustBadges";
 import type { ProductVariantRecord } from "@/lib/variants";
 
 // Standard color names mapped to CSS hex for swatches
@@ -477,6 +478,11 @@ export default function ProductInfoPanel({
         >
           {isBuyingNow ? <span>Preparing Checkout...</span> : <span>Buy Now</span>}
         </button>
+      </div>
+
+      {/* Trust Badges Row (Stage 22 Part A: 4 badges under Add to Cart) */}
+      <div className="pt-2">
+        <TrustBadges location="product" limit={4} />
       </div>
 
       {/* 9. Wishlist, Compare & Share Row */}

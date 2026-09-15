@@ -4,6 +4,7 @@ import Image from "next/image";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
 import { normalizeImageUrl } from "@/lib/utils";
 import { getNavigationPages } from "@/lib/cms";
+import PaymentIcons from "@/components/PaymentIcons";
 
 interface FooterProps {
   settings?: StoreSettings;
@@ -252,8 +253,8 @@ export default async function Footer({
                 </Link>
               </li>
               <li>
-                <Link href="/privacy-policy" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
-                  Cookie Settings
+                <Link href="/cookie-policy" className="hover:text-[#960DF2] dark:hover:text-white transition-colors">
+                  Cookie Policy &amp; Settings
                 </Link>
               </li>
               {customLegalLinks.map((p, idx) => (
@@ -273,24 +274,8 @@ export default async function Footer({
             <span>&copy; {currentYear} {settings.storeName || "ApexStore"}. All rights reserved.</span>
           </div>
 
-          {/* Payment Method Badges */}
-          <div className="flex items-center gap-2 text-[10px] font-bold">
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
-              VISA
-            </span>
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
-              MC
-            </span>
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
-              AMEX
-            </span>
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
-              PayPal
-            </span>
-            <span className="rounded bg-white dark:bg-[#3C0561] px-2 py-1 border border-purple-200 dark:border-purple-700/60 text-[#3C0561] dark:text-[#EACFFC]">
-              Apple Pay
-            </span>
-          </div>
+          {/* Payment Method Badges (Integrated with payment_icons table) */}
+          <PaymentIcons className="flex items-center gap-2 text-[10px] font-bold" />
         </div>
       </div>
     </footer>

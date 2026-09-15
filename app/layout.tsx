@@ -14,6 +14,8 @@ import "./globals.css";
 
 import CartDrawerContainer from "@/components/CartDrawerContainer";
 import BroadcastPopup from "@/components/BroadcastPopup";
+import CookieConsentBanner from "@/components/CookieConsentBanner";
+import ScriptBlocker from "@/components/ScriptBlocker";
 
 
 const inter = Inter({
@@ -133,6 +135,10 @@ export default async function RootLayout({
               <BroadcastPopup />
               {/* Global Bottom Compare Bar */}
               <CompareBar />
+              {/* GDPR Cookie Consent Banner */}
+              <CookieConsentBanner />
+              {/* GDPR Third-Party Script Telemetry Blocker */}
+              <ScriptBlocker />
             </CompareProvider>
           </WishlistProvider>
         </CartProvider>

@@ -9,6 +9,7 @@ import { useCart } from "@/components/CartContext";
 import { normalizeImageUrl } from "@/lib/utils";
 import CouponsSection from "@/components/CouponsSection";
 import TrustBar from "@/components/homepage/TrustBar";
+import TrustBadges from "@/components/TrustBadges";
 import ProductCard from "@/components/ProductCard";
 import type { ProductWithImagesAndCategory } from "@/lib/products";
 
@@ -345,6 +346,11 @@ export default function CartPage(): React.JSX.Element {
                     <span>Total</span>
                     <span className="text-xl text-purple-700 dark:text-purple-300 font-black">${total.toFixed(2)}</span>
                   </div>
+                </div>
+
+                {/* Trust Badges Row (Stage 22 Part A: 4 badges above Proceed to Checkout) */}
+                <div className="pt-2">
+                  <TrustBadges location="cart" limit={4} variant="compact" />
                 </div>
 
                 <Link

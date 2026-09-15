@@ -10,6 +10,8 @@ import { useCart } from "@/components/CartContext";
 import { normalizeImageUrl } from "@/lib/utils";
 import CouponsSection from "@/components/CouponsSection";
 import TrustBar from "@/components/homepage/TrustBar";
+import PaymentIcons from "@/components/PaymentIcons";
+import TrustBadges from "@/components/TrustBadges";
 
 const CHECKOUT_COUNTRIES = [
   { code: "PK", name: "Pakistan" },
@@ -951,6 +953,17 @@ export default function CheckoutPage(): React.JSX.Element {
                   </>
                 )}
               </button>
+
+              {/* Stage 22 Part A: Payment Icons Row & Trust Badges near Place Order */}
+              <div className="pt-2 space-y-3 border-t border-purple-100 dark:border-purple-800/60">
+                <div className="flex flex-col items-center justify-center gap-1 text-center">
+                  <span className="text-[10px] uppercase font-bold text-zinc-400 dark:text-purple-300/60 tracking-wider">
+                    Accepted Payment Options
+                  </span>
+                  <PaymentIcons className="flex flex-wrap items-center justify-center gap-2 pt-1" />
+                </div>
+                <TrustBadges location="checkout" limit={4} variant="compact" />
+              </div>
 
               <div className="text-center">
                 <Link

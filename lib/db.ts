@@ -114,6 +114,9 @@ export async function checkDbHealth(): Promise<DbHealthResult> {
       "users",
       "login_attempts",
       "sessions",
+      "trust_badges",
+      "payment_icons",
+      "cookie_consent_settings",
     ],
     latencyMs: 0,
   };

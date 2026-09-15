@@ -40,8 +40,8 @@ export default function AdminSettingsPage(): React.JSX.Element {
         </p>
       </div>
 
-      {/* Quick Access to Tax & Shipping */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Quick Access to Settings Sub-Modules */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <a
           href="/admin/settings/tax"
           className="group rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-5 shadow-sm hover:border-purple-400 dark:hover:border-purple-600 transition-all"
@@ -56,7 +56,7 @@ export default function AdminSettingsPage(): React.JSX.Element {
                   Tax Management
                 </h3>
                 <p className="text-[11px] text-purple-700/70 dark:text-purple-300/70 mt-0.5">
-                  Configure country/state rates, presets, and Cloudflare IP detection
+                  Country/state tax rates &amp; detection
                 </p>
               </div>
             </div>
@@ -80,7 +80,53 @@ export default function AdminSettingsPage(): React.JSX.Element {
                   Shipping Zones
                 </h3>
                 <p className="text-[11px] text-purple-700/70 dark:text-purple-300/70 mt-0.5">
-                  Define regions, country targeting, flat/free rates, and delivery times
+                  Regional rates, free thresholds, delivery
+                </p>
+              </div>
+            </div>
+            <span className="text-purple-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
+          </div>
+        </a>
+
+        <a
+          href="/admin/settings/trust-badges"
+          className="group rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-5 shadow-sm hover:border-purple-400 dark:hover:border-purple-600 transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center text-purple-700 dark:text-purple-300">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-[#3C0561] dark:text-[#EACFFC] group-hover:text-purple-600 transition-colors">
+                  Trust Badges
+                </h3>
+                <p className="text-[11px] text-purple-700/70 dark:text-purple-300/70 mt-0.5">
+                  Security, returns &amp; payment badges
+                </p>
+              </div>
+            </div>
+            <span className="text-purple-500 group-hover:translate-x-1 transition-transform">&rarr;</span>
+          </div>
+        </a>
+
+        <a
+          href="/admin/settings/cookie-consent"
+          className="group rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-5 shadow-sm hover:border-purple-400 dark:hover:border-purple-600 transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center text-purple-700 dark:text-purple-300 text-lg">
+                🍪
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-[#3C0561] dark:text-[#EACFFC] group-hover:text-purple-600 transition-colors">
+                  Cookie Consent
+                </h3>
+                <p className="text-[11px] text-purple-700/70 dark:text-purple-300/70 mt-0.5">
+                  GDPR cookie banner &amp; legal policy
                 </p>
               </div>
             </div>

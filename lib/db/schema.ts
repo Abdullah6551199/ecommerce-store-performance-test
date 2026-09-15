@@ -1015,3 +1015,73 @@ export type NewProductBundleRecord = typeof productBundles.$inferInsert;
 
 export type BundleItemRecord = typeof bundleItems.$inferSelect;
 export type NewBundleItemRecord = typeof bundleItems.$inferInsert;
+
+// 37. Trust Badges Table (Stage 22)
+export const trustBadges = sqliteTable("trust_badges", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  icon: text("icon").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  location: text("location").default("all"),
+  sortOrder: integer("sort_order").default(0),
+  isActive: integer("is_active", { mode: "boolean" }).default(true),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export type TrustBadgeRecord = typeof trustBadges.$inferSelect;
+export type NewTrustBadgeRecord = typeof trustBadges.$inferInsert;
+
+// 38. Payment Icons Table (Stage 22)
+export const paymentIcons = sqliteTable("payment_icons", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  name: text("name").notNull(),
+  iconSvg: text("icon_svg"),
+  sortOrder: integer("sort_order").default(0),
+  isActive: integer("is_active", { mode: "boolean" }).default(true),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export type PaymentIconRecord = typeof paymentIcons.$inferSelect;
+export type NewPaymentIconRecord = typeof paymentIcons.$inferInsert;
+
+// 39. Cookie Consent Settings Table (Stage 22)
+export const cookieConsentSettings = sqliteTable("cookie_consent_settings", {
+  id: text("id").primaryKey(),
+  tenantId: text("tenant_id"),
+  isEnabled: integer("is_enabled", { mode: "boolean" }).default(true),
+  bannerTitle: text("banner_title").default("We use cookies"),
+  bannerMessage: text("banner_message").default(
+    "We use cookies to improve your experience, analyze traffic, and personalize content."
+  ),
+  acceptText: text("accept_text").default("Accept All"),
+  rejectText: text("reject_text").default("Reject All"),
+  customizeText: text("customize_text").default("Customize"),
+  position: text("position").default("bottom"),
+  theme: text("theme").default("light"),
+  analyticsEnabled: integer("analytics_enabled", { mode: "boolean" }).default(true),
+  marketingEnabled: integer("marketing_enabled", { mode: "boolean" }).default(true),
+  functionalEnabled: integer("functional_enabled", { mode: "boolean" }).default(true),
+  cookiePolicyContent: text("cookie_policy_content"),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
+export type CookieConsentSettingRecord = typeof cookieConsentSettings.$inferSelect;
+export type NewCookieConsentSettingRecord = typeof cookieConsentSettings.$inferInsert;
+

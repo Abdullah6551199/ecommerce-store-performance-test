@@ -1,0 +1,998 @@
+"use client";
+
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
+import type { CartSummary, CartItemDetail } from "@/lib/cart";
+
+export const LOCAL_STORAGE_CART_KEY = "apex_cart_v1";
+export const LOCAL_STORAGE_COUPON_KEY = "apex_applied_coupon_v1";
+
+import type { CouponRecord } from "@/lib/coupons";
+
+export interface StoredCartItem {
+  productId: string;
+  variantId: string | null;
+  quantity: number;
+  name: string;
+  slug: string;
+  price: number;
+  salePrice: number | null;
+  imageUrl: string;
+  stockQuantity: number; // snapshot for soft check
+  options: Record<string, string> | null;
+  bundleId?: string | null;
+  bundleName?: string | null;
+  originalPrice?: number | null;
+}
+
+export interface StoredCart {
+  items: StoredCartItem[];
+  updatedAt: string;
+}
+
+export interface AddItemOptions {
+  productName?: string;
+  productSlug?: string;
+  imageUrl?: string | null;
+  price?: number;
+  salePrice?: number | null;
+  stockQuantity?: number;
+  variantOptions?: Record<string, string> | null;
+  bundleId?: string | null;
+  bundleName?: string | null;
+  originalPrice?: number | null;
+  openOnSuccess?: boolean;
+}
+
+export interface BulkAddItemEntry {
+  productId: string;
+  variantId?: string | null;
+  quantity?: number;
+  options?: AddItemOptions;
+}
+
+export interface CartToastState {
+  id: number;
+  message: string;
+  type: "success" | "error";
+}
+
+interface CartContextType {
+  cart: CartSummary | null;
+  items: CartItemDetail[];
+  itemCount: number;
+  subtotal: number;
+  total: number;
+  isLoading: boolean;
+  isDrawerOpen: boolean;
+  toast: CartToastState | null;
+  appliedCoupon: CouponRecord | null;
+  discountAmount: number;
+  freeShippingCoupon: boolean;
+  availableCoupons: CouponRecord[];
+  bestCoupon: CouponRecord | null;
+  bestDiscount: number;
+  smartSuggestion: string | null;
+  couponError: string | null;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+  toggleDrawer: () => void;
+  showToast: (message: string, type?: "success" | "error") => void;
+  addItem: (
+    productId: string,
+    variantId?: string | null,
+    quantity?: number,
+    openOnSuccessOrOptions?: boolean | AddItemOptions
+  ) => Promise<boolean>;
+  addItems: (
+    items: BulkAddItemEntry[],
+    openOnSuccess?: boolean
+  ) => Promise<{ success: boolean; count: number }>;
+  addBundleToCart: (bundle: {
+    id: string;
+    name: string;
+    bundlePrice: number;
+    originalPrice: number;
+    items: Array<{
+      productId: string;
+      variantId?: string | null;
+      quantity?: number;
+      product?: any;
+    }>;
+  }) => Promise<boolean>;
+  updateQuantity: (cartItemId: string, quantity: number) => Promise<boolean>;
+  removeItem: (cartItemId: string) => Promise<boolean>;
+  clearCart: () => void;
+  refreshCart: () => Promise<void>;
+  applyCoupon: (
+    code: string,
+    options?: { silentToast?: boolean; customSuccessMsg?: string }
+  ) => Promise<{ success: boolean; message: string }>;
+  applyBestCoupon: () => Promise<{ success: boolean; message: string }>;
+  removeCoupon: () => void;
+  refreshCoupons: () => Promise<void>;
+}
+
+const CartContext = createContext<CartContextType | undefined>(undefined);
+
+function buildCartItemDetail(item: StoredCartItem): CartItemDetail {
+  const effectivePrice = Number(item.salePrice ?? item.price);
+  const lineTotal = Number((effectivePrice * item.quantity).toFixed(2));
+  const id = `${item.productId}_${item.variantId || "default"}${item.bundleId ? `_${item.bundleId}` : ""}`;
+
+  return {
+    id,
+    cartId: LOCAL_STORAGE_CART_KEY,
+    productId: item.productId,
+    variantId: item.variantId,
+    productName: item.name,
+    productSlug: item.slug,
+    sku: item.variantId ? item.variantId.slice(0, 8).toUpperCase() : "",
+    imageUrl: item.imageUrl || "",
+    variantOptions: item.options,
+    quantity: item.quantity,
+    unitPrice: effectivePrice,
+    lineTotal,
+    stockQuantity: item.stockQuantity,
+    stockStatus: item.stockQuantity > 0 ? "in_stock" : "out_of_stock",
+    bundleId: item.bundleId || null,
+    bundleName: item.bundleName || null,
+  };
+}
+
+function computeCartSummary(
+  storedItems: StoredCartItem[],
+  discountAmount: number = 0,
+  freeShippingCoupon: boolean = false
+): {
+  cart: CartSummary;
+  items: CartItemDetail[];
+  itemCount: number;
+  subtotal: number;
+  total: number;
+} {
+  const items = storedItems.map(buildCartItemDetail);
+  const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
+  const subtotal = Number(
+    items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+  );
+  const freeShippingThreshold = 100;
+  const freeShippingRemaining = Math.max(0, freeShippingThreshold - subtotal);
+  const baseShipping =
+    subtotal >= freeShippingThreshold || items.length === 0 ? 0 : 15;
+  const shipping = freeShippingCoupon ? 0 : baseShipping;
+  const total = Math.max(
+    0,
+    Number((subtotal - discountAmount + shipping).toFixed(2))
+  );
+
+  const cart: CartSummary = {
+    id: LOCAL_STORAGE_CART_KEY,
+    userId: null,
+    sessionId: null,
+    items,
+    itemCount,
+    subtotal,
+    shipping,
+    freeShippingThreshold,
+    freeShippingRemaining,
+    total,
+  };
+
+  return { cart, items, itemCount, subtotal, total };
+}
+
+/**
+ * Fire-and-forget silent background sync for analytics and abandoned cart recovery.
+ * Never throws, never blocks the UI, never presents errors to the shopper.
+ */
+function silentBackgroundSync(items: StoredCartItem[]) {
+  if (typeof window === "undefined") return;
+  try {
+    const payload: StoredCart = {
+      items,
+      updatedAt: new Date().toISOString(),
+    };
+    fetch("/api/cart/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    // Non-blocking catch
+  }
+}
+
+function CartToastNotification({
+  toast,
+  onClose,
+}: {
+  toast: CartToastState | null;
+  onClose: () => void;
+}): React.JSX.Element | null {
+  if (!toast) return null;
+
+  const isSuccess = toast.type === "success";
+
+  return (
+    <aside
+      aria-live="polite"
+      aria-atomic="true"
+      className="fixed bottom-5 right-5 z-[100] max-w-sm pointer-events-auto transition-all animate-in fade-in slide-in-from-bottom-4 duration-200"
+    >
+      <div
+        className={`flex items-center gap-3 rounded-2xl px-4 py-3 shadow-2xl backdrop-blur-md border ${
+          isSuccess
+            ? "border-purple-400/40 bg-[#3C0561]/95 text-white shadow-purple-500/20"
+            : "border-red-500/30 bg-[#1c0c0c]/95 text-red-100 shadow-red-500/10"
+        }`}
+      >
+        <div
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl ${
+            isSuccess ? "bg-purple-400/20 text-purple-200" : "bg-red-500/20 text-red-400"
+          }`}
+        >
+          {isSuccess ? (
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+          )}
+        </div>
+
+        <div className="flex-1 text-xs font-semibold">{toast.message}</div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-white/40 hover:text-white transition-colors p-1"
+          aria-label="Dismiss notification"
+        >
+          <svg
+            className="h-3.5 w-3.5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [storedItems, setStoredItems] = useState<StoredCartItem[]>([]);
+  const storedItemsRef = useRef<StoredCartItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [toast, setToast] = useState<CartToastState | null>(null);
+
+  // Coupon States
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponRecord | null>(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [freeShippingCoupon, setFreeShippingCoupon] = useState(false);
+  const [availableCoupons, setAvailableCoupons] = useState<CouponRecord[]>([]);
+  const [bestCoupon, setBestCoupon] = useState<CouponRecord | null>(null);
+  const [bestDiscount, setBestDiscount] = useState(0);
+  const [smartSuggestion, setSmartSuggestion] = useState<string | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+
+  const showToast = useCallback(
+    (message: string, type: "success" | "error" = "success") => {
+      const id = Date.now();
+      setToast({ id, message, type });
+      setTimeout(() => {
+        setToast((current) => (current?.id === id ? null : current));
+      }, 2500);
+    },
+    []
+  );
+
+  // Synchronous, instant hydration from localStorage on mount (0ms cold-start)
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const raw = localStorage.getItem(LOCAL_STORAGE_CART_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw) as StoredCart;
+          if (parsed && Array.isArray(parsed.items)) {
+            storedItemsRef.current = parsed.items;
+            setStoredItems(parsed.items);
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("[CartContext] LocalStorage read unavailable:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Fetch available coupons and suggestions
+  const refreshCoupons = useCallback(async () => {
+    try {
+      const items = storedItems.map(buildCartItemDetail);
+      const subtotal = Number(
+        items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+      );
+
+      const res = await fetch(`/api/coupons/available?subtotal=${subtotal}`);
+      const json = (await res.json()) as any;
+      if (json.success) {
+        setAvailableCoupons(json.coupons || []);
+        setBestCoupon(json.bestCoupon || null);
+        setBestDiscount(json.bestDiscount || 0);
+        setSmartSuggestion(json.suggestion || null);
+      }
+    } catch {
+      // Non-blocking
+    }
+  }, [storedItems]);
+
+  // Validate or re-evaluate applied coupon
+  const evaluateAppliedCoupon = useCallback(
+    async (codeToValidate: string, itemsList: StoredCartItem[]) => {
+      try {
+        const items = itemsList.map(buildCartItemDetail);
+        const subtotal = Number(
+          items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+        );
+
+        if (subtotal <= 0 || items.length === 0) {
+          setDiscountAmount(0);
+          setFreeShippingCoupon(false);
+          return;
+        }
+
+        const res = await fetch("/api/coupons/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code: codeToValidate,
+            cartItems: items.map((i) => ({
+              productId: i.productId,
+              variantId: i.variantId,
+              quantity: i.quantity,
+              unitPrice: i.unitPrice,
+            })),
+            subtotal,
+          }),
+        });
+
+        const json = (await res.json()) as any;
+        if (json.valid && json.coupon) {
+          setAppliedCoupon(json.coupon);
+          setDiscountAmount(json.discount || 0);
+          setFreeShippingCoupon(Boolean(json.freeShipping));
+          setCouponError(null);
+        } else {
+          // If no longer valid (e.g. min order dropped below threshold)
+          setCouponError(json.message || "Coupon is not applicable");
+          setDiscountAmount(0);
+          setFreeShippingCoupon(false);
+        }
+      } catch {
+        // Non-blocking
+      }
+    },
+    []
+  );
+
+  // Initial load of applied coupon from localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const savedCoupon = localStorage.getItem(LOCAL_STORAGE_COUPON_KEY);
+      if (savedCoupon && storedItems.length > 0) {
+        evaluateAppliedCoupon(savedCoupon, storedItems);
+      }
+    } catch {}
+  }, [evaluateAppliedCoupon, storedItems]);
+
+  // Re-evaluate coupons whenever storedItems change
+  useEffect(() => {
+    refreshCoupons();
+    if (typeof window !== "undefined") {
+      const savedCoupon = localStorage.getItem(LOCAL_STORAGE_COUPON_KEY);
+      if (savedCoupon) {
+        evaluateAppliedCoupon(savedCoupon, storedItems);
+      }
+    }
+  }, [storedItems, refreshCoupons, evaluateAppliedCoupon]);
+
+  // Helper to persist to localStorage synchronously
+  const persistItems = useCallback((items: StoredCartItem[]) => {
+    storedItemsRef.current = items;
+    setStoredItems(items);
+    if (typeof window !== "undefined") {
+      try {
+        const payload: StoredCart = {
+          items,
+          updatedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(LOCAL_STORAGE_CART_KEY, JSON.stringify(payload));
+      } catch (err) {
+        console.warn("[CartContext] LocalStorage write error:", err);
+      }
+    }
+    silentBackgroundSync(items);
+  }, []);
+
+  const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
+  const toggleDrawer = useCallback(() => setIsDrawerOpen((prev) => !prev), []);
+
+  const clearCart = useCallback(() => {
+    storedItemsRef.current = [];
+    persistItems([]);
+    setAppliedCoupon(null);
+    setDiscountAmount(0);
+    setFreeShippingCoupon(false);
+    setCouponError(null);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem(LOCAL_STORAGE_CART_KEY);
+        localStorage.removeItem(LOCAL_STORAGE_COUPON_KEY);
+      } catch {}
+    }
+  }, [persistItems]);
+
+  const refreshCart = useCallback(async () => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = localStorage.getItem(LOCAL_STORAGE_CART_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as StoredCart;
+        if (Array.isArray(parsed?.items)) {
+          storedItemsRef.current = parsed.items;
+          setStoredItems(parsed.items);
+        }
+      } else {
+        storedItemsRef.current = [];
+        setStoredItems([]);
+      }
+    } catch {}
+  }, []);
+
+  // Apply Coupon method
+  const applyCoupon = useCallback(
+    async (
+      code: string,
+      options?: { silentToast?: boolean; customSuccessMsg?: string }
+    ): Promise<{ success: boolean; message: string }> => {
+      const trimmed = code.trim().toUpperCase();
+      if (!trimmed) {
+        const msg = "Please enter a coupon code";
+        setCouponError(msg);
+        if (!options?.silentToast) showToast(msg, "error");
+        return { success: false, message: msg };
+      }
+
+      const items = (storedItemsRef.current.length > 0 ? storedItemsRef.current : storedItems).map(buildCartItemDetail);
+      const subtotal = Number(
+        items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+      );
+
+      if (items.length === 0 || subtotal <= 0) {
+        const msg = "Your cart is empty. Add items before applying a coupon.";
+        setCouponError(msg);
+        if (!options?.silentToast) showToast(msg, "error");
+        return { success: false, message: msg };
+      }
+
+      try {
+        const res = await fetch("/api/coupons/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code: trimmed,
+            cartItems: items.map((i) => ({
+              productId: i.productId,
+              variantId: i.variantId,
+              quantity: i.quantity,
+              unitPrice: i.unitPrice,
+            })),
+            subtotal,
+          }),
+        });
+
+        const json = (await res.json()) as any;
+        if (!json.valid || !json.coupon) {
+          const errMsg = json.message || "Invalid coupon code";
+          setCouponError(errMsg);
+          if (!options?.silentToast) showToast(errMsg, "error");
+          return { success: false, message: errMsg };
+        }
+
+        // Successfully applied!
+        setAppliedCoupon(json.coupon);
+        setDiscountAmount(json.discount || 0);
+        setFreeShippingCoupon(Boolean(json.freeShipping));
+        setCouponError(null);
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem(LOCAL_STORAGE_COUPON_KEY, json.coupon.code);
+        }
+
+        if (!options?.silentToast) {
+          showToast(
+            options?.customSuccessMsg || json.message || `Coupon ${json.coupon.code} applied!`,
+            "success"
+          );
+        }
+        return { success: true, message: json.message || "Coupon applied!" };
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : "Validation failed";
+        setCouponError(errMsg);
+        if (!options?.silentToast) showToast(errMsg, "error");
+        return { success: false, message: errMsg };
+      }
+    },
+    [storedItems, showToast]
+  );
+
+  // Apply Best Coupon method (automatically applies best applicable coupon)
+  const applyBestCoupon = useCallback(async (): Promise<{ success: boolean; message: string }> => {
+    const currentList = storedItemsRef.current.length > 0 ? storedItemsRef.current : storedItems;
+    if (currentList.length === 0) {
+      const msg = "Your cart is empty. Add items before applying a coupon.";
+      showToast(msg, "error");
+      return { success: false, message: msg };
+    }
+
+    const items = currentList.map(buildCartItemDetail);
+    const cartSubtotal = Number(
+      items.reduce((acc, item) => acc + item.lineTotal, 0).toFixed(2)
+    );
+
+    let target = bestCoupon;
+    let targetDiscount = bestDiscount;
+
+    // If bestCoupon state hasn't resolved yet or is null, evaluate from availableCoupons
+    if (!target && availableCoupons.length > 0) {
+      const applicable = availableCoupons.filter((c) => {
+        if (c.minOrderValue && cartSubtotal < c.minOrderValue) return false;
+        return true;
+      });
+
+      if (applicable.length > 0) {
+        applicable.sort((a, b) => {
+          if (a.isAutoApply && !b.isAutoApply) return -1;
+          if (!a.isAutoApply && b.isAutoApply) return 1;
+          const valA = a.type === "fixed" ? a.value : (cartSubtotal * a.value) / 100;
+          const valB = b.type === "fixed" ? b.value : (cartSubtotal * b.value) / 100;
+          return valB - valA;
+        });
+        target = applicable[0];
+        targetDiscount =
+          target.type === "fixed"
+            ? target.value
+            : Number(((cartSubtotal * target.value) / 100).toFixed(2));
+      }
+    }
+
+    if (!target) {
+      const msg = "No coupons available for current cart";
+      showToast(msg, "error");
+      return { success: false, message: msg };
+    }
+
+    // Check if already applied
+    if (appliedCoupon && appliedCoupon.code.toUpperCase() === target.code.toUpperCase()) {
+      const msg = "Best coupon already applied";
+      showToast(msg, "success");
+      return { success: true, message: msg };
+    }
+
+    // Apply the target coupon
+    const res = await applyCoupon(target.code, { silentToast: true });
+    if (res.success) {
+      const saved =
+        targetDiscount > 0
+          ? targetDiscount
+          : target.type === "fixed"
+          ? target.value
+          : target.type === "free_shipping"
+          ? 15.0
+          : Number(((cartSubtotal * target.value) / 100).toFixed(2));
+
+      const msg = `Best coupon applied: ${target.code} (saved $${saved.toFixed(2)})`;
+      showToast(msg, "success");
+      return { success: true, message: msg };
+    } else {
+      showToast(res.message || "Could not apply coupon", "error");
+      return res;
+    }
+  }, [
+    storedItems,
+    bestCoupon,
+    bestDiscount,
+    availableCoupons,
+    appliedCoupon,
+    applyCoupon,
+    showToast,
+  ]);
+
+  // Remove Coupon method
+  const removeCoupon = useCallback(() => {
+    setAppliedCoupon(null);
+    setDiscountAmount(0);
+    setFreeShippingCoupon(false);
+    setCouponError(null);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem(LOCAL_STORAGE_COUPON_KEY);
+      } catch {}
+    }
+    showToast("Coupon removed", "success");
+  }, [showToast]);
+
+  const addItem = useCallback(
+    async (
+      productId: string,
+      variantId?: string | null,
+      quantity = 1,
+      openOnSuccessOrOptions?: boolean | AddItemOptions
+    ): Promise<boolean> => {
+      const options: AddItemOptions =
+        typeof openOnSuccessOrOptions === "boolean"
+          ? { openOnSuccess: openOnSuccessOrOptions }
+          : openOnSuccessOrOptions || {};
+      const openOnSuccess = options.openOnSuccess !== false;
+
+      const snapshotStock = options.stockQuantity ?? 99;
+
+      // PART 2: Client-side Soft Stock Check
+      if (snapshotStock <= 0) {
+        showToast("This item is currently out of stock.", "error");
+        return false;
+      }
+
+      const normalizedVariantId = variantId || null;
+      // Read current list directly from ref to prevent stale closure overwrites
+      const currentList = [...storedItemsRef.current];
+      const existingIdx = currentList.findIndex(
+        (it) =>
+          it.productId === productId &&
+          (it.variantId || null) === normalizedVariantId
+      );
+
+      let newItems: StoredCartItem[];
+
+      if (existingIdx >= 0) {
+        const existing = currentList[existingIdx];
+        const newQty = existing.quantity + quantity;
+
+        // Soft stock check against item limit
+        const limit = Math.min(existing.stockQuantity || 99, snapshotStock);
+        if (newQty > limit) {
+          showToast(`Only ${limit} units available in stock.`, "error");
+          return false;
+        }
+
+        newItems = [...currentList];
+        newItems[existingIdx] = {
+          ...existing,
+          quantity: newQty,
+          stockQuantity: snapshotStock,
+          price: options.price !== undefined ? options.price : existing.price,
+          salePrice:
+            options.salePrice !== undefined
+              ? options.salePrice
+              : existing.salePrice,
+        };
+      } else {
+        if (quantity > snapshotStock) {
+          showToast(`Only ${snapshotStock} units available in stock.`, "error");
+          return false;
+        }
+
+        const newItem: StoredCartItem = {
+          productId,
+          variantId: normalizedVariantId,
+          quantity,
+          name: options.productName || "Product",
+          slug: options.productSlug || "",
+          price: options.price ?? 0,
+          salePrice: options.salePrice ?? null,
+          imageUrl: options.imageUrl || "",
+          stockQuantity: snapshotStock,
+          options: options.variantOptions || null,
+        };
+        newItems = [...currentList, newItem];
+      }
+
+      // Synchronous instant update (0ms, zero D1 hits)
+      persistItems(newItems);
+      showToast("Added to cart", "success");
+
+      if (openOnSuccess) {
+        setIsDrawerOpen((prev) => (prev ? prev : true));
+      }
+
+      return true;
+    },
+    [showToast, persistItems]
+  );
+
+  // Bulk add method: adds multiple items in a single atomic batch
+  const addItems = useCallback(
+    async (
+      itemsToAdd: BulkAddItemEntry[],
+      openOnSuccess = false
+    ): Promise<{ success: boolean; count: number }> => {
+      if (!itemsToAdd || itemsToAdd.length === 0) {
+        return { success: false, count: 0 };
+      }
+
+      const currentList = [...storedItemsRef.current];
+      let addedCount = 0;
+
+      for (const entry of itemsToAdd) {
+        const { productId, variantId, quantity = 1, options = {} } = entry;
+        const snapshotStock = options.stockQuantity ?? 99;
+
+        if (snapshotStock <= 0) continue;
+
+        const normalizedVariantId = variantId || null;
+        const existingIdx = currentList.findIndex(
+          (it) =>
+            it.productId === productId &&
+            (it.variantId || null) === normalizedVariantId
+        );
+
+        if (existingIdx >= 0) {
+          const existing = currentList[existingIdx];
+          const newQty = existing.quantity + quantity;
+          const limit = Math.min(existing.stockQuantity || 99, snapshotStock);
+          const safeQty = Math.min(newQty, limit);
+
+          currentList[existingIdx] = {
+            ...existing,
+            quantity: safeQty,
+            stockQuantity: snapshotStock,
+            price: options.price !== undefined ? options.price : existing.price,
+            salePrice:
+              options.salePrice !== undefined
+                ? options.salePrice
+                : existing.salePrice,
+          };
+          addedCount++;
+        } else {
+          const safeQty = Math.min(quantity, snapshotStock);
+          if (safeQty <= 0) continue;
+
+          const newItem: StoredCartItem = {
+            productId,
+            variantId: normalizedVariantId,
+            quantity: safeQty,
+            name: options.productName || "Product",
+            slug: options.productSlug || "",
+            price: options.price ?? 0,
+            salePrice: options.salePrice ?? null,
+            imageUrl: options.imageUrl || "",
+            stockQuantity: snapshotStock,
+            options: options.variantOptions || null,
+          };
+          currentList.push(newItem);
+          addedCount++;
+        }
+      }
+
+      if (addedCount > 0) {
+        persistItems(currentList);
+        showToast(
+          `${addedCount} ${addedCount === 1 ? "item" : "items"} added to cart`,
+          "success"
+        );
+        if (openOnSuccess) {
+          setIsDrawerOpen((prev) => (prev ? prev : true));
+        }
+        return { success: true, count: addedCount };
+      }
+
+      return { success: false, count: 0 };
+    },
+    [showToast, persistItems]
+  );
+
+  const addBundleToCart = useCallback(
+    async (bundle: {
+      id: string;
+      name: string;
+      bundlePrice: number;
+      originalPrice: number;
+      items: Array<{
+        productId: string;
+        variantId?: string | null;
+        quantity?: number;
+        product?: any;
+      }>;
+    }): Promise<boolean> => {
+      if (!bundle || !bundle.items || bundle.items.length === 0) return false;
+
+      const discountRatio =
+        bundle.originalPrice > 0 ? bundle.bundlePrice / bundle.originalPrice : 1;
+
+      const currentList = [...storedItemsRef.current];
+
+      for (const item of bundle.items) {
+        const prod = item.product;
+        const basePrice = prod ? Number(prod.price) : 0;
+        const discountedPrice = Math.round(basePrice * discountRatio * 100) / 100;
+        const qty = item.quantity && item.quantity > 0 ? item.quantity : 1;
+        const normVariant = item.variantId || null;
+
+        const existingIdx = currentList.findIndex(
+          (it) =>
+            it.productId === item.productId &&
+            (it.variantId || null) === normVariant &&
+            it.bundleId === bundle.id
+        );
+
+        if (existingIdx >= 0) {
+          currentList[existingIdx] = {
+            ...currentList[existingIdx],
+            quantity: currentList[existingIdx].quantity + qty,
+          };
+        } else {
+          currentList.push({
+            productId: item.productId,
+            variantId: normVariant,
+            quantity: qty,
+            name: prod?.name || "Product",
+            slug: prod?.slug || "",
+            price: discountedPrice,
+            salePrice: null,
+            imageUrl: prod?.mainImage || "",
+            stockQuantity: prod?.stockQuantity ?? 99,
+            options: null,
+            bundleId: bundle.id,
+            bundleName: bundle.name,
+            originalPrice: basePrice,
+          });
+        }
+      }
+
+      persistItems(currentList);
+      showToast(`Added bundle "${bundle.name}" to cart!`, "success");
+      setIsDrawerOpen(true);
+      return true;
+    },
+    [persistItems, showToast]
+  );
+
+  const updateQuantity = useCallback(
+    async (cartItemId: string, quantity: number): Promise<boolean> => {
+      const currentList = [...storedItemsRef.current];
+      let newItems: StoredCartItem[];
+
+      const getItemId = (it: StoredCartItem) =>
+        `${it.productId}_${it.variantId || "default"}${it.bundleId ? `_${it.bundleId}` : ""}`;
+
+      if (quantity <= 0) {
+        newItems = currentList.filter((it) => getItemId(it) !== cartItemId);
+      } else {
+        newItems = currentList.map((it) => {
+          const itemId = getItemId(it);
+          if (itemId === cartItemId) {
+            // Soft stock check
+            if (it.stockQuantity > 0 && quantity > it.stockQuantity) {
+              showToast(`Only ${it.stockQuantity} available in stock.`, "error");
+              return it;
+            }
+            return {
+              ...it,
+              quantity,
+            };
+          }
+          return it;
+        });
+      }
+
+      persistItems(newItems);
+      return true;
+    },
+    [showToast, persistItems]
+  );
+
+  const removeItem = useCallback(
+    async (cartItemId: string): Promise<boolean> => {
+      const getItemId = (it: StoredCartItem) =>
+        `${it.productId}_${it.variantId || "default"}${it.bundleId ? `_${it.bundleId}` : ""}`;
+
+      const newItems = storedItemsRef.current.filter(
+        (it) => getItemId(it) !== cartItemId
+      );
+      persistItems(newItems);
+      showToast("Item removed from cart", "success");
+      return true;
+    },
+    [showToast, persistItems]
+  );
+
+  const { cart, items, itemCount, subtotal, total } = useMemo(
+    () =>
+      computeCartSummary(storedItems, discountAmount, freeShippingCoupon),
+    [storedItems, discountAmount, freeShippingCoupon]
+  );
+
+  return (
+    <CartContext.Provider
+      value={{
+        cart,
+        items,
+        itemCount,
+        subtotal,
+        total,
+        isLoading,
+        isDrawerOpen,
+        toast,
+        appliedCoupon,
+        discountAmount,
+        freeShippingCoupon,
+        availableCoupons,
+        bestCoupon,
+        bestDiscount,
+        smartSuggestion,
+        couponError,
+        openDrawer,
+        closeDrawer,
+        toggleDrawer,
+        showToast,
+        addItem,
+        addItems,
+        addBundleToCart,
+        updateQuantity,
+        removeItem,
+        clearCart,
+        refreshCart,
+        applyCoupon,
+        applyBestCoupon,
+        removeCoupon,
+        refreshCoupons,
+      }}
+    >
+      {children}
+      <CartToastNotification toast={toast} onClose={() => setToast(null)} />
+    </CartContext.Provider>
+  );
+}
+
+export function useCart() {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error("useCart must be used within a CartProvider");
+  }
+  return context;
+}

@@ -1,0 +1,17 @@
+{
+  "id": "hello-world",
+  "name": "Hello World",
+  "version": "1.0.0",
+  "description": "Demo app to test the framework",
+  "author": "Nasrify",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "tools",
+  "permissions": [
+    "read:settings"
+  ],
+  "extensionPoints": [
+    "admin.dashboard.widget",
+    "storefront.homepage.section"
+  ]
+}

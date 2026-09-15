@@ -1085,3 +1085,31 @@ export const cookieConsentSettings = sqliteTable("cookie_consent_settings", {
 export type CookieConsentSettingRecord = typeof cookieConsentSettings.$inferSelect;
 export type NewCookieConsentSettingRecord = typeof cookieConsentSettings.$inferInsert;
 
+// 40. Installed Apps Table (Stage C)
+export const installedApps = sqliteTable("installed_apps", {
+  id: text("id").primaryKey(), // app_id
+  version: text("version").notNull(),
+  enabled: integer("enabled", { mode: "boolean" }).default(true).notNull(),
+  installedAt: integer("installed_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+  settings: text("settings"),
+  permissions: text("permissions"),
+  installedBy: text("installed_by"),
+});
+
+export type InstalledAppRecord = typeof installedApps.$inferSelect;
+export type NewInstalledAppRecord = typeof installedApps.$inferInsert;
+
+// 41. App Install Log Table (Stage C)
+export const appInstallLogs = sqliteTable("app_install_log", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  appId: text("app_id").notNull(),
+  action: text("action").notNull(), // "install"|"uninstall"|"enable"|"disable"|"update"
+  performedAt: integer("performed_at").notNull(),
+  performedBy: text("performed_by"),
+  notes: text("notes"),
+});
+
+export type AppInstallLogDbRecord = typeof appInstallLogs.$inferSelect;
+export type NewAppInstallLogDbRecord = typeof appInstallLogs.$inferInsert;
+

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentAdmin } from "@/lib/auth";
 import { getBundleById, updateBundle, deleteBundle, UpdateBundleInput } from "@/lib/bundles";
@@ -91,6 +92,10 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       );
     }
 
+    try {
+      revalidatePath("/");
+      revalidatePath("/bundles");
+    } catch (_) {}
     return NextResponse.json({ success: true, bundle: updated });
   } catch (error) {
     console.error("PUT /api/admin/bundles/[id] error:", error);
@@ -121,6 +126,10 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     }
 
     await deleteBundle(id);
+    try {
+      revalidatePath("/");
+      revalidatePath("/bundles");
+    } catch (_) {}
     return NextResponse.json({ success: true, message: "Bundle deleted successfully" });
   } catch (error) {
     console.error("DELETE /api/admin/bundles/[id] error:", error);

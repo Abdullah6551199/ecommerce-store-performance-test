@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { eq, and, desc, sql, inArray } from "drizzle-orm";
 import {
   getDb,
@@ -260,10 +261,27 @@ export async function getCouponByCode(code: string): Promise<CouponRecord | null
   return memoryCoupons.find((c) => c.code.toUpperCase() === normalized) || null;
 }
 
+let _cachedAvailableCoupons: CouponRecord[] | null = null;
+let _cachedAvailableCouponsTtl = 0;
+const COUPONS_CACHE_TTL_MS = 60000;
+
+export function invalidateCouponsCache(): void {
+  _cachedAvailableCoupons = null;
+  _cachedAvailableCouponsTtl = 0;
+}
+
 /**
  * Fetch all visible active coupons for the storefront
+ * Deduplicated via React.cache with 60s in-memory TTL
  */
-export async function getAvailableCoupons(): Promise<CouponRecord[]> {
+export const getAvailableCoupons = cache(async (): Promise<CouponRecord[]> => {
+  if (
+    _cachedAvailableCoupons &&
+    Date.now() - _cachedAvailableCouponsTtl < COUPONS_CACHE_TTL_MS
+  ) {
+    return _cachedAvailableCoupons;
+  }
+
   const db = getDb();
   const now = new Date().toISOString();
   if (db) {
@@ -279,10 +297,15 @@ export async function getAvailableCoupons(): Promise<CouponRecord[]> {
         )
       )
       .orderBy(desc(coupons.isFeatured), desc(coupons.createdAt));
+    _cachedAvailableCoupons = rows;
+    _cachedAvailableCouponsTtl = Date.now();
     return rows;
   }
-  return memoryCoupons.filter((c) => c.isActive && c.isVisible);
-}
+  const mem = memoryCoupons.filter((c) => c.isActive && c.isVisible);
+  _cachedAvailableCoupons = mem;
+  _cachedAvailableCouponsTtl = Date.now();
+  return mem;
+});
 
 /**
  * Calculate the discount amount for a validated coupon given items and subtotal

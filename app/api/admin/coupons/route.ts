@@ -3,7 +3,7 @@ import { z } from "zod";
 import { eq, desc, asc, and, sql, like, or } from "drizzle-orm";
 import { getDb, coupons, type CouponRecord } from "@/lib/db";
 import { getCurrentAdmin } from "@/lib/auth";
-import { memoryCoupons } from "@/lib/coupons";
+import { memoryCoupons, invalidateCouponsCache } from "@/lib/coupons";
 
 export const dynamic = "force-dynamic";
 
@@ -200,6 +200,7 @@ export async function POST(req: NextRequest) {
         updatedAt: now,
       });
 
+      invalidateCouponsCache();
       const [created] = await db.select().from(coupons).where(eq(coupons.id, id)).limit(1);
       return NextResponse.json({ success: true, data: created });
     }
@@ -239,6 +240,7 @@ export async function POST(req: NextRequest) {
       updatedAt: now,
     };
     memoryCoupons.unshift(newCoupon);
+    invalidateCouponsCache();
 
     return NextResponse.json({ success: true, data: newCoupon });
   } catch (error) {

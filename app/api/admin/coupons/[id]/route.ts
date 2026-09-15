@@ -3,7 +3,7 @@ import { z } from "zod";
 import { eq, sql, and } from "drizzle-orm";
 import { getDb, coupons, couponUsages, type CouponRecord } from "@/lib/db";
 import { getCurrentAdmin } from "@/lib/auth";
-import { memoryCoupons } from "@/lib/coupons";
+import { memoryCoupons, invalidateCouponsCache } from "@/lib/coupons";
 
 export const dynamic = "force-dynamic";
 
@@ -153,6 +153,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       if (data.isActive !== undefined) updatePayload.isActive = data.isActive;
 
       await db.update(coupons).set(updatePayload).where(eq(coupons.id, id));
+      invalidateCouponsCache();
 
       const [updated] = await db.select().from(coupons).where(eq(coupons.id, id)).limit(1);
       if (!updated) {
@@ -176,6 +177,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
       updatedAt: now,
     };
     memoryCoupons[idx] = updated;
+    invalidateCouponsCache();
 
     return NextResponse.json({ success: true, data: updated });
   } catch (error) {
@@ -203,6 +205,7 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     if (db) {
       await db.delete(couponUsages).where(eq(couponUsages.couponId, id));
       await db.delete(coupons).where(eq(coupons.id, id));
+      invalidateCouponsCache();
       return NextResponse.json({ success: true, message: "Coupon deleted successfully" });
     }
 
@@ -210,6 +213,7 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     if (idx !== -1) {
       memoryCoupons.splice(idx, 1);
     }
+    invalidateCouponsCache();
 
     return NextResponse.json({ success: true, message: "Coupon deleted successfully" });
   } catch (error) {

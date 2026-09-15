@@ -316,6 +316,15 @@ export async function resolveProductDetails(productId: string, db?: any): Promis
   return null;
 }
 
+let _cachedActiveBundles: BundleWithItems[] | null = null;
+let _cachedActiveBundlesTtl = 0;
+const BUNDLES_CACHE_TTL_MS = 60000;
+
+export function invalidateBundlesCache(): void {
+  _cachedActiveBundles = null;
+  _cachedActiveBundlesTtl = 0;
+}
+
 /**
  * List bundles with optional filters, search, and sorting
  */
@@ -329,6 +338,22 @@ export async function listBundles(options: ListBundlesOptions = {}): Promise<Bun
     limit = 50,
     offset = 0,
   } = options;
+
+  if (
+    status === "active" &&
+    !search &&
+    offset === 0 &&
+    sortBy === "sortOrder" &&
+    sortOrder === "asc" &&
+    _cachedActiveBundles &&
+    Date.now() - _cachedActiveBundlesTtl < BUNDLES_CACHE_TTL_MS
+  ) {
+    let result = _cachedActiveBundles;
+    if (isFeatured !== undefined) {
+      result = result.filter((b) => Boolean(b.isFeatured) === Boolean(isFeatured));
+    }
+    return result.slice(0, limit);
+  }
 
   const db = getDb();
 
@@ -443,7 +468,7 @@ export async function listBundles(options: ListBundlesOptions = {}): Promise<Bun
         });
       });
 
-      return bundleRows.map((b) => {
+      const mappedBundles = bundleRows.map((b) => {
         const items = itemsByBundle[b.id] || [];
         const savingsAmount = Math.max(0, Number((b.originalPrice - b.bundlePrice).toFixed(2)));
         // Auto-assign image from first product if bundle has no image
@@ -455,6 +480,13 @@ export async function listBundles(options: ListBundlesOptions = {}): Promise<Bun
           savingsAmount,
         };
       });
+
+      if (status === "active" && !search && offset === 0 && sortBy === "sortOrder" && sortOrder === "asc" && isFeatured === undefined) {
+        _cachedActiveBundles = mappedBundles;
+        _cachedActiveBundlesTtl = Date.now();
+      }
+
+      return mappedBundles;
     } catch (err) {
       console.warn("D1 query failed in listBundles, falling back to memory:", err);
     }
@@ -479,9 +511,9 @@ export async function listBundles(options: ListBundlesOptions = {}): Promise<Bun
 }
 
 /**
- * Get bundle by slug
+ * Get bundle by slug (deduplicated via React.cache)
  */
-export async function getBundleBySlug(slug: string): Promise<BundleWithItems | null> {
+export const getBundleBySlug = cache(async (slug: string): Promise<BundleWithItems | null> => {
   const db = getDb();
   if (db) {
     try {
@@ -556,12 +588,12 @@ export async function getBundleBySlug(slug: string): Promise<BundleWithItems | n
 
   const found = memoryBundles.find((b) => b.slug === slug);
   return found || null;
-}
+});
 
 /**
- * Get bundle by ID
+ * Get bundle by ID (deduplicated via React.cache)
  */
-export async function getBundleById(id: string): Promise<BundleWithItems | null> {
+export const getBundleById = cache(async (id: string): Promise<BundleWithItems | null> => {
   const db = getDb();
   if (db) {
     try {
@@ -636,7 +668,7 @@ export async function getBundleById(id: string): Promise<BundleWithItems | null>
 
   const found = memoryBundles.find((b) => b.id === id);
   return found || null;
-}
+});
 
 /**
  * Create a new bundle
@@ -749,6 +781,7 @@ export async function createBundle(input: CreateBundleInput): Promise<BundleWith
   };
 
   memoryBundles.unshift(created);
+  invalidateBundlesCache();
   return created;
 }
 
@@ -872,6 +905,7 @@ export async function updateBundle(id: string, input: UpdateBundleInput): Promis
     memoryBundles[memIdx] = updated;
   }
 
+  invalidateBundlesCache();
   return updated;
 }
 
@@ -893,6 +927,7 @@ export async function deleteBundle(id: string): Promise<boolean> {
   if (idx !== -1) {
     memoryBundles.splice(idx, 1);
   }
+  invalidateBundlesCache();
   return true;
 }
 
@@ -947,6 +982,7 @@ export async function reorderBundles(items: Array<{ id: string; sortOrder: numbe
     if (mem) mem.sortOrder = it.sortOrder;
   });
 
+  invalidateBundlesCache();
   return true;
 }
 
@@ -977,13 +1013,14 @@ export async function getBundleStats(): Promise<{
 
 /**
  * Check if a product belongs to any active bundle ("Also available in bundle" cross-sell)
+ * Deduplicated via React.cache
  */
-export async function getProductBundles(productId: string): Promise<BundleWithItems[]> {
+export const getProductBundles = cache(async (productId: string): Promise<BundleWithItems[]> => {
   const activeBundles = await listBundles({ status: "active", limit: 20 });
   return activeBundles.filter((bundle) =>
     bundle.items.some((it) => it.productId === productId)
   );
-}
+});
 
 /**
  * Get featured bundles for homepage display

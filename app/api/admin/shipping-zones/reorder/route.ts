@@ -3,7 +3,7 @@ import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { getDb, shippingZones } from "@/lib/db";
 import { getCurrentAdmin } from "@/lib/auth";
-import { memoryShippingZones } from "@/lib/shipping";
+import { memoryShippingZones, invalidateShippingZonesCache } from "@/lib/shipping";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +48,8 @@ export async function PUT(req: NextRequest) {
         }
       }
     }
+
+    invalidateShippingZonesCache();
 
     return NextResponse.json({
       success: true,

@@ -9,7 +9,12 @@ import {
 } from "@/lib/products";
 import { renderHomepageSection } from "@/components/homepage/HomepageSections";
 import { getFeaturedBundles } from "@/lib/bundles";
-import FeaturedBundlesSection from "@/components/homepage/FeaturedBundlesSection";
+import dynamic from "next/dynamic";
+
+const FeaturedBundlesSection = dynamic(
+  () => import("@/components/homepage/FeaturedBundlesSection"),
+  { ssr: true }
+);
 import type { Metadata } from "next";
 import { getStoreSettings } from "@/lib/settings";
 import { getBaseUrl } from "@/lib/seo";

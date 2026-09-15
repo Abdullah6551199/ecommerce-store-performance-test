@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getCurrentAdmin } from "@/lib/auth";
 import { listBundles, createBundle, CreateBundleInput } from "@/lib/bundles";
@@ -89,6 +90,10 @@ export async function POST(req: NextRequest) {
     }
 
     const bundle = await createBundle(parsed.data as CreateBundleInput);
+    try {
+      revalidatePath("/");
+      revalidatePath("/bundles");
+    } catch (_) {}
     return NextResponse.json({ success: true, bundle }, { status: 201 });
   } catch (error) {
     console.error("POST /api/admin/bundles error:", error);

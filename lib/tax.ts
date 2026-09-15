@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getDb, taxRates, taxSettings, type TaxRateRecord, type TaxSettingRecord } from "./db";
 import { eq, and, sql, desc, asc, isNull, or } from "drizzle-orm";
 
@@ -209,15 +210,30 @@ export function getVisitorLocation(request: Request): VisitorLocation {
   };
 }
 
+let _cachedTaxSettings: TaxSettingRecord | null = null;
+let _cachedTaxSettingsTtl = 0;
+const TAX_SETTINGS_TTL_MS = 60000;
+
+export function invalidateTaxSettingsCache(): void {
+  _cachedTaxSettings = null;
+  _cachedTaxSettingsTtl = 0;
+}
+
 /**
  * Fetch global tax settings
+ * Deduplicated via React.cache with 60s in-memory TTL
  */
-export async function getTaxSettings(): Promise<TaxSettingRecord> {
+export const getTaxSettings = cache(async (): Promise<TaxSettingRecord> => {
+  if (_cachedTaxSettings && Date.now() - _cachedTaxSettingsTtl < TAX_SETTINGS_TTL_MS) {
+    return _cachedTaxSettings;
+  }
   const db = getDb();
   if (db) {
     try {
       const rows = await db.select().from(taxSettings).limit(1);
       if (rows.length > 0) {
+        _cachedTaxSettings = rows[0];
+        _cachedTaxSettingsTtl = Date.now();
         return rows[0];
       }
     } catch (err) {
@@ -225,7 +241,7 @@ export async function getTaxSettings(): Promise<TaxSettingRecord> {
     }
   }
   return memoryTaxSettings;
-}
+});
 
 /**
  * Detect applicable tax rate based on location hierarchy:

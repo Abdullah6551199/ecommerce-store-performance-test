@@ -3,7 +3,7 @@ import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { getDb, shippingZones, type ShippingZoneRecord } from "@/lib/db";
 import { getCurrentAdmin } from "@/lib/auth";
-import { formatShippingZone, memoryShippingZones } from "@/lib/shipping";
+import { formatShippingZone, memoryShippingZones, invalidateShippingZonesCache } from "@/lib/shipping";
 
 export const dynamic = "force-dynamic";
 
@@ -60,7 +60,12 @@ export async function PUT(
       if (validated.isActive !== undefined) updateData.isActive = validated.isActive;
       if (validated.sortOrder !== undefined) updateData.sortOrder = validated.sortOrder;
 
-      await db.update(shippingZones).set(updateData).where(eq(shippingZones.id, id));
+      await db
+        .update(shippingZones)
+        .set(updateData)
+        .where(eq(shippingZones.id, id));
+
+      invalidateShippingZonesCache();
 
       const updated = await db.select().from(shippingZones).where(eq(shippingZones.id, id)).limit(1);
       if (updated.length === 0) {
@@ -96,6 +101,7 @@ export async function PUT(
       };
 
       memoryShippingZones[idx] = updatedRecord;
+      invalidateShippingZonesCache();
       return NextResponse.json({
         success: true,
         data: formatShippingZone(updatedRecord),
@@ -133,6 +139,8 @@ export async function DELETE(
         memoryShippingZones.splice(idx, 1);
       }
     }
+
+    invalidateShippingZonesCache();
 
     return NextResponse.json({
       success: true,

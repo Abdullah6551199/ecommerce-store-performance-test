@@ -151,6 +151,159 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/api/bundles",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=600",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+        ],
+      },
+      {
+        source: "/api/bundles/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=600",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+        ],
+      },
+      {
+        source: "/api/payment-icons",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=600",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+        ],
+      },
+      {
+        source: "/api/trust-badges",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=600",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+        ],
+      },
+      {
+        source: "/api/cookie-settings",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=600",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+        ],
+      },
+      {
+        source: "/api/faqs",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=600",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+        ],
+      },
+      {
+        source: "/api/pages/navigation",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=600",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+        ],
+      },
+      {
+        source: "/api/pages/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=600",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+        ],
+      },
+      {
+        source: "/api/shipping/zones",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=60, stale-while-revalidate=600",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=60, stale-while-revalidate=600",
+          },
+        ],
+      },
       // 4. HTML Storefront Pages (ISR 300s, Search 60s)
       {
         source: "/",

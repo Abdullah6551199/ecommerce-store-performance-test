@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getDb, shippingZones, type ShippingZoneRecord } from "./db";
 import { eq, asc, and, desc } from "drizzle-orm";
 
@@ -170,10 +171,23 @@ export function formatShippingZone(record: ShippingZoneRecord): ShippingZone {
   };
 }
 
+let _cachedActiveZones: ShippingZone[] | null = null;
+let _cachedActiveZonesTtl = 0;
+const SHIPPING_ZONES_CACHE_TTL_MS = 60000;
+
+export function invalidateShippingZonesCache(): void {
+  _cachedActiveZones = null;
+  _cachedActiveZonesTtl = 0;
+}
+
 /**
  * Fetch all active shipping zones ordered by sort_order
+ * Deduplicated via React.cache with 60s in-memory TTL
  */
-export async function getActiveShippingZones(): Promise<ShippingZone[]> {
+export const getActiveShippingZones = cache(async (): Promise<ShippingZone[]> => {
+  if (_cachedActiveZones && Date.now() - _cachedActiveZonesTtl < SHIPPING_ZONES_CACHE_TTL_MS) {
+    return _cachedActiveZones;
+  }
   const db = getDb();
   if (db) {
     try {
@@ -182,7 +196,10 @@ export async function getActiveShippingZones(): Promise<ShippingZone[]> {
         .from(shippingZones)
         .where(eq(shippingZones.isActive, true))
         .orderBy(asc(shippingZones.sortOrder), asc(shippingZones.createdAt));
-      return rows.map(formatShippingZone);
+      const formatted = rows.map(formatShippingZone);
+      _cachedActiveZones = formatted;
+      _cachedActiveZonesTtl = Date.now();
+      return formatted;
     } catch (err) {
       console.warn("Failed to fetch shipping zones from D1, falling back to memory:", err);
     }
@@ -192,7 +209,7 @@ export async function getActiveShippingZones(): Promise<ShippingZone[]> {
     .filter((z) => z.isActive)
     .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
     .map(formatShippingZone);
-}
+});
 
 /**
  * Calculate shipping cost and matching zone based on country, state, and order subtotal

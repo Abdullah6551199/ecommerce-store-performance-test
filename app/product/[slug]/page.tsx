@@ -8,8 +8,14 @@ import ProductShowcase from "@/components/ProductShowcase";
 import ProductBundleCrossSell from "@/components/product/ProductBundleCrossSell";
 import ProductTabs from "@/components/product/ProductTabs";
 import RelatedProductsCarousel from "@/components/product/RelatedProductsCarousel";
-import RecentlyViewedCarousel from "@/components/product/RecentlyViewedCarousel";
-import MobileStickyCartBar from "@/components/product/MobileStickyCartBar";
+import dynamic from "next/dynamic";
+
+const RecentlyViewedCarousel = dynamic(
+  () => import("@/components/product/RecentlyViewedCarousel")
+);
+const MobileStickyCartBar = dynamic(
+  () => import("@/components/product/MobileStickyCartBar")
+);
 import { getProductRatingSummary, getProductReviews } from "@/lib/reviews";
 import { getAbsoluteUrl, generateProductJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 import { normalizeImageUrl } from "@/lib/utils";

@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import CookieCustomizeModal from "@/components/CookieCustomizeModal";
+import dynamic from "next/dynamic";
+
+const CookieCustomizeModal = dynamic(() => import("@/components/CookieCustomizeModal"), { ssr: false });
 import {
   getStoredCookieConsent,
   saveCookieConsent,

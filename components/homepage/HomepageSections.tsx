@@ -9,12 +9,12 @@ import ProductCard from "@/components/ProductCard";
 import { normalizeImageUrl } from "@/lib/utils";
 
 const NewsletterForm = dynamic(() => import("./NewsletterForm"), { ssr: true });
+const BrandLogosRow = dynamic(() => import("./BrandLogosRow"), { ssr: true });
 import HeroCarousel from "./HeroCarousel";
 import CategoryCardsRow from "./CategoryCardsRow";
 import TrendingProductsSection from "./TrendingProductsSection";
 import TrustBar from "./TrustBar";
 import NewArrivalsSection from "./NewArrivalsSection";
-import BrandLogosRow from "./BrandLogosRow";
 
 
 /**

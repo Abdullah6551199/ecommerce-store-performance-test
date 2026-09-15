@@ -315,9 +315,9 @@ export async function listProducts(options?: {
 }
 
 /**
- * Retrieve a single product by ID
+ * Retrieve a single product by ID (deduplicated via React.cache)
  */
-export async function getProductById(id: string): Promise<ProductWithImagesAndCategory | null> {
+export const getProductById = cache(async (id: string): Promise<ProductWithImagesAndCategory | null> => {
   const db = getDb();
 
   if (db) {
@@ -359,7 +359,7 @@ export async function getProductById(id: string): Promise<ProductWithImagesAndCa
   const imgs = memoryProductImages.filter((img) => img.productId === p.id);
   const variants = await getVariantsByProductId(id);
   return formatProduct(p, imgs, null, variants);
-}
+});
 
 /**
  * Retrieve a single product by Slug
@@ -1296,14 +1296,15 @@ export async function getProductsByCategoryPaginated(
 }
 
 /**
- * Get related products for product details page (same category, excluding current product)
+ * Retrieve related products within the same category for Product Detail Page recommendations.
  * Optimized to directly query D1 with LIMIT 4 and exclude current productId.
+ * Deduplicated via React.cache
  */
-export async function getRelatedProducts(
+export const getRelatedProducts = cache(async (
   productId: string,
   categoryId: string | null,
   limit = 4
-): Promise<ProductWithImagesAndCategory[]> {
+): Promise<ProductWithImagesAndCategory[]> => {
   const db = getDb();
   if (db) {
     try {
@@ -1387,7 +1388,7 @@ export async function getRelatedProducts(
 
   const all = await getFeaturedProducts(limit + 1);
   return all.filter((p) => p.id !== productId).slice(0, limit);
-}
+});
 
 /**
  * Retrieve multiple products by an array of IDs.

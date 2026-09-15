@@ -111,9 +111,9 @@ let memoryReviewSettings: ReviewSettings = { ...DEFAULT_REVIEW_SETTINGS };
 const REVIEW_SETTINGS_KEY = "review_settings";
 
 /**
- * Retrieve review configuration settings
+ * Retrieve review configuration settings (deduplicated via React.cache)
  */
-export async function getReviewSettings(): Promise<ReviewSettings> {
+export const getReviewSettings = cache(async (): Promise<ReviewSettings> => {
   const db = getDb();
   if (db) {
     try {
@@ -135,7 +135,7 @@ export async function getReviewSettings(): Promise<ReviewSettings> {
     }
   }
   return memoryReviewSettings;
-}
+});
 
 /**
  * Update review configuration settings

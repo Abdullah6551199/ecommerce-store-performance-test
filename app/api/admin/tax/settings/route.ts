@@ -3,7 +3,7 @@ import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { getDb, taxSettings, type TaxSettingRecord } from "@/lib/db";
 import { getCurrentAdmin } from "@/lib/auth";
-import { getTaxSettings, memoryTaxSettings } from "@/lib/tax";
+import { memoryTaxSettings, getTaxSettings, invalidateTaxSettingsCache } from "@/lib/tax";
 
 export const dynamic = "force-dynamic";
 
@@ -80,6 +80,7 @@ export async function PUT(req: NextRequest) {
         });
       }
 
+      invalidateTaxSettingsCache();
       const updated = await getTaxSettings();
       return NextResponse.json({
         success: true,
@@ -91,6 +92,7 @@ export async function PUT(req: NextRequest) {
         ...validated,
         updatedAt: now,
       });
+      invalidateTaxSettingsCache();
       return NextResponse.json({
         success: true,
         data: memoryTaxSettings,

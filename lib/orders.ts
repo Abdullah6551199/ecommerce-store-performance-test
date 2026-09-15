@@ -748,7 +748,6 @@ export async function onOrderStatusChange(
       message: statusMessage,
       link: `/account/orders/${orderId}`,
     });
-    console.log(`[Orders] Notification sent to customer ${customerId} for order ${orderId} (${newStatus})`);
   } catch (err) {
     console.warn(`[Orders] Failed to send order status notification for ${orderId}:`, err);
   }

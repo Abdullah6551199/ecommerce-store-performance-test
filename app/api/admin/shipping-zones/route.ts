@@ -3,7 +3,7 @@ import { z } from "zod";
 import { asc, eq, desc } from "drizzle-orm";
 import { getDb, shippingZones, type ShippingZoneRecord } from "@/lib/db";
 import { getCurrentAdmin } from "@/lib/auth";
-import { formatShippingZone, memoryShippingZones } from "@/lib/shipping";
+import { formatShippingZone, memoryShippingZones, invalidateShippingZonesCache } from "@/lib/shipping";
 
 export const dynamic = "force-dynamic";
 
@@ -100,6 +100,8 @@ export async function POST(req: NextRequest) {
     } else {
       memoryShippingZones.push(newZoneRecord);
     }
+
+    invalidateShippingZonesCache();
 
     return NextResponse.json({
       success: true,

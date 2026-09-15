@@ -1,0 +1,27 @@
+"use client";
+
+import React from "react";
+import dynamic from "next/dynamic";
+
+const CartDrawerContainer = dynamic(() => import("@/components/CartDrawerContainer"), { ssr: false });
+const BroadcastPopup = dynamic(() => import("@/components/BroadcastPopup"), { ssr: false });
+const CompareBar = dynamic(() => import("@/components/CompareBar"), { ssr: false });
+const CookieConsentBanner = dynamic(() => import("@/components/CookieConsentBanner"), { ssr: false });
+const ScriptBlocker = dynamic(() => import("@/components/ScriptBlocker"), { ssr: false });
+
+export default function StorefrontOverlays(): React.JSX.Element {
+  return (
+    <>
+      {/* Global Cart Slide-Over Drawer (Loaded on demand) */}
+      <CartDrawerContainer />
+      {/* Global Broadcast Popup Modal */}
+      <BroadcastPopup />
+      {/* Global Bottom Compare Bar */}
+      <CompareBar />
+      {/* GDPR Cookie Consent Banner */}
+      <CookieConsentBanner />
+      {/* GDPR Third-Party Script Telemetry Blocker */}
+      <ScriptBlocker />
+    </>
+  );
+}

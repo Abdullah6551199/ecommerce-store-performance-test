@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import {
   getDb,
@@ -53,17 +52,19 @@ export function generateSecureToken(): string {
 }
 
 /**
- * Hash customer password with bcrypt (10 rounds)
+ * Hash customer password with bcrypt (10 rounds, lazy-loaded)
  */
 export async function hashCustomerPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, 10);
+  const bcrypt = await import("bcryptjs");
+  return (bcrypt.default || bcrypt).hash(password, 10);
 }
 
 /**
- * Verify customer password against bcrypt hash
+ * Verify customer password against bcrypt hash (lazy-loaded)
  */
 export async function verifyCustomerPassword(password: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(password, hash);
+  const bcrypt = await import("bcryptjs");
+  return (bcrypt.default || bcrypt).compare(password, hash);
 }
 
 /**

@@ -9,13 +9,8 @@ import { getThemeSettings, generateThemeCss } from "@/lib/theme";
 import { CartProvider } from "@/components/CartContext";
 import { WishlistProvider } from "@/components/WishlistContext";
 import { CompareProvider } from "@/components/CompareContext";
-import CompareBar from "@/components/CompareBar";
 import "./globals.css";
-
-import CartDrawerContainer from "@/components/CartDrawerContainer";
-import BroadcastPopup from "@/components/BroadcastPopup";
-import CookieConsentBanner from "@/components/CookieConsentBanner";
-import ScriptBlocker from "@/components/ScriptBlocker";
+import StorefrontOverlays from "@/components/StorefrontOverlays";
 
 
 const inter = Inter({
@@ -129,16 +124,8 @@ export default async function RootLayout({
                   <Footer settings={mergedSettings} />
                 </div>
               </div>
-              {/* Global Cart Slide-Over Drawer (Loaded on demand) */}
-              <CartDrawerContainer />
-              {/* Global Broadcast Popup Modal */}
-              <BroadcastPopup />
-              {/* Global Bottom Compare Bar */}
-              <CompareBar />
-              {/* GDPR Cookie Consent Banner */}
-              <CookieConsentBanner />
-              {/* GDPR Third-Party Script Telemetry Blocker */}
-              <ScriptBlocker />
+              {/* Global Overlays & Modals (Lazy Loaded on Demand) */}
+              <StorefrontOverlays />
             </CompareProvider>
           </WishlistProvider>
         </CartProvider>

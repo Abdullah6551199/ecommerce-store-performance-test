@@ -46,15 +46,24 @@ export function getD1Database(): D1Database | null {
   return null;
 }
 
+// Singleton cache for the Drizzle client per worker isolate
+let _cachedDb: AppDatabase | null = null;
+let _cachedD1: D1Database | null = null;
+
 /**
- * Obtain the initialized Drizzle database client
+ * Obtain the initialized Drizzle database client (cached singleton)
  */
 export function getDb(): AppDatabase | null {
   const d1 = getD1Database();
-  if (d1) {
-    return drizzle(d1, { schema });
+  if (!d1) return null;
+
+  if (_cachedDb && _cachedD1 === d1) {
+    return _cachedDb;
   }
-  return null;
+
+  _cachedD1 = d1;
+  _cachedDb = drizzle(d1, { schema });
+  return _cachedDb;
 }
 
 /**
@@ -67,7 +76,7 @@ export async function checkDbHealth(): Promise<DbHealthResult> {
 
   if (d1) {
     try {
-      const db = drizzle(d1, { schema });
+      const db = getDb() || drizzle(d1, { schema });
       // Execute health check query
       await db.run(sql`SELECT 1`);
       

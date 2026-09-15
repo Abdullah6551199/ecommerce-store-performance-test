@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getDb, settings } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -206,8 +207,9 @@ const THEME_CACHE_TTL_MS = 60000;
 
 /**
  * Fetch theme settings from Cloudflare D1 or fallback memory
+ * Deduplicated via React.cache
  */
-export async function getThemeSettings(): Promise<ThemeSettings> {
+export const getThemeSettings = cache(async (): Promise<ThemeSettings> => {
   if (lastThemeFetchTime > 0 && Date.now() - lastThemeFetchTime < THEME_CACHE_TTL_MS) {
     return memoryThemeSettings;
   }
@@ -255,7 +257,7 @@ export async function getThemeSettings(): Promise<ThemeSettings> {
   }
 
   return memoryThemeSettings;
-}
+});
 
 export interface DeepPartialThemeSettings {
   colors?: Partial<ThemeColors>;

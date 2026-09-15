@@ -371,11 +371,25 @@ export async function getPageById(id: string): Promise<EnhancedPageRecord | null
   return null;
 }
 
+let cachedAllPages: EnhancedPageRecord[] | null = null;
+let lastAllPagesFetchTime = 0;
+const CMS_PAGES_CACHE_TTL_MS = 60000;
+
+export function invalidateCmsCache(): void {
+  cachedAllPages = null;
+  lastAllPagesFetchTime = 0;
+}
+
 /**
- * List all pages (admin)
+ * List all pages (admin & navigation)
  * Guaranteed to return all 8 Core Pages + all Custom Pages
+ * Deduplicated via React.cache and 60s TTL memory cache
  */
-export async function listAllPages(): Promise<EnhancedPageRecord[]> {
+export const listAllPages = cache(async (): Promise<EnhancedPageRecord[]> => {
+  if (cachedAllPages && Date.now() - lastAllPagesFetchTime < CMS_PAGES_CACHE_TTL_MS) {
+    return cachedAllPages;
+  }
+
   const db = getDb();
   let dbRows: PageRecord[] = [];
 
@@ -407,8 +421,10 @@ export async function listAllPages(): Promise<EnhancedPageRecord[]> {
     }
   }
 
+  cachedAllPages = allRecords;
+  lastAllPagesFetchTime = Date.now();
   return allRecords;
-}
+});
 
 export const listPages = listAllPages;
 
@@ -454,6 +470,7 @@ export async function createPage(input: PageInput): Promise<EnhancedPageRecord> 
     await db.insert(pages).values(record);
   }
 
+  invalidateCmsCache();
   return enrichPageRecord(record);
 }
 
@@ -492,28 +509,38 @@ export async function updatePage(id: string, input: Partial<PageInput>): Promise
   // Do not allow changing the slug of core pages
   if (!isCore && input.slug) {
     const newSlug = input.slug.toLowerCase().trim();
-    if (newSlug !== existing.slug && isCorePageSlug(newSlug)) {
-      throw new Error(`The slug "${newSlug}" is reserved for a core system page.`);
+    if (newSlug !== existing.slug) {
+      if (isCorePageSlug(newSlug)) {
+        throw new Error(`Cannot use reserved core page slug: ${newSlug}`);
+      }
+      const existingPage = await getPageBySlug(newSlug);
+      if (existingPage && existingPage.id !== id) {
+        throw new Error(`A page with slug '${newSlug}' already exists.`);
+      }
+      updatedFields.slug = newSlug;
     }
-    updatedFields.slug = newSlug;
   }
 
-  // If this was a synthesized default page that had not yet been inserted into D1
+  if (input.sortOrder !== undefined) {
+    updatedFields.sortOrder = Number(input.sortOrder);
+  }
+
+  // Handle default page records that are being modified for the first time
   if (id.startsWith("default-")) {
     const realId = `page-core-${existing.slug}`;
     const newRecord: PageRecord = {
       id: realId,
       tenantId: "default",
       slug: existing.slug,
+      isDefault: true,
       title: updatedFields.title || existing.title,
-      content: contentToSave,
-      seoTitle: updatedFields.seoTitle ?? existing.seoTitle,
-      seoDescription: updatedFields.seoDescription ?? existing.seoDescription,
-      ogImage: updatedFields.ogImage ?? existing.ogImage,
+      content: updatedFields.content !== undefined ? updatedFields.content : existing.content,
+      seoTitle: updatedFields.seoTitle !== undefined ? updatedFields.seoTitle : existing.seoTitle,
+      seoDescription: updatedFields.seoDescription !== undefined ? updatedFields.seoDescription : existing.seoDescription,
+      ogImage: updatedFields.ogImage !== undefined ? updatedFields.ogImage : existing.ogImage,
       showInFooter: updatedFields.showInFooter !== undefined ? updatedFields.showInFooter : existing.showInFooter,
       isPublished: updatedFields.isPublished !== undefined ? updatedFields.isPublished : existing.isPublished,
-      isDefault: true,
-      sortOrder: 0,
+      sortOrder: updatedFields.sortOrder !== undefined ? updatedFields.sortOrder : existing.sortOrder,
       createdAt: now,
       updatedAt: now,
     };
@@ -521,6 +548,7 @@ export async function updatePage(id: string, input: Partial<PageInput>): Promise
     if (db) {
       await db.insert(pages).values(newRecord);
     }
+    invalidateCmsCache();
     return enrichPageRecord(newRecord);
   }
 
@@ -528,6 +556,7 @@ export async function updatePage(id: string, input: Partial<PageInput>): Promise
     await db.update(pages).set(updatedFields).where(eq(pages.id, id));
   }
 
+  invalidateCmsCache();
   return enrichPageRecord({ ...existing, ...updatedFields } as PageRecord);
 }
 
@@ -582,6 +611,7 @@ export async function resetPageToDefault(id: string): Promise<EnhancedPageRecord
     if (db) {
       await db.insert(pages).values(newRecord);
     }
+    invalidateCmsCache();
     return enrichPageRecord(newRecord);
   }
 
@@ -589,6 +619,7 @@ export async function resetPageToDefault(id: string): Promise<EnhancedPageRecord
     await db.update(pages).set(resetFields).where(eq(pages.id, id));
   }
 
+  invalidateCmsCache();
   return enrichPageRecord({
     ...existing,
     ...resetFields,
@@ -610,16 +641,18 @@ export async function deletePage(id: string): Promise<boolean> {
   if (db) {
     await db.delete(pages).where(eq(pages.id, id));
   }
+  invalidateCmsCache();
   return true;
 }
 
 /**
  * Get active navigation pages (for header and footer)
+ * Deduplicated via React.cache
  */
-export async function getNavigationPages(): Promise<{
+export const getNavigationPages = cache(async (): Promise<{
   headerPages: Array<{ title: string; slug: string; href: string }>;
   footerPages: Array<{ title: string; slug: string; href: string }>;
-}> {
+}> => {
   const all = await listAllPages();
   const published = all.filter((p) => p.isPublished);
 
@@ -655,7 +688,7 @@ export async function getNavigationPages(): Promise<{
     .map((p) => ({ title: p.title, slug: p.slug, href: getHref(p.slug) }));
 
   return { headerPages, footerPages };
-}
+});
 
 export const DEFAULT_FAQS: FaqRecord[] = [
   {

@@ -1,8 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import SettingsManager from "@/components/admin/SettingsManager";
-import AdminAccountManager from "@/components/admin/AdminAccountManager";
+import dynamic from "next/dynamic";
+import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+
+const SettingsManager = dynamic(
+  () => import("@/components/admin/SettingsManager"),
+  { ssr: false, loading: () => <AdminLoadingSkeleton title="Loading Storefront Settings..." /> }
+);
+
+const AdminAccountManager = dynamic(
+  () => import("@/components/admin/AdminAccountManager"),
+  { ssr: false, loading: () => <AdminLoadingSkeleton title="Loading Admin Account..." /> }
+);
 
 interface AdminProfile {
   email: string;

@@ -1,15 +1,21 @@
-import React from "react";
-import CategoryProductsManager from "@/components/admin/CategoryProductsManager";
+"use client";
 
-export const dynamic = "force-dynamic";
+import React, { use } from "react";
+import dynamic from "next/dynamic";
+import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+
+const CategoryProductsManager = dynamic(
+  () => import("@/components/admin/CategoryProductsManager"),
+  { ssr: false, loading: () => <AdminLoadingSkeleton title="Loading Category Products..." /> }
+);
 
 interface CategoryProductsPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function CategoryProductsPage({
+export default function CategoryProductsPage({
   params,
-}: CategoryProductsPageProps): Promise<React.JSX.Element> {
-  const { id } = await params;
+}: CategoryProductsPageProps): React.JSX.Element {
+  const { id } = use(params);
   return <CategoryProductsManager categoryId={id} />;
 }

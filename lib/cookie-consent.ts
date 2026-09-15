@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { eq } from "drizzle-orm";
 import {
   getDb,
@@ -107,10 +108,23 @@ export const memoryCookieSettings: CookieConsentSettingRecord = {
   updatedAt: new Date().toISOString(),
 };
 
+let cachedCookieSettings: CookieConsentSettingRecord | null = null;
+let lastCookieSettingsFetchTime = 0;
+const COOKIE_SETTINGS_TTL_MS = 60000;
+
+export function invalidateCookieSettingsCache(): void {
+  cachedCookieSettings = null;
+  lastCookieSettingsFetchTime = 0;
+}
+
 /**
  * Fetch cookie consent settings from D1 or fallback memory
+ * Deduplicated via React.cache and 60s in-memory TTL
  */
-export async function getCookieConsentSettings(): Promise<CookieConsentSettingRecord> {
+export const getCookieConsentSettings = cache(async (): Promise<CookieConsentSettingRecord> => {
+  if (cachedCookieSettings && Date.now() - lastCookieSettingsFetchTime < COOKIE_SETTINGS_TTL_MS) {
+    return cachedCookieSettings;
+  }
   const db = getDb();
   if (db) {
     try {
@@ -120,6 +134,8 @@ export async function getCookieConsentSettings(): Promise<CookieConsentSettingRe
         if (!row.cookiePolicyContent) {
           row.cookiePolicyContent = getDefaultCookiePolicyContent();
         }
+        cachedCookieSettings = row;
+        lastCookieSettingsFetchTime = Date.now();
         return row;
       }
     } catch (error) {
@@ -128,7 +144,7 @@ export async function getCookieConsentSettings(): Promise<CookieConsentSettingRe
   }
 
   return { ...memoryCookieSettings };
-}
+});
 
 /**
  * Update cookie consent settings
@@ -162,6 +178,7 @@ export async function updateCookieConsentSettings(
         .update(cookieConsentSettings)
         .set(updates)
         .where(eq(cookieConsentSettings.id, current.id));
+      invalidateCookieSettingsCache();
       return await getCookieConsentSettings();
     } catch (error) {
       console.warn("D1 update error in updateCookieConsentSettings:", error);
@@ -170,6 +187,7 @@ export async function updateCookieConsentSettings(
 
   // In-memory fallback
   Object.assign(memoryCookieSettings, updates);
+  invalidateCookieSettingsCache();
   return { ...memoryCookieSettings };
 }
 

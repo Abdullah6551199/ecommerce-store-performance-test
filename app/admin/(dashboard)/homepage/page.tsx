@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useEffect } from "react";
-import HomepageManager from "@/components/admin/HomepageManager";
+import dynamic from "next/dynamic";
+import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+
+const HomepageManager = dynamic(
+  () => import("@/components/admin/HomepageManager"),
+  { ssr: false, loading: () => <AdminLoadingSkeleton title="Loading Homepage Builder..." /> }
+);
 
 export default function AdminHomepagePage(): React.JSX.Element {
   useEffect(() => {

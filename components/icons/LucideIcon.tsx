@@ -350,7 +350,7 @@ export const LUCIDE_ICONS: Record<string, (size: number) => React.ReactNode> = {
 
 export const LUCIDE_ICON_CHOICES = Object.keys(LUCIDE_ICONS).sort();
 
-export default function LucideIcon({
+function LucideIconComponent({
   name,
   className = "w-5 h-5",
   size = 24,
@@ -377,3 +377,6 @@ export default function LucideIcon({
     </svg>
   );
 }
+
+const LucideIcon = React.memo(LucideIconComponent);
+export default LucideIcon;

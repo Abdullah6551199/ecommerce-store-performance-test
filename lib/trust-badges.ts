@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { eq, asc, and, or, inArray, sql } from "drizzle-orm";
 import {
   getDb,
@@ -170,15 +171,38 @@ export const memoryPaymentIcons: PaymentIconRecord[] = [
   },
 ];
 
+let cachedTrustBadges: TrustBadgeRecord[] | null = null;
+let lastTrustBadgesFetchTime = 0;
+let cachedPaymentIcons: PaymentIconRecord[] | null = null;
+let lastPaymentIconsFetchTime = 0;
+const TRUST_CACHE_TTL_MS = 60000;
+
+export function invalidateTrustBadgesCache(): void {
+  cachedTrustBadges = null;
+  lastTrustBadgesFetchTime = 0;
+  cachedPaymentIcons = null;
+  lastPaymentIconsFetchTime = 0;
+}
+
 /**
  * List trust badges with optional location and active status filtering
+ * Deduplicated via React.cache and 60s in-memory TTL
  */
-export async function listTrustBadges(options?: {
+export const listTrustBadges = cache(async (options?: {
   location?: string;
   isActiveOnly?: boolean;
-}): Promise<TrustBadgeRecord[]> {
+}): Promise<TrustBadgeRecord[]> => {
   const location = options?.location?.trim().toLowerCase();
   const isActiveOnly = options?.isActiveOnly ?? false;
+
+  const isAllActiveQuery = (!location || location === "all") && isActiveOnly;
+  if (
+    isAllActiveQuery &&
+    cachedTrustBadges &&
+    Date.now() - lastTrustBadgesFetchTime < TRUST_CACHE_TTL_MS
+  ) {
+    return cachedTrustBadges;
+  }
 
   const db = getDb();
   if (db) {
@@ -199,6 +223,10 @@ export async function listTrustBadges(options?: {
 
       const rows = await query;
       if (rows.length > 0) {
+        if (isAllActiveQuery) {
+          cachedTrustBadges = rows;
+          lastTrustBadgesFetchTime = Date.now();
+        }
         return rows;
       }
     } catch (error) {
@@ -214,7 +242,7 @@ export async function listTrustBadges(options?: {
     }
     return true;
   }).sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
-}
+});
 
 /**
  * Get single trust badge by ID
@@ -264,6 +292,7 @@ export async function createTrustBadge(input: CreateTrustBadgeInput): Promise<Tr
 
   // In-memory fallback
   memoryTrustBadges.push(record);
+  invalidateTrustBadgesCache();
   return record;
 }
 
@@ -291,7 +320,10 @@ export async function updateTrustBadge(
 
       await db.update(trustBadges).set(updates).where(eq(trustBadges.id, id));
       const updated = await getTrustBadgeById(id);
-      if (updated) return updated;
+      if (updated) {
+        invalidateTrustBadgesCache();
+        return updated;
+      }
     } catch (error) {
       console.warn("D1 update error in updateTrustBadge:", error);
     }
@@ -310,6 +342,7 @@ export async function updateTrustBadge(
       ...(input.isActive !== undefined && { isActive: input.isActive }),
       updatedAt: now,
     };
+    invalidateTrustBadgesCache();
     return memoryTrustBadges[idx];
   }
 
@@ -333,6 +366,7 @@ export async function deleteTrustBadge(id: string): Promise<boolean> {
   const idx = memoryTrustBadges.findIndex((b) => b.id === id);
   if (idx >= 0) {
     memoryTrustBadges.splice(idx, 1);
+    invalidateTrustBadgesCache();
     return true;
   }
   return false;
@@ -353,6 +387,7 @@ export async function reorderTrustBadges(orderedIds: string[]): Promise<boolean>
           .set({ sortOrder: i + 1, updatedAt: now })
           .where(eq(trustBadges.id, orderedIds[i]));
       }
+      invalidateTrustBadgesCache();
       return true;
     } catch (error) {
       console.warn("D1 reorder error in reorderTrustBadges:", error);
@@ -366,13 +401,21 @@ export async function reorderTrustBadges(orderedIds: string[]): Promise<boolean>
       badge.updatedAt = now;
     }
   });
+  invalidateTrustBadgesCache();
   return true;
 }
 
 /**
- * List payment icons with optional active filter
+ * List active payment icons (for footer, checkout, etc.)
+ * Deduplicated via React.cache and 60s in-memory TTL
  */
-export async function listPaymentIcons(isActiveOnly: boolean = false): Promise<PaymentIconRecord[]> {
+export const listPaymentIcons = cache(async (options?: boolean | { isActiveOnly?: boolean }): Promise<PaymentIconRecord[]> => {
+  const isActiveOnly = typeof options === "boolean" ? options : (options?.isActiveOnly ?? true);
+
+  if (isActiveOnly && cachedPaymentIcons && Date.now() - lastPaymentIconsFetchTime < TRUST_CACHE_TTL_MS) {
+    return cachedPaymentIcons;
+  }
+
   const db = getDb();
   if (db) {
     try {
@@ -381,7 +424,13 @@ export async function listPaymentIcons(isActiveOnly: boolean = false): Promise<P
         : db.select().from(paymentIcons).orderBy(asc(paymentIcons.sortOrder), asc(paymentIcons.createdAt));
 
       const rows = await query;
-      if (rows.length > 0) return rows;
+      if (rows.length > 0) {
+        if (isActiveOnly) {
+          cachedPaymentIcons = rows;
+          lastPaymentIconsFetchTime = Date.now();
+        }
+        return rows;
+      }
     } catch (error) {
       console.warn("D1 query error in listPaymentIcons:", error);
     }
@@ -390,7 +439,7 @@ export async function listPaymentIcons(isActiveOnly: boolean = false): Promise<P
   return memoryPaymentIcons
     .filter((p) => (isActiveOnly ? p.isActive : true))
     .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
-}
+});
 
 /**
  * Get payment icon by ID
@@ -437,6 +486,7 @@ export async function createPaymentIcon(input: CreatePaymentIconInput): Promise<
   }
 
   memoryPaymentIcons.push(record);
+  invalidateTrustBadgesCache();
   return record;
 }
 
@@ -462,7 +512,10 @@ export async function updatePaymentIcon(
 
       await db.update(paymentIcons).set(updates).where(eq(paymentIcons.id, id));
       const updated = await getPaymentIconById(id);
-      if (updated) return updated;
+      if (updated) {
+        invalidateTrustBadgesCache();
+        return updated;
+      }
     } catch (error) {
       console.warn("D1 update error in updatePaymentIcon:", error);
     }
@@ -478,6 +531,7 @@ export async function updatePaymentIcon(
       ...(input.isActive !== undefined && { isActive: input.isActive }),
       updatedAt: now,
     };
+    invalidateTrustBadgesCache();
     return memoryPaymentIcons[idx];
   }
 
@@ -506,6 +560,7 @@ export async function reorderPaymentIcons(orderedIds: string[]): Promise<boolean
           .set({ sortOrder: i + 1, updatedAt: now })
           .where(eq(paymentIcons.id, orderedIds[i]));
       }
+      invalidateTrustBadgesCache();
       return true;
     } catch (error) {
       console.warn("D1 reorder error in reorderPaymentIcons:", error);
@@ -519,6 +574,7 @@ export async function reorderPaymentIcons(orderedIds: string[]): Promise<boolean
       icon.updatedAt = now;
     }
   });
+  invalidateTrustBadgesCache();
   return true;
 }
 
@@ -530,6 +586,7 @@ export async function deletePaymentIcon(id: string): Promise<boolean> {
   if (db) {
     try {
       await db.delete(paymentIcons).where(eq(paymentIcons.id, id));
+      invalidateTrustBadgesCache();
       return true;
     } catch (error) {
       console.warn("D1 delete error in deletePaymentIcon:", error);
@@ -539,6 +596,7 @@ export async function deletePaymentIcon(id: string): Promise<boolean> {
   const idx = memoryPaymentIcons.findIndex((p) => p.id === id);
   if (idx >= 0) {
     memoryPaymentIcons.splice(idx, 1);
+    invalidateTrustBadgesCache();
     return true;
   }
   return false;

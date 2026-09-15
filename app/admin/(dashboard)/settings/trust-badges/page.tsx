@@ -1,11 +1,18 @@
-import React from "react";
-import TrustBadgesManager from "@/components/admin/TrustBadgesManager";
+"use client";
 
-export const metadata = {
-  title: "Trust Badges & Payment Icons - Admin",
-  description: "Manage security trust badges, return policies, and payment icons across storefront pages",
-};
+import React, { useEffect } from "react";
+import dynamic from "next/dynamic";
+import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+
+const TrustBadgesManager = dynamic(
+  () => import("@/components/admin/TrustBadgesManager"),
+  { ssr: false, loading: () => <AdminLoadingSkeleton title="Loading Trust Badges & Icons..." /> }
+);
 
 export default function TrustBadgesAdminPage(): React.JSX.Element {
+  useEffect(() => {
+    document.title = "Trust Badges & Payment Icons - Admin Panel";
+  }, []);
+
   return <TrustBadgesManager />;
 }

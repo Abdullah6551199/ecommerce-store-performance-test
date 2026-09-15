@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useEffect } from "react";
-import ReviewsManager from "@/components/admin/ReviewsManager";
+import dynamic from "next/dynamic";
+import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+
+const ReviewsManager = dynamic(
+  () => import("@/components/admin/ReviewsManager"),
+  { ssr: false, loading: () => <AdminLoadingSkeleton title="Loading Reviews Moderation..." /> }
+);
 
 export default function AdminReviewsPage(): React.JSX.Element {
   useEffect(() => {

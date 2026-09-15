@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useEffect } from "react";
-import AppearanceManager from "@/components/admin/AppearanceManager";
+import dynamic from "next/dynamic";
+import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+
+const AppearanceManager = dynamic(
+  () => import("@/components/admin/AppearanceManager"),
+  { ssr: false, loading: () => <AdminLoadingSkeleton title="Loading Appearance..." /> }
+);
 
 export default function AdminAppearancePage(): React.JSX.Element {
   useEffect(() => {

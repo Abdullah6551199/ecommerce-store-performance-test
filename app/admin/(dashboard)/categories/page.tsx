@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useEffect } from "react";
-import CategoriesManager from "@/components/admin/CategoriesManager";
+import dynamic from "next/dynamic";
+import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+
+const CategoriesManager = dynamic(
+  () => import("@/components/admin/CategoriesManager"),
+  { ssr: false, loading: () => <AdminLoadingSkeleton title="Loading Categories..." /> }
+);
 
 export default function AdminCategoriesPage(): React.JSX.Element {
   useEffect(() => {

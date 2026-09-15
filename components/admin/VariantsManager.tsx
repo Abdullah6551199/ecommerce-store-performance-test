@@ -762,7 +762,7 @@ export default function VariantsManager({
                           className="rounded-md border border-zinc-200 dark:border-white/15 bg-zinc-100 dark:bg-white/5 px-2 py-0.5 text-xs text-zinc-800 dark:text-white/90"
                         >
                           <span className="text-zinc-500 dark:text-white/40">{key}:</span>{" "}
-                          <span className="font-semibold text-emerald-600 dark:text-[#FEF500]">{val}</span>
+                          <span className="font-semibold text-[#960DF2] dark:text-[#EACFFC]">{String(val)}</span>
                         </span>
                       ))}
                     </div>

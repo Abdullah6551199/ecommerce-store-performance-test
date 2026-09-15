@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { getDb, users, loginAttempts, sessions, type UserRecord } from "./db";
 import { eq, and, desc, sql } from "drizzle-orm";
@@ -40,17 +39,19 @@ function parseUtcTimestamp(str: string): number {
 }
 
 /**
- * Securely hash a plaintext password with bcrypt
+ * Securely hash a plaintext password with bcrypt (lazy-loaded)
  */
 export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, 10);
+  const bcrypt = await import("bcryptjs");
+  return (bcrypt.default || bcrypt).hash(password, 10);
 }
 
 /**
- * Verify plaintext password against stored bcrypt hash
+ * Verify plaintext password against stored bcrypt hash (lazy-loaded)
  */
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(password, hash);
+  const bcrypt = await import("bcryptjs");
+  return (bcrypt.default || bcrypt).compare(password, hash);
 }
 
 /**

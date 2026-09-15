@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { eq, desc, asc, and, sql, inArray, like, or } from "drizzle-orm";
 import { getDb, productBundles, bundleItems, products, productImages, ProductBundleRecord, BundleItemRecord } from "./db";
 import { normalizeImageUrl } from "./utils";
@@ -986,7 +987,8 @@ export async function getProductBundles(productId: string): Promise<BundleWithIt
 
 /**
  * Get featured bundles for homepage display
+ * Deduplicated via React.cache
  */
-export async function getFeaturedBundles(limit: number = 4): Promise<BundleWithItems[]> {
+export const getFeaturedBundles = cache(async (limit: number = 4): Promise<BundleWithItems[]> => {
   return listBundles({ status: "active", isFeatured: true, limit });
-}
+});

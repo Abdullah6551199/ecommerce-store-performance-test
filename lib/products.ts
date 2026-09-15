@@ -576,6 +576,7 @@ export async function createProduct(input: ProductInput): Promise<ProductWithIma
   // Update memory store
   memoryProducts.push(productData);
   memoryProductImages.push(...imagesList);
+  invalidateCatalogCache();
 
   return formatProduct(productData, imagesList, null);
 }
@@ -710,6 +711,7 @@ export async function updateProduct(
     memoryProducts.push(updatedProduct);
   }
 
+  invalidateCatalogCache();
   return formatProduct(updatedProduct, currentImages, null);
 }
 
@@ -743,6 +745,7 @@ export async function deleteProduct(id: string): Promise<boolean> {
     memoryProducts.splice(idx, 1);
   }
 
+  invalidateCatalogCache();
   return true;
 }
 
@@ -1013,12 +1016,37 @@ export async function searchProducts(
  * trackInventory, allowBackorders, lowStockThreshold, and mainImage.
  * Does NOT fetch secondary gallery images or variant matrices.
  */
+let cachedPublishedCatalog: CatalogProductItem[] | null = null;
+let lastPublishedCatalogFetchTime = 0;
+const CATALOG_MICROCACHE_TTL_MS = 60000;
+
+export function invalidateCatalogCache(): void {
+  cachedPublishedCatalog = null;
+  lastPublishedCatalogFetchTime = 0;
+}
+
 export async function listCatalogProducts(options?: {
   categoryId?: string;
   status?: "draft" | "published" | "archived";
   limit?: number;
   offset?: number;
 }): Promise<CatalogProductItem[]> {
+  const isDefaultPublishedQuery =
+    !options?.categoryId &&
+    options?.status === "published" &&
+    (!options?.offset || options.offset === 0);
+
+  const requestedLimit = options?.limit || 100;
+
+  if (
+    isDefaultPublishedQuery &&
+    cachedPublishedCatalog &&
+    cachedPublishedCatalog.length >= requestedLimit &&
+    Date.now() - lastPublishedCatalogFetchTime < CATALOG_MICROCACHE_TTL_MS
+  ) {
+    return cachedPublishedCatalog.slice(0, requestedLimit);
+  }
+
   const db = getDb();
 
   if (db) {
@@ -1084,7 +1112,7 @@ export async function listCatalogProducts(options?: {
         }
       }
 
-      return rows.map((r) => ({
+      const catalogResults: CatalogProductItem[] = rows.map((r) => ({
         id: r.id,
         name: r.name,
         slug: r.slug,
@@ -1108,6 +1136,13 @@ export async function listCatalogProducts(options?: {
           : [],
         variants: [],
       }));
+
+      if (isDefaultPublishedQuery && catalogResults.length > 0) {
+        cachedPublishedCatalog = catalogResults;
+        lastPublishedCatalogFetchTime = Date.now();
+      }
+
+      return catalogResults;
     } catch (err) {
       console.warn("[Products] D1 listCatalogProducts failed, falling back:", err);
     }

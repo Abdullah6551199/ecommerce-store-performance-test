@@ -8,17 +8,19 @@ import dynamic from "next/dynamic";
  */
 export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.ComponentType<any>>> = {
   "hello-world": {
-    HelloWorldWidget: dynamic(() => import("@/apps/hello-world/admin/HelloWorldWidget"), {
-      ssr: false,
-    }),
+    HelloWorldWidget: dynamic(() => import("@/apps/hello-world/admin/HelloWorldWidget")),
+  },
+  reviews: {
+    ReviewsManager: dynamic(() => import("@/apps/reviews/admin/ReviewsManager")),
   },
 };
 
 export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.ComponentType<any>>> = {
   "hello-world": {
-    HelloWorldBanner: dynamic(() => import("@/apps/hello-world/storefront/HelloWorldBanner"), {
-      ssr: false,
-    }),
+    HelloWorldBanner: dynamic(() => import("@/apps/hello-world/storefront/HelloWorldBanner")),
+  },
+  reviews: {
+    ReviewsList: dynamic(() => import("@/apps/reviews/storefront/ReviewsList")),
   },
 };
 

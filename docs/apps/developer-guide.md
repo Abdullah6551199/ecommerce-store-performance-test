@@ -96,7 +96,80 @@ Apps must declare minimum required permissions:
 
 ---
 
+
 ## 5. Component Isolation & Best Practices
 1. **Always use `"use client"`** for interactive widgets.
 2. **Error Boundary Guarantee**: All extension points are wrapped in `AppErrorBoundary`. If your component throws an uncaught error, it will gracefully unmount without affecting the rest of the store.
-3. **Data Safety**: All app-owned tables must begin with `app_<id>_`. The platform guarantees that uninstalling an app will NEVER delete app-owned database tables.
+3. **Data Safety**: All app-owned tables must begin with `app_<id>_` or use declared platform tables in `databaseTables`. The platform guarantees that uninstalling an app will NEVER delete app database tables.
+
+---
+
+## 6. Real-World Case Study: The Reviews App (`apps/reviews/`)
+
+The Reviews App converted an existing monolithic module into an installable, lifecycle-managed application without modifying D1 schemas.
+
+### Directory Structure
+```
+apps/reviews/
+├── manifest.json
+├── icon.svg
+├── admin/
+│   └── ReviewsManager.tsx        # Moderation UI (loaded into /admin/reviews)
+├── storefront/
+│   └── ReviewsList.tsx           # Customer review list & form (injected below product)
+├── api/
+│   ├── list/route.ts             # Public query endpoint
+│   ├── submit/route.ts           # Customer submission endpoint
+│   └── moderate/route.ts         # Admin moderation endpoint
+└── lib/
+    └── reviews.ts                # D1 queries & React.cache() wrappers
+```
+
+### Manifest Definition
+```json
+{
+  "id": "reviews",
+  "name": "Reviews & Ratings",
+  "version": "1.0.0",
+  "description": "Let customers leave star ratings and written reviews on products",
+  "author": "Nasrify",
+  "authorUrl": "",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "sales",
+  "permissions": [
+    "read:products",
+    "read:orders",
+    "read:customers",
+    "read:media"
+  ],
+  "extensionPoints": [
+    "storefront.product.below",
+    "admin.dashboard.widget"
+  ],
+  "databaseTables": [
+    "reviews",
+    "review_images"
+  ],
+  "settingsSchema": {
+    "autoApprove": { "type": "boolean", "default": false, "label": "Auto-approve new reviews" },
+    "requirePurchase": { "type": "boolean", "default": false, "label": "Only verified buyers can review" },
+    "allowImages": { "type": "boolean", "default": true, "label": "Allow image uploads" }
+  },
+  "changelog": "1.0.0 — Initial release"
+}
+```
+
+### Extension Point Wiring
+On the product details page (`app/product/[slug]/page.tsx`), the extension point is embedded:
+```tsx
+<StorefrontProductBelow productId={product.id} />
+```
+- When `reviews` is installed & enabled: `StorefrontProductBelow` dynamically loads `ReviewsList`.
+- When uninstalled: `StorefrontProductBelow` evaluates the 60s TTL cache and immediately returns `null` (zero markup, zero bundle overhead).
+
+### Admin Route Integration
+In `app/admin/(dashboard)/reviews/page.tsx`:
+- If installed: Loads `ReviewsManager` dynamically with skeleton loading.
+- If uninstalled: Displays a dedicated prompt directing the administrator to `/admin/apps` to install the app.
+

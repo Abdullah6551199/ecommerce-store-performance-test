@@ -7,6 +7,7 @@ import { getProductBundles } from "@/lib/bundles";
 import ProductShowcase from "@/components/ProductShowcase";
 import ProductBundleCrossSell from "@/components/product/ProductBundleCrossSell";
 import ProductTabs from "@/components/product/ProductTabs";
+import StorefrontProductBelow from "@/components/apps/StorefrontProductBelow";
 import RelatedProductsCarousel from "@/components/product/RelatedProductsCarousel";
 import dynamic from "next/dynamic";
 
@@ -185,11 +186,14 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
           <ProductBundleCrossSell bundles={productBundles} />
         )}
 
-        {/* B4: Product Tabs Section (Description, Specifications, Reviews, Shipping & Returns) */}
+        {/* B4: Product Tabs Section (Description, Specifications, Shipping & Returns) */}
         <ProductTabs
           product={product}
           reviewCount={ratingSummary.totalReviews || approvedReviews.length || 0}
         />
+
+        {/* Extension Point: Apps rendering below product/tabs */}
+        <StorefrontProductBelow productId={product.id} />
 
         {/* B5: Related Products Carousel ("You May Also Like") */}
         {relatedProducts.length > 0 && (

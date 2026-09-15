@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import ProductReviewsSection from "@/components/reviews/ProductReviewsSection";
 import type { ProductWithImagesAndCategory } from "@/lib/products";
 
 interface ProductTabsProps {
   product: ProductWithImagesAndCategory;
   reviewCount?: number;
-  initialTab?: "description" | "specs" | "reviews" | "shipping";
+  initialTab?: "description" | "specs" | "shipping";
 }
 
 export default function ProductTabs({
@@ -15,7 +14,7 @@ export default function ProductTabs({
   reviewCount = 0,
   initialTab = "description",
 }: ProductTabsProps): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<"description" | "specs" | "reviews" | "shipping">(initialTab);
+  const [activeTab, setActiveTab] = useState<"description" | "specs" | "shipping">(initialTab);
 
   // Dynamic delivery date: 5 days from now
   const estimatedDeliveryDate = useMemo(() => {
@@ -80,21 +79,6 @@ export default function ProductTabs({
           }`}
         >
           Specifications
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab("reviews")}
-          className={`py-4 sm:py-5 px-4 sm:px-6 text-sm sm:text-base font-bold transition-all border-b-2 whitespace-nowrap cursor-pointer flex items-center gap-2 ${
-            activeTab === "reviews"
-              ? "border-purple-400 text-purple-600 dark:text-[#EACFFC]"
-              : "border-transparent text-purple-700/60 dark:text-purple-200/60 hover:text-purple-600 dark:hover:text-purple-100"
-          }`}
-        >
-          <span>Reviews</span>
-          <span className="rounded-full bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 text-xs font-bold text-purple-700 dark:text-purple-200">
-            {reviewCount}
-          </span>
         </button>
 
         <button
@@ -188,13 +172,6 @@ export default function ProductTabs({
                 </tbody>
               </table>
             </div>
-          </div>
-        )}
-
-        {/* TAB 3: REVIEWS */}
-        {activeTab === "reviews" && (
-          <div id="customer-reviews" className="animate-in fade-in duration-150">
-            <ProductReviewsSection productId={product.id} productName={product.name} />
           </div>
         )}
 

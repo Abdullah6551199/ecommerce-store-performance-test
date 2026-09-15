@@ -1,0 +1,43 @@
+{
+  "id": "reviews",
+  "name": "Reviews & Ratings",
+  "version": "1.0.0",
+  "description": "Let customers leave star ratings and written reviews on products",
+  "author": "Nasrify",
+  "authorUrl": "",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "sales",
+  "permissions": [
+    "read:products",
+    "read:orders",
+    "read:customers",
+    "read:media"
+  ],
+  "extensionPoints": [
+    "storefront.product.below",
+    "admin.dashboard.widget"
+  ],
+  "databaseTables": [
+    "reviews",
+    "review_images"
+  ],
+  "settingsSchema": {
+    "autoApprove": {
+      "type": "boolean",
+      "default": false,
+      "label": "Auto-approve new reviews"
+    },
+    "requirePurchase": {
+      "type": "boolean",
+      "default": false,
+      "label": "Only verified buyers can review"
+    },
+    "allowImages": {
+      "type": "boolean",
+      "default": true,
+      "label": "Allow image uploads"
+    }
+  },
+  "changelog": "1.0.0 — Initial release"
+}

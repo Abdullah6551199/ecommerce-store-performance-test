@@ -123,8 +123,19 @@ export default function AdminShell({
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [pendingReviewsCount, setPendingReviewsCount] = useState<number>(0);
+  const [reviewsInstalled, setReviewsInstalled] = useState<boolean>(true);
 
   React.useEffect(() => {
+    fetch("/api/admin/apps")
+      .then((res) => res.json() as Promise<any>)
+      .then((json) => {
+        if (json && json.success && Array.isArray(json.data)) {
+          const rev = json.data.find((a: any) => a.id === "reviews");
+          setReviewsInstalled(Boolean(rev && rev.installed && rev.enabled));
+        }
+      })
+      .catch(() => {});
+
     fetch("/api/admin/reviews/stats")
       .then((res) => res.json() as Promise<any>)
       .then((json) => {
@@ -193,7 +204,14 @@ export default function AdminShell({
 
         {/* Navigation Items List */}
         <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-4">
-          {navigationItems.map((item) => {
+          {navigationItems
+            .filter(
+              (item) =>
+                item.name !== "Reviews" ||
+                reviewsInstalled ||
+                pathname.startsWith("/admin/reviews")
+            )
+            .map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link

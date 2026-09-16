@@ -58,10 +58,16 @@ export async function PUT(
       );
     }
 
+    const payload = body as Record<string, any>;
+    const settingsToSave =
+      payload.settings && typeof payload.settings === "object"
+        ? payload.settings
+        : payload;
+
     await db
       .update(installedApps)
       .set({
-        settings: JSON.stringify(body),
+        settings: JSON.stringify(settingsToSave),
         updatedAt: Date.now(),
       })
       .where(eq(installedApps.id, appId));

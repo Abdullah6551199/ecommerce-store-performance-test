@@ -18,6 +18,11 @@
     "storefront.product.below",
     "admin.dashboard.widget"
   ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
   "databaseTables": [
     "reviews",
     "review_images"

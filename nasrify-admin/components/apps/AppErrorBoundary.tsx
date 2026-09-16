@@ -15,6 +15,7 @@ interface State {
 
 /**
  * Isolates third-party app failures so they cannot break host application rendering.
+ * Automatically logs runtime errors to D1 app_install_log.
  */
 export class AppErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
@@ -32,6 +33,19 @@ export class AppErrorBoundary extends Component<Props, State> {
       error,
       info
     );
+
+    // Telemetry: record runtime error to backend audit log
+    try {
+      fetch("/api/apps/runtime-error", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          appId: this.props.appId,
+          extensionPoint: this.props.extensionPoint,
+          message: error.message || String(error),
+        }),
+      }).catch(() => {});
+    } catch {}
   }
 
   render(): ReactNode {

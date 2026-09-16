@@ -15,6 +15,7 @@ import {
   type ReviewHelpfulRecord,
 } from "@/lib/db";
 import { createCustomerNotification } from "@/lib/customer-notifications";
+import { getAppSettings } from "@/lib/apps/installed";
 
 export type { ReviewRecord, NewReviewRecord, ReviewImageRecord, ReviewHelpfulRecord };
 
@@ -114,6 +115,19 @@ const REVIEW_SETTINGS_KEY = "review_settings";
  * Retrieve review configuration settings (deduplicated via React.cache)
  */
 export const getReviewSettings = cache(async (): Promise<ReviewSettings> => {
+  // First check installed app settings JSON from Apps Framework
+  try {
+    const appSettings = await getAppSettings<Partial<ReviewSettings>>("reviews");
+    if (appSettings && typeof appSettings === "object") {
+      return {
+        ...DEFAULT_REVIEW_SETTINGS,
+        ...appSettings,
+      };
+    }
+  } catch (err) {
+    console.warn("[getReviewSettings] Error reading installed app settings:", err);
+  }
+
   const db = getDb();
   if (db) {
     try {

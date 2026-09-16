@@ -73,3 +73,23 @@ export async function isAppEnabled(appId: string): Promise<boolean> {
   const app = await getInstalledApp(appId);
   return Boolean(app && app.enabled);
 }
+
+/**
+ * Retrieve parsed settings JSON for an installed app with 60s TTL caching.
+ */
+export async function getAppSettings<T = Record<string, unknown>>(
+  appId: string
+): Promise<T | null> {
+  const app = await getInstalledApp(appId);
+  if (!app || !app.settings) {
+    return null;
+  }
+  try {
+    return typeof app.settings === "string"
+      ? (JSON.parse(app.settings) as T)
+      : (app.settings as T);
+  } catch {
+    return null;
+  }
+}
+

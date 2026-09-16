@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prebuild": "npx tsx ../scripts/sync-apps.ts --target=storefront",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

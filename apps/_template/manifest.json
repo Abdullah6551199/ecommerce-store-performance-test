@@ -1,0 +1,39 @@
+{
+  "id": "my-custom-app",
+  "name": "My Custom App",
+  "version": "1.0.0",
+  "description": "TODO: Describe what this app accomplishes for customers or administrators",
+  "author": "Your Name or Company",
+  "authorUrl": "https://example.com",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "tools",
+  "permissions": [
+    "read:products",
+    "read:settings"
+  ],
+  "extensionPoints": [
+    "admin.dashboard.widget",
+    "storefront.product.below"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "settingsSchema": {
+    "enableFeature": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Custom Feature",
+      "description": "Toggle this app's primary feature on or off"
+    },
+    "badgeTitle": {
+      "type": "string",
+      "default": "Featured Offer",
+      "label": "Display Badge Text",
+      "description": "Text label displayed in the storefront widget"
+    }
+  },
+  "changelog": "1.0.0 — Initial release"
+}

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 /**
  * ==============================================================================
- * Apps Framework - Types and Schemas (Stage C)
+ * Apps Framework - Types and Schemas (Stage E: Refine + Worker Separation + DX)
  * ==============================================================================
  */
 
@@ -36,6 +36,18 @@ export const APP_EXTENSION_POINTS = [
 
 export type AppExtensionPoint = (typeof APP_EXTENSION_POINTS)[number];
 
+export interface WorkerScope {
+  admin?: string[];
+  storefront?: string[];
+  shared?: string[];
+}
+
+export const WorkerScopeSchema = z.object({
+  admin: z.array(z.string()).optional(),
+  storefront: z.array(z.string()).optional(),
+  shared: z.array(z.string()).optional(),
+});
+
 export interface AppManifest {
   id: string; // unique, kebab-case, e.g. "hello-world"
   name: string; // display name
@@ -51,6 +63,7 @@ export interface AppManifest {
   extensionPoints: AppExtensionPoint[];
   databaseTables?: string[]; // app-owned tables (prefix: app_<id>_)
   settingsSchema?: Record<string, unknown>; // optional JSON schema for app settings
+  workerScope?: WorkerScope; // explicit worker distribution scope
   changelog?: string;
 }
 
@@ -62,7 +75,7 @@ export const AppManifestSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
       message: "App ID must be lowercase alphanumeric with hyphens (kebab-case)",
     }),
-  name: z.string().min(1).max(100),
+  name: z.string().min(1, { message: "missing required field 'name'" }).max(100),
   version: z
     .string()
     .regex(/^\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?$/, {
@@ -79,6 +92,7 @@ export const AppManifestSchema = z.object({
   extensionPoints: z.array(z.enum(APP_EXTENSION_POINTS)),
   databaseTables: z.array(z.string()).optional(),
   settingsSchema: z.record(z.string(), z.unknown()).optional(),
+  workerScope: WorkerScopeSchema.optional(),
   changelog: z.string().optional(),
 });
 
@@ -93,7 +107,13 @@ export interface InstalledAppRecord {
   installedBy?: string | null;
 }
 
-export type AppInstallAction = "install" | "uninstall" | "enable" | "disable" | "update";
+export type AppInstallAction =
+  | "install"
+  | "uninstall"
+  | "enable"
+  | "disable"
+  | "update"
+  | "runtime_error";
 
 export interface AppInstallLogRecord {
   id: number;
@@ -111,3 +131,43 @@ export interface AppSummary extends AppManifest {
   installedAt?: number;
   updatedAt?: number;
 }
+
+/**
+ * Extension Point Prop Contracts
+ */
+export interface StorefrontProductBelowProps {
+  productId: string;
+  productSlug?: string;
+}
+
+export interface StorefrontHomepageSectionProps {
+  sectionId?: string;
+}
+
+export interface StorefrontCartBelowProps {
+  cartId?: string;
+}
+
+export interface StorefrontCheckoutBelowProps {
+  orderId?: string;
+}
+
+export interface AdminDashboardWidgetProps {
+  className?: string;
+}
+
+export interface AdminSidebarProps {
+  className?: string;
+}
+
+export type ExtensionPointPropsMap = {
+  "storefront.product.below": StorefrontProductBelowProps;
+  "storefront.homepage.section": StorefrontHomepageSectionProps;
+  "storefront.cart.below": StorefrontCartBelowProps;
+  "storefront.checkout.below": StorefrontCheckoutBelowProps;
+  "admin.dashboard.widget": AdminDashboardWidgetProps;
+  "admin.sidebar": AdminSidebarProps;
+  "admin.route": Record<string, unknown>;
+  "storefront.header": Record<string, unknown>;
+  "storefront.footer": Record<string, unknown>;
+};

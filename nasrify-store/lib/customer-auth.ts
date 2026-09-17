@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { cache } from "react";
 import {
   getDb,
   customers,
@@ -23,6 +24,44 @@ export const SIGNUP_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export const SESSION_DURATION_DEFAULT_MS = 24 * 60 * 60 * 1000; // 1 day
 export const SESSION_DURATION_REMEMBER_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+// 60-second in-memory isolate token cache
+export const CUSTOMER_TOKEN_CACHE_TTL_MS = 60 * 1000;
+
+export interface CachedCustomerSession {
+  customerId: string;
+  email: string;
+  customerRecord: CustomerRecord;
+  cachedAt: number;
+}
+
+// Isolate-scoped in-memory cache for validated customer tokens (key: SHA-256 token hash)
+const customerTokenCache = new Map<string, CachedCustomerSession>();
+
+/**
+ * Invalidate customer token cache for a specific customer, token, or clear all
+ */
+export function invalidateCustomerTokenCache(customerIdOrToken?: string): void {
+  if (!customerIdOrToken) {
+    customerTokenCache.clear();
+    return;
+  }
+  for (const [hash, entry] of customerTokenCache.entries()) {
+    if (entry.customerId === customerIdOrToken || hash === customerIdOrToken) {
+      customerTokenCache.delete(hash);
+    }
+  }
+}
+
+/**
+ * Cryptographically hash session token with SHA-256 to use as safe cache key
+ */
+async function hashCustomerToken(token: string): Promise<string> {
+  const data = new TextEncoder().encode(token);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 // In-memory fallbacks for local dev / testing
 interface MemorySession {
@@ -355,11 +394,28 @@ export async function createCustomerSession(
 
 /**
  * Validate customer session token against D1 and return CustomerRecord
+ * Leverages 60-second in-memory isolate micro-cache to eliminate redundant D1 hits.
  */
 export async function validateCustomerSession(
   token: string
 ): Promise<CustomerRecord | null> {
   if (!token) return null;
+
+  const now = Date.now();
+  let tokenHash = "";
+  try {
+    tokenHash = await hashCustomerToken(token);
+    const cached = customerTokenCache.get(tokenHash);
+    if (cached && now - cached.cachedAt < CUSTOMER_TOKEN_CACHE_TTL_MS) {
+      if (cached.customerRecord.status === "suspended") {
+        customerTokenCache.delete(tokenHash);
+        return null;
+      }
+      return cached.customerRecord;
+    }
+  } catch (_e) {
+    // Non-fatal, proceed with direct D1 validation
+  }
 
   const db = getDb();
 
@@ -386,6 +442,15 @@ export async function validateCustomerSession(
         if (c.status === "suspended") {
           return null;
         }
+        // Cache ONLY successful validations. Never cache failures.
+        if (tokenHash) {
+          customerTokenCache.set(tokenHash, {
+            customerId: c.id,
+            email: c.email,
+            customerRecord: c,
+            cachedAt: now,
+          });
+        }
         return c;
       }
       return null;
@@ -398,6 +463,14 @@ export async function validateCustomerSession(
   if (memSession && memSession.expiresAt > Date.now()) {
     const memCust = memoryCustomers.get(memSession.customerId);
     if (memCust && memCust.status !== "suspended") {
+      if (tokenHash) {
+        customerTokenCache.set(tokenHash, {
+          customerId: memCust.id,
+          email: memCust.email,
+          customerRecord: memCust,
+          cachedAt: now,
+        });
+      }
       return memCust;
     }
   }
@@ -410,6 +483,13 @@ export async function validateCustomerSession(
  */
 export async function destroyCustomerSession(token: string): Promise<void> {
   if (!token) return;
+
+  try {
+    const tokenHash = await hashCustomerToken(token);
+    customerTokenCache.delete(tokenHash);
+  } catch (_e) {
+    // non-fatal
+  }
 
   const db = getDb();
   if (db) {
@@ -425,24 +505,25 @@ export async function destroyCustomerSession(token: string): Promise<void> {
 
 /**
  * Retrieve current customer from HTTP-only session cookie
+ * Deduplicated per-request via React.cache()
  */
-export async function getCurrentCustomer(
-  sessionToken?: string
-): Promise<CustomerRecord | null> {
-  let token = sessionToken;
+export const getCurrentCustomer = cache(
+  async (sessionToken?: string): Promise<CustomerRecord | null> => {
+    let token = sessionToken;
 
-  if (!token) {
-    try {
-      const cookieStore = await cookies();
-      token = cookieStore.get(CUSTOMER_SESSION_COOKIE)?.value;
-    } catch (_err) {
-      return null;
+    if (!token) {
+      try {
+        const cookieStore = await cookies();
+        token = cookieStore.get(CUSTOMER_SESSION_COOKIE)?.value;
+      } catch (_err) {
+        return null;
+      }
     }
-  }
 
-  if (!token) return null;
-  return validateCustomerSession(token);
-}
+    if (!token) return null;
+    return validateCustomerSession(token);
+  }
+);
 
 /**
  * Update customer last login timestamp

@@ -1022,10 +1022,23 @@ export const getProductBundles = cache(async (productId: string): Promise<Bundle
   );
 });
 
+let cachedFeaturedBundles: BundleWithItems[] | null = null;
+let lastFeaturedBundlesFetchTime = 0;
+
 /**
  * Get featured bundles for homepage display
- * Deduplicated via React.cache
+ * Deduplicated via React.cache + 60s in-memory isolate micro-cache
  */
 export const getFeaturedBundles = cache(async (limit: number = 4): Promise<BundleWithItems[]> => {
-  return listBundles({ status: "active", isFeatured: true, limit });
+  if (
+    cachedFeaturedBundles &&
+    cachedFeaturedBundles.length >= limit &&
+    Date.now() - lastFeaturedBundlesFetchTime < BUNDLES_CACHE_TTL_MS
+  ) {
+    return cachedFeaturedBundles.slice(0, limit);
+  }
+  const result = await listBundles({ status: "active", isFeatured: true, limit });
+  cachedFeaturedBundles = result;
+  lastFeaturedBundlesFetchTime = Date.now();
+  return result;
 });

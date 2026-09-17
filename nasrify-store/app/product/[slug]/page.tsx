@@ -5,21 +5,12 @@ import type { Metadata } from "next";
 import { getProductBySlug, getRelatedProducts, listCatalogProducts } from "@/lib/products";
 import { getProductBundles } from "@/lib/bundles";
 import ProductShowcase from "@/components/ProductShowcase";
-import ProductBundleCrossSell from "@/components/product/ProductBundleCrossSell";
-import ProductTabs from "@/components/product/ProductTabs";
 import StorefrontProductBelow from "@/components/apps/StorefrontProductBelow";
-import RelatedProductsCarousel from "@/components/product/RelatedProductsCarousel";
-import dynamic from "next/dynamic";
-
-const RecentlyViewedCarousel = dynamic(
-  () => import("@/components/product/RecentlyViewedCarousel")
-);
-const MobileStickyCartBar = dynamic(
-  () => import("@/components/product/MobileStickyCartBar")
-);
-import { getProductRatingSummary, getProductReviews } from "@/lib/reviews";
+import { getProductRatingSummary } from "@/lib/reviews";
 import { getAbsoluteUrl, generateProductJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 import { normalizeImageUrl } from "@/lib/utils";
+
+import ProductBelowFoldClient from "@/components/product/ProductBelowFoldClient";
 
 export const revalidate = 300;
 
@@ -102,15 +93,15 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
     notFound();
   }
 
-  const [relatedProducts, ratingSummary, { reviews: approvedReviews }, productBundles] = await Promise.all([
+  // Optimized parallel SSR pass: only fetch essential product data; eliminate heavy review list query
+  const [relatedProducts, ratingSummary, productBundles] = await Promise.all([
     getRelatedProducts(product.id, product.categoryId, 4),
     getProductRatingSummary(product.id),
-    getProductReviews(product.id, { status: "approved", limit: 10, sort: "recent" }),
     getProductBundles(product.id),
   ]);
 
-  // Structured Data (JSON-LD) with aggregate rating and reviews
-  const productJsonLd = generateProductJsonLd(product, ratingSummary, approvedReviews);
+  // Structured Data (JSON-LD) with aggregate rating
+  const productJsonLd = generateProductJsonLd(product, ratingSummary);
   const breadcrumbItems = [
     { name: "Home", url: "/" },
     ...(product.categorySlug && product.categoryName
@@ -178,43 +169,19 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
         <ProductShowcase
           product={product}
           averageRating={ratingSummary.averageRating || 4.8}
-          reviewCount={ratingSummary.totalReviews || approvedReviews.length || 24}
+          reviewCount={ratingSummary.totalReviews || 24}
         />
 
-        {/* Product Bundle Cross-Sell ("Also available in bundle") */}
-        {productBundles.length > 0 && (
-          <ProductBundleCrossSell bundles={productBundles} />
-        )}
-
-        {/* B4: Product Tabs Section (Description, Specifications, Shipping & Returns) */}
-        <ProductTabs
+        {/* Below-the-fold interactive CSR Islands */}
+        <ProductBelowFoldClient
           product={product}
-          reviewCount={ratingSummary.totalReviews || approvedReviews.length || 0}
-        />
-
-        {/* Extension Point: Apps rendering below product/tabs */}
-        <StorefrontProductBelow productId={product.id} />
-
-        {/* B5: Related Products Carousel ("You May Also Like") */}
-        {relatedProducts.length > 0 && (
-          <RelatedProductsCarousel
-            products={relatedProducts}
-            categorySlug={product.categorySlug}
-          />
-        )}
-
-        {/* B6: Recently Viewed Carousel ("Recently Viewed") */}
-        <RecentlyViewedCarousel currentProductId={product.id} />
-
-        {/* B9: Mobile Sticky Add-to-Cart Bar */}
-        <MobileStickyCartBar
-          productId={product.id}
-          productName={product.name}
-          price={product.price}
-          salePrice={product.salePrice}
-          mainImage={product.mainImage}
-          stockStatus={product.stockStatus}
-        />
+          reviewCount={ratingSummary.totalReviews || 0}
+          productBundles={productBundles}
+          relatedProducts={relatedProducts}
+        >
+          {/* Extension Point: Apps rendering below product/tabs */}
+          <StorefrontProductBelow productId={product.id} />
+        </ProductBelowFoldClient>
       </div>
     </>
   );

@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import OrderStatusTimeline, { OrderTimelineData } from "@/components/OrderStatusTimeline";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 interface OrderItem {
   id: string;
@@ -327,7 +328,9 @@ export default function TrackOrderPage(): React.JSX.Element {
         </div>
       }
     >
-      <TrackOrderContent />
+      <ErrorBoundary name="TrackOrder">
+        <TrackOrderContent />
+      </ErrorBoundary>
     </Suspense>
   );
 }

@@ -12,6 +12,7 @@ import CouponsSection from "@/components/CouponsSection";
 import TrustBar from "@/components/homepage/TrustBar";
 import PaymentIcons from "@/components/PaymentIcons";
 import TrustBadges from "@/components/TrustBadges";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 const CHECKOUT_COUNTRIES = [
   { code: "PK", name: "Pakistan" },
@@ -443,8 +444,9 @@ export default function CheckoutPage(): React.JSX.Element {
   }
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 text-zinc-900 dark:text-purple-100">
-      <div className="max-w-6xl mx-auto">
+    <ErrorBoundary name="Checkout">
+      <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 text-zinc-900 dark:text-purple-100">
+        <div className="max-w-6xl mx-auto">
         {/* Navigation Breadcrumb */}
         <nav className="flex items-center gap-2 text-xs text-purple-600/70 dark:text-purple-300/70 mb-8 font-medium">
           <Link href="/" className="hover:text-purple-900 dark:hover:text-white transition-colors">
@@ -983,5 +985,6 @@ export default function CheckoutPage(): React.JSX.Element {
         </div>
       </div>
     </div>
+    </ErrorBoundary>
   );
 }

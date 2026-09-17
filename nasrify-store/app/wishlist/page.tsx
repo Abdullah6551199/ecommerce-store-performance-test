@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useWishlist } from "@/components/WishlistContext";
 import { normalizeImageUrl } from "@/lib/utils";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 export default function WishlistPage(): React.JSX.Element {
   const {
@@ -36,8 +37,9 @@ export default function WishlistPage(): React.JSX.Element {
   }
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 text-zinc-900 dark:text-purple-100">
-      <div className="max-w-7xl mx-auto">
+    <ErrorBoundary name="Wishlist">
+      <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 text-zinc-900 dark:text-purple-100">
+        <div className="max-w-7xl mx-auto">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-xs text-purple-600/70 dark:text-purple-300/70 mb-6 font-medium">
           <Link href="/" className="hover:text-purple-900 dark:hover:text-white transition-colors">
@@ -194,5 +196,6 @@ export default function WishlistPage(): React.JSX.Element {
         )}
       </div>
     </div>
+    </ErrorBoundary>
   );
 }

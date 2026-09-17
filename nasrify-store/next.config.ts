@@ -309,60 +309,21 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // 4. HTML Storefront Pages (ISR 300s, Search 60s)
-      {
-        source: "/",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, s-maxage=300, stale-while-revalidate=600",
-          },
-          {
-            key: "CDN-Cache-Control",
-            value: "public, max-age=300, stale-while-revalidate=600",
-          },
-          {
-            key: "Cloudflare-CDN-Cache-Control",
-            value: "public, max-age=300, stale-while-revalidate=600",
-          },
-        ],
-      },
-      {
-        source: "/product/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, s-maxage=300, stale-while-revalidate=600",
-          },
-          {
-            key: "CDN-Cache-Control",
-            value: "public, max-age=300, stale-while-revalidate=600",
-          },
-          {
-            key: "Cloudflare-CDN-Cache-Control",
-            value: "public, max-age=300, stale-while-revalidate=600",
-          },
-        ],
-      },
-      {
-        source: "/category/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, s-maxage=300, stale-while-revalidate=600",
-          },
-          {
-            key: "CDN-Cache-Control",
-            value: "public, max-age=300, stale-while-revalidate=600",
-          },
-          {
-            key: "Cloudflare-CDN-Cache-Control",
-            value: "public, max-age=300, stale-while-revalidate=600",
-          },
-        ],
-      },
-      {
-        source: "/search",
+      // 4. HTML Public Storefront Pages (Edge Cache 60s, stale-while-revalidate 600s)
+      ...[
+        "/",
+        "/shop",
+        "/product/:path*",
+        "/category/:path*",
+        "/search",
+        "/about",
+        "/contact",
+        "/faq",
+        "/privacy-policy",
+        "/terms",
+        "/cookie-policy",
+      ].map((routeSource) => ({
+        source: routeSource,
         headers: [
           {
             key: "Cache-Control",
@@ -377,10 +338,23 @@ const nextConfig: NextConfig = {
             value: "public, max-age=60, stale-while-revalidate=600",
           },
         ],
-      },
-      // 5. Dynamic / User-Specific Routes (Strict No-Store Cache Bypass)
-      {
-        source: "/cart",
+      })),
+      // 5. Dynamic / User-Specific Private Routes (Strict No-Store Cache Bypass)
+      ...[
+        "/cart",
+        "/checkout",
+        "/account",
+        "/account/:path*",
+        "/wishlist",
+        "/compare",
+        "/order-success/:path*",
+        "/track-order",
+        "/api/cart/:path*",
+        "/api/orders/:path*",
+        "/api/customer/:path*",
+        "/api/auth/:path*",
+      ].map((privateSource) => ({
+        source: privateSource,
         headers: [
           {
             key: "Cache-Control",
@@ -394,59 +368,16 @@ const nextConfig: NextConfig = {
             key: "Cloudflare-CDN-Cache-Control",
             value: "no-store",
           },
-        ],
-      },
-      {
-        source: "/checkout",
-        headers: [
           {
-            key: "Cache-Control",
-            value: "private, no-cache, no-store, max-age=0, must-revalidate",
+            key: "Pragma",
+            value: "no-cache",
           },
           {
-            key: "CDN-Cache-Control",
-            value: "no-store",
-          },
-          {
-            key: "Cloudflare-CDN-Cache-Control",
-            value: "no-store",
+            key: "Expires",
+            value: "0",
           },
         ],
-      },
-      {
-        source: "/api/cart/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "private, no-cache, no-store, max-age=0, must-revalidate",
-          },
-          {
-            key: "CDN-Cache-Control",
-            value: "no-store",
-          },
-          {
-            key: "Cloudflare-CDN-Cache-Control",
-            value: "no-store",
-          },
-        ],
-      },
-      {
-        source: "/api/orders/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "private, no-cache, no-store, max-age=0, must-revalidate",
-          },
-          {
-            key: "CDN-Cache-Control",
-            value: "no-store",
-          },
-          {
-            key: "Cloudflare-CDN-Cache-Control",
-            value: "no-store",
-          },
-        ],
-      },
+      })),
       {
         source: "/favicon.ico",
         headers: [

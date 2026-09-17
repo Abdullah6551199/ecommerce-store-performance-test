@@ -21,7 +21,7 @@ bucket_name = "ecommerce-perf-assets"
 NEXT_PUBLIC_APP_URL = "https://nasrify-admin.zia291930.workers.dev"
 SESSION_SECRET = "8b051f18ed04fdbfc3aa401da65480ff4cb3b96a5e2082390693b2368a3f06e8"
 JWT_SECRET = "8b051f18ed04fdbfc3aa401da65480ff4cb3b96a5e2082390693b2368a3f06e8"
-ADMIN_SECRET = "admin_perf_test_secret_2026"
+STOREFRONT_URL = "https://nasrify-store.zia291930.workers.dev"
 ADMIN_EMAIL = "admin@apexstore.com"
 
 [observability]

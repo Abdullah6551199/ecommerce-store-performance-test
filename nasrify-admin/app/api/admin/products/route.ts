@@ -9,6 +9,7 @@ import {
   isProductSlugTaken,
 } from "@/lib/products";
 import { getCategoryById } from "@/lib/categories";
+import { invalidateStorefront } from "@/lib/storefront-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -123,8 +124,12 @@ export async function POST(req: NextRequest) {
       revalidatePath("/");
       revalidatePath("/search");
       if (created.slug) revalidatePath(`/product/${created.slug}`);
+      await invalidateStorefront({ target: "products", path: "/api/products" });
+      if (created.slug) {
+        await invalidateStorefront({ path: `/product/${created.slug}` });
+      }
     } catch (e) {
-      console.warn("[Admin Product] revalidatePath failed:", e);
+      console.warn("[Admin Product] revalidate/invalidate failed:", e);
     }
 
     return NextResponse.json(

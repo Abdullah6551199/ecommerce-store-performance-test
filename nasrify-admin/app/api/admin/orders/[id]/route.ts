@@ -5,6 +5,7 @@ import {
   updateOrderStatusSchema,
 } from "@/lib/orders";
 import { getCurrentAdmin } from "@/lib/auth";
+import { invalidateStorefront } from "@/lib/storefront-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -94,6 +95,12 @@ export async function PUT(
       estimatedDelivery,
       statusNotes,
     });
+
+    try {
+      await invalidateStorefront({ target: "orders" });
+    } catch (e) {
+      console.warn("[Admin Order] invalidateStorefront failed:", e);
+    }
 
     return NextResponse.json({
       success: true,

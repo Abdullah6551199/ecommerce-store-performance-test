@@ -10,6 +10,7 @@ import {
   isProductSlugTaken,
 } from "@/lib/products";
 import { getCategoryById } from "@/lib/categories";
+import { invalidateStorefront } from "@/lib/storefront-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -143,6 +144,9 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       revalidatePath("/search");
       if (existing.slug) revalidatePath(`/product/${existing.slug}`);
       if (input.slug && input.slug !== existing.slug) revalidatePath(`/product/${input.slug}`);
+      await invalidateStorefront({ target: "products", path: "/api/products" });
+      if (existing.slug) await invalidateStorefront({ path: `/product/${existing.slug}` });
+      if (input.slug && input.slug !== existing.slug) await invalidateStorefront({ path: `/product/${input.slug}` });
     } catch (e) {
       console.warn("[revalidatePath] Failed:", e);
     }
@@ -197,6 +201,8 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
       revalidatePath("/");
       revalidatePath("/search");
       if (existing.slug) revalidatePath(`/product/${existing.slug}`);
+      await invalidateStorefront({ target: "products", path: "/api/products" });
+      if (existing.slug) await invalidateStorefront({ path: `/product/${existing.slug}` });
     } catch (e) {
       console.warn("[revalidatePath] Failed:", e);
     }

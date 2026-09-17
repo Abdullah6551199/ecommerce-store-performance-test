@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { updateBulkAdminOrderStatus, ORDER_STATUSES } from "@/lib/orders";
 import { getCurrentAdmin } from "@/lib/auth";
+import { invalidateStorefront } from "@/lib/storefront-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,12 @@ export async function POST(req: NextRequest) {
 
     const { ids, status } = parseResult.data;
     const updatedCount = await updateBulkAdminOrderStatus(ids, status);
+
+    try {
+      await invalidateStorefront({ target: "orders" });
+    } catch (e) {
+      console.warn("[Admin Bulk Orders] invalidateStorefront failed:", e);
+    }
 
     return NextResponse.json(
       {

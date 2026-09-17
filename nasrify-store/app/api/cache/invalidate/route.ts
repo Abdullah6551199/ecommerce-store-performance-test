@@ -12,29 +12,23 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     const authHeader = req.headers.get("authorization");
-    let allowedSecrets = new Set<string>();
-
-    if (process.env.SESSION_SECRET) allowedSecrets.add(process.env.SESSION_SECRET);
-    if (process.env.JWT_SECRET) allowedSecrets.add(process.env.JWT_SECRET);
-    if (process.env.ADMIN_SECRET) allowedSecrets.add(process.env.ADMIN_SECRET);
-    allowedSecrets.add("admin_perf_test_secret_2026");
-    allowedSecrets.add("8b051f18ed04fdbfc3aa401da65480ff4cb3b96a5e2082390693b2368a3f06e8");
+    let configuredSecret = process.env.CACHE_INVALIDATE_SECRET || "";
 
     try {
       const { getCloudflareContext } = require("@opennextjs/cloudflare");
       const cfCtx = getCloudflareContext();
-      if (cfCtx?.env?.SESSION_SECRET) allowedSecrets.add(cfCtx.env.SESSION_SECRET);
-      if (cfCtx?.env?.JWT_SECRET) allowedSecrets.add(cfCtx.env.JWT_SECRET);
-      if (cfCtx?.env?.ADMIN_SECRET) allowedSecrets.add(cfCtx.env.ADMIN_SECRET);
+      if (cfCtx?.env?.CACHE_INVALIDATE_SECRET) {
+        configuredSecret = cfCtx.env.CACHE_INVALIDATE_SECRET;
+      }
     } catch {
-      // Running outside Cloudflare context or during build
+      // Running outside Cloudflare context or during local build
     }
 
     const body = (await req.json().catch(() => ({}))) as Record<string, any>;
-    const secret = body.secret || (authHeader?.replace(/^Bearer\s+/i, "") ?? "");
+    const providedSecret = body.secret || (authHeader?.replace(/^Bearer\s+/i, "") ?? "");
 
-    // Verify secret for calls
-    if (!allowedSecrets.has(secret)) {
+    // Secure verification: must match configured worker secret
+    if (!configuredSecret || providedSecret !== configuredSecret) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

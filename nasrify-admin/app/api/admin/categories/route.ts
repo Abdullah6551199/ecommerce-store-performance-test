@@ -11,6 +11,7 @@ import {
   buildCategoryTree,
   flattenCategoryHierarchy,
 } from "@/lib/categories";
+import { invalidateStorefront } from "@/lib/storefront-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -121,6 +122,8 @@ export async function POST(req: NextRequest) {
       revalidatePath("/");
       revalidatePath("/search");
       if (input.slug) revalidatePath(`/category/${input.slug}`);
+      await invalidateStorefront({ target: "categories", path: "/api/categories" });
+      if (input.slug) await invalidateStorefront({ path: `/category/${input.slug}` });
     } catch (e) {
       console.warn("[revalidatePath] Failed:", e);
     }

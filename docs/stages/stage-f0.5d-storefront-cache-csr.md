@@ -98,7 +98,7 @@ Created `nasrify-store/lib/store-cache.ts`:
 - Applied to public GET endpoints.
 - Secure cache invalidation endpoint `POST /api/cache/invalidate`:
   - Validates `Authorization: Bearer <secret>` or `{ "secret": "..." }`.
-  - Supports `admin_perf_test_secret_2026`, `SESSION_SECRET`, and `JWT_SECRET`.
+  - Authenticated via Cloudflare Worker secret `CACHE_INVALIDATE_SECRET`.
   - Purges memory cache and calls `caches.default.delete()` on specific paths.
 
 ### Pattern 7: Database Performance Indexes
@@ -141,7 +141,7 @@ CREATE INDEX IF NOT EXISTS idx_orders_customer_id ON orders(customer_id);
 4. **Cache Invalidation Hook**:
    ```bash
    curl -s -X POST https://nasrify-store.zia291930.workers.dev/api/cache/invalidate \
-     -H "Authorization: Bearer admin_perf_test_secret_2026" \
+     -H "Authorization: Bearer <CACHE_INVALIDATE_SECRET>" \
      -H "Content-Type: application/json"
    # Response: {"success":true,"message":"Storefront cache invalidated successfully","target":"all","path":null}
    ```

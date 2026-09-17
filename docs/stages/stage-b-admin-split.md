@@ -24,7 +24,7 @@ All three workers share the same D1 SQLite database (`ecommerce-perf-db`, ID: `3
   - `env.ASSETS` (Static asset binding)
   - `env.NEXT_PUBLIC_APP_URL` (`https://nasrify-admin.zia291930.workers.dev`)
   - `env.SESSION_SECRET`, `env.JWT_SECRET`
-  - `env.ADMIN_SECRET` (`admin_perf_test_secret_2026`)
+  - `env.ADMIN_SECRET` (configured via Cloudflare secret)
   - `env.ADMIN_EMAIL` (`admin@apexstore.com`)
 - **Upload Size**: `10,993.83 KiB / gzip: 1,955.16 KiB`
 - **Worker Startup Time**: `25 ms`

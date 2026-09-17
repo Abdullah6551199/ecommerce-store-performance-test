@@ -292,7 +292,10 @@ export async function listProducts(options?: {
         )
       );
     } catch (err) {
-      console.warn("[Products] D1 listProducts failed, falling back to memory:", err);
+      console.error("[products] D1 listProducts failed:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -350,7 +353,10 @@ export const getProductById = cache(async (id: string): Promise<ProductWithImage
         variants
       );
     } catch (err) {
-      console.warn("[Products] D1 getProductById failed:", err);
+      console.error("[products] D1 getProductById failed:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -407,7 +413,10 @@ export const getProductBySlug = cache(async (slug: string): Promise<ProductWithI
         variants
       );
     } catch (err) {
-      console.warn("[Products] D1 getProductBySlug failed:", err);
+      console.error("[products] D1 getProductBySlug failed:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -437,7 +446,10 @@ export async function isSkuTaken(sku: string, excludeId?: string): Promise<boole
       if (excludeId && rows.length === 1 && rows[0].id === excludeId) return false;
       return true;
     } catch (err) {
-      console.warn("[Products] isSkuTaken check failed in D1:", err);
+      console.error("[products] isSkuTaken check failed in D1:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -463,7 +475,10 @@ export async function isProductSlugTaken(slug: string, excludeId?: string): Prom
       if (excludeId && rows.length === 1 && rows[0].id === excludeId) return false;
       return true;
     } catch (err) {
-      console.warn("[Products] isProductSlugTaken check failed in D1:", err);
+      console.error("[products] isProductSlugTaken check failed in D1:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -1144,7 +1159,10 @@ export async function listCatalogProducts(options?: {
 
       return catalogResults;
     } catch (err) {
-      console.warn("[Products] D1 listCatalogProducts failed, falling back:", err);
+      console.error("[products] D1 listCatalogProducts failed:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -1272,7 +1290,10 @@ export async function getProductsByCategoryPaginated(
         page,
       };
     } catch (err) {
-      console.warn("[Products] getProductsByCategoryPaginated failed in D1:", err);
+      console.error("[products] getProductsByCategoryPaginated failed in D1:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -1468,7 +1489,10 @@ export async function getProductsByIds(
 
       return mapped.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
     } catch (err) {
-      console.warn("[Products] D1 getProductsByIds failed, falling back:", err);
+      console.error("[products] D1 getProductsByIds failed:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 

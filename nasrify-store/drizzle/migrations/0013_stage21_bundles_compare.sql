@@ -38,8 +38,9 @@ CREATE INDEX IF NOT EXISTS idx_bundles_featured ON product_bundles(is_featured);
 CREATE INDEX IF NOT EXISTS idx_bundle_items_bundle ON bundle_items(bundle_id);
 CREATE INDEX IF NOT EXISTS idx_bundle_items_product ON bundle_items(product_id);
 
--- 4. Pre-seed Initial High-Converting Starter Bundles
--- Bundle 1: Endurance Trio (Apex Velocity Runner $160 + Aero-Knit Tee $58 + Vapor-Shield Windbreaker $140 = $358, Bundle Price $268 => ~25% off)
+-- 4. Pre-seed Initial High-Converting Starter Bundles (applied via data import once products exist)
+-- Bundle 1: Endurance Trio
+/*
 INSERT OR IGNORE INTO product_bundles (
   id,
   tenant_id,
@@ -115,3 +116,5 @@ INSERT OR IGNORE INTO bundle_items (id, bundle_id, product_id, variant_id, quant
 VALUES 
   ('bitem-marathon-1', 'bundle-elite-marathon-duo', 'prod-apex-vrx1', NULL, 1, 1),
   ('bitem-marathon-2', 'bundle-elite-marathon-duo', 'prod-pulse-enduro', NULL, 1, 2);
+*/
+

@@ -202,7 +202,10 @@ export async function listCategories(options?: {
         .orderBy(asc(categories.sortOrder), asc(categories.name));
       return rows as CategoryRecord[];
     } catch (err) {
-      console.warn("[Categories] D1 query failed, using memory store:", err);
+      console.error("[categories] D1 query failed, using memory store:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -252,7 +255,10 @@ export const getCategoryById = cache(async (id: string): Promise<CategoryRecord 
         .limit(1);
       return (rows[0] as CategoryRecord) || null;
     } catch (err) {
-      console.warn("[Categories] D1 getById failed:", err);
+      console.error("[categories] D1 getById failed:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -274,7 +280,10 @@ export const getCategoryBySlug = cache(async (slug: string): Promise<CategoryRec
         .limit(1);
       return (rows[0] as CategoryRecord) || null;
     } catch (err) {
-      console.warn("[Categories] D1 getBySlug failed:", err);
+      console.error("[categories] D1 getBySlug failed:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 
@@ -470,7 +479,10 @@ export async function getCategoriesWithProductCounts(): Promise<CategoryWithProd
         productCount: Number(r.productCount) || 0,
       }));
     } catch (err) {
-      console.warn("[getCategoriesWithProductCounts] D1 query error, falling back:", err);
+      console.error("[categories] getCategoriesWithProductCounts D1 query error, falling back:", err);
+      if (process.env.NODE_ENV === "development") {
+        throw err;
+      }
     }
   }
 

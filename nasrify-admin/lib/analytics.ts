@@ -168,28 +168,109 @@ export async function getAnalyticsKpis(
   const prevStartIso = prevStart.toISOString();
   const prevEndIso = prevEnd.toISOString();
 
-  let currentOrders: OrderRecord[] = [];
-  let prevOrders: OrderRecord[] = [];
-  let allHistoricalOrders: OrderRecord[] = [];
+  type BoundedOrder = {
+    id: string;
+    total: number;
+    status: string;
+    createdAt: string;
+    email: string | null;
+    phone: string | null;
+    customerName: string | null;
+  };
+
+  let periodOrders: BoundedOrder[] = [];
+  let recentOrders: {
+    id: string;
+    customerName: string;
+    email: string | null;
+    total: number;
+    status: string;
+    createdAt: string;
+  }[] = [];
+  const customerFirstOrderTime = new Map<string, number>();
 
   if (db) {
     try {
-      allHistoricalOrders = await db.select().from(orders).orderBy(desc(orders.createdAt));
-      currentOrders = allHistoricalOrders.filter((o) => {
-        const t = new Date(o.createdAt).getTime();
-        return t >= start.getTime() && t <= end.getTime();
-      });
-      prevOrders = allHistoricalOrders.filter((o) => {
-        const t = new Date(o.createdAt).getTime();
-        return t >= prevStart.getTime() && t <= prevEnd.getTime();
+      // 1. Fetch only orders in comparison window (prevStart to end) selecting only needed fields
+      const rows = await db
+        .select({
+          id: orders.id,
+          total: orders.total,
+          status: orders.status,
+          createdAt: orders.createdAt,
+          email: orders.email,
+          phone: orders.phone,
+          customerName: orders.customerName,
+        })
+        .from(orders)
+        .where(and(gte(orders.createdAt, prevStartIso), lte(orders.createdAt, endIso)))
+        .orderBy(desc(orders.createdAt));
+
+      periodOrders = rows.map((r) => ({
+        id: r.id,
+        total: Number(r.total || 0),
+        status: r.status || "pending",
+        createdAt: r.createdAt,
+        email: r.email,
+        phone: r.phone,
+        customerName: r.customerName,
+      }));
+
+      // 2. Fetch top 10 recent orders with SQL LIMIT 10 (never loads all table rows)
+      const recentRows = await db
+        .select({
+          id: orders.id,
+          customerName: orders.customerName,
+          email: orders.email,
+          total: orders.total,
+          status: orders.status,
+          createdAt: orders.createdAt,
+        })
+        .from(orders)
+        .orderBy(desc(orders.createdAt))
+        .limit(10);
+
+      recentOrders = recentRows.map((o) => ({
+        id: o.id,
+        customerName: o.customerName || "Customer",
+        email: o.email || null,
+        total: Number(o.total || 0),
+        status: o.status || "pending",
+        createdAt: o.createdAt,
+      }));
+
+      // 3. New customers: find earliest order date grouped by customer key in SQL
+      const firstOrders = await db
+        .select({
+          firstOrder: sql<string>`min(${orders.createdAt})`,
+          custKey: sql<string>`coalesce(nullif(lower(trim(${orders.email})), ''), nullif(${orders.phone}, ''), ${orders.customerName})`,
+        })
+        .from(orders)
+        .groupBy(
+          sql`coalesce(nullif(lower(trim(${orders.email})), ''), nullif(${orders.phone}, ''), ${orders.customerName})`
+        );
+
+      firstOrders.forEach((fo) => {
+        if (fo.custKey && fo.firstOrder) {
+          customerFirstOrderTime.set(fo.custKey, new Date(fo.firstOrder).getTime());
+        }
       });
     } catch (err) {
-      console.warn("[Analytics] Error querying orders from D1:", err);
+      console.warn("[Analytics] Error querying bounded orders from D1:", err);
     }
   }
 
+  const currentOrders = periodOrders.filter((o) => {
+    const t = new Date(o.createdAt).getTime();
+    return t >= start.getTime() && t <= end.getTime();
+  });
+  const prevOrders = periodOrders.filter((o) => {
+    const t = new Date(o.createdAt).getTime();
+    return t >= prevStart.getTime() && t <= prevEnd.getTime();
+  });
+
   // Calculate Metrics
-  const calcRevenue = (list: OrderRecord[]) =>
+  const calcRevenue = (list: BoundedOrder[]) =>
     Number(
       list
         .filter((o) => o.status !== "cancelled")
@@ -207,7 +288,7 @@ export async function getAnalyticsKpis(
   const prevAov = prevOrdersCount > 0 ? Number((prevRev / prevOrdersCount).toFixed(2)) : 0;
 
   // Unique Customers in period
-  const getUniqueCustomers = (list: OrderRecord[]) => {
+  const getUniqueCustomers = (list: BoundedOrder[]) => {
     const set = new Set<string>();
     list.forEach((o) => {
       const key = o.email ? o.email.toLowerCase().trim() : o.phone || o.customerName;
@@ -220,15 +301,6 @@ export async function getAnalyticsKpis(
   const prevCustSet = getUniqueCustomers(prevOrders);
 
   // New customers (placed first order in this period)
-  const customerFirstOrderTime = new Map<string, number>();
-  allHistoricalOrders.forEach((o) => {
-    const key = o.email ? o.email.toLowerCase().trim() : o.phone || o.customerName;
-    const time = new Date(o.createdAt).getTime();
-    if (!customerFirstOrderTime.has(key) || time < (customerFirstOrderTime.get(key) || Infinity)) {
-      customerFirstOrderTime.set(key, time);
-    }
-  });
-
   let curNewCustCount = 0;
   curCustSet.forEach((custKey) => {
     const firstTime = customerFirstOrderTime.get(custKey);
@@ -281,7 +353,7 @@ export async function getAnalyticsKpis(
   }
 
   // Sparkline buckets (7 points)
-  const generateSparkline = (list: OrderRecord[], valueKey: "total" | "count"): number[] => {
+  const generateSparkline = (list: BoundedOrder[], valueKey: "total" | "count"): number[] => {
     const step = (end.getTime() - start.getTime()) / 7;
     const points: number[] = [];
     for (let i = 0; i < 7; i++) {
@@ -314,23 +386,13 @@ export async function getAnalyticsKpis(
     pending: 0,
     cancelled: 0,
   };
-  const ordersForStatus = currentOrders.length > 0 ? currentOrders : allHistoricalOrders;
+  const ordersForStatus = currentOrders.length > 0 ? currentOrders : periodOrders;
   ordersForStatus.forEach((o) => {
     const s = (o.status || "pending").toLowerCase();
     statusDistribution[s] = (statusDistribution[s] || 0) + 1;
   });
 
-  // Recent Orders (up to 10)
-  const recentOrders = allHistoricalOrders.slice(0, 10).map((o) => ({
-    id: o.id,
-    customerName: o.customerName || "Customer",
-    email: o.email || null,
-    total: Number(o.total || 0),
-    status: o.status || "pending",
-    createdAt: o.createdAt,
-  }));
-
-  // Low stock products
+  // Low stock products (bounded to 10)
   let lowStockProducts: { id: string; name: string; stockQuantity: number; lowStockThreshold: number }[] = [];
   if (db) {
     try {
@@ -342,7 +404,8 @@ export async function getAnalyticsKpis(
           lowStockThreshold: products.lowStockThreshold,
         })
         .from(products)
-        .where(sql`${products.stockQuantity} <= ${products.lowStockThreshold}`);
+        .where(sql`${products.stockQuantity} <= ${products.lowStockThreshold}`)
+        .limit(10);
       lowStockProducts = prods.map((p) => ({
         id: p.id,
         name: p.name,
@@ -411,6 +474,7 @@ export interface SalesTrendPoint {
 
 /**
  * Returns time-series revenue and order count for the line chart.
+ * Uses bounded WHERE created_at >= ? and selects only needed columns.
  */
 export async function getSalesTrend(
   period: AnalyticsPeriod = "last_30_days",
@@ -419,15 +483,26 @@ export async function getSalesTrend(
 ): Promise<{ trend: SalesTrendPoint[] }> {
   const { start, end } = resolveDateRanges(period, customFrom, customTo);
   const db = getDb();
-  let ordersList: OrderRecord[] = [];
+  let ordersList: { total: number; createdAt: string }[] = [];
+
+  const startIso = start.toISOString();
+  const endIso = end.toISOString();
 
   if (db) {
     try {
-      const all = await db.select().from(orders).orderBy(orders.createdAt);
-      ordersList = all.filter((o) => {
-        const t = new Date(o.createdAt).getTime();
-        return t >= start.getTime() && t <= end.getTime();
-      });
+      const rows = await db
+        .select({
+          total: orders.total,
+          createdAt: orders.createdAt,
+        })
+        .from(orders)
+        .where(and(gte(orders.createdAt, startIso), lte(orders.createdAt, endIso)))
+        .orderBy(orders.createdAt);
+
+      ordersList = rows.map((r) => ({
+        total: Number(r.total || 0),
+        createdAt: r.createdAt,
+      }));
     } catch (err) {
       console.warn("[Analytics] Error querying sales trend:", err);
     }
@@ -515,54 +590,52 @@ export interface CategoryPerformanceItem {
 
 /**
  * Returns revenue and units sold by category.
+ * Uses SQL GROUP BY and SUM aggregations with date bounds.
  */
-export async function getCategoryPerformance(): Promise<{ categories: CategoryPerformanceItem[] }> {
+export async function getCategoryPerformance(
+  period: AnalyticsPeriod = "last_30_days"
+): Promise<{ categories: CategoryPerformanceItem[] }> {
   const db = getDb();
   if (!db) {
     return { categories: [] };
   }
 
   try {
+    const { start } = resolveDateRanges(period);
+    const startIso = start.toISOString();
+
     const rawItems = await db
       .select({
-        productId: orderItems.productId,
-        quantity: orderItems.quantity,
-        lineTotal: orderItems.lineTotal,
-        categoryId: products.categoryId,
-        categoryName: categories.name,
+        categoryId: sql<string>`coalesce(${products.categoryId}, 'uncategorized')`,
+        categoryName: sql<string>`coalesce(${categories.name}, 'Uncategorized')`,
+        revenue: sql<number>`coalesce(sum(${orderItems.lineTotal}), 0)`,
+        unitsSold: sql<number>`coalesce(sum(${orderItems.quantity}), 0)`,
       })
       .from(orderItems)
+      .innerJoin(orders, eq(orderItems.orderId, orders.id))
       .leftJoin(products, eq(orderItems.productId, products.id))
-      .leftJoin(categories, eq(products.categoryId, categories.id));
+      .leftJoin(categories, eq(products.categoryId, categories.id))
+      .where(gte(orders.createdAt, startIso))
+      .groupBy(products.categoryId, categories.name)
+      .orderBy(desc(sql`revenue`));
 
-    const map = new Map<string, { categoryName: string; revenue: number; unitsSold: number }>();
     let totalRev = 0;
-
     rawItems.forEach((it) => {
-      const catId = it.categoryId || "uncategorized";
-      const catName = it.categoryName || "Uncategorized";
-      const rev = Number(it.lineTotal) || 0;
-      const qty = Number(it.quantity) || 1;
-
-      totalRev += rev;
-      const existing = map.get(catId) || { categoryName: catName, revenue: 0, unitsSold: 0 };
-      existing.revenue += rev;
-      existing.unitsSold += qty;
-      map.set(catId, existing);
+      totalRev += Number(it.revenue) || 0;
     });
 
-    const list: CategoryPerformanceItem[] = [];
-    map.forEach((val, id) => {
-      list.push({
-        categoryId: id,
+    const list: CategoryPerformanceItem[] = rawItems.map((val) => {
+      const rev = Number(Number(val.revenue).toFixed(2));
+      const pct = totalRev > 0 ? Number(((rev / totalRev) * 100).toFixed(1)) : 0;
+      return {
+        categoryId: val.categoryId,
         categoryName: val.categoryName,
-        revenue: Number(val.revenue.toFixed(2)),
-        unitsSold: val.unitsSold,
-        percentage: totalRev > 0 ? Number(((val.revenue / totalRev) * 100).toFixed(1)) : 0,
-      });
+        revenue: rev,
+        unitsSold: Number(val.unitsSold),
+        percentage: pct,
+      };
     });
 
-    list.sort((a, b) => b.revenue - a.revenue);
     return { categories: list };
   } catch (err) {
     console.warn("[Analytics] Error in getCategoryPerformance:", err);
@@ -580,7 +653,8 @@ export interface TopProductItem {
 }
 
 /**
- * Returns top 10 products by quantity sold.
+ * Returns top N products by quantity sold.
+ * Pushes date filter, GROUP BY, SUM, and LIMIT down to SQL.
  */
 export async function getTopProducts(
   period: AnalyticsPeriod = "last_30_days",
@@ -591,53 +665,35 @@ export async function getTopProducts(
 
   try {
     const { start, end } = resolveDateRanges(period);
-    const raw = await db
+    const startIso = start.toISOString();
+    const endIso = end.toISOString();
+
+    const rows = await db
       .select({
-        productId: orderItems.productId,
-        productName: orderItems.productName,
-        quantity: orderItems.quantity,
-        lineTotal: orderItems.lineTotal,
-        stockQuantity: products.stockQuantity,
-        createdAt: orders.createdAt,
+        id: orderItems.productId,
+        name: orderItems.productName,
+        unitsSold: sql<number>`coalesce(sum(${orderItems.quantity}), 0)`,
+        revenue: sql<number>`coalesce(sum(${orderItems.lineTotal}), 0)`,
+        currentStock: sql<number>`coalesce(${products.stockQuantity}, 10)`,
       })
       .from(orderItems)
       .innerJoin(orders, eq(orderItems.orderId, orders.id))
-      .leftJoin(products, eq(orderItems.productId, products.id));
+      .leftJoin(products, eq(orderItems.productId, products.id))
+      .where(and(gte(orders.createdAt, startIso), lte(orders.createdAt, endIso)))
+      .groupBy(orderItems.productId, orderItems.productName)
+      .orderBy(desc(sql`unitsSold`))
+      .limit(limit);
 
-    const map = new Map<
-      string,
-      { name: string; unitsSold: number; revenue: number; stock: number }
-    >();
+    const result: TopProductItem[] = rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=75",
+      unitsSold: Number(r.unitsSold),
+      revenue: Number(Number(r.revenue).toFixed(2)),
+      currentStock: Number(r.currentStock),
+    }));
 
-    raw.forEach((r) => {
-      const t = new Date(r.createdAt).getTime();
-      if (t >= start.getTime() && t <= end.getTime()) {
-        const existing = map.get(r.productId) || {
-          name: r.productName,
-          unitsSold: 0,
-          revenue: 0,
-          stock: r.stockQuantity ?? 10,
-        };
-        existing.unitsSold += Number(r.quantity) || 1;
-        existing.revenue += Number(r.lineTotal) || 0;
-        map.set(r.productId, existing);
-      }
-    });
-
-    const result: TopProductItem[] = [];
-    map.forEach((val, id) => {
-      result.push({
-        id,
-        name: val.name,
-        imageUrl: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=75",
-        unitsSold: val.unitsSold,
-        revenue: Number(val.revenue.toFixed(2)),
-        currentStock: val.stock,
-      });
-    });
-
-    result.sort((a, b) => b.unitsSold - a.unitsSold);
-    return { products: result.slice(0, limit) };
+    return { products: result };
   } catch (err) {
     console.warn("[Analytics] Error in getTopProducts:", err);
     return { products: [] };
@@ -684,7 +740,7 @@ export async function getWeeklyPatterns(): Promise<{ patterns: WeeklyPatternDay[
   }
 
   try {
-    // Query order_items joined with orders
+    // Query order_items joined with orders bounded to the last 90 days
     const raw = await db
       .select({
         productId: orderItems.productId,
@@ -693,7 +749,8 @@ export async function getWeeklyPatterns(): Promise<{ patterns: WeeklyPatternDay[
         createdAt: orders.createdAt,
       })
       .from(orderItems)
-      .innerJoin(orders, eq(orderItems.orderId, orders.id));
+      .innerJoin(orders, eq(orderItems.orderId, orders.id))
+      .where(gte(orders.createdAt, sql`datetime('now', '-90 days')`));
 
     if (raw.length === 0) {
       return { patterns: fallbackPatterns };
@@ -817,59 +874,109 @@ export interface YearlyPatterns {
 }
 
 /**
- * Calculates annual performance peaks.
+ * Calculates annual performance peaks using SQL monthly grouping and focused top queries.
  */
 export async function getYearlyPatterns(): Promise<YearlyPatterns> {
   const db = getDb();
-  let allOrders: OrderRecord[] = [];
-
-  if (db) {
-    try {
-      allOrders = await db.select().from(orders);
-    } catch (err) {
-      console.warn("[Analytics] Error in getYearlyPatterns:", err);
-    }
-  }
-
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December",
   ];
 
-  const monthRev = new Array(12).fill(0);
-  allOrders.forEach((o) => {
-    const m = new Date(o.createdAt).getMonth();
-    monthRev[m] += Number(o.total) || 0;
-  });
-
   let maxMonthIdx = 8; // September default
   let maxMonthRev = 0;
-  monthRev.forEach((rev, idx) => {
-    if (rev > maxMonthRev) {
-      maxMonthRev = rev;
-      maxMonthIdx = idx;
-    }
-  });
+  let totalStoreRevenue = 3359.76;
+  let topProductName = "Apex Velocity Runner X1";
+  let topProductUnits = 24;
+  let topProductRev = 2183.84;
+  let topCategoryName = "Footwear";
+  let topCategoryRev = 2351.83;
 
-  const totalStoreRevenue = monthRev.reduce((s, r) => s + r, 0) || 3359.76;
+  if (db) {
+    try {
+      // 1. Group revenue by month in SQL over the past year
+      const monthlyRows = await db
+        .select({
+          monthNum: sql<string>`strftime('%m', ${orders.createdAt})`,
+          revenue: sql<number>`coalesce(sum(case when ${orders.status} != 'cancelled' then ${orders.total} else 0 end), 0)`,
+        })
+        .from(orders)
+        .where(gte(orders.createdAt, sql`datetime('now', '-1 year')`))
+        .groupBy(sql`strftime('%m', ${orders.createdAt})`);
+
+      let totalSum = 0;
+      monthlyRows.forEach((row) => {
+        const mIdx = parseInt(row.monthNum, 10) - 1;
+        const rev = Number(row.revenue) || 0;
+        totalSum += rev;
+        if (rev > maxMonthRev && mIdx >= 0 && mIdx < 12) {
+          maxMonthRev = rev;
+          maxMonthIdx = mIdx;
+        }
+      });
+      if (totalSum > 0) totalStoreRevenue = totalSum;
+
+      // 2. Top product in 1 SQL query with LIMIT 1
+      const topProd = await db
+        .select({
+          name: orderItems.productName,
+          unitsSold: sql<number>`coalesce(sum(${orderItems.quantity}), 0)`,
+          revenue: sql<number>`coalesce(sum(${orderItems.lineTotal}), 0)`,
+        })
+        .from(orderItems)
+        .innerJoin(orders, eq(orderItems.orderId, orders.id))
+        .groupBy(orderItems.productId, orderItems.productName)
+        .orderBy(desc(sql`unitsSold`))
+        .limit(1);
+
+      if (topProd.length > 0) {
+        topProductName = topProd[0].name;
+        topProductUnits = Number(topProd[0].unitsSold);
+        topProductRev = Number(Number(topProd[0].revenue).toFixed(2));
+      }
+
+      // 3. Top category in 1 SQL query with LIMIT 1
+      const topCat = await db
+        .select({
+          name: sql<string>`coalesce(${categories.name}, 'Footwear')`,
+          revenue: sql<number>`coalesce(sum(${orderItems.lineTotal}), 0)`,
+        })
+        .from(orderItems)
+        .innerJoin(orders, eq(orderItems.orderId, orders.id))
+        .leftJoin(products, eq(orderItems.productId, products.id))
+        .leftJoin(categories, eq(products.categoryId, categories.id))
+        .groupBy(products.categoryId, categories.name)
+        .orderBy(desc(sql`revenue`))
+        .limit(1);
+
+      if (topCat.length > 0) {
+        topCategoryName = topCat[0].name;
+        topCategoryRev = Number(Number(topCat[0].revenue).toFixed(2));
+      }
+    } catch (err) {
+      console.warn("[Analytics] Error in getYearlyPatterns:", err);
+    }
+  }
+
+  const effectiveMonthRev = maxMonthRev || totalStoreRevenue;
 
   return {
     bestMonth: {
       name: monthNames[maxMonthIdx],
-      revenue: Number((maxMonthRev || totalStoreRevenue).toFixed(2)),
+      revenue: Number(effectiveMonthRev.toFixed(2)),
     },
     bestWeek: {
       description: `Week 2 of ${monthNames[maxMonthIdx]}`,
-      revenue: Number(((maxMonthRev || totalStoreRevenue) * 0.4).toFixed(2)),
+      revenue: Number((effectiveMonthRev * 0.4).toFixed(2)),
     },
     topProduct: {
-      name: "Apex Velocity Runner X1",
-      unitsSold: 24,
-      revenue: Number((totalStoreRevenue * 0.65).toFixed(2)),
+      name: topProductName,
+      unitsSold: topProductUnits,
+      revenue: topProductRev,
     },
     topCategory: {
-      name: "Footwear",
-      revenue: Number((totalStoreRevenue * 0.7).toFixed(2)),
+      name: topCategoryName,
+      revenue: topCategoryRev,
     },
   };
 }

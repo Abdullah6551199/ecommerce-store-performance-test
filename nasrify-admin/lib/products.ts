@@ -3,6 +3,7 @@ import { z } from "zod";
 import { eq, ne, desc, asc, and, inArray, sql, count } from "drizzle-orm";
 import { getDb, products, productImages, productVariants, categories } from "./db";
 import { getVariantsByProductId, saveProductVariants, type ProductVariantRecord } from "./variants";
+import { invalidateAdminDataCache } from "./admin-cache";
 
 /**
  * ==============================================================================
@@ -1038,6 +1039,7 @@ const CATALOG_MICROCACHE_TTL_MS = 60000;
 export function invalidateCatalogCache(): void {
   cachedPublishedCatalog = null;
   lastPublishedCatalogFetchTime = 0;
+  invalidateAdminDataCache();
 }
 
 export async function listCatalogProducts(options?: {

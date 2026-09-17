@@ -6,6 +6,7 @@ import {
   getAnalyticsKpis,
   getTodaySmartInsights,
 } from "@/lib/analytics";
+import { getAdminApiCache, setAdminApiCache, getAdminApiCacheKey } from "@/lib/admin-cache";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,15 @@ export async function GET() {
     return NextResponse.json(
       { success: false, error: "Unauthorized" },
       { status: 401, headers: { "Cache-Control": "private, no-store" } }
+    );
+  }
+
+  const cacheKey = getAdminApiCacheKey(admin.id, "/api/admin/dashboard");
+  const cachedData = getAdminApiCache<any>(cacheKey);
+  if (cachedData) {
+    return NextResponse.json(
+      { success: true, data: cachedData },
+      { headers: { "Cache-Control": "private, no-store", "X-Admin-Cache": "HIT" } }
     );
   }
 
@@ -55,28 +65,34 @@ export async function GET() {
     console.warn("[Dashboard API] Error querying analytics data:", err);
   }
 
+  const responseData = {
+    counts: {
+      totalProducts,
+      totalCategories,
+      totalMedia,
+      totalSettings,
+    },
+    analyticsKpis,
+    smartInsights,
+    admin: {
+      email: admin.email,
+      role: admin.role,
+    },
+  };
+
+  setAdminApiCache(cacheKey, responseData);
+
   return NextResponse.json(
     {
       success: true,
-      data: {
-        counts: {
-          totalProducts,
-          totalCategories,
-          totalMedia,
-          totalSettings,
-        },
-        analyticsKpis,
-        smartInsights,
-        admin: {
-          email: admin.email,
-          role: admin.role,
-        },
-      },
+      data: responseData,
     },
     {
       headers: {
         "Cache-Control": "private, no-store",
+        "X-Admin-Cache": "MISS",
       },
     }
   );
 }
+

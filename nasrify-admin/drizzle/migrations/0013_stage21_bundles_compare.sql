@@ -38,9 +38,16 @@ CREATE INDEX IF NOT EXISTS idx_bundles_featured ON product_bundles(is_featured);
 CREATE INDEX IF NOT EXISTS idx_bundle_items_bundle ON bundle_items(bundle_id);
 CREATE INDEX IF NOT EXISTS idx_bundle_items_product ON bundle_items(product_id);
 
--- 4. Pre-seed Initial High-Converting Starter Bundles (applied via data import once products exist)
+-- 4. Pre-seed Initial High-Converting Starter Bundles
+-- Ensure minimal placeholder products exist for foreign key integrity on fresh D1 databases
+INSERT OR IGNORE INTO products (id, name, slug, price, status, created_at, updated_at)
+VALUES 
+  ('prod-apex-vrx1', 'Apex Velocity Runner X1', 'apex-velocity-runner-x1', 160.0, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  ('prod-aero-knit-tee', 'Aero-Knit Compression Tee', 'aero-knit-compression-tee', 48.0, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  ('prod-vapor-jacket', 'Vapor-Shield Windbreaker', 'vapor-shield-windbreaker', 150.0, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+  ('prod-pulse-enduro', 'Pulse Enduro Carbon Pro', 'pulse-enduro-carbon-pro', 185.0, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
 -- Bundle 1: Endurance Trio
-/*
 INSERT OR IGNORE INTO product_bundles (
   id,
   tenant_id,
@@ -69,8 +76,8 @@ INSERT OR IGNORE INTO product_bundles (
   'active',
   1,
   1,
-  datetime('now'),
-  datetime('now')
+  CURRENT_TIMESTAMP,
+  CURRENT_TIMESTAMP
 );
 
 INSERT OR IGNORE INTO bundle_items (id, bundle_id, product_id, variant_id, quantity, sort_order)
@@ -79,7 +86,7 @@ VALUES
   ('bitem-endurance-2', 'bundle-endurance-trio', 'prod-aero-knit-tee', NULL, 1, 2),
   ('bitem-endurance-3', 'bundle-endurance-trio', 'prod-vapor-jacket', NULL, 1, 3);
 
--- Bundle 2: Elite Marathon Duo (Apex Velocity Runner $160 + Pulse Enduro Carbon Pro $185 = $345, Bundle Price $275 => ~20% off)
+-- Bundle 2: Elite Marathon Duo
 INSERT OR IGNORE INTO product_bundles (
   id,
   tenant_id,
@@ -108,13 +115,13 @@ INSERT OR IGNORE INTO product_bundles (
   'active',
   1,
   2,
-  datetime('now'),
-  datetime('now')
+  CURRENT_TIMESTAMP,
+  CURRENT_TIMESTAMP
 );
 
 INSERT OR IGNORE INTO bundle_items (id, bundle_id, product_id, variant_id, quantity, sort_order)
 VALUES 
   ('bitem-marathon-1', 'bundle-elite-marathon-duo', 'prod-apex-vrx1', NULL, 1, 1),
   ('bitem-marathon-2', 'bundle-elite-marathon-duo', 'prod-pulse-enduro', NULL, 1, 2);
-*/
+
 

@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
+import { cache } from "react";
 import { getDb, users, loginAttempts, sessions, type UserRecord } from "./db";
 import { eq, and, desc, sql } from "drizzle-orm";
+import { invalidateAdminUserCache } from "./admin-cache";
 
 /**
  * ==============================================================================
@@ -12,6 +14,49 @@ export const RATE_LIMIT_MAX_ATTEMPTS = 3;
 export const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 export const SESSION_COOKIE_NAME = "admin_session";
 export const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+// 60-second in-memory isolate token cache
+export const ADMIN_TOKEN_CACHE_TTL_MS = 60 * 1000;
+
+export interface CachedAdminSession {
+  userId: string;
+  email: string;
+  role: string;
+  expiresAt: string;
+  userRecord: UserRecord;
+  cachedAt: number;
+}
+
+// Isolate-scoped in-memory cache for validated admin tokens (key: SHA-256 token hash)
+const adminTokenCache = new Map<string, CachedAdminSession>();
+
+/**
+ * Invalidate admin token cache for a specific user, token, or clear all
+ */
+export function invalidateAdminTokenCache(userIdOrToken?: string): void {
+  if (!userIdOrToken) {
+    adminTokenCache.clear();
+    return;
+  }
+  for (const [hash, entry] of adminTokenCache.entries()) {
+    if (entry.userId === userIdOrToken || hash === userIdOrToken) {
+      adminTokenCache.delete(hash);
+    }
+  }
+}
+
+/**
+ * Cryptographically hash session token with SHA-256 to use as safe cache key
+ */
+async function hashToken(token: string): Promise<string> {
+  const data = new TextEncoder().encode(token);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Dev-only verification invocation tracker (Target: 1 run per request)
+let devVerificationRunCount = 0;
 
 // In-memory fallback for local dev when running outside Cloudflare worker runtime
 interface MemoryAttempt {
@@ -61,6 +106,9 @@ export async function updateAdminPassword(userId: string, newPasswordPlain: stri
   const db = getDb();
   const newHash = await hashPassword(newPasswordPlain);
 
+  invalidateAdminTokenCache(userId);
+  invalidateAdminUserCache(userId);
+
   if (db) {
     try {
       await db
@@ -82,6 +130,9 @@ export async function updateAdminPassword(userId: string, newPasswordPlain: stri
 export async function updateAdminEmail(userId: string, newEmail: string): Promise<boolean> {
   const normalizedEmail = newEmail.toLowerCase().trim();
   const db = getDb();
+
+  invalidateAdminTokenCache(userId);
+  invalidateAdminUserCache(userId);
 
   if (db) {
     try {
@@ -252,14 +303,45 @@ export async function createSession(userId: string): Promise<string> {
 
 /**
  * Validate a session token against D1 and return the associated User
+ * Uses 60-second isolate-scoped in-memory cache for fast deduplication.
+ * Cache only successful validations. Never cache failures.
  */
 export async function validateSession(token: string): Promise<UserRecord | null> {
   if (!token) return null;
 
+  const tokenHash = await hashToken(token);
+  const now = Date.now();
+
+  // 1. Check 60-second in-memory cache (isolate-scoped)
+  const cached = adminTokenCache.get(tokenHash);
+  if (cached) {
+    if (now - cached.cachedAt < ADMIN_TOKEN_CACHE_TTL_MS) {
+      const expTime = parseUtcTimestamp(cached.expiresAt);
+      if (expTime > now) {
+        if (process.env.NODE_ENV === "development") {
+          devVerificationRunCount++;
+          console.log(
+            `[Auth Dev] Session verification run #${devVerificationRunCount} (CACHE_HIT 60s, token: ${tokenHash.slice(0, 8)}...)`
+          );
+        }
+        return cached.userRecord;
+      }
+    }
+    // Expired from cache
+    adminTokenCache.delete(tokenHash);
+  }
+
+  // 2. Query D1
   const db = getDb();
 
   if (db) {
     try {
+      if (process.env.NODE_ENV === "development") {
+        devVerificationRunCount++;
+        console.log(
+          `[Auth Dev] Session verification run #${devVerificationRunCount} (D1_QUERY, token: ${tokenHash.slice(0, 8)}...)`
+        );
+      }
       const sessionResults = await db
         .select({
           session: sessions,
@@ -276,7 +358,19 @@ export async function validateSession(token: string): Promise<UserRecord | null>
         .limit(1);
 
       if (sessionResults.length > 0) {
-        return sessionResults[0].user;
+        const { session: sess, user } = sessionResults[0];
+        // Cache ONLY successful validations. Never cache failures.
+        if (user && user.role === "admin") {
+          adminTokenCache.set(tokenHash, {
+            userId: user.id,
+            email: user.email,
+            role: user.role,
+            expiresAt: sess.expiresAt,
+            userRecord: user,
+            cachedAt: now,
+          });
+        }
+        return user;
       }
       return null;
     } catch (err) {
@@ -286,23 +380,43 @@ export async function validateSession(token: string): Promise<UserRecord | null>
 
   const memSession = memorySessions.get(token);
   if (memSession && memSession.expiresAt > Date.now()) {
-    return {
+    const memUser: UserRecord = {
       id: memSession.userId,
       email: "admin@example.com",
       passwordHash: "",
       role: "admin",
       createdAt: new Date().toISOString(),
     };
+    adminTokenCache.set(tokenHash, {
+      userId: memUser.id,
+      email: memUser.email,
+      role: memUser.role,
+      expiresAt: new Date(memSession.expiresAt).toISOString(),
+      userRecord: memUser,
+      cachedAt: now,
+    });
+    return memUser;
   }
 
   return null;
 }
 
 /**
- * Destroy a session token
+ * Destroy a session token and evict it from memory cache
  */
 export async function destroySession(token: string): Promise<void> {
   if (!token) return;
+
+  try {
+    const tokenHash = await hashToken(token);
+    const cached = adminTokenCache.get(tokenHash);
+    if (cached) {
+      invalidateAdminUserCache(cached.userId);
+    }
+    adminTokenCache.delete(tokenHash);
+  } catch (_e) {
+    // non-fatal
+  }
 
   const db = getDb();
   if (db) {
@@ -319,8 +433,9 @@ export async function destroySession(token: string): Promise<void> {
 /**
  * Retrieve current authenticated admin from HTTP-only session cookie
  * Strictly enforces that user exists and user.role === "admin"
+ * Deduplicated per-request via React.cache()
  */
-export async function getCurrentAdmin(sessionToken?: string): Promise<UserRecord | null> {
+export const getCurrentAdmin = cache(async (sessionToken?: string): Promise<UserRecord | null> => {
   let token = sessionToken;
 
   if (!token) {
@@ -341,14 +456,16 @@ export async function getCurrentAdmin(sessionToken?: string): Promise<UserRecord
   }
 
   return user;
-}
+});
 
 /**
  * Fast edge & middleware check to verify an admin session token is valid and belongs to an admin
+ * Deduplicated per-request via React.cache() and backed by 60s isolate token cache
  */
-export async function verifyAdminSessionToken(token: string): Promise<boolean> {
+export const verifyAdminSessionToken = cache(async (token: string): Promise<boolean> => {
   if (!token || typeof token !== "string" || token.trim().length === 0) return false;
   const user = await validateSession(token.trim());
   return !!(user && user.role === "admin");
-}
+});
+
 

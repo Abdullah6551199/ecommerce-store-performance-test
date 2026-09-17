@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentAdmin } from "@/lib/auth";
 import { getAnalyticsKpis, AnalyticsPeriod } from "@/lib/analytics";
+import { getAdminApiCache, setAdminApiCache, getAdminApiCacheKey } from "@/lib/admin-cache";
 
 export const dynamic = "force-dynamic";
 
@@ -17,10 +18,29 @@ export async function GET(req: NextRequest) {
     const customFrom = searchParams.get("from") || undefined;
     const customTo = searchParams.get("to") || undefined;
 
+    const cacheKey = getAdminApiCacheKey(admin.id, "/api/admin/analytics/kpis", {
+      period,
+      from: customFrom,
+      to: customTo,
+    });
+    const cachedData = getAdminApiCache<any>(cacheKey);
+    if (cachedData) {
+      return NextResponse.json(
+        { success: true, data: cachedData },
+        { headers: { "X-Admin-Cache": "HIT" } }
+      );
+    }
+
     const data = await getAnalyticsKpis(period, customFrom, customTo);
-    return NextResponse.json({ success: true, data });
+    setAdminApiCache(cacheKey, data);
+
+    return NextResponse.json(
+      { success: true, data },
+      { headers: { "X-Admin-Cache": "MISS" } }
+    );
   } catch (err) {
     console.error("[Analytics KPIs API Error]:", err);
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
   }
 }
+

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import type { AppSummary } from "@/types/apps";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function AppsManager(): React.JSX.Element {
   const [apps, setApps] = useState<AppSummary[]>([]);
@@ -16,13 +17,12 @@ export default function AppsManager(): React.JSX.Element {
   const [appDetailsLogs, setAppDetailsLogs] = useState<any[]>([]);
   const [loadingLogs, setLoadingLogs] = useState(false);
 
-  const fetchApps = async () => {
+  const fetchApps = async (forceRefresh = false) => {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch("/api/admin/apps");
-      const json = (await res.json()) as any;
-      if (res.ok && json.success && Array.isArray(json.data)) {
+      const json = await fetchWithClientCache<AppSummary[]>("/api/admin/apps", { forceRefresh });
+      if (json.success && Array.isArray(json.data)) {
         setApps(json.data);
       } else {
         setError(json.error || "Failed to load apps list.");
@@ -50,7 +50,8 @@ export default function AppsManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (res.ok && json.success) {
         setMessage({ type: "success", text: `App "${appId}" installed successfully!` });
-        await fetchApps();
+        invalidateClientCache("/api/admin/apps");
+        await fetchApps(true);
       } else {
         setMessage({ type: "error", text: json.error || "Failed to install app." });
       }
@@ -76,7 +77,8 @@ export default function AppsManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (res.ok && json.success) {
         setMessage({ type: "success", text: `App "${appId}" uninstalled successfully.` });
-        await fetchApps();
+        invalidateClientCache("/api/admin/apps");
+        await fetchApps(true);
       } else {
         setMessage({ type: "error", text: json.error || "Failed to uninstall app." });
       }
@@ -102,7 +104,8 @@ export default function AppsManager(): React.JSX.Element {
           type: "success",
           text: `App "${appId}" ${!currentEnabled ? "enabled" : "disabled"} successfully.`,
         });
-        await fetchApps();
+        invalidateClientCache("/api/admin/apps");
+        await fetchApps(true);
       } else {
         setMessage({ type: "error", text: json.error || "Failed to toggle app." });
       }

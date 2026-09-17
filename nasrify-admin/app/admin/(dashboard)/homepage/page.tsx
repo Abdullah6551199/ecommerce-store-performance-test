@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const HomepageManager = dynamic(
   () => import("@/components/admin/HomepageManager"),
@@ -14,5 +15,9 @@ export default function AdminHomepagePage(): React.JSX.Element {
     document.title = "Homepage Builder - Admin Panel";
   }, []);
 
-  return <HomepageManager />;
+  return (
+    <AdminErrorBoundary moduleName="Homepage Builder">
+      <HomepageManager />
+    </AdminErrorBoundary>
+  );
 }

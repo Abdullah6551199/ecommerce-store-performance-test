@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import type { AnalyticsKpiResponse, SmartNotification } from "@/lib/analytics";
+import { fetchWithClientCache } from "@/lib/client-cache";
 
 interface DashboardData {
   counts: {
@@ -24,13 +25,15 @@ export default function DashboardOverviewManager(): React.JSX.Element {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (forceRefresh: unknown = false) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/dashboard");
-      const json = (await res.json()) as any;
-      if (res.ok && json.success) {
+      const json = await fetchWithClientCache<any>("/api/admin/dashboard", {
+        ttlMs: 20000,
+        forceRefresh: forceRefresh === true,
+      });
+      if (json.success && json.data) {
         setData(json.data);
       } else {
         setError(json.error || "Failed to load dashboard metrics");
@@ -133,7 +136,7 @@ export default function DashboardOverviewManager(): React.JSX.Element {
           <span>{error}</span>
           <button
             type="button"
-            onClick={fetchDashboardData}
+            onClick={() => fetchDashboardData(true)}
             className="font-bold underline hover:text-red-700 dark:hover:text-white"
           >
             Retry Fetch

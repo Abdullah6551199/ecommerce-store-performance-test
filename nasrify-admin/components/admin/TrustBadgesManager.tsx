@@ -5,6 +5,7 @@ import LucideIcon, { LUCIDE_ICON_CHOICES } from "@/components/icons/LucideIcon";
 import TrustBadges from "@/components/TrustBadges";
 import PaymentIcons, { StandardPaymentSvg } from "@/components/PaymentIcons";
 import type { TrustBadgeRecord, PaymentIconRecord } from "@/lib/db";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function TrustBadgesManager(): React.JSX.Element {
   const [badges, setBadges] = useState<TrustBadgeRecord[]>([]);
@@ -35,17 +36,15 @@ export default function TrustBadgesManager(): React.JSX.Element {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const fetchData = async () => {
+  const fetchData = async (forceRefresh = false) => {
     setLoading(true);
     try {
       const [bRes, pRes] = await Promise.all([
-        fetch("/api/admin/trust-badges"),
-        fetch("/api/admin/payment-icons"),
+        fetchWithClientCache<any>("/api/admin/trust-badges", { forceRefresh }),
+        fetchWithClientCache<any>("/api/admin/payment-icons", { forceRefresh }),
       ]);
-      const bJson = (await bRes.json()) as any;
-      const pJson = (await pRes.json()) as any;
-      if (bJson.success) setBadges(bJson.data || []);
-      if (pJson.success) setPaymentIcons(pJson.data || []);
+      if (bRes.success) setBadges(bRes.data || []);
+      if (pRes.success) setPaymentIcons(pRes.data || []);
     } catch (err) {
       console.warn("Failed to load admin badge data:", err);
       setMessage({ type: "error", text: "Failed to load data from server" });
@@ -104,7 +103,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
         if (json.success) {
           setMessage({ type: "success", text: "Trust badge updated successfully" });
           setBadgeModalOpen(false);
-          fetchData();
+          invalidateClientCache("/api/admin/trust-badges");
+          fetchData(true);
         } else {
           setMessage({ type: "error", text: json.error || "Failed to update badge" });
         }
@@ -122,7 +122,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
         if (json.success) {
           setMessage({ type: "success", text: "Trust badge created successfully" });
           setBadgeModalOpen(false);
-          fetchData();
+          invalidateClientCache("/api/admin/trust-badges");
+          fetchData(true);
         } else {
           setMessage({ type: "error", text: json.error || "Failed to create badge" });
         }
@@ -142,7 +143,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (json.success) {
         setMessage({ type: "success", text: "Badge deleted successfully" });
-        fetchData();
+        invalidateClientCache("/api/admin/trust-badges");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);
@@ -159,7 +161,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
-        fetchData();
+        invalidateClientCache("/api/admin/trust-badges");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);
@@ -183,6 +186,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: newBadges.map((b) => b.id) }),
       });
+      invalidateClientCache("/api/admin/trust-badges");
     } catch (err) {
       console.error("Reorder failed:", err);
     }
@@ -197,7 +201,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
-        fetchData();
+        invalidateClientCache("/api/admin/payment-icons");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);
@@ -221,6 +226,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: newIcons.map((i) => i.id) }),
       });
+      invalidateClientCache("/api/admin/payment-icons");
     } catch (err) {
       console.error("Payment icon reorder failed:", err);
     }
@@ -244,7 +250,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       if (json.success) {
         setPaymentModalOpen(false);
         setPaymentForm({ name: "", iconSvg: "", isActive: true });
-        fetchData();
+        invalidateClientCache("/api/admin/payment-icons");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);
@@ -259,7 +266,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       const res = await fetch(`/api/admin/payment-icons/${id}`, { method: "DELETE" });
       const json = (await res.json()) as any;
       if (json.success) {
-        fetchData();
+        invalidateClientCache("/api/admin/payment-icons");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);

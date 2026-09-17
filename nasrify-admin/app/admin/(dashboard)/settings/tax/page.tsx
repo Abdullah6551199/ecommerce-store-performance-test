@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const TaxManager = dynamic(
   () => import("@/components/admin/TaxManager"),
@@ -10,5 +11,13 @@ const TaxManager = dynamic(
 );
 
 export default function AdminTaxPage(): React.JSX.Element {
-  return <TaxManager />;
+  useEffect(() => {
+    document.title = "Tax Rates & Settings - Admin Panel";
+  }, []);
+
+  return (
+    <AdminErrorBoundary moduleName="Tax Settings">
+      <TaxManager />
+    </AdminErrorBoundary>
+  );
 }

@@ -7,6 +7,7 @@ import {
   THEME_PRESETS,
   ThemePreset,
 } from "@/lib/theme";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function AppearanceManager(): React.JSX.Element {
   const [theme, setTheme] = useState<ThemeSettings>(DEFAULT_THEME_SETTINGS);
@@ -19,12 +20,11 @@ export default function AppearanceManager(): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<"colors" | "typography" | "design" | "branding">("colors");
 
   // Load theme settings from API
-  const fetchTheme = async () => {
+  const fetchTheme = async (forceRefresh: unknown = false) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/appearance");
-      const json = (await res.json()) as any;
+      const json = await fetchWithClientCache<any>("/api/admin/appearance", { forceRefresh: forceRefresh === true });
       if (json.success && json.data) {
         setTheme(json.data);
       } else {
@@ -58,6 +58,7 @@ export default function AppearanceManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
+        invalidateClientCache("/api/admin/appearance");
         showNotification("Theme and appearance settings saved to Cloudflare D1!");
       } else {
         alert(json.error || "Failed to update theme settings.");
@@ -82,6 +83,7 @@ export default function AppearanceManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
+        invalidateClientCache("/api/admin/appearance");
         setTheme(json.data || DEFAULT_THEME_SETTINGS);
         showNotification("Theme settings reset to default brand configuration.");
       } else {

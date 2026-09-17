@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { normalizeImageUrl } from "@/lib/utils";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export interface MediaItem {
   id: string;
@@ -37,7 +38,7 @@ export default function MediaManager(): React.JSX.Element {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchMedia = useCallback(async (searchQuery = "", type = "all") => {
+  const fetchMedia = useCallback(async (searchQuery = "", type = "all", forceRefresh = false) => {
     try {
       setIsLoading(true);
       const params = new URLSearchParams();
@@ -45,25 +46,27 @@ export default function MediaManager(): React.JSX.Element {
       if (type && type !== "all") params.set("type", type);
 
       const url = `/api/admin/media${params.toString() ? `?${params.toString()}` : ""}`;
-      const res = await fetch(url);
-      const json = (await res.json()) as {
-        success: boolean;
-        data?: { items: MediaItem[]; summary: MediaSummary };
-        error?: string;
-      };
+      const json = await fetchWithClientCache<{ items: MediaItem[]; summary: MediaSummary }>(
+        url,
+        { forceRefresh }
+      );
 
-      if (!res.ok || !json.success) {
+      if (!json.success) {
         throw new Error(json.error || "Failed to load media assets.");
       }
 
       if (json.data) {
         setItems(json.data.items || []);
-        if (!searchQuery && type === "all") {
-          setSummary(json.data.summary);
-        }
+        setSummary(
+          json.data.summary || {
+            totalFiles: 0,
+            totalSizeBytes: 0,
+            totalSizeFormatted: "0 B",
+          }
+        );
       }
     } catch (err) {
-      console.error("[MediaManager] Fetch error:", err);
+      console.error("[MediaManager] fetch error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -116,7 +119,8 @@ export default function MediaManager(): React.JSX.Element {
           type: "success",
           text: `Successfully uploaded ${successCount} file${successCount > 1 ? "s" : ""} to Cloudflare R2!`,
         });
-        fetchMedia(search, typeFilter);
+        invalidateClientCache("/api/admin/media");
+        fetchMedia(search, typeFilter, true);
       } else {
         setUploadMessage({
           type: "error",

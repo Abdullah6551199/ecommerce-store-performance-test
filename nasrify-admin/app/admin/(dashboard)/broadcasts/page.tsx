@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const BroadcastManager = dynamic(
   () => import("@/components/admin/BroadcastManager"),
@@ -14,5 +15,9 @@ export default function AdminBroadcastsPage(): React.JSX.Element {
     document.title = "Broadcast Notifications - Admin Panel";
   }, []);
 
-  return <BroadcastManager />;
+  return (
+    <AdminErrorBoundary moduleName="Broadcast Notifications">
+      <BroadcastManager />
+    </AdminErrorBoundary>
+  );
 }

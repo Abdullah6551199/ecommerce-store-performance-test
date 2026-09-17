@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import type { EnhancedPageRecord } from "@/lib/cms";
 import PageEditorModal from "./PageEditorModal";
 import FaqManager from "./FaqManager";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function PagesManager(): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<"pages" | "faqs">("pages");
@@ -24,11 +25,12 @@ export default function PagesManager(): React.JSX.Element {
 
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  const fetchPages = useCallback(async () => {
+  const fetchPages = useCallback(async (forceRefresh = false) => {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/admin/pages");
-      const data = (await res.json()) as any;
+      const data = await fetchWithClientCache<{ pages: EnhancedPageRecord[] }>("/api/admin/pages", {
+        forceRefresh,
+      });
       if (data.success && Array.isArray(data.data?.pages)) {
         setPagesList(data.data.pages);
       }
@@ -60,7 +62,8 @@ export default function PagesManager(): React.JSX.Element {
       }
       setFeedback({ type: "success", message: `Deleted "${pageToDelete.title}" successfully.` });
       setPageToDelete(null);
-      fetchPages();
+      invalidateClientCache("/api/admin/pages");
+      fetchPages(true);
     } catch (err: any) {
       setFeedback({ type: "error", message: err.message || "Failed to delete page" });
     } finally {
@@ -82,7 +85,8 @@ export default function PagesManager(): React.JSX.Element {
         throw new Error(data.error || "Failed to reset page to default.");
       }
       setFeedback({ type: "success", message: `"${page.title}" restored to default template.` });
-      fetchPages();
+      invalidateClientCache("/api/admin/pages");
+      fetchPages(true);
     } catch (err: any) {
       setFeedback({ type: "error", message: err.message || "Failed to reset template" });
     } finally {
@@ -503,7 +507,8 @@ export default function PagesManager(): React.JSX.Element {
           onSave={() => {
             setIsEditorOpen(false);
             setSelectedPage(null);
-            fetchPages();
+            invalidateClientCache("/api/admin/pages");
+            fetchPages(true);
           }}
         />
       )}

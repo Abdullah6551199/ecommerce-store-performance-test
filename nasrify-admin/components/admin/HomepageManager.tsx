@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { HomepageSectionRecord, HomepageSectionType } from "@/lib/homepage";
 import { renderHomepageSection } from "@/components/homepage/HomepageSections";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function HomepageManager(): React.JSX.Element {
   const [sections, setSections] = useState<HomepageSectionRecord[]>([]);
@@ -18,12 +19,11 @@ export default function HomepageManager(): React.JSX.Element {
   const [uploadingSlideIndex, setUploadingSlideIndex] = useState<number | null>(null);
 
   // Fetch sections from API
-  const fetchSections = async () => {
+  const fetchSections = async (forceRefresh: unknown = false) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/homepage");
-      const json = (await res.json()) as any;
+      const json = await fetchWithClientCache<any>("/api/admin/homepage", { forceRefresh: forceRefresh === true });
       if (json.success) {
         setSections(json.data);
       } else {
@@ -56,6 +56,7 @@ export default function HomepageManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
+        invalidateClientCache("/api/admin/homepage");
         setSections((prev) =>
           prev.map((s) => (s.id === sec.id ? { ...s, isActive: updatedStatus } : s))
         );
@@ -91,12 +92,13 @@ export default function HomepageManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
+        invalidateClientCache("/api/admin/homepage");
         showNotification("Homepage section sequence updated in Cloudflare D1.");
       } else {
-        fetchSections(); // revert
+        fetchSections(true); // revert
       }
     } catch (err) {
-      fetchSections();
+      fetchSections(true);
     }
   };
 
@@ -110,6 +112,7 @@ export default function HomepageManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
+        invalidateClientCache("/api/admin/homepage");
         setSections((prev) => prev.filter((s) => s.id !== id));
         showNotification("Section deleted successfully.");
       } else {
@@ -137,7 +140,8 @@ export default function HomepageManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
-        fetchSections();
+        invalidateClientCache("/api/admin/homepage");
+        fetchSections(true);
         showNotification("Default Chronicles homepage sections restored successfully.");
       } else {
         alert(json.error || "Failed to restore defaults.");
@@ -234,11 +238,12 @@ export default function HomepageManager(): React.JSX.Element {
       const json = (await res.json()) as any;
 
       if (json.success) {
+        invalidateClientCache("/api/admin/homepage");
         showNotification(
           isNew ? "New homepage section created successfully!" : "Homepage section updated successfully!"
         );
         setEditingSection(null);
-        fetchSections();
+        fetchSections(true);
       } else {
         alert(json.error || "Failed to save section.");
       }
@@ -621,7 +626,7 @@ export default function HomepageManager(): React.JSX.Element {
           <span>{error}</span>
           <button
             type="button"
-            onClick={fetchSections}
+            onClick={() => fetchSections(true)}
             className="underline hover:text-red-700 dark:hover:text-white"
           >
             Retry

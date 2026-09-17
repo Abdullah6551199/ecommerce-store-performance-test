@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import type { OrderRecord, OrderWithItems, OrderStatus } from "@/lib/orders";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 const STATUS_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   pending: { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400", border: "border-amber-500/30" },
@@ -105,7 +106,7 @@ export default function OrdersManager(): React.JSX.Element {
   const PAGE_SIZE = 20;
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
-  const fetchOrders = useCallback(async (pageToFetch = currentPage) => {
+  const fetchOrders = useCallback(async (pageToFetch = currentPage, forceRefresh: unknown = false) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -116,14 +117,10 @@ export default function OrdersManager(): React.JSX.Element {
       params.set("limit", String(PAGE_SIZE));
       params.set("offset", String((pageToFetch - 1) * PAGE_SIZE));
 
-      const res = await fetch(`/api/admin/orders?${params.toString()}`);
-      const json = (await res.json()) as {
-        success: boolean;
-        data?: { orders: (OrderRecord & { itemCount: number })[]; totalCount: number };
-        error?: string;
-      };
+      const url = `/api/admin/orders?${params.toString()}`;
+      const json = await fetchWithClientCache<any>(url, { forceRefresh: forceRefresh === true });
 
-      if (!res.ok || !json.success) {
+      if (!json.success) {
         throw new Error(json.error || "Failed to fetch orders");
       }
 
@@ -220,6 +217,9 @@ export default function OrdersManager(): React.JSX.Element {
             : o
         )
       );
+
+      invalidateClientCache("/api/admin/orders");
+      showToast("Tracking details saved successfully", "success");
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Failed to update tracking", "error");
     } finally {
@@ -256,6 +256,7 @@ export default function OrdersManager(): React.JSX.Element {
         throw new Error(json.error || "Failed to update order status");
       }
 
+      invalidateClientCache("/api/admin/orders");
       showToast(`Order #${orderId.slice(0, 8).toUpperCase()} updated to ${newStatus}`, "success");
     } catch (err) {
       // Revert if failed
@@ -324,6 +325,7 @@ export default function OrdersManager(): React.JSX.Element {
       setOrdersList((prev) =>
         prev.map((o) => (selectedOrderIds.has(o.id) ? { ...o, status: newStatus } : o))
       );
+      invalidateClientCache("/api/admin/orders");
       showToast(`${idsToUpdate.length} orders updated to ${newStatus}`, "success");
       setSelectedOrderIds(new Set());
     } catch (err) {

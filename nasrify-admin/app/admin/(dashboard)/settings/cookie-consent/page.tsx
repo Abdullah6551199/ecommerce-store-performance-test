@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const CookieConsentManager = dynamic(
   () => import("@/components/admin/CookieConsentManager"),
@@ -14,5 +15,9 @@ export default function CookieConsentAdminPage(): React.JSX.Element {
     document.title = "Cookie Consent & GDPR - Admin Panel";
   }, []);
 
-  return <CookieConsentManager />;
+  return (
+    <AdminErrorBoundary moduleName="Cookie Consent & GDPR">
+      <CookieConsentManager />
+    </AdminErrorBoundary>
+  );
 }

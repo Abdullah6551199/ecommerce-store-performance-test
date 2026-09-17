@@ -3,6 +3,7 @@
 import React, { use } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const CategoryProductsManager = dynamic(
   () => import("@/components/admin/CategoryProductsManager"),
@@ -17,5 +18,9 @@ export default function CategoryProductsPage({
   params,
 }: CategoryProductsPageProps): React.JSX.Element {
   const { id } = use(params);
-  return <CategoryProductsManager categoryId={id} />;
+  return (
+    <AdminErrorBoundary moduleName="Category Products">
+      <CategoryProductsManager categoryId={id} />
+    </AdminErrorBoundary>
+  );
 }

@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const CustomersManager = dynamic(
   () => import("@/components/admin/CustomersManager"),
@@ -14,5 +15,9 @@ export default function AdminCustomersPage(): React.JSX.Element {
     document.title = "Customers Directory - Admin Panel";
   }, []);
 
-  return <CustomersManager />;
+  return (
+    <AdminErrorBoundary moduleName="Customers Directory">
+      <CustomersManager />
+    </AdminErrorBoundary>
+  );
 }

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "./LogoutButton";
+import { fetchWithClientCache } from "@/lib/client-cache";
 
 interface AdminSidebarProps {
   userEmail: string;
@@ -131,8 +132,7 @@ export default function AdminShell({
   const [reviewsInstalled, setReviewsInstalled] = useState<boolean>(true);
 
   React.useEffect(() => {
-    fetch("/api/admin/apps")
-      .then((res) => res.json() as Promise<any>)
+    fetchWithClientCache("/api/admin/apps", { ttlMs: 60000 })
       .then((json) => {
         if (json && json.success && Array.isArray(json.data)) {
           const rev = json.data.find((a: any) => a.id === "reviews");
@@ -141,8 +141,7 @@ export default function AdminShell({
       })
       .catch(() => {});
 
-    fetch("/api/admin/reviews/stats")
-      .then((res) => res.json() as Promise<any>)
+    fetchWithClientCache("/api/admin/reviews/stats", { ttlMs: 20000 })
       .then((json) => {
         if (json && json.success && typeof json.data?.pending === "number") {
           setPendingReviewsCount(json.data.pending);

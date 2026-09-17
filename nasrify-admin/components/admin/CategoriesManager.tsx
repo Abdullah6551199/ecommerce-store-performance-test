@@ -6,6 +6,7 @@ import CategoryModal from "./CategoryModal";
 import ProductModal from "./ProductModal";
 import type { CategoryRecord, FlattenedCategory, CategoryWithChildren } from "@/lib/categories";
 import { buildCategoryTree, flattenCategoryHierarchy } from "@/lib/categories";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function CategoriesManager(): React.JSX.Element {
   const [categories, setCategories] = useState<CategoryRecord[]>([]);
@@ -30,17 +31,15 @@ export default function CategoriesManager(): React.JSX.Element {
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch categories from API
-  const fetchCategories = useCallback(async () => {
+  const fetchCategories = useCallback(async (forceRefresh: unknown = false) => {
     try {
       setIsLoading(true);
       setError(null);
-      const res = await fetch("/api/admin/categories");
-      const data = (await res.json()) as {
-        success: boolean;
-        data?: { categories: CategoryRecord[] };
-        error?: string;
-      };
-      if (!res.ok || !data.success) {
+      const data = await fetchWithClientCache<any>(
+        "/api/admin/categories",
+        { forceRefresh: forceRefresh === true }
+      );
+      if (!data.success) {
         throw new Error(data.error || "Failed to load categories");
       }
       setCategories(data.data?.categories || []);
@@ -112,7 +111,8 @@ export default function CategoriesManager(): React.JSX.Element {
         message: `Category '${categoryToDelete.name}' was removed.`,
       });
       setCategoryToDelete(null);
-      await fetchCategories();
+      invalidateClientCache("/api/admin/categories");
+      await fetchCategories(true);
     } catch (err) {
       setFeedback({
         type: "error",
@@ -247,7 +247,7 @@ export default function CategoriesManager(): React.JSX.Element {
 
           <button
             type="button"
-            onClick={fetchCategories}
+            onClick={() => fetchCategories(true)}
             title="Refresh list"
             className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 p-2 text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
           >
@@ -270,7 +270,7 @@ export default function CategoriesManager(): React.JSX.Element {
             <p className="text-xs text-red-500 dark:text-red-400">{error}</p>
             <button
               type="button"
-              onClick={fetchCategories}
+              onClick={() => fetchCategories(true)}
               className="mt-3 rounded-lg border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10"
             >
               Retry
@@ -498,7 +498,8 @@ export default function CategoriesManager(): React.JSX.Element {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={async () => {
-          await fetchCategories();
+          invalidateClientCache("/api/admin/categories");
+          await fetchCategories(true);
           setFeedback({
             type: "success",
             message: categoryToEdit ? "Category updated successfully." : "Category created successfully.",
@@ -517,7 +518,9 @@ export default function CategoriesManager(): React.JSX.Element {
           setPrefilledCategory(null);
         }}
         onSuccess={async () => {
-          await fetchCategories();
+          invalidateClientCache("/api/admin/categories");
+          invalidateClientCache("/api/admin/products");
+          await fetchCategories(true);
           setFeedback({
             type: "success",
             message: `Product added successfully to ${prefilledCategory?.name || "category"}!`,

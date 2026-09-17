@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const AnalyticsDashboard = dynamic(
   () => import("@/components/admin/analytics/AnalyticsDashboard"),
@@ -14,5 +15,9 @@ export default function AdminAnalyticsPage(): React.JSX.Element {
     document.title = "Analytics & Smart Insights - Admin Panel";
   }, []);
 
-  return <AnalyticsDashboard />;
+  return (
+    <AdminErrorBoundary moduleName="Analytics & Insights">
+      <AnalyticsDashboard />
+    </AdminErrorBoundary>
+  );
 }

@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const TrustBadgesManager = dynamic(
   () => import("@/components/admin/TrustBadgesManager"),
@@ -14,5 +15,9 @@ export default function TrustBadgesAdminPage(): React.JSX.Element {
     document.title = "Trust Badges & Payment Icons - Admin Panel";
   }, []);
 
-  return <TrustBadgesManager />;
+  return (
+    <AdminErrorBoundary moduleName="Trust Badges & Payment Icons">
+      <TrustBadgesManager />
+    </AdminErrorBoundary>
+  );
 }

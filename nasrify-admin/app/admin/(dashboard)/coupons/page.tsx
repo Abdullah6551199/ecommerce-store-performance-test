@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const CouponsManager = dynamic(
   () => import("@/components/admin/CouponsManager"),
@@ -10,5 +11,13 @@ const CouponsManager = dynamic(
 );
 
 export default function AdminCouponsPage(): React.JSX.Element {
-  return <CouponsManager />;
+  useEffect(() => {
+    document.title = "Discount Coupons & Promotions - Admin Panel";
+  }, []);
+
+  return (
+    <AdminErrorBoundary moduleName="Coupons">
+      <CouponsManager />
+    </AdminErrorBoundary>
+  );
 }

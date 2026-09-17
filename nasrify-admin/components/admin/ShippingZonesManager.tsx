@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import type { ShippingZone, ShippingRateType } from "@/lib/shipping";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 const QUICK_COUNTRIES = [
   { code: "PK", name: "Pakistan" },
@@ -47,13 +48,15 @@ export default function ShippingZonesManager(): React.JSX.Element {
     setTimeout(() => setFeedback(null), 4000);
   };
 
-  const fetchZones = useCallback(async () => {
+  const fetchZones = useCallback(async (forceRefresh = false) => {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/admin/shipping-zones");
-      const json = (await res.json()) as any;
-      if (res.ok && json.success) {
-        setZones(json.data || []);
+      const json = await fetchWithClientCache<{ data: ShippingZone[] }>(
+        "/api/admin/shipping-zones",
+        { forceRefresh }
+      );
+      if (json.success) {
+        setZones((json.data as any)?.data || json.data || []);
       } else {
         throw new Error(json.error || "Failed to fetch shipping zones");
       }
@@ -76,7 +79,8 @@ export default function ShippingZonesManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (!res.ok || !json.success) throw new Error(json.error || "Failed to load presets");
       showToast("Preset shipping zones loaded successfully");
-      await fetchZones();
+      invalidateClientCache("/api/admin/shipping-zones");
+      await fetchZones(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error loading presets", "error");
       setIsLoading(false);
@@ -181,7 +185,8 @@ export default function ShippingZonesManager(): React.JSX.Element {
 
       showToast(editingZone ? "Zone updated successfully" : "Zone created successfully");
       setIsModalOpen(false);
-      fetchZones();
+      invalidateClientCache("/api/admin/shipping-zones");
+      fetchZones(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error saving zone", "error");
     } finally {
@@ -197,7 +202,8 @@ export default function ShippingZonesManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (!res.ok || !json.success) throw new Error(json.error || "Failed to delete zone");
       showToast("Shipping zone deleted");
-      fetchZones();
+      invalidateClientCache("/api/admin/shipping-zones");
+      fetchZones(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Delete error", "error");
     }
@@ -244,9 +250,10 @@ export default function ShippingZonesManager(): React.JSX.Element {
         }),
       });
       showToast("Zone priority updated");
+      invalidateClientCache("/api/admin/shipping-zones");
     } catch {
       showToast("Failed to persist order", "error");
-      fetchZones();
+      fetchZones(true);
     }
   };
 

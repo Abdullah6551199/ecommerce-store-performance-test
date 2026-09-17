@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
 
 const AppearanceManager = dynamic(
   () => import("@/components/admin/AppearanceManager"),
@@ -14,5 +15,9 @@ export default function AdminAppearancePage(): React.JSX.Element {
     document.title = "Appearance & Theme - Admin Panel";
   }, []);
 
-  return <AppearanceManager />;
+  return (
+    <AdminErrorBoundary moduleName="Appearance & Theme">
+      <AppearanceManager />
+    </AdminErrorBoundary>
+  );
 }

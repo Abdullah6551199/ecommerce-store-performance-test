@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import type { BroadcastAdminItem } from "@/lib/broadcasts";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function BroadcastManager(): React.JSX.Element {
   const [broadcasts, setBroadcasts] = useState<BroadcastAdminItem[]>([]);
@@ -21,16 +22,15 @@ export default function BroadcastManager(): React.JSX.Element {
   const [scheduleMode, setScheduleMode] = useState<"now" | "later">("now");
 
   // Load broadcasts
-  const fetchBroadcasts = useCallback(async () => {
+  const fetchBroadcasts = useCallback(async (forceRefresh: unknown = false) => {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/admin/broadcasts");
-      if (res.ok) {
-        const data = (await res.json()) as {
-          success?: boolean;
-          broadcasts?: BroadcastAdminItem[];
-        };
-        setBroadcasts(data.broadcasts || []);
+      const data = await fetchWithClientCache<any>(
+        "/api/admin/broadcasts",
+        { forceRefresh: forceRefresh === true }
+      );
+      if (data.success && Array.isArray(data.data?.broadcasts || (data as any).broadcasts)) {
+        setBroadcasts(data.data?.broadcasts || (data as any).broadcasts || []);
       }
     } catch (err) {
       console.error("Failed to load broadcasts:", err);
@@ -86,7 +86,8 @@ export default function BroadcastManager(): React.JSX.Element {
       setButtonText("");
       setScheduleMode("now");
       setScheduledFor("");
-      fetchBroadcasts();
+      invalidateClientCache("/api/admin/broadcasts");
+      fetchBroadcasts(true);
     } catch (err: unknown) {
       setAlert({
         text: err instanceof Error ? err.message : "Error creating broadcast",
@@ -106,7 +107,8 @@ export default function BroadcastManager(): React.JSX.Element {
     try {
       const res = await fetch(`/api/admin/broadcasts/${id}`, { method: "DELETE" });
       if (res.ok) {
-        fetchBroadcasts();
+        invalidateClientCache("/api/admin/broadcasts");
+        fetchBroadcasts(true);
       }
     } catch (err) {
       console.error("Failed to delete broadcast:", err);
@@ -425,7 +427,7 @@ export default function BroadcastManager(): React.JSX.Element {
           </div>
           <button
             type="button"
-            onClick={fetchBroadcasts}
+            onClick={() => fetchBroadcasts(true)}
             className="px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs font-bold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
           >
             Refresh

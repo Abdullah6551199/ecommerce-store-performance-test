@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { normalizeImageUrl } from "@/lib/utils";
 import type { BundleWithItems } from "@/lib/bundles";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function BundlesManager(): React.JSX.Element {
   const [bundles, setBundles] = useState<BundleWithItems[]>([]);
@@ -62,23 +63,24 @@ export default function BundlesManager(): React.JSX.Element {
       const isFeatured = statusFilter === "featured" ? true : undefined;
       const statusParam = statusFilter === "featured" || statusFilter === "all" ? undefined : statusFilter;
 
-      const [bundlesRes, statsRes] = await Promise.all([
-        fetch(
+      const [bundlesData, statsData] = await Promise.all([
+        fetchWithClientCache<{ bundles: BundleWithItems[] }>(
           `/api/admin/bundles?search=${encodeURIComponent(search)}&sortBy=${sortBy}${
             statusParam ? `&status=${statusParam}` : ""
-          }${isFeatured !== undefined ? `&isFeatured=true` : ""}`
+          }${isFeatured !== undefined ? `&isFeatured=true` : ""}`,
+          { forceRefresh: false }
         ),
-        fetch("/api/admin/bundles/stats"),
+        fetchWithClientCache<{ stats: any }>("/api/admin/bundles/stats", {
+          ttlMs: 20000,
+          forceRefresh: false,
+        }),
       ]);
 
-      const bundlesData = (await bundlesRes.json()) as any;
-      const statsData = (await statsRes.json()) as any;
-
       if (bundlesData?.success) {
-        setBundles(bundlesData.bundles || []);
+        setBundles(bundlesData.data?.bundles || (bundlesData as any).bundles || []);
       }
       if (statsData?.success) {
-        setStats(statsData.stats);
+        setStats(statsData.data?.stats || (statsData as any).stats);
       }
     } catch (err) {
       console.error("Failed to load bundles data:", err);
@@ -221,6 +223,7 @@ export default function BundlesManager(): React.JSX.Element {
         "success"
       );
       setIsModalOpen(false);
+      invalidateClientCache("/api/admin/bundles");
       loadData();
     } catch (err) {
       console.error("Save bundle error:", err);
@@ -237,6 +240,7 @@ export default function BundlesManager(): React.JSX.Element {
       if (data?.success) {
         showFeedback("Bundle deleted successfully", "success");
         setDeletingId(null);
+        invalidateClientCache("/api/admin/bundles");
         loadData();
       } else {
         showFeedback(data?.error || "Failed to delete bundle", "error");
@@ -252,6 +256,7 @@ export default function BundlesManager(): React.JSX.Element {
       const data = (await res.json()) as any;
       if (data?.success) {
         showFeedback("Bundle duplicated successfully", "success");
+        invalidateClientCache("/api/admin/bundles");
         loadData();
       } else {
         showFeedback(data?.error || "Failed to duplicate bundle", "error");
@@ -272,6 +277,7 @@ export default function BundlesManager(): React.JSX.Element {
       const data = (await res.json()) as any;
       if (data?.success) {
         showFeedback(`Bundle set to ${nextStatus}`, "success");
+        invalidateClientCache("/api/admin/bundles");
         loadData();
       }
     } catch {

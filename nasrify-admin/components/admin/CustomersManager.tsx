@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { CustomerRecord, CustomerDetailRecord, CustomersSummary } from "@/lib/customers";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function CustomersManager(): React.JSX.Element {
   const [customers, setCustomers] = useState<CustomerRecord[]>([]);
@@ -41,7 +42,7 @@ export default function CustomersManager(): React.JSX.Element {
   const [notifyAlert, setNotifyAlert] = useState<{ text: string; success: boolean } | null>(null);
 
   const fetchCustomers = useCallback(
-    async (searchQuery = "", pageToFetch = currentPage, type = filterType) => {
+    async (searchQuery = "", pageToFetch = currentPage, type = filterType, forceRefresh: unknown = false) => {
       try {
         setIsLoading(true);
         setError(null);
@@ -51,26 +52,19 @@ export default function CustomersManager(): React.JSX.Element {
         params.set("limit", String(PAGE_SIZE));
         params.set("page", String(pageToFetch));
 
-        const res = await fetch(`/api/admin/customers?${params.toString()}`);
-        const json = (await res.json()) as {
-          success?: boolean;
-          error?: string;
-          data?: {
-            customers?: CustomerRecord[];
-            total?: number;
-            summary?: CustomersSummary;
-          };
-        };
+        const url = `/api/admin/customers?${params.toString()}`;
+        const json = await fetchWithClientCache<any>(url, { forceRefresh: forceRefresh === true });
 
-        if (!res.ok || !json.success) {
+        if (!json.success) {
           throw new Error(json.error || "Failed to load customer records.");
         }
 
-        if (json.data) {
-          setCustomers(json.data.customers || []);
-          setTotalCount(json.data.total || (json.data.customers ? json.data.customers.length : 0));
+        const data = json.data || json;
+        if (data) {
+          setCustomers(data.customers || []);
+          setTotalCount(data.total || (data.customers ? data.customers.length : 0));
           if (!searchQuery) {
-            setSummary(json.data.summary || {
+            setSummary(data.summary || {
               totalCustomers: 0,
               registeredCustomers: 0,
               guestCustomers: 0,
@@ -133,7 +127,8 @@ export default function CustomersManager(): React.JSX.Element {
       );
       if (res.ok) {
         setDetailData((prev) => (prev ? { ...prev, status: newStatus } : null));
-        fetchCustomers(search, currentPage, filterType);
+        invalidateClientCache("/api/admin/customers");
+        fetchCustomers(search, currentPage, filterType, true);
       }
     } catch (err) {
       console.error("Failed to toggle customer status:", err);

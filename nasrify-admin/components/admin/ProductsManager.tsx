@@ -5,6 +5,7 @@ import ProductModal from "./ProductModal";
 import type { ProductWithImagesAndCategory } from "@/lib/products";
 import type { CategoryRecord } from "@/lib/categories";
 import { normalizeImageUrl } from "@/lib/utils";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function ProductsManager(): React.JSX.Element {
   const [productsList, setProductsList] = useState<ProductWithImagesAndCategory[]>([]);
@@ -31,26 +32,23 @@ export default function ProductsManager(): React.JSX.Element {
   // Duplication
   const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (forceRefresh: unknown = false) => {
     try {
       setIsLoading(true);
       setError(null);
 
       const [prodsRes, catsRes] = await Promise.all([
-        fetch("/api/admin/products"),
-        fetch("/api/admin/categories"),
+        fetchWithClientCache<any>("/api/admin/products", { forceRefresh: forceRefresh === true }),
+        fetchWithClientCache<any>("/api/admin/categories", { forceRefresh: forceRefresh === true }),
       ]);
 
-      const prodsData = (await prodsRes.json()) as { success: boolean; data?: ProductWithImagesAndCategory[]; error?: string };
-      const catsData = (await catsRes.json()) as { success: boolean; data?: { categories: CategoryRecord[] }; error?: string };
-
-      if (!prodsRes.ok || !prodsData.success) {
-        throw new Error(prodsData.error || "Failed to load products");
+      if (!prodsRes.success) {
+        throw new Error(prodsRes.error || "Failed to load products");
       }
 
-      setProductsList(prodsData.data || []);
-      if (catsRes.ok && catsData.success) {
-        setCategoriesList(catsData.data?.categories || []);
+      setProductsList(prodsRes.data || []);
+      if (catsRes.success && catsRes.data?.categories) {
+        setCategoriesList(catsRes.data.categories);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error fetching products");
@@ -116,7 +114,8 @@ export default function ProductsManager(): React.JSX.Element {
         type: "success",
         message: data.message || "Product cloned successfully as draft.",
       });
-      await fetchData();
+      invalidateClientCache("/api/admin/products");
+      await fetchData(true);
     } catch (err) {
       setFeedback({
         type: "error",
@@ -145,7 +144,8 @@ export default function ProductsManager(): React.JSX.Element {
         message: `Product '${productToDelete.name}' has been deleted.`,
       });
       setProductToDelete(null);
-      await fetchData();
+      invalidateClientCache("/api/admin/products");
+      await fetchData(true);
     } catch (err) {
       setFeedback({
         type: "error",
@@ -304,7 +304,7 @@ export default function ProductsManager(): React.JSX.Element {
 
           <button
             type="button"
-            onClick={fetchData}
+            onClick={() => fetchData(true)}
             title="Refresh product list"
             className="rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-100 dark:bg-white/5 p-2 text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
           >
@@ -327,7 +327,7 @@ export default function ProductsManager(): React.JSX.Element {
             <p className="text-xs text-red-500 dark:text-red-400">{error}</p>
             <button
               type="button"
-              onClick={fetchData}
+              onClick={() => fetchData(true)}
               className="mt-3 rounded-lg border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 px-3 py-1 text-xs text-zinc-800 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/10"
             >
               Retry
@@ -606,7 +606,8 @@ export default function ProductsManager(): React.JSX.Element {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={async () => {
-          await fetchData();
+          invalidateClientCache("/api/admin/products");
+          await fetchData(true);
           setFeedback({
             type: "success",
             message: productToEdit ? "Product updated successfully." : "Product created successfully.",

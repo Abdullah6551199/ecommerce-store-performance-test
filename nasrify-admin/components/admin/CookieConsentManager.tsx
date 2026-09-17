@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { getDefaultCookiePolicyContent } from "@/lib/cookie-consent";
 import type { CookieConsentSettingRecord } from "@/lib/db";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 export default function CookieConsentManager(): React.JSX.Element {
   const [settings, setSettings] = useState<CookieConsentSettingRecord | null>(null);
@@ -26,11 +27,13 @@ export default function CookieConsentManager(): React.JSX.Element {
     cookiePolicyContent: "",
   });
 
-  const fetchSettings = async () => {
+  const fetchSettings = async (forceRefresh = false) => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/cookie-settings");
-      const json = (await res.json()) as any;
+      const json = await fetchWithClientCache<CookieConsentSettingRecord>(
+        "/api/admin/cookie-settings",
+        { forceRefresh }
+      );
       if (json.success && json.data) {
         setSettings(json.data);
         setForm({
@@ -74,6 +77,8 @@ export default function CookieConsentManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (json.success) {
         setSettings(json.data);
+        invalidateClientCache("/api/admin/cookie-settings");
+        invalidateClientCache("/api/cookie-settings");
         setMessage({ type: "success", text: "Cookie consent settings updated successfully" });
       } else {
         setMessage({ type: "error", text: json.error || "Failed to update settings" });

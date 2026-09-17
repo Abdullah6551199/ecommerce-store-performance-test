@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
+import { fetchWithClientCache } from "@/lib/client-cache";
 
 const ReviewsManager = dynamic(
   () => import("@/apps/reviews/admin/ReviewsManager"),
@@ -22,9 +24,8 @@ export default function AdminReviewsPage(): React.JSX.Element {
 
     const checkReviewsApp = async () => {
       try {
-        const res = await fetch("/api/admin/apps");
-        const json = (await res.json()) as any;
-        if (res.ok && json.success && Array.isArray(json.data)) {
+        const json = await fetchWithClientCache("/api/admin/apps", { ttlMs: 60000 });
+        if (json.success && Array.isArray(json.data)) {
           const reviewsApp = json.data.find((a: any) => a.id === "reviews");
           setAppState({
             loading: false,
@@ -88,5 +89,9 @@ export default function AdminReviewsPage(): React.JSX.Element {
     );
   }
 
-  return <ReviewsManager />;
+  return (
+    <AdminErrorBoundary moduleName="Reviews & Ratings Moderation">
+      <ReviewsManager />
+    </AdminErrorBoundary>
+  );
 }

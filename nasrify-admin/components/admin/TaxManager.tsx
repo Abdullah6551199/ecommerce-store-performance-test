@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import type { TaxRateRecord, TaxSettingRecord } from "@/lib/db";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 const COMMON_COUNTRIES = [
   { code: "PK", name: "Pakistan" },
@@ -69,7 +70,7 @@ export default function TaxManager(): React.JSX.Element {
   };
 
   // Fetch rates and settings
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (forceRefresh = false) => {
     try {
       setIsLoading(true);
       const params = new URLSearchParams();
@@ -77,29 +78,35 @@ export default function TaxManager(): React.JSX.Element {
       if (statusFilter !== "all") params.set("status", statusFilter);
       if (sortBy) params.set("sort", sortBy);
 
-      const [ratesRes, settingsRes] = await Promise.all([
-        fetch(`/api/admin/tax/rates?${params.toString()}`),
-        fetch("/api/admin/tax/settings"),
+      const [ratesJson, settingsJson] = await Promise.all([
+        fetchWithClientCache<{ data: TaxRateRecord[] }>(
+          `/api/admin/tax/rates?${params.toString()}`,
+          { forceRefresh }
+        ),
+        fetchWithClientCache<{ data: TaxSettingRecord }>("/api/admin/tax/settings", {
+          forceRefresh,
+        }),
       ]);
 
-      const ratesJson = (await ratesRes.json()) as any;
-      const settingsJson = (await settingsRes.json()) as any;
-
       if (ratesJson.success) {
-        setRates(ratesJson.data || []);
+        setRates((ratesJson.data as any)?.data || ratesJson.data || []);
       }
-      if (settingsJson.success && settingsJson.data) {
-        setSettings(settingsJson.data);
-        setSettingsForm({
-          isEnabled: Boolean(settingsJson.data.isEnabled),
-          defaultRate: Number(settingsJson.data.defaultRate ?? 0),
-          defaultLabel: settingsJson.data.defaultLabel || "Tax",
-          defaultTaxType: settingsJson.data.defaultTaxType || "exclusive",
-          applyToShipping: Boolean(settingsJson.data.applyToShipping),
-        });
+      if (settingsJson.success && (settingsJson.data || (settingsJson as any).settings)) {
+        const s = (settingsJson.data as any)?.settings || settingsJson.data;
+        if (s) {
+          setSettings(s);
+          setSettingsForm({
+            isEnabled: Boolean(s.isEnabled),
+            defaultRate: Number(s.defaultRate) || 0,
+            defaultLabel: s.defaultLabel || "Tax",
+            defaultTaxType: (s.defaultTaxType as "inclusive" | "exclusive") || "exclusive",
+            applyToShipping: Boolean(s.applyToShipping),
+          });
+        }
       }
     } catch (err) {
-      showToast(err instanceof Error ? err.message : "Failed to load tax data", "error");
+      console.error("Failed to load tax data:", err);
+      showToast("Error loading tax configuration", "error");
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +145,8 @@ export default function TaxManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (!res.ok || !json.success) throw new Error(json.error || "Failed to load preset");
       showToast(json.message || `Loaded preset rates for ${countryCode}`);
-      await fetchData();
+      invalidateClientCache("/api/admin/tax");
+      await fetchData(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error loading preset", "error");
       setIsLoading(false);
@@ -198,7 +206,8 @@ export default function TaxManager(): React.JSX.Element {
 
       showToast(editingRate ? "Tax rate updated" : "Tax rate created");
       setIsModalOpen(false);
-      fetchData();
+      invalidateClientCache("/api/admin/tax");
+      fetchData(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error saving tax rate", "error");
     } finally {
@@ -214,7 +223,8 @@ export default function TaxManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (!res.ok || !json.success) throw new Error(json.error || "Failed to delete tax rate");
       showToast("Tax rate deleted");
-      fetchData();
+      invalidateClientCache("/api/admin/tax");
+      fetchData(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error deleting rate", "error");
     }
@@ -263,7 +273,8 @@ export default function TaxManager(): React.JSX.Element {
       );
       showToast(`${selectedIds.length} tax rate(s) ${active ? "activated" : "deactivated"}`);
       setSelectedIds([]);
-      fetchData();
+      invalidateClientCache("/api/admin/tax");
+      fetchData(true);
     } catch {
       showToast("Bulk status update failed", "error");
       setIsLoading(false);
@@ -282,7 +293,8 @@ export default function TaxManager(): React.JSX.Element {
       );
       showToast(`${selectedIds.length} tax rate(s) deleted`);
       setSelectedIds([]);
-      fetchData();
+      invalidateClientCache("/api/admin/tax");
+      fetchData(true);
     } catch {
       showToast("Bulk delete failed", "error");
       setIsLoading(false);

@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import AdminErrorBoundary from "@/components/admin/AdminErrorBoundary";
+import { fetchWithClientCache } from "@/lib/client-cache";
 
 const SettingsManager = dynamic(
   () => import("@/components/admin/SettingsManager"),
@@ -27,9 +29,8 @@ export default function AdminSettingsPage(): React.JSX.Element {
     document.title = "Settings - Admin Panel";
     const fetchAdmin = async () => {
       try {
-        const res = await fetch("/api/admin/me");
-        const json = (await res.json()) as any;
-        if (res.ok && json.success && json.data) {
+        const json = await fetchWithClientCache<AdminProfile>("/api/admin/me", { ttlMs: 60000 });
+        if (json.success && json.data) {
           setAdmin(json.data);
         }
       } catch (err) {
@@ -42,7 +43,8 @@ export default function AdminSettingsPage(): React.JSX.Element {
   }, []);
 
   return (
-    <div className="space-y-10 max-w-5xl">
+    <AdminErrorBoundary moduleName="Settings">
+      <div className="space-y-10 max-w-5xl">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Store & System Settings</h1>
         <p className="mt-1 text-xs text-zinc-600 dark:text-white/60">
@@ -175,5 +177,6 @@ export default function AdminSettingsPage(): React.JSX.Element {
         )}
       </section>
     </div>
+    </AdminErrorBoundary>
   );
 }

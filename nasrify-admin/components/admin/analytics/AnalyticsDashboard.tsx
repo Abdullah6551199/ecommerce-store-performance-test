@@ -22,6 +22,7 @@ import type {
   YearlyPatterns,
   SmartNotification,
 } from "@/lib/analytics";
+import { fetchWithClientCache } from "@/lib/client-cache";
 
 const PERIOD_OPTIONS: { id: AnalyticsPeriod; label: string }[] = [
   { id: "today", label: "Today" },
@@ -63,8 +64,7 @@ export default function AnalyticsDashboard(): React.JSX.Element {
       const qStr = queryParams.toString();
 
       const fetchJson = async (url: string): Promise<any> => {
-        const res = await fetch(url);
-        return res.json();
+        return fetchWithClientCache(url, { ttlMs: 20000 });
       };
 
       const [

@@ -12,6 +12,10 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
   reviews: {
     ReviewsList: dynamic(() => import("@/apps/reviews/storefront/ReviewsList")),
   },
+  "whatsapp-order": {
+    WhatsAppFloatingButton: dynamic(() => import("@/apps/whatsapp-order/storefront/WhatsAppFloatingButton")),
+    WhatsAppProductButton: dynamic(() => import("@/apps/whatsapp-order/storefront/WhatsAppProductButton")),
+  },
 };
 
 export function loadAdminAppComponent(

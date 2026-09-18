@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { getDefaultCookiePolicyContent } from "@/lib/cookie-consent";
 import type { CookieConsentSettingRecord } from "@/lib/db";
 import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
+import Toggle from "@/components/ui/Toggle";
 
 export default function CookieConsentManager(): React.JSX.Element {
   const [settings, setSettings] = useState<CookieConsentSettingRecord | null>(null);
@@ -197,19 +198,12 @@ export default function CookieConsentManager(): React.JSX.Element {
                   When enabled, visiting shoppers are prompted to accept or reject tracking cookies.
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => setForm({ ...form, isEnabled: !form.isEnabled })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                  form.isEnabled ? "bg-[#960DF2]" : "bg-zinc-300 dark:bg-zinc-700"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    form.isEnabled ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
+              <Toggle
+                size="md"
+                checked={form.isEnabled}
+                onChange={(val) => setForm({ ...form, isEnabled: val })}
+                aria-label="Enable Cookie Consent Banner"
+              />
             </div>
 
             {/* Banner Title & Message */}
@@ -341,19 +335,12 @@ export default function CookieConsentManager(): React.JSX.Element {
                   Allow customers to toggle telemetry and traffic tracking consent.
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setForm({ ...form, analyticsEnabled: !form.analyticsEnabled })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                  form.analyticsEnabled ? "bg-[#960DF2]" : "bg-zinc-300 dark:bg-zinc-700"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    form.analyticsEnabled ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
+              <Toggle
+                size="md"
+                checked={form.analyticsEnabled}
+                onChange={(val) => setForm({ ...form, analyticsEnabled: val })}
+                aria-label="Toggle Analytics Cookies"
+              />
             </div>
 
             {/* Marketing */}
@@ -366,19 +353,12 @@ export default function CookieConsentManager(): React.JSX.Element {
                   Allow customers to toggle conversion ads and retargeting tracking.
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setForm({ ...form, marketingEnabled: !form.marketingEnabled })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                  form.marketingEnabled ? "bg-[#960DF2]" : "bg-zinc-300 dark:bg-zinc-700"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    form.marketingEnabled ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
+              <Toggle
+                size="md"
+                checked={form.marketingEnabled}
+                onChange={(val) => setForm({ ...form, marketingEnabled: val })}
+                aria-label="Toggle Marketing Cookies"
+              />
             </div>
 
             {/* Functional */}
@@ -391,19 +371,12 @@ export default function CookieConsentManager(): React.JSX.Element {
                   Allow customers to toggle client preference cookies.
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setForm({ ...form, functionalEnabled: !form.functionalEnabled })}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                  form.functionalEnabled ? "bg-[#960DF2]" : "bg-zinc-300 dark:bg-zinc-700"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    form.functionalEnabled ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
+              <Toggle
+                size="md"
+                checked={form.functionalEnabled}
+                onChange={(val) => setForm({ ...form, functionalEnabled: val })}
+                aria-label="Toggle Functional Cookies"
+              />
             </div>
           </div>
         )}

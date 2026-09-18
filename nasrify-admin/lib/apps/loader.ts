@@ -12,6 +12,9 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   reviews: {
     ReviewsManager: dynamic(() => import("@/apps/reviews/admin/ReviewsManager")),
   },
+  "whatsapp-order": {
+    WhatsAppSettings: dynamic(() => import("@/apps/whatsapp-order/admin/WhatsAppSettings")),
+  },
 };
 
 export function loadAdminAppComponent(

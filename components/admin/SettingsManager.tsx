@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { StoreSettings, DEFAULT_STORE_SETTINGS } from "@/lib/settings";
+import Toggle from "@/components/ui/Toggle";
 
 export default function SettingsManager(): React.JSX.Element {
   const [settings, setSettings] = useState<StoreSettings>(DEFAULT_STORE_SETTINGS);
@@ -382,17 +383,14 @@ export default function SettingsManager(): React.JSX.Element {
             <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-900 dark:text-white">Header & Footer Experience</h2>
 
             <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
+              <div>
+                <Toggle
+                  size="sm"
                   id="showAnnouncement"
                   checked={settings.showAnnouncement}
-                  onChange={(e) => setSettings({ ...settings, showAnnouncement: e.target.checked })}
-                  className="h-4 w-4 rounded border-zinc-300 dark:border-white/20 bg-white dark:bg-white/5 text-[#18C729] focus:ring-[#18C729]"
+                  onChange={(val) => setSettings({ ...settings, showAnnouncement: val })}
+                  label="Display Top Announcement Banner"
                 />
-                <label htmlFor="showAnnouncement" className="text-xs text-zinc-800 dark:text-white font-medium">
-                  Display Top Announcement Banner
-                </label>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

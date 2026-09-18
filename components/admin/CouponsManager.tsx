@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import type { CouponRecord } from "@/lib/coupons";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
+import Toggle from "@/components/ui/Toggle";
 
 interface CouponStats {
   totalCoupons: number;
@@ -67,7 +69,7 @@ export default function CouponsManager(): React.JSX.Element {
   });
 
   // Fetch coupons, stats, and catalog metadata
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (forceRefresh: unknown = false) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -77,15 +79,12 @@ export default function CouponsManager(): React.JSX.Element {
       if (statusFilter !== "all") params.set("status", statusFilter);
       if (sortBy) params.set("sort", sortBy);
 
-      const [couponsRes, statsRes] = await Promise.all([
-        fetch(`/api/admin/coupons?${params.toString()}`),
-        fetch("/api/admin/coupons/stats"),
+      const [couponsJson, statsJson] = await Promise.all([
+        fetchWithClientCache<any>(`/api/admin/coupons?${params.toString()}`, { forceRefresh: forceRefresh === true }),
+        fetchWithClientCache<any>("/api/admin/coupons/stats", { ttlMs: 20000, forceRefresh: forceRefresh === true }),
       ]);
 
-      const couponsJson = (await couponsRes.json()) as any;
-      const statsJson = (await statsRes.json()) as any;
-
-      if (!couponsRes.ok || !couponsJson.success) {
+      if (!couponsJson.success) {
         throw new Error(couponsJson.error || "Failed to fetch coupons");
       }
 
@@ -104,12 +103,10 @@ export default function CouponsManager(): React.JSX.Element {
   useEffect(() => {
     const loadMetadata = async () => {
       try {
-        const [catRes, prodRes] = await Promise.all([
-          fetch("/api/admin/categories"),
-          fetch("/api/admin/products?limit=100"),
+        const [catJson, prodJson] = await Promise.all([
+          fetchWithClientCache<{ categories: any[] }>("/api/admin/categories"),
+          fetchWithClientCache<{ products: any[] }>("/api/admin/products?limit=100"),
         ]);
-        const catJson = (await catRes.json()) as any;
-        const prodJson = (await prodRes.json()) as any;
 
         if (catJson.success && catJson.data?.categories) {
           setCategories(catJson.data.categories.map((c: any) => ({ id: c.id, name: c.name })));
@@ -238,7 +235,8 @@ export default function CouponsManager(): React.JSX.Element {
           : `Coupon ${payload.code} created successfully!`
       );
       setIsModalOpen(false);
-      fetchData();
+      invalidateClientCache("/api/admin/coupons");
+      fetchData(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Save error", "error");
     } finally {
@@ -264,7 +262,8 @@ export default function CouponsManager(): React.JSX.Element {
         throw new Error(json.error || "Failed to toggle status");
       }
       showToast(`Coupon ${c.code} is now ${nextState ? "Active" : "Inactive"}`);
-      fetchData();
+      invalidateClientCache("/api/admin/coupons");
+      fetchData(true);
     } catch (err) {
       // Revert optimistic update
       setCouponsList((prev) =>
@@ -284,7 +283,8 @@ export default function CouponsManager(): React.JSX.Element {
         throw new Error(json.error || "Failed to duplicate coupon");
       }
       showToast(`Coupon ${c.code} duplicated as ${json.data?.code}!`);
-      fetchData();
+      invalidateClientCache("/api/admin/coupons");
+      fetchData(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Duplicate error", "error");
     }
@@ -303,7 +303,8 @@ export default function CouponsManager(): React.JSX.Element {
       }
       showToast(`Coupon ${deletingCoupon.code} deleted successfully`);
       setDeletingCoupon(null);
-      fetchData();
+      invalidateClientCache("/api/admin/coupons");
+      fetchData(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Delete error", "error");
     } finally {
@@ -514,7 +515,7 @@ export default function CouponsManager(): React.JSX.Element {
             <p className="text-sm font-semibold text-red-500 mb-3">{error}</p>
             <button
               type="button"
-              onClick={fetchData}
+              onClick={() => fetchData(true)}
               className="rounded-xl bg-zinc-100 dark:bg-white/10 px-4 py-2 text-xs font-bold text-zinc-900 dark:text-white hover:bg-zinc-200 dark:hover:bg-white/20 transition-colors"
             >
               Retry
@@ -967,46 +968,34 @@ export default function CouponsManager(): React.JSX.Element {
               </div>
 
               {/* Toggles & Visibility */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                <label className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-white/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isVisible}
-                    onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
-                    className="rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                  />
-                  <span>Show in List</span>
-                </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+                <Toggle
+                  size="sm"
+                  checked={formData.isVisible}
+                  onChange={(checked) => setFormData({ ...formData, isVisible: checked })}
+                  label="Show in List"
+                />
 
-                <label className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-white/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isAutoApply}
-                    onChange={(e) => setFormData({ ...formData, isAutoApply: e.target.checked })}
-                    className="rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                  />
-                  <span>Auto-Apply</span>
-                </label>
+                <Toggle
+                  size="sm"
+                  checked={formData.isAutoApply}
+                  onChange={(checked) => setFormData({ ...formData, isAutoApply: checked })}
+                  label="Auto-Apply"
+                />
 
-                <label className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-white/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isFeatured}
-                    onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
-                    className="rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                  />
-                  <span>Featured</span>
-                </label>
+                <Toggle
+                  size="sm"
+                  checked={formData.isFeatured}
+                  onChange={(checked) => setFormData({ ...formData, isFeatured: checked })}
+                  label="Featured"
+                />
 
-                <label className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-white/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isActive}
-                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                  />
-                  <span>Active</span>
-                </label>
+                <Toggle
+                  size="sm"
+                  checked={formData.isActive}
+                  onChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                  label="Active"
+                />
               </div>
 
               {/* Submit Buttons */}

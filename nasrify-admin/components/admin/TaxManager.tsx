@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import type { TaxRateRecord, TaxSettingRecord } from "@/lib/db";
 import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
+import Toggle from "@/components/ui/Toggle";
 
 const COMMON_COUNTRIES = [
   { code: "PK", name: "Pakistan" },
@@ -367,11 +368,11 @@ export default function TaxManager(): React.JSX.Element {
               <p className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">Enable Tax</p>
               <p className="text-[10px] text-purple-600/70 dark:text-purple-300/70">Show tax at checkout</p>
             </div>
-            <input
-              type="checkbox"
+            <Toggle
+              size="sm"
               checked={settingsForm.isEnabled}
-              onChange={(e) => setSettingsForm({ ...settingsForm, isEnabled: e.target.checked })}
-              className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-purple-300 cursor-pointer"
+              onChange={(val) => setSettingsForm({ ...settingsForm, isEnabled: val })}
+              aria-label="Enable Tax"
             />
           </div>
 
@@ -381,11 +382,11 @@ export default function TaxManager(): React.JSX.Element {
               <p className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">Tax on Shipping</p>
               <p className="text-[10px] text-purple-600/70 dark:text-purple-300/70">Apply tax to shipping fees</p>
             </div>
-            <input
-              type="checkbox"
+            <Toggle
+              size="sm"
               checked={settingsForm.applyToShipping}
-              onChange={(e) => setSettingsForm({ ...settingsForm, applyToShipping: e.target.checked })}
-              className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-purple-300 cursor-pointer"
+              onChange={(val) => setSettingsForm({ ...settingsForm, applyToShipping: val })}
+              aria-label="Tax on Shipping"
             />
           </div>
 
@@ -857,13 +858,12 @@ export default function TaxManager(): React.JSX.Element {
                   </select>
                 </div>
 
-                <div className="flex items-center justify-between p-3 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 mt-3">
-                  <span className="text-xs font-bold text-[#3C0561] dark:text-purple-200">Active</span>
-                  <input
-                    type="checkbox"
+                <div className="p-3 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 mt-3">
+                  <Toggle
+                    size="sm"
                     checked={rateForm.isActive}
-                    onChange={(e) => setRateForm({ ...rateForm, isActive: e.target.checked })}
-                    className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-purple-300 cursor-pointer"
+                    onChange={(val) => setRateForm({ ...rateForm, isActive: val })}
+                    label="Active"
                   />
                 </div>
               </div>

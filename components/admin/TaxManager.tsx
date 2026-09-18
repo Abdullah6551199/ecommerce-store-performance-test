@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import type { TaxRateRecord, TaxSettingRecord } from "@/lib/db";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
+import Toggle from "@/components/ui/Toggle";
 
 const COMMON_COUNTRIES = [
   { code: "PK", name: "Pakistan" },
@@ -69,7 +71,7 @@ export default function TaxManager(): React.JSX.Element {
   };
 
   // Fetch rates and settings
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (forceRefresh = false) => {
     try {
       setIsLoading(true);
       const params = new URLSearchParams();
@@ -77,29 +79,35 @@ export default function TaxManager(): React.JSX.Element {
       if (statusFilter !== "all") params.set("status", statusFilter);
       if (sortBy) params.set("sort", sortBy);
 
-      const [ratesRes, settingsRes] = await Promise.all([
-        fetch(`/api/admin/tax/rates?${params.toString()}`),
-        fetch("/api/admin/tax/settings"),
+      const [ratesJson, settingsJson] = await Promise.all([
+        fetchWithClientCache<{ data: TaxRateRecord[] }>(
+          `/api/admin/tax/rates?${params.toString()}`,
+          { forceRefresh }
+        ),
+        fetchWithClientCache<{ data: TaxSettingRecord }>("/api/admin/tax/settings", {
+          forceRefresh,
+        }),
       ]);
 
-      const ratesJson = (await ratesRes.json()) as any;
-      const settingsJson = (await settingsRes.json()) as any;
-
       if (ratesJson.success) {
-        setRates(ratesJson.data || []);
+        setRates((ratesJson.data as any)?.data || ratesJson.data || []);
       }
-      if (settingsJson.success && settingsJson.data) {
-        setSettings(settingsJson.data);
-        setSettingsForm({
-          isEnabled: Boolean(settingsJson.data.isEnabled),
-          defaultRate: Number(settingsJson.data.defaultRate ?? 0),
-          defaultLabel: settingsJson.data.defaultLabel || "Tax",
-          defaultTaxType: settingsJson.data.defaultTaxType || "exclusive",
-          applyToShipping: Boolean(settingsJson.data.applyToShipping),
-        });
+      if (settingsJson.success && (settingsJson.data || (settingsJson as any).settings)) {
+        const s = (settingsJson.data as any)?.settings || settingsJson.data;
+        if (s) {
+          setSettings(s);
+          setSettingsForm({
+            isEnabled: Boolean(s.isEnabled),
+            defaultRate: Number(s.defaultRate) || 0,
+            defaultLabel: s.defaultLabel || "Tax",
+            defaultTaxType: (s.defaultTaxType as "inclusive" | "exclusive") || "exclusive",
+            applyToShipping: Boolean(s.applyToShipping),
+          });
+        }
       }
     } catch (err) {
-      showToast(err instanceof Error ? err.message : "Failed to load tax data", "error");
+      console.error("Failed to load tax data:", err);
+      showToast("Error loading tax configuration", "error");
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +146,8 @@ export default function TaxManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (!res.ok || !json.success) throw new Error(json.error || "Failed to load preset");
       showToast(json.message || `Loaded preset rates for ${countryCode}`);
-      await fetchData();
+      invalidateClientCache("/api/admin/tax");
+      await fetchData(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error loading preset", "error");
       setIsLoading(false);
@@ -198,7 +207,8 @@ export default function TaxManager(): React.JSX.Element {
 
       showToast(editingRate ? "Tax rate updated" : "Tax rate created");
       setIsModalOpen(false);
-      fetchData();
+      invalidateClientCache("/api/admin/tax");
+      fetchData(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error saving tax rate", "error");
     } finally {
@@ -214,7 +224,8 @@ export default function TaxManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (!res.ok || !json.success) throw new Error(json.error || "Failed to delete tax rate");
       showToast("Tax rate deleted");
-      fetchData();
+      invalidateClientCache("/api/admin/tax");
+      fetchData(true);
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Error deleting rate", "error");
     }
@@ -263,7 +274,8 @@ export default function TaxManager(): React.JSX.Element {
       );
       showToast(`${selectedIds.length} tax rate(s) ${active ? "activated" : "deactivated"}`);
       setSelectedIds([]);
-      fetchData();
+      invalidateClientCache("/api/admin/tax");
+      fetchData(true);
     } catch {
       showToast("Bulk status update failed", "error");
       setIsLoading(false);
@@ -282,7 +294,8 @@ export default function TaxManager(): React.JSX.Element {
       );
       showToast(`${selectedIds.length} tax rate(s) deleted`);
       setSelectedIds([]);
-      fetchData();
+      invalidateClientCache("/api/admin/tax");
+      fetchData(true);
     } catch {
       showToast("Bulk delete failed", "error");
       setIsLoading(false);
@@ -355,11 +368,11 @@ export default function TaxManager(): React.JSX.Element {
               <p className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">Enable Tax</p>
               <p className="text-[10px] text-purple-600/70 dark:text-purple-300/70">Show tax at checkout</p>
             </div>
-            <input
-              type="checkbox"
+            <Toggle
+              size="sm"
               checked={settingsForm.isEnabled}
-              onChange={(e) => setSettingsForm({ ...settingsForm, isEnabled: e.target.checked })}
-              className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-purple-300 cursor-pointer"
+              onChange={(val) => setSettingsForm({ ...settingsForm, isEnabled: val })}
+              aria-label="Enable Tax"
             />
           </div>
 
@@ -369,11 +382,11 @@ export default function TaxManager(): React.JSX.Element {
               <p className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">Tax on Shipping</p>
               <p className="text-[10px] text-purple-600/70 dark:text-purple-300/70">Apply tax to shipping fees</p>
             </div>
-            <input
-              type="checkbox"
+            <Toggle
+              size="sm"
               checked={settingsForm.applyToShipping}
-              onChange={(e) => setSettingsForm({ ...settingsForm, applyToShipping: e.target.checked })}
-              className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-purple-300 cursor-pointer"
+              onChange={(val) => setSettingsForm({ ...settingsForm, applyToShipping: val })}
+              aria-label="Tax on Shipping"
             />
           </div>
 
@@ -845,13 +858,12 @@ export default function TaxManager(): React.JSX.Element {
                   </select>
                 </div>
 
-                <div className="flex items-center justify-between p-3 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 mt-3">
-                  <span className="text-xs font-bold text-[#3C0561] dark:text-purple-200">Active</span>
-                  <input
-                    type="checkbox"
+                <div className="p-3 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 mt-3">
+                  <Toggle
+                    size="sm"
                     checked={rateForm.isActive}
-                    onChange={(e) => setRateForm({ ...rateForm, isActive: e.target.checked })}
-                    className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-purple-300 cursor-pointer"
+                    onChange={(val) => setRateForm({ ...rateForm, isActive: val })}
+                    label="Active"
                   />
                 </div>
               </div>

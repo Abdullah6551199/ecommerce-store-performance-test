@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import type { EnhancedPageRecord } from "@/lib/cms";
+import Toggle from "@/components/ui/Toggle";
 
 interface PageEditorModalProps {
   isOpen: boolean;
@@ -855,37 +856,28 @@ export default function PageEditorModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-1">
               {/* Published Toggle */}
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 dark:text-slate-300">
-                <input
-                  type="checkbox"
-                  checked={isPublished}
-                  onChange={(e) => setIsPublished(e.target.checked)}
-                  className="w-4 h-4 rounded text-[#960DF2] border-purple-300 dark:border-purple-700 focus:ring-[#960DF2]"
-                />
-                <span>Published on Storefront</span>
-              </label>
+              <Toggle
+                size="sm"
+                checked={isPublished}
+                onChange={setIsPublished}
+                label="Published on Storefront"
+              />
 
               {/* Show in Header Menu */}
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 dark:text-slate-300">
-                <input
-                  type="checkbox"
-                  checked={showInHeader}
-                  onChange={(e) => setShowInHeader(e.target.checked)}
-                  className="w-4 h-4 rounded text-[#960DF2] border-purple-300 dark:border-purple-700 focus:ring-[#960DF2]"
-                />
-                <span>Show in Header Navigation</span>
-              </label>
+              <Toggle
+                size="sm"
+                checked={showInHeader}
+                onChange={setShowInHeader}
+                label="Show in Header Navigation"
+              />
 
               {/* Show in Footer */}
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 dark:text-slate-300">
-                <input
-                  type="checkbox"
-                  checked={showInFooter}
-                  onChange={(e) => setShowInFooter(e.target.checked)}
-                  className="w-4 h-4 rounded text-[#960DF2] border-purple-300 dark:border-purple-700 focus:ring-[#960DF2]"
-                />
-                <span>Show in Footer Links</span>
-              </label>
+              <Toggle
+                size="sm"
+                checked={showInFooter}
+                onChange={setShowInFooter}
+                label="Show in Footer Links"
+              />
 
               {/* Access Level */}
               <div className="flex items-center gap-2">

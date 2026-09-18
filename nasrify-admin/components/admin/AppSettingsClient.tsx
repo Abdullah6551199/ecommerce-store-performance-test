@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
+import Toggle from "@/components/ui/Toggle";
 
 interface SchemaProperty {
   type: "boolean" | "string" | "number" | "select";
@@ -386,15 +387,11 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
                       <div className="sm:w-60 flex justify-start sm:justify-end">
                         {/* BOOLEAN TOGGLE */}
                         {prop.type === "boolean" && (
-                          <label className="relative inline-flex items-center cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={Boolean(value)}
-                              onChange={(e) => handleFieldChange(key, e.target.checked)}
-                              className="sr-only peer"
-                            />
-                            <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-purple-600"></div>
-                          </label>
+                          <Toggle
+                            checked={Boolean(value)}
+                            onChange={(checked) => handleFieldChange(key, checked)}
+                            aria-label={prop.label || key}
+                          />
                         )}
 
                         {/* NUMBER INPUT */}

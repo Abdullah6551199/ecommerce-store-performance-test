@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import type { CouponRecord } from "@/lib/coupons";
 import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
+import Toggle from "@/components/ui/Toggle";
 
 interface CouponStats {
   totalCoupons: number;
@@ -967,46 +968,34 @@ export default function CouponsManager(): React.JSX.Element {
               </div>
 
               {/* Toggles & Visibility */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                <label className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-white/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isVisible}
-                    onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
-                    className="rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                  />
-                  <span>Show in List</span>
-                </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+                <Toggle
+                  size="sm"
+                  checked={formData.isVisible}
+                  onChange={(checked) => setFormData({ ...formData, isVisible: checked })}
+                  label="Show in List"
+                />
 
-                <label className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-white/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isAutoApply}
-                    onChange={(e) => setFormData({ ...formData, isAutoApply: e.target.checked })}
-                    className="rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                  />
-                  <span>Auto-Apply</span>
-                </label>
+                <Toggle
+                  size="sm"
+                  checked={formData.isAutoApply}
+                  onChange={(checked) => setFormData({ ...formData, isAutoApply: checked })}
+                  label="Auto-Apply"
+                />
 
-                <label className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-white/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isFeatured}
-                    onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
-                    className="rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                  />
-                  <span>Featured</span>
-                </label>
+                <Toggle
+                  size="sm"
+                  checked={formData.isFeatured}
+                  onChange={(checked) => setFormData({ ...formData, isFeatured: checked })}
+                  label="Featured"
+                />
 
-                <label className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-white/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isActive}
-                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                  />
-                  <span>Active</span>
-                </label>
+                <Toggle
+                  size="sm"
+                  checked={formData.isActive}
+                  onChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                  label="Active"
+                />
               </div>
 
               {/* Submit Buttons */}

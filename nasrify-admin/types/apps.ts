@@ -32,6 +32,7 @@ export const APP_EXTENSION_POINTS = [
   "storefront.checkout.below",
   "storefront.header",
   "storefront.footer",
+  "storefront.floating",
 ] as const;
 
 export type AppExtensionPoint = (typeof APP_EXTENSION_POINTS)[number];
@@ -152,6 +153,8 @@ export interface StorefrontCheckoutBelowProps {
   orderId?: string;
 }
 
+export interface StorefrontFloatingProps {}
+
 export interface AdminDashboardWidgetProps {
   className?: string;
 }
@@ -165,6 +168,7 @@ export type ExtensionPointPropsMap = {
   "storefront.homepage.section": StorefrontHomepageSectionProps;
   "storefront.cart.below": StorefrontCartBelowProps;
   "storefront.checkout.below": StorefrontCheckoutBelowProps;
+  "storefront.floating": StorefrontFloatingProps;
   "admin.dashboard.widget": AdminDashboardWidgetProps;
   "admin.sidebar": AdminSidebarProps;
   "admin.route": Record<string, unknown>;

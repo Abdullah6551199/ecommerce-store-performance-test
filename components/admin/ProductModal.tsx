@@ -7,6 +7,7 @@ import { generateSlug } from "@/lib/categories";
 import VariantsManager from "./VariantsManager";
 import type { ProductVariantInput } from "@/lib/variants";
 import { normalizeImageUrl } from "@/lib/utils";
+import Toggle from "@/components/ui/Toggle";
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -640,25 +641,19 @@ export default function ProductModal({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-6 pt-2">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-700 dark:text-white/80">
-                    <input
-                      type="checkbox"
-                      checked={trackInventory}
-                      onChange={(e) => setTrackInventory(e.target.checked)}
-                      className="h-4 w-4 rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                    />
-                    <span>Track inventory levels automatically</span>
-                  </label>
+                  <Toggle
+                    size="sm"
+                    checked={trackInventory}
+                    onChange={setTrackInventory}
+                    label="Track inventory levels automatically"
+                  />
 
-                  <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-700 dark:text-white/80">
-                    <input
-                      type="checkbox"
-                      checked={allowBackorders}
-                      onChange={(e) => setAllowBackorders(e.target.checked)}
-                      className="h-4 w-4 rounded border-zinc-300 dark:border-white/20 text-[#18C729] focus:ring-0"
-                    />
-                    <span>Allow customer backorders when inventory reaches 0</span>
-                  </label>
+                  <Toggle
+                    size="sm"
+                    checked={allowBackorders}
+                    onChange={setAllowBackorders}
+                    label="Allow customer backorders when inventory reaches 0"
+                  />
                 </div>
               </div>
             </div>

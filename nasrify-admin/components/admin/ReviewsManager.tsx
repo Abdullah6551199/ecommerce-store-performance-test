@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Toggle from "@/components/ui/Toggle";
 
 interface ReviewImage {
   id: string;
@@ -366,11 +367,11 @@ export default function ReviewsManager(): React.JSX.Element {
                 <p className="text-xs font-semibold text-zinc-900 dark:text-white">Auto-approve</p>
                 <p className="text-[10px] text-zinc-500">Publish without moderation</p>
               </div>
-              <input
-                type="checkbox"
+              <Toggle
+                size="sm"
                 checked={settings.autoApprove}
-                onChange={(e) => setSettings({ ...settings, autoApprove: e.target.checked })}
-                className="h-4 w-4 rounded accent-[#18C729]"
+                onChange={(checked) => setSettings({ ...settings, autoApprove: checked })}
+                aria-label="Auto-approve reviews"
               />
             </div>
 
@@ -380,13 +381,13 @@ export default function ReviewsManager(): React.JSX.Element {
                 <p className="text-xs font-semibold text-zinc-900 dark:text-white">Require Verified</p>
                 <p className="text-[10px] text-zinc-500">Only actual buyers can review</p>
               </div>
-              <input
-                type="checkbox"
+              <Toggle
+                size="sm"
                 checked={settings.requireVerifiedPurchase}
-                onChange={(e) =>
-                  setSettings({ ...settings, requireVerifiedPurchase: e.target.checked })
+                onChange={(checked) =>
+                  setSettings({ ...settings, requireVerifiedPurchase: checked })
                 }
-                className="h-4 w-4 rounded accent-[#18C729]"
+                aria-label="Require verified purchase"
               />
             </div>
 
@@ -396,11 +397,11 @@ export default function ReviewsManager(): React.JSX.Element {
                 <p className="text-xs font-semibold text-zinc-900 dark:text-white">Allow Images</p>
                 <p className="text-[10px] text-zinc-500">Let buyers upload photos</p>
               </div>
-              <input
-                type="checkbox"
+              <Toggle
+                size="sm"
                 checked={settings.allowImages}
-                onChange={(e) => setSettings({ ...settings, allowImages: e.target.checked })}
-                className="h-4 w-4 rounded accent-[#18C729]"
+                onChange={(checked) => setSettings({ ...settings, allowImages: checked })}
+                aria-label="Allow review images"
               />
             </div>
 

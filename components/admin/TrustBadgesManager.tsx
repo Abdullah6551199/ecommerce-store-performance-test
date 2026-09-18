@@ -5,6 +5,8 @@ import LucideIcon, { LUCIDE_ICON_CHOICES } from "@/components/icons/LucideIcon";
 import TrustBadges from "@/components/TrustBadges";
 import PaymentIcons, { StandardPaymentSvg } from "@/components/PaymentIcons";
 import type { TrustBadgeRecord, PaymentIconRecord } from "@/lib/db";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
+import Toggle from "@/components/ui/Toggle";
 
 export default function TrustBadgesManager(): React.JSX.Element {
   const [badges, setBadges] = useState<TrustBadgeRecord[]>([]);
@@ -35,17 +37,15 @@ export default function TrustBadgesManager(): React.JSX.Element {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const fetchData = async () => {
+  const fetchData = async (forceRefresh = false) => {
     setLoading(true);
     try {
       const [bRes, pRes] = await Promise.all([
-        fetch("/api/admin/trust-badges"),
-        fetch("/api/admin/payment-icons"),
+        fetchWithClientCache<any>("/api/admin/trust-badges", { forceRefresh }),
+        fetchWithClientCache<any>("/api/admin/payment-icons", { forceRefresh }),
       ]);
-      const bJson = (await bRes.json()) as any;
-      const pJson = (await pRes.json()) as any;
-      if (bJson.success) setBadges(bJson.data || []);
-      if (pJson.success) setPaymentIcons(pJson.data || []);
+      if (bRes.success) setBadges(bRes.data || []);
+      if (pRes.success) setPaymentIcons(pRes.data || []);
     } catch (err) {
       console.warn("Failed to load admin badge data:", err);
       setMessage({ type: "error", text: "Failed to load data from server" });
@@ -104,7 +104,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
         if (json.success) {
           setMessage({ type: "success", text: "Trust badge updated successfully" });
           setBadgeModalOpen(false);
-          fetchData();
+          invalidateClientCache("/api/admin/trust-badges");
+          fetchData(true);
         } else {
           setMessage({ type: "error", text: json.error || "Failed to update badge" });
         }
@@ -122,7 +123,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
         if (json.success) {
           setMessage({ type: "success", text: "Trust badge created successfully" });
           setBadgeModalOpen(false);
-          fetchData();
+          invalidateClientCache("/api/admin/trust-badges");
+          fetchData(true);
         } else {
           setMessage({ type: "error", text: json.error || "Failed to create badge" });
         }
@@ -142,7 +144,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       const json = (await res.json()) as any;
       if (json.success) {
         setMessage({ type: "success", text: "Badge deleted successfully" });
-        fetchData();
+        invalidateClientCache("/api/admin/trust-badges");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);
@@ -159,7 +162,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
-        fetchData();
+        invalidateClientCache("/api/admin/trust-badges");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);
@@ -183,6 +187,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: newBadges.map((b) => b.id) }),
       });
+      invalidateClientCache("/api/admin/trust-badges");
     } catch (err) {
       console.error("Reorder failed:", err);
     }
@@ -197,7 +202,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       });
       const json = (await res.json()) as any;
       if (json.success) {
-        fetchData();
+        invalidateClientCache("/api/admin/payment-icons");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);
@@ -221,6 +227,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: newIcons.map((i) => i.id) }),
       });
+      invalidateClientCache("/api/admin/payment-icons");
     } catch (err) {
       console.error("Payment icon reorder failed:", err);
     }
@@ -244,7 +251,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       if (json.success) {
         setPaymentModalOpen(false);
         setPaymentForm({ name: "", iconSvg: "", isActive: true });
-        fetchData();
+        invalidateClientCache("/api/admin/payment-icons");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);
@@ -259,7 +267,8 @@ export default function TrustBadgesManager(): React.JSX.Element {
       const res = await fetch(`/api/admin/payment-icons/${id}`, { method: "DELETE" });
       const json = (await res.json()) as any;
       if (json.success) {
-        fetchData();
+        invalidateClientCache("/api/admin/payment-icons");
+        fetchData(true);
       }
     } catch (err) {
       console.error(err);
@@ -420,19 +429,12 @@ export default function TrustBadgesManager(): React.JSX.Element {
 
                       {/* Active Toggle */}
                       <td className="py-3 px-4">
-                        <button
-                          type="button"
-                          onClick={() => handleToggleBadge(badge)}
-                          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
-                            badge.isActive ? "bg-[#960DF2]" : "bg-zinc-300 dark:bg-zinc-700"
-                          }`}
-                        >
-                          <span
-                            className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-                              badge.isActive ? "translate-x-4.5" : "translate-x-1"
-                            }`}
-                          />
-                        </button>
+                        <Toggle
+                          size="sm"
+                          checked={Boolean(badge.isActive)}
+                          onChange={() => handleToggleBadge(badge)}
+                          aria-label={`Toggle ${badge.title}`}
+                        />
                       </td>
 
                       {/* Actions */}
@@ -533,19 +535,12 @@ export default function TrustBadgesManager(): React.JSX.Element {
                     </td>
 
                     <td className="py-3 px-4">
-                      <button
-                        type="button"
-                        onClick={() => handleTogglePaymentIcon(icon)}
-                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
-                          icon.isActive ? "bg-[#960DF2]" : "bg-zinc-300 dark:bg-zinc-700"
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-                            icon.isActive ? "translate-x-4.5" : "translate-x-1"
-                          }`}
-                        />
-                      </button>
+                      <Toggle
+                        size="sm"
+                        checked={Boolean(icon.isActive)}
+                        onChange={() => handleTogglePaymentIcon(icon)}
+                        aria-label={`Toggle ${icon.name}`}
+                      />
                     </td>
 
                     <td className="py-3 px-4 text-right">
@@ -705,17 +700,13 @@ export default function TrustBadgesManager(): React.JSX.Element {
               </div>
 
               {/* Active Toggle */}
-              <div className="flex items-center gap-2 pt-2">
-                <input
-                  type="checkbox"
-                  id="badge-active-check"
+              <div className="pt-2">
+                <Toggle
+                  size="sm"
                   checked={badgeForm.isActive}
-                  onChange={(e) => setBadgeForm({ ...badgeForm, isActive: e.target.checked })}
-                  className="h-4 w-4 rounded border-purple-300 text-[#960DF2] focus:ring-[#960DF2]"
+                  onChange={(val) => setBadgeForm({ ...badgeForm, isActive: val })}
+                  label="Active (Visible on Storefront)"
                 />
-                <label htmlFor="badge-active-check" className="text-xs font-bold text-[#3C0561] dark:text-white">
-                  Active (Visible on Storefront)
-                </label>
               </div>
 
               {/* Submit Buttons */}

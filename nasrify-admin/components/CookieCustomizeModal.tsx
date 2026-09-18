@@ -6,6 +6,7 @@ import {
   saveCookieConsent,
   type CookieConsentState,
 } from "@/lib/script-blocker";
+import Toggle from "@/components/ui/Toggle";
 
 interface CookieCustomizeModalProps {
   isOpen: boolean;
@@ -112,11 +113,12 @@ export default function CookieCustomizeModal({
               </p>
             </div>
             <div className="pt-0.5 shrink-0">
-              <input
-                type="checkbox"
+              <Toggle
+                size="sm"
                 checked={true}
                 disabled={true}
-                className="h-5 w-5 rounded border-purple-300 text-[#960DF2] focus:ring-[#960DF2] opacity-70 cursor-not-allowed"
+                onChange={() => {}}
+                aria-label="Necessary Cookies (Always active)"
               />
             </div>
           </div>
@@ -133,14 +135,14 @@ export default function CookieCustomizeModal({
                 </p>
               </div>
               <div className="pt-0.5 shrink-0">
-                <input
-                  type="checkbox"
+                <Toggle
+                  size="sm"
                   id="cookie-toggle-analytics"
                   checked={preferences.analytics}
-                  onChange={(e) =>
-                    setPreferences((prev) => ({ ...prev, analytics: e.target.checked }))
+                  onChange={(checked) =>
+                    setPreferences((prev) => ({ ...prev, analytics: checked }))
                   }
-                  className="h-5 w-5 rounded border-purple-300 text-[#960DF2] focus:ring-[#960DF2] cursor-pointer"
+                  aria-label="Toggle Analytics Cookies"
                 />
               </div>
             </div>
@@ -158,14 +160,14 @@ export default function CookieCustomizeModal({
                 </p>
               </div>
               <div className="pt-0.5 shrink-0">
-                <input
-                  type="checkbox"
+                <Toggle
+                  size="sm"
                   id="cookie-toggle-marketing"
                   checked={preferences.marketing}
-                  onChange={(e) =>
-                    setPreferences((prev) => ({ ...prev, marketing: e.target.checked }))
+                  onChange={(checked) =>
+                    setPreferences((prev) => ({ ...prev, marketing: checked }))
                   }
-                  className="h-5 w-5 rounded border-purple-300 text-[#960DF2] focus:ring-[#960DF2] cursor-pointer"
+                  aria-label="Toggle Marketing Cookies"
                 />
               </div>
             </div>
@@ -183,14 +185,14 @@ export default function CookieCustomizeModal({
                 </p>
               </div>
               <div className="pt-0.5 shrink-0">
-                <input
-                  type="checkbox"
+                <Toggle
+                  size="sm"
                   id="cookie-toggle-functional"
                   checked={preferences.functional}
-                  onChange={(e) =>
-                    setPreferences((prev) => ({ ...prev, functional: e.target.checked }))
+                  onChange={(checked) =>
+                    setPreferences((prev) => ({ ...prev, functional: checked }))
                   }
-                  className="h-5 w-5 rounded border-purple-300 text-[#960DF2] focus:ring-[#960DF2] cursor-pointer"
+                  aria-label="Toggle Functional Cookies"
                 />
               </div>
             </div>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import type { ShippingZone, ShippingRateType } from "@/lib/shipping";
 import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
+import Toggle from "@/components/ui/Toggle";
 
 const QUICK_COUNTRIES = [
   { code: "PK", name: "Pakistan" },
@@ -675,13 +676,12 @@ export default function ShippingZonesManager(): React.JSX.Element {
                   />
                 </div>
 
-                <div className="flex items-center justify-between p-3 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 self-end">
-                  <span className="text-xs font-bold text-[#3C0561] dark:text-purple-200">Active Zone</span>
-                  <input
-                    type="checkbox"
+                <div className="p-3 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 self-end">
+                  <Toggle
+                    size="sm"
                     checked={formIsActive}
-                    onChange={(e) => setFormIsActive(e.target.checked)}
-                    className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 border-purple-300 cursor-pointer"
+                    onChange={setFormIsActive}
+                    label="Active Zone"
                   />
                 </div>
               </div>

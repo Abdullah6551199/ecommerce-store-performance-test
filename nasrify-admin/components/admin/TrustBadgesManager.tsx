@@ -6,6 +6,7 @@ import TrustBadges from "@/components/TrustBadges";
 import PaymentIcons, { StandardPaymentSvg } from "@/components/PaymentIcons";
 import type { TrustBadgeRecord, PaymentIconRecord } from "@/lib/db";
 import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
+import Toggle from "@/components/ui/Toggle";
 
 export default function TrustBadgesManager(): React.JSX.Element {
   const [badges, setBadges] = useState<TrustBadgeRecord[]>([]);
@@ -428,19 +429,12 @@ export default function TrustBadgesManager(): React.JSX.Element {
 
                       {/* Active Toggle */}
                       <td className="py-3 px-4">
-                        <button
-                          type="button"
-                          onClick={() => handleToggleBadge(badge)}
-                          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
-                            badge.isActive ? "bg-[#960DF2]" : "bg-zinc-300 dark:bg-zinc-700"
-                          }`}
-                        >
-                          <span
-                            className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-                              badge.isActive ? "translate-x-4.5" : "translate-x-1"
-                            }`}
-                          />
-                        </button>
+                        <Toggle
+                          size="sm"
+                          checked={Boolean(badge.isActive)}
+                          onChange={() => handleToggleBadge(badge)}
+                          aria-label={`Toggle ${badge.title}`}
+                        />
                       </td>
 
                       {/* Actions */}
@@ -541,19 +535,12 @@ export default function TrustBadgesManager(): React.JSX.Element {
                     </td>
 
                     <td className="py-3 px-4">
-                      <button
-                        type="button"
-                        onClick={() => handleTogglePaymentIcon(icon)}
-                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
-                          icon.isActive ? "bg-[#960DF2]" : "bg-zinc-300 dark:bg-zinc-700"
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
-                            icon.isActive ? "translate-x-4.5" : "translate-x-1"
-                          }`}
-                        />
-                      </button>
+                      <Toggle
+                        size="sm"
+                        checked={Boolean(icon.isActive)}
+                        onChange={() => handleTogglePaymentIcon(icon)}
+                        aria-label={`Toggle ${icon.name}`}
+                      />
                     </td>
 
                     <td className="py-3 px-4 text-right">
@@ -713,17 +700,13 @@ export default function TrustBadgesManager(): React.JSX.Element {
               </div>
 
               {/* Active Toggle */}
-              <div className="flex items-center gap-2 pt-2">
-                <input
-                  type="checkbox"
-                  id="badge-active-check"
+              <div className="pt-2">
+                <Toggle
+                  size="sm"
                   checked={badgeForm.isActive}
-                  onChange={(e) => setBadgeForm({ ...badgeForm, isActive: e.target.checked })}
-                  className="h-4 w-4 rounded border-purple-300 text-[#960DF2] focus:ring-[#960DF2]"
+                  onChange={(val) => setBadgeForm({ ...badgeForm, isActive: val })}
+                  label="Active (Visible on Storefront)"
                 />
-                <label htmlFor="badge-active-check" className="text-xs font-bold text-[#3C0561] dark:text-white">
-                  Active (Visible on Storefront)
-                </label>
               </div>
 
               {/* Submit Buttons */}

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import type { FaqRecord } from "@/lib/db";
+import Toggle from "@/components/ui/Toggle";
 
 export default function FaqManager(): React.JSX.Element {
   const [faqsList, setFaqsList] = useState<FaqRecord[]>([]);
@@ -369,15 +370,12 @@ export default function FaqManager(): React.JSX.Element {
             </div>
 
             <div className="flex items-center justify-between pt-2">
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300">
-                <input
-                  type="checkbox"
-                  checked={isActive}
-                  onChange={(e) => setIsActive(e.target.checked)}
-                  className="w-4 h-4 rounded text-indigo-600 border-slate-300 dark:border-slate-700 focus:ring-indigo-500"
-                />
-                <span>Active (Show on Storefront)</span>
-              </label>
+              <Toggle
+                size="sm"
+                checked={isActive}
+                onChange={setIsActive}
+                label="Active (Show on Storefront)"
+              />
 
               <div className="flex items-center gap-2">
                 <button

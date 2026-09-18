@@ -11,6 +11,7 @@ import { WishlistProvider } from "@/components/WishlistContext";
 import { CompareProvider } from "@/components/CompareContext";
 import "./globals.css";
 import StorefrontOverlays from "@/components/StorefrontOverlays";
+import StorefrontFloating from "@/components/apps/StorefrontFloating";
 
 
 const inter = Inter({
@@ -126,6 +127,8 @@ export default async function RootLayout({
               </div>
               {/* Global Overlays & Modals (Lazy Loaded on Demand) */}
               <StorefrontOverlays />
+              {/* App Extension Point: storefront.floating */}
+              <StorefrontFloating />
             </CompareProvider>
           </WishlistProvider>
         </CartProvider>

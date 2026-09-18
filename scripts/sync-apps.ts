@@ -114,6 +114,8 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
   "whatsapp-order": {
     WhatsAppFloatingButton: dynamic(() => import("@/apps/whatsapp-order/storefront/WhatsAppFloatingButton")),
     WhatsAppProductButton: dynamic(() => import("@/apps/whatsapp-order/storefront/WhatsAppProductButton")),
+    CartOrderButton: dynamic(() => import("@/apps/whatsapp-order/storefront/CartOrderButton")),
+    CheckoutOrderButton: dynamic(() => import("@/apps/whatsapp-order/storefront/CheckoutOrderButton")),
   },
   wishlist: {
     WishlistButton: dynamic(() => import("@/apps/wishlist/storefront/WishlistButton")),

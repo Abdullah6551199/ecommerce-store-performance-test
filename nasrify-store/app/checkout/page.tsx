@@ -12,6 +12,7 @@ import CouponsSection from "@/components/CouponsSection";
 import TrustBar from "@/components/homepage/TrustBar";
 import PaymentIcons from "@/components/PaymentIcons";
 import TrustBadges from "@/components/TrustBadges";
+import StorefrontCheckoutBelow from "@/components/apps/StorefrontCheckoutBelow";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 const CHECKOUT_COUNTRIES = [
@@ -955,6 +956,8 @@ export default function CheckoutPage(): React.JSX.Element {
                   </>
                 )}
               </button>
+
+              <StorefrontCheckoutBelow />
 
               {/* Stage 22 Part A: Payment Icons Row & Trust Badges near Place Order */}
               <div className="pt-2 space-y-3 border-t border-purple-100 dark:border-purple-800/60">

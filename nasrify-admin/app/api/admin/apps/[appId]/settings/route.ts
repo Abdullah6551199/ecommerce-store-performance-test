@@ -3,6 +3,7 @@ import { getCurrentAdmin } from "@/lib/auth";
 import { getDb, installedApps } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { invalidateInstalledAppsCache } from "@/lib/apps/installed";
+import { invalidateStorefront } from "@/lib/storefront-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -73,6 +74,7 @@ export async function PUT(
       .where(eq(installedApps.id, appId));
 
     invalidateInstalledAppsCache();
+    await invalidateStorefront({ target: "apps" }).catch(() => null);
 
     return NextResponse.json({
       success: true,

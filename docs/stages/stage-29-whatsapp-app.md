@@ -92,11 +92,66 @@ The automated end-to-end verification suite (`scripts/verify-stage-29.ts`) execu
 
 ---
 
+## Stage 29.5 — WhatsApp App Fixes & Cart/Checkout Ordering
+
+### 1. Overview & Issues Resolved
+- **Issue 1: Product Page Button Width**: Previously stretched full-screen width below product details. Redesigned and repositioned as `ProductOrderButton` placed directly below the "Buy Now" button inside `ProductInfoPanel`, matching its exact size, padding (`py-4 px-8`), font (`text-lg font-bold`), and border-radius (`rounded-xl`).
+- **Issue 2: Missing WhatsApp Buttons in Cart and Checkout**:
+  - Added new `storefront.cart.below` extension point: Renders `CartOrderButton` directly below "Proceed to Checkout" in `/cart`, styled with matching `py-3.5 text-sm font-bold rounded-xl`.
+  - Added new `storefront.checkout.below` extension point: Renders `CheckoutOrderButton` directly below the "Place Order" button in `/checkout`, styled with matching `py-4 text-sm font-extrabold rounded-xl`.
+- **Issue 3: Incomplete WhatsApp Message**:
+  - Implemented structured single-item message formatting in `buildProductMessage()`:
+    ```
+    Hello! I want to order:
+
+    *Product:* <name>
+    *Price:* <price>
+    *Quantity:* <qty>
+    *Link:* <url>
+    *Image:* <image_url>
+
+    Please confirm availability.
+    ```
+  - Implemented structured multi-item message formatting in `buildCartMessage()`:
+    ```
+    Hello! I want to place this order:
+
+    1. <name>
+       Price: <price> x <qty> = <line_total>
+       Link: <url>
+
+    2. <name>
+       Price: <price> x <qty> = <line_total>
+       Link: <url>
+
+    *Subtotal:* <subtotal>
+    *Total:* <total>
+
+    Please confirm availability.
+    ```
+- **Settings Cache Invalidation**:
+  - Previously, when an admin modified WhatsApp settings (e.g. phone number), aggressive browser and edge caching prevented storefront from reflecting the update immediately.
+  - Fix 1: Storefront endpoint `/api/apps/[appId]/settings` now responds with `Cache-Control: no-cache, no-store, max-age=0, must-revalidate`.
+  - Fix 2: Admin PUT route `/api/admin/apps/[appId]/settings` invalidates local app cache and broadcasts cross-worker invalidation `invalidateStorefront({ target: "apps" })`. Updates reflect immediately on next storefront request.
+
+### 2. Deployment Version IDs (Stage 29.5)
+- **Nasrify Admin Worker**:
+  - URL: `https://nasrify-admin.zia291930.workers.dev`
+  - Version ID: `46e65a1c-8ad7-4749-9330-ab4739a45771`
+  - Upload Size: `11283.97 KiB / gzip: 1979.39 KiB`
+- **Nasrify Storefront Worker**:
+  - URL: `https://nasrify-store.zia291930.workers.dev`
+  - Version ID: `8d1b380c-fc0b-4ccd-97b8-02c298151427`
+  - Upload Size: `10292.11 KiB / gzip: 1897.08 KiB`
+
+---
+
 ## Rollback Procedure
 If rollback is required:
 ```bash
-git checkout pre-stage-29
+git checkout pre-stage-29-5
 cd nasrify-admin && npx.cmd wrangler deploy
 cd nasrify-store && npx.cmd wrangler deploy
 ```
-Database backup exists at `backups/d1-pre-stage-29.sql`.
+Database backup exists at `backups/d1-pre-stage-29.sql` and git tag `pre-stage-29-5`.
+

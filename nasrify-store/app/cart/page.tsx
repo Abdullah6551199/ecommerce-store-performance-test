@@ -11,6 +11,7 @@ import CouponsSection from "@/components/CouponsSection";
 import TrustBar from "@/components/homepage/TrustBar";
 import TrustBadges from "@/components/TrustBadges";
 import ProductCard from "@/components/ProductCard";
+import StorefrontCartBelow from "@/components/apps/StorefrontCartBelow";
 import type { ProductWithImagesAndCategory } from "@/lib/products";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -342,6 +343,7 @@ export default function CartPage(): React.JSX.Element {
                     >
                       Proceed to Checkout &rarr;
                     </Link>
+                    <StorefrontCartBelow />
                     <p className="text-[11px] text-center text-zinc-400 mt-2.5 flex items-center justify-center gap-1.5">
                       <span>🔒</span> Safe &amp; 256-Bit Encrypted Checkout
                     </p>

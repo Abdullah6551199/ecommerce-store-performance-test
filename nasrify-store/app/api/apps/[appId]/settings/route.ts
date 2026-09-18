@@ -46,7 +46,7 @@ export async function GET(
         {
           status: 200,
           headers: {
-            "Cache-Control": "public, max-age=30, s-maxage=30",
+            "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
           },
         }
       );
@@ -68,7 +68,7 @@ export async function GET(
       {
         status: 200,
         headers: {
-          "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300",
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
         },
       }
     );

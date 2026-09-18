@@ -364,6 +364,8 @@ export default function CartPage(): React.JSX.Element {
                   </svg>
                 </Link>
 
+                <StorefrontCartBelow />
+
                 <div className="pt-3 border-t border-purple-100 dark:border-purple-900/60 space-y-2 text-[11px] text-zinc-500 dark:text-purple-300/70">
                   <div className="flex items-center gap-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-purple-500" />

@@ -11,6 +11,7 @@ import CouponsSection from "@/components/CouponsSection";
 import TrustBar from "@/components/homepage/TrustBar";
 import TrustBadges from "@/components/TrustBadges";
 import ProductCard from "@/components/ProductCard";
+import StorefrontCartBelow from "@/components/apps/StorefrontCartBelow";
 import type { ProductWithImagesAndCategory } from "@/lib/products";
 
 export default function CartPage(): React.JSX.Element {

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartContext";
 import { useWishlist } from "@/components/WishlistContext";
 import WishlistButton from "@/apps/wishlist/storefront/WishlistButton";
+import ProductOrderButton from "@/apps/whatsapp-order/storefront/ProductOrderButton";
 import CompareButton from "@/components/CompareButton";
 import TrustBadges from "@/components/TrustBadges";
 import type { ProductVariantRecord } from "@/lib/variants";
@@ -479,6 +480,14 @@ export default function ProductInfoPanel({
         >
           {isBuyingNow ? <span>Preparing Checkout...</span> : <span>Buy Now</span>}
         </button>
+
+        <ProductOrderButton
+          productId={productId}
+          productSlug={baseSku || productId}
+          productName={productName}
+          price={effectivePrice}
+          quantity={quantity}
+        />
       </div>
 
       {/* Trust Badges Row (Stage 22 Part A: 4 badges under Add to Cart) */}

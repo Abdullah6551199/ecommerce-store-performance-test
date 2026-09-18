@@ -40,10 +40,9 @@ export default function StorefrontProductBelowClient({
   enabledAppIds,
 }: Props): React.JSX.Element | null {
   const hasReviews = Boolean(productId && enabledAppIds.includes("reviews"));
-  const hasWhatsApp = Boolean(productId && enabledAppIds.includes("whatsapp-order"));
   const hasWishlist = Boolean(productId && enabledAppIds.includes("wishlist"));
 
-  if (!hasReviews && !hasWhatsApp && !hasWishlist) {
+  if (!hasReviews && !hasWishlist) {
     return null;
   }
 
@@ -55,11 +54,6 @@ export default function StorefrontProductBelowClient({
             <WishlistButton productId={productId!} variant="detail" />
           </AppErrorBoundary>
         </div>
-      )}
-      {hasWhatsApp && (
-        <AppErrorBoundary appId="whatsapp-order" extensionPoint="storefront.product.below">
-          <WhatsAppProductButton productId={productId!} />
-        </AppErrorBoundary>
       )}
       {hasReviews && (
         <AppErrorBoundary appId="reviews" extensionPoint="storefront.product.below">

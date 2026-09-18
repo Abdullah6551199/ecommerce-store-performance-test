@@ -14,7 +14,9 @@
   ],
   "extensionPoints": [
     "storefront.floating",
-    "storefront.product.below"
+    "storefront.product.below",
+    "storefront.cart.below",
+    "storefront.checkout.below"
   ],
   "workerScope": {
     "admin": ["admin/"],

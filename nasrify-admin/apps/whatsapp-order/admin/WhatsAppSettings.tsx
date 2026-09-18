@@ -20,7 +20,7 @@ export default function WhatsAppSettings({ className = "" }: Props): React.JSX.E
       try {
         setLoading(true);
         const res = await fetch("/api/admin/apps/whatsapp-order");
-        const json = await res.json();
+        const json = (await res.json()) as any;
         if (res.ok && json.success && json.data) {
           const rawSettings = json.data.installation?.settings;
           if (rawSettings) {
@@ -49,7 +49,7 @@ export default function WhatsAppSettings({ className = "" }: Props): React.JSX.E
         body: JSON.stringify(settings),
       });
 
-      const json = await res.json();
+      const json = (await res.json()) as any;
       if (res.ok && json.success) {
         setToast({ type: "success", message: "WhatsApp settings saved successfully!" });
       } else {

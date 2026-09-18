@@ -18,8 +18,8 @@ export default function WhatsAppFloatingButton(): React.JSX.Element | null {
       try {
         const res = await fetch("/api/apps/whatsapp-order/settings");
         if (res.ok) {
-          const json = await res.json();
-          if (json.success && json.data) {
+          const json = (await res.json()) as any;
+          if (json && json.success && json.data) {
             if (isMounted) {
               setSettings({ ...DEFAULT_WHATSAPP_SETTINGS, ...json.data });
             }

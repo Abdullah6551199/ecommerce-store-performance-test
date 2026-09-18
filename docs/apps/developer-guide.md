@@ -142,6 +142,7 @@ Apps must declare minimum required permissions:
 
 | Extension Point | Prop Interface | Typical Use Case |
 |---|---|---|
+| `storefront.floating` | `StorefrontFloatingProps` (`{}`) | Sticky bottom corner floating buttons, live chat widgets, WhatsApp support |
 | `storefront.product.below` | `StorefrontProductBelowProps` (`{ productId, productSlug }`) | Product reviews, cross-sells, sizing calculators |
 | `storefront.homepage.section` | `StorefrontHomepageSectionProps` (`{ sectionId }`) | Custom hero banners, featured collection grids |
 | `storefront.cart.below` | `StorefrontCartBelowProps` (`{ cartId }`) | Free shipping progress bars, upsell cards |

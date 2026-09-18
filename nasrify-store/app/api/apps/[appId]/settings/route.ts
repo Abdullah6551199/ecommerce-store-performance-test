@@ -37,7 +37,7 @@ export async function GET(
         settings: installedApps.settings,
       })
       .from(installedApps)
-      .where(and(eq(installedApps.id, appId), eq(installedApps.enabled, 1)))
+      .where(and(eq(installedApps.id, appId), eq(installedApps.enabled, true)))
       .limit(1);
 
     if (rows.length === 0) {

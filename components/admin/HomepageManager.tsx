@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { HomepageSectionRecord, HomepageSectionType } from "@/lib/homepage";
 import { renderHomepageSection } from "@/components/homepage/HomepageSections";
+import Toggle from "@/components/ui/Toggle";
 
 export default function HomepageManager(): React.JSX.Element {
   const [sections, setSections] = useState<HomepageSectionRecord[]>([]);
@@ -867,20 +868,14 @@ export default function HomepageManager(): React.JSX.Element {
                   </div>
 
                   {/* Status Toggle */}
-                  <div className="flex items-center gap-3 py-1">
-                    <input
-                      type="checkbox"
-                      id="modal-active"
+                  {/* Status Toggle */}
+                  <div className="py-2">
+                    <Toggle
                       checked={editingSection.isActive}
-                      onChange={(e) => setEditingSection({ ...editingSection, isActive: e.target.checked })}
-                      className="h-4 w-4 rounded border-purple-300 dark:border-purple-700 text-purple-600 focus:ring-purple-500"
+                      onChange={(checked) => setEditingSection({ ...editingSection, isActive: checked })}
+                      label="Active (Visible on Storefront Homepage)"
+                      description="Display or hide this section on the live homepage."
                     />
-                    <label
-                      htmlFor="modal-active"
-                      className="text-xs text-zinc-800 dark:text-purple-200 font-medium cursor-pointer"
-                    >
-                      Active (Visible on Storefront Homepage)
-                    </label>
                   </div>
 
                   {/* =========================================================================

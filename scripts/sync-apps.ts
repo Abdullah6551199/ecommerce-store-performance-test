@@ -115,6 +115,11 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     WhatsAppFloatingButton: dynamic(() => import("@/apps/whatsapp-order/storefront/WhatsAppFloatingButton")),
     WhatsAppProductButton: dynamic(() => import("@/apps/whatsapp-order/storefront/WhatsAppProductButton")),
   },
+  wishlist: {
+    WishlistButton: dynamic(() => import("@/apps/wishlist/storefront/WishlistButton")),
+    WishlistPage: dynamic(() => import("@/apps/wishlist/storefront/WishlistPage")),
+    WishlistHeaderIcon: dynamic(() => import("@/apps/wishlist/storefront/WishlistHeaderIcon")),
+  },
 };
 
 export function loadAdminAppComponent(

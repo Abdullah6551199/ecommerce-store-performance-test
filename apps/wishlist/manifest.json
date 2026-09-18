@@ -1,0 +1,52 @@
+{
+  "id": "wishlist",
+  "name": "Wishlist",
+  "version": "1.0.0",
+  "description": "Let customers save products for later",
+  "author": "Nasrify",
+  "authorUrl": "",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "sales",
+  "permissions": [
+    "read:products",
+    "read:customers",
+    "read:media"
+  ],
+  "extensionPoints": [
+    "storefront.product.below",
+    "storefront.header",
+    "storefront.account.menu"
+  ],
+  "workerScope": {
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "databaseTables": [
+    "customer_wishlist"
+  ],
+  "settingsSchema": {
+    "showOnProductCards": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show heart icon on product cards"
+    },
+    "showInHeader": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show wishlist icon in header"
+    },
+    "requireLogin": {
+      "type": "boolean",
+      "default": true,
+      "label": "Require login to save"
+    },
+    "iconPosition": {
+      "type": "select",
+      "default": "top-right",
+      "options": ["top-right", "top-left", "below-image"],
+      "label": "Heart icon position on product cards"
+    }
+  },
+  "changelog": "1.0.0 — Initial release"
+}

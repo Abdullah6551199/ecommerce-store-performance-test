@@ -37,6 +37,16 @@ export async function POST(req: NextRequest) {
     // Invalidate in-memory micro-cache
     invalidateStorefrontCache(target);
 
+    try {
+      const { invalidateInstalledAppsCache } = await import("@/lib/apps/installed");
+      invalidateInstalledAppsCache();
+    } catch {}
+
+    try {
+      const { invalidateWishlistCache } = await import("@/apps/wishlist/lib/wishlist");
+      invalidateWishlistCache();
+    } catch {}
+
     // If a specific URL/path is specified, purge from edge cache
     if (path) {
       await purgeEdgeCache(path);

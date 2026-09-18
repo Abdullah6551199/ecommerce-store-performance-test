@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentAdmin } from "@/lib/auth";
 import { getDb, installedApps, appInstallLogs } from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { getManifest } from "@/lib/apps/registry";
 import { validateManifest } from "@/lib/apps/manifest";
 import { validatePermissions } from "@/lib/apps/permissions";
 import { invalidateInstalledAppsCache } from "@/lib/apps/installed";
+import { invalidateStorefront } from "@/lib/storefront-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -90,13 +91,36 @@ export async function POST(req: NextRequest) {
         })
         .where(eq(installedApps.id, appId));
     } else {
-      // Insert new installation
+      // Check if previous settings exist from earlier installation
+      let previousSettings: string | null = null;
+      try {
+        const lastUninstall = await db
+          .select({ notes: appInstallLogs.notes })
+          .from(appInstallLogs)
+          .where(and(eq(appInstallLogs.appId, appId), eq(appInstallLogs.action, "uninstall")))
+          .orderBy(desc(appInstallLogs.performedAt))
+          .limit(1);
+
+        if (lastUninstall.length > 0 && lastUninstall[0].notes) {
+          try {
+            JSON.parse(lastUninstall[0].notes);
+            previousSettings = lastUninstall[0].notes;
+          } catch {
+            // Not valid JSON settings string
+          }
+        }
+      } catch (err) {
+        console.warn("[InstallApp] Failed to query previous settings:", err);
+      }
+
+      // Insert new installation with restored settings if available
       await db.insert(installedApps).values({
         id: appId,
         version: manifest.version,
         enabled: true,
         installedAt: now,
         updatedAt: now,
+        settings: previousSettings,
         permissions: JSON.stringify(manifest.permissions),
         installedBy: admin.email,
       });
@@ -112,6 +136,7 @@ export async function POST(req: NextRequest) {
     });
 
     invalidateInstalledAppsCache();
+    await invalidateStorefront({ target: "apps" }).catch(() => null);
 
     return NextResponse.json({
       success: true,

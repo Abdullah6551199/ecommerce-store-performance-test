@@ -16,6 +16,7 @@ import WishlistNavButton from "@/components/WishlistNavButton";
 import AccountNavButton from "@/components/AccountNavButton";
 import NotificationNavButton from "@/components/NotificationNavButton";
 import ThemeToggle from "@/components/ThemeToggle";
+import { getInstalledApps } from "@/lib/apps/installed";
 
 const MobileNav = dynamic(() => import("@/components/MobileNav"));
 
@@ -86,10 +87,12 @@ const MEN_COLUMNS: MegaMenuColumn[] = [
 export default async function Header({
   settings = DEFAULT_STORE_SETTINGS,
 }: HeaderProps): Promise<React.JSX.Element> {
-  const [activeCategories, navigation] = await Promise.all([
+  const [activeCategories, navigation, installedApps] = await Promise.all([
     getActiveCategories(),
     getNavigationPages().catch(() => ({ headerPages: [], footerPages: [] })),
+    getInstalledApps().catch(() => []),
   ]);
+  const isWishlistInstalled = installedApps.some((a) => a.id === "wishlist" && a.enabled);
   const headerPages = (navigation.headerPages || []).filter(
     (hp) => !["about", "contact"].includes(hp.slug)
   );
@@ -232,7 +235,7 @@ export default async function Header({
           {/* Navigation Action Icons */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             {/* Wishlist Button */}
-            <WishlistNavButton />
+            {isWishlistInstalled && <WishlistNavButton />}
 
             {/* Cart Button */}
             <CartNavButton />

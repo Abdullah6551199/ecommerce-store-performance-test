@@ -1,6 +1,7 @@
 import helloWorldManifest from "@/apps/hello-world/manifest.json";
 import reviewsManifest from "@/apps/reviews/manifest.json";
 import whatsappOrderManifest from "@/apps/whatsapp-order/manifest.json";
+import wishlistManifest from "@/apps/wishlist/manifest.json";
 import { type AppManifest } from "@/types/apps";
 import { validateManifest } from "./manifest";
 
@@ -12,6 +13,7 @@ const RAW_MANIFESTS: Record<string, unknown> = {
   "hello-world": helloWorldManifest,
   "reviews": reviewsManifest,
   "whatsapp-order": whatsappOrderManifest,
+  "wishlist": wishlistManifest,
 };
 
 const VALIDATED_MANIFESTS: Record<string, AppManifest> = {};

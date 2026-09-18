@@ -22,6 +22,14 @@ const WhatsAppProductButton = dynamic(
   }
 );
 
+const WishlistButton = dynamic(
+  () => import("@/apps/wishlist/storefront/WishlistButton"),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
 interface Props {
   productId?: string;
   enabledAppIds: string[];
@@ -33,13 +41,21 @@ export default function StorefrontProductBelowClient({
 }: Props): React.JSX.Element | null {
   const hasReviews = Boolean(productId && enabledAppIds.includes("reviews"));
   const hasWhatsApp = Boolean(productId && enabledAppIds.includes("whatsapp-order"));
+  const hasWishlist = Boolean(productId && enabledAppIds.includes("wishlist"));
 
-  if (!hasReviews && !hasWhatsApp) {
+  if (!hasReviews && !hasWhatsApp && !hasWishlist) {
     return null;
   }
 
   return (
     <div className="w-full space-y-6 mt-8">
+      {hasWishlist && (
+        <div data-app="wishlist" className="w-full">
+          <AppErrorBoundary appId="wishlist" extensionPoint="storefront.product.below">
+            <WishlistButton productId={productId!} variant="detail" />
+          </AppErrorBoundary>
+        </div>
+      )}
       {hasWhatsApp && (
         <AppErrorBoundary appId="whatsapp-order" extensionPoint="storefront.product.below">
           <WhatsAppProductButton productId={productId!} />

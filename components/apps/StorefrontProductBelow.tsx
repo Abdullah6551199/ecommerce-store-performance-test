@@ -22,9 +22,15 @@ export default async function StorefrontProductBelow({ productId }: Props): Prom
   }
 
   return (
-    <StorefrontProductBelowClient
-      productId={productId}
-      enabledAppIds={matching.map((m) => m.id)}
-    />
+    <div
+      id="storefront-product-below-container"
+      data-extension-point="storefront.product.below"
+      className="w-full"
+    >
+      <StorefrontProductBelowClient
+        productId={productId}
+        enabledAppIds={matching.map((m) => m.id)}
+      />
+    </div>
   );
 }

@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/CartContext";
 import { useWishlist } from "@/components/WishlistContext";
+import WishlistButton from "@/apps/wishlist/storefront/WishlistButton";
 import CompareButton from "@/components/CompareButton";
 import TrustBadges from "@/components/TrustBadges";
 import type { ProductVariantRecord } from "@/lib/variants";
@@ -487,33 +488,14 @@ export default function ProductInfoPanel({
 
       {/* 9. Wishlist, Compare & Share Row */}
       <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-purple-100 dark:border-purple-800/40">
-        <button
-          type="button"
-          onClick={() =>
-            toggleWishlist({
-              productId,
-              slug: baseSku || productId,
-              name: productName,
-              price: Number(currentPrice),
-              salePrice: currentSalePrice ? Number(currentSalePrice) : null,
-            })
-          }
-          className={`inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-xl border transition-all cursor-pointer ${
-            inWishlist
-              ? "border-rose-400 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400"
-              : "border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-200 hover:border-purple-400"
-          }`}
-        >
-          <svg
-            className={`h-4 w-4 ${inWishlist ? "fill-rose-500 text-rose-500" : "fill-none"}`}
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-          <span>{inWishlist ? "Saved" : "Wishlist"}</span>
-        </button>
+        <WishlistButton
+          productId={productId}
+          productSlug={baseSku || productId}
+          productName={productName}
+          price={Number(currentPrice)}
+          salePrice={currentSalePrice ? Number(currentSalePrice) : null}
+          variant="inline"
+        />
 
         <CompareButton productId={productId} variant="pill" />
 

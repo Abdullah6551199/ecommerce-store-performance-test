@@ -143,7 +143,9 @@ Apps must declare minimum required permissions:
 | Extension Point | Prop Interface | Typical Use Case |
 |---|---|---|
 | `storefront.floating` | `StorefrontFloatingProps` (`{}`) | Sticky bottom corner floating buttons, live chat widgets, WhatsApp support |
-| `storefront.product.below` | `StorefrontProductBelowProps` (`{ productId, productSlug }`) | Product reviews, cross-sells, sizing calculators |
+| `storefront.product.below` | `StorefrontProductBelowProps` (`{ productId, productSlug }`) | Product reviews, cross-sells, sizing calculators, wishlist action button |
+| `storefront.header` | `StorefrontHeaderProps` (`{}`) | Header action buttons, wishlist counter badge, promotional notification pills |
+| `storefront.account.menu` | `StorefrontAccountMenuProps` (`{}`) | Customer account portal menu links, saved items navigation |
 | `storefront.homepage.section` | `StorefrontHomepageSectionProps` (`{ sectionId }`) | Custom hero banners, featured collection grids |
 | `storefront.cart.below` | `StorefrontCartBelowProps` (`{ cartId }`) | Free shipping progress bars, upsell cards |
 | `storefront.checkout.below` | `StorefrontCheckoutBelowProps` (`{ orderId }`) | Trust seals, checkout assistance notes |
@@ -170,3 +172,17 @@ The Reviews App is the platform's reference implementation demonstrating worker 
 - `apps/reviews/storefront/`: Contains `ReviewsList.tsx` and public routes (`api/list`, `api/submit`).
 - `apps/reviews/shared/`: Contains unified TypeScript types and defaults.
 - `apps/reviews/lib/`: Contains shared, auth-agnostic D1 database queries.
+
+---
+
+## 9. Real-World Case Study: The Wishlist App (`apps/wishlist/`)
+
+The Wishlist App demonstrates how to convert an existing core platform feature into a modular, installable app while maintaining 100% backward compatibility and zero database migrations:
+- `apps/wishlist/manifest.json`: Declares permissions (`read:products`, `read:customers`, `read:media`), extension points (`storefront.product.below`, `storefront.header`, `storefront.account.menu`), and 4 configurable settings toggles.
+- `apps/wishlist/storefront/`: Contains `WishlistButton.tsx` (product card heart + detail button + inline pill), `WishlistHeaderIcon.tsx` (sticky navigation heart + count badge), and `WishlistPage.tsx` (customer wishlist CSR island).
+- `apps/wishlist/storefront/api/`: Customer API routes (`list`, `add`, `remove`, `toggle`) supporting both authenticated customers and guest session cookies (`requireLogin = false`).
+- `apps/wishlist/shared/types.ts`: Strongly typed settings schema and defaults.
+- `apps/wishlist/lib/wishlist.ts`: Auth-agnostic, date-bounded, cached database queries with 20s in-memory micro-cache.
+- **Root Re-Exports**: Root `lib/wishlist.ts` re-exports from `@/apps/wishlist/lib/wishlist`, ensuring existing imports continue functioning seamlessly.
+- **Data Preservation**: Uninstalling the app preserves all rows in `customer_wishlist`. Reinstalling restores previous items and restores previously saved configuration settings.
+

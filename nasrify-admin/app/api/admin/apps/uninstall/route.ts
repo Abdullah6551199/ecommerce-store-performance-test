@@ -3,6 +3,7 @@ import { getCurrentAdmin } from "@/lib/auth";
 import { getDb, installedApps, appInstallLogs } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { invalidateInstalledAppsCache } from "@/lib/apps/installed";
+import { invalidateStorefront } from "@/lib/storefront-invalidation";
 
 export const dynamic = "force-dynamic";
 
@@ -58,20 +59,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const previousSettings = existing[0].settings;
+
     // Delete record from installed_apps table
     // DATA SAFETY: NEVER drop app-owned data tables (e.g. app_<id>_*)
     await db.delete(installedApps).where(eq(installedApps.id, appId));
 
-    // Audit log
+    // Audit log - preserve settings to support restore on reinstall
     await db.insert(appInstallLogs).values({
       appId,
       action: "uninstall",
       performedAt: now,
       performedBy: admin.email,
-      notes: "Uninstalled app, preserved all app data tables",
+      notes: previousSettings || "Uninstalled app, preserved all app data tables",
     });
 
     invalidateInstalledAppsCache();
+    await invalidateStorefront({ target: "apps" }).catch(() => null);
 
     return NextResponse.json({
       success: true,

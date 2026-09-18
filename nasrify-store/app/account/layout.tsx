@@ -19,6 +19,7 @@ export default function AccountLayout({
   const router = useRouter();
   const [customer, setCustomer] = useState<CustomerProfile | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [hasWishlistApp, setHasWishlistApp] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -26,9 +27,10 @@ export default function AccountLayout({
     let isMounted = true;
     async function checkAuth() {
       try {
-        const [meRes, unreadRes] = await Promise.all([
+        const [meRes, unreadRes, wishlistRes] = await Promise.all([
           fetch("/api/auth/me"),
           fetch("/api/customer/notifications/unread-count"),
+          fetch("/api/apps/wishlist/settings").catch(() => null),
         ]);
 
         if (!meRes.ok) {
@@ -38,6 +40,15 @@ export default function AccountLayout({
 
         const meData = (await meRes.json()) as { customer?: CustomerProfile };
         const unreadData = (await unreadRes.json().catch(() => ({ unreadCount: 0 }))) as { unreadCount?: number };
+
+        if (wishlistRes && wishlistRes.ok) {
+          const wJson = (await wishlistRes.json().catch(() => ({}))) as any;
+          if (wJson.data === null) {
+            if (isMounted) setHasWishlistApp(false);
+          } else if (isMounted) {
+            setHasWishlistApp(true);
+          }
+        }
 
         if (isMounted && meData.customer) {
           setCustomer(meData.customer);
@@ -132,7 +143,7 @@ export default function AccountLayout({
         </svg>
       ),
     },
-  ];
+  ].filter((link) => link.href !== "/account/wishlist" || hasWishlistApp);
 
   const getSubPageName = () => {
     if (pathname.startsWith("/account/orders")) return "Orders";

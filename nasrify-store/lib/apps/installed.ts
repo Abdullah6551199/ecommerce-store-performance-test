@@ -8,7 +8,7 @@ interface CacheEntry {
   expiresAt: number;
 }
 
-const CACHE_TTL_MS = 60 * 1000; // 60s TTL
+const CACHE_TTL_MS = 20 * 1000; // 20s TTL per permanent rules
 let memoryCache: CacheEntry | null = null;
 
 /**

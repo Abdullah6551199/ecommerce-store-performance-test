@@ -21,6 +21,12 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   bundles: {
     BundlesManager: dynamic(() => import("@/apps/bundles/admin/BundlesManager")),
   },
+  "order-tracking": {
+    OrderTrackingSettings: dynamic(() => import("@/apps/order-tracking/admin/OrderTrackingSettings")),
+  },
+  broadcast: {
+    BroadcastManager: dynamic(() => import("@/apps/broadcast/admin/BroadcastManager")),
+  },
 };
 
 export function loadAdminAppComponent(

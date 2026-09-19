@@ -1,0 +1,76 @@
+{
+  "id": "order-tracking",
+  "name": "Order Tracking",
+  "version": "1.0.0",
+  "description": "Live shipment tracking timeline, courier information, and customer order status progression updates.",
+  "author": "Nasrify Core",
+  "authorUrl": "https://nasrify.com",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "operations",
+  "permissions": [
+    "read:orders",
+    "write:orders",
+    "read:customers",
+    "send:notifications"
+  ],
+  "extensionPoints": [
+    "storefront.account.menu",
+    "admin.order.detail.below"
+  ],
+  "workerScope": {
+    "admin": [
+      "admin/"
+    ],
+    "storefront": [
+      "storefront/"
+    ],
+    "shared": [
+      "manifest.json",
+      "icon.svg",
+      "lib/",
+      "shared/"
+    ]
+  },
+  "settingsSchema": {
+    "enablePublicTracking": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Public Tracking",
+      "description": "Allow customers to track order progress on /track-order without requiring an account login"
+    },
+    "enableAutoNotifications": {
+      "type": "boolean",
+      "default": true,
+      "label": "Auto Status Notifications",
+      "description": "Automatically send notifications to customers when fulfillment status changes"
+    },
+    "showCourierField": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Courier Details",
+      "description": "Display courier name and tracking code in the shipment progress timeline"
+    },
+    "showTimeline": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Visual Timeline",
+      "description": "Display the visual step-by-step progress timeline on the tracking page"
+    },
+    "timelineStages": {
+      "type": "string",
+      "default": "Pending,Confirmed,Packed,Shipped,Out for Delivery,Delivered",
+      "label": "Timeline Stages",
+      "description": "Comma-separated list of fulfillment stages displayed on customer tracking timelines"
+    },
+    "estimatedDeliveryDays": {
+      "type": "number",
+      "default": 5,
+      "min": 1,
+      "max": 30,
+      "label": "Default Estimated Delivery Days",
+      "description": "Default delivery timeframe (in days) calculated for new orders"
+    }
+  },
+  "databaseTables": []
+}

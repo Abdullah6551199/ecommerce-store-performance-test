@@ -20,6 +20,14 @@ const CompareBar = dynamic(
   }
 );
 
+const BroadcastPopup = dynamic(
+  () => import("@/apps/broadcast/storefront/BroadcastPopup"),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
 interface Props {
   enabledAppIds: string[];
 }
@@ -33,8 +41,9 @@ export default function StorefrontFloatingClient({
 
   const hasWhatsApp = enabledAppIds.includes("whatsapp-order");
   const hasCompare = enabledAppIds.includes("compare");
+  const hasBroadcast = enabledAppIds.includes("broadcast");
 
-  if (!hasWhatsApp && !hasCompare) {
+  if (!hasWhatsApp && !hasCompare && !hasBroadcast) {
     return null;
   }
 
@@ -43,6 +52,11 @@ export default function StorefrontFloatingClient({
       {hasCompare && (
         <AppErrorBoundary appId="compare" extensionPoint="storefront.floating">
           <CompareBar />
+        </AppErrorBoundary>
+      )}
+      {hasBroadcast && (
+        <AppErrorBoundary appId="broadcast" extensionPoint="storefront.floating">
+          <BroadcastPopup />
         </AppErrorBoundary>
       )}
       {hasWhatsApp && (

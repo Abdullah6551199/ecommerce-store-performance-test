@@ -19,7 +19,6 @@ import { validateCoupon, recordCouponUsage } from "./coupons";
 import { createCustomerNotification } from "./customer-notifications";
 import { detectTaxRate, calculateTax, getTaxSettings } from "./tax";
 import { calculateShipping } from "./shipping";
-import { invalidateAdminDataCache } from "./admin-cache";
 
 // Validation Schemas
 export const orderItemInputSchema = z.object({
@@ -480,9 +479,6 @@ export async function createOrderFromCart(
     }
   }
 
-  // Invalidate admin API cache on new order creation
-  invalidateAdminDataCache();
-
   return {
     ...orderRecord,
     items: createdOrderItems,
@@ -820,8 +816,6 @@ export async function updateAdminOrderStatus(
     trackingNumber: memoryOrders[idx].trackingNumber,
   });
 
-  invalidateAdminDataCache();
-
   return memoryOrders[idx];
 }
 
@@ -850,8 +844,6 @@ export async function updateBulkAdminOrderStatus(
       await onOrderStatusChange(r.id, newStatus).catch(() => {});
     }
 
-    invalidateAdminDataCache();
-
     return res.length;
   }
 
@@ -869,4 +861,17 @@ export async function updateBulkAdminOrderStatus(
   }
   return count;
 }
+
+// Re-export Order Tracking app helpers
+export {
+  trackOrder,
+  updateOrderTrackingStatus,
+  getOrderTrackingSettings,
+  invalidateTrackingCache,
+} from "@/apps/order-tracking/lib/order-tracking";
+export type {
+  TrackedOrder,
+  TrackedOrderItem,
+  OrderTrackingAppSettings,
+} from "@/apps/order-tracking/shared/types";
 

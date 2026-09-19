@@ -4,6 +4,8 @@ import whatsappOrderManifest from "@/apps/whatsapp-order/manifest.json";
 import wishlistManifest from "@/apps/wishlist/manifest.json";
 import compareManifest from "@/apps/compare/manifest.json";
 import bundlesManifest from "@/apps/bundles/manifest.json";
+import orderTrackingManifest from "@/apps/order-tracking/manifest.json";
+import broadcastManifest from "@/apps/broadcast/manifest.json";
 import { type AppManifest } from "@/types/apps";
 import { validateManifest } from "./manifest";
 
@@ -18,6 +20,8 @@ const RAW_MANIFESTS: Record<string, unknown> = {
   wishlist: wishlistManifest,
   compare: compareManifest,
   bundles: bundlesManifest,
+  "order-tracking": orderTrackingManifest,
+  broadcast: broadcastManifest,
 };
 
 const VALIDATED_MANIFESTS: Record<string, AppManifest> = {};

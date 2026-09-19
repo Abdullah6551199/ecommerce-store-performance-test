@@ -78,6 +78,12 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   bundles: {
     BundlesManager: dynamic(() => import("@/apps/bundles/admin/BundlesManager")),
   },
+  "order-tracking": {
+    OrderTrackingSettings: dynamic(() => import("@/apps/order-tracking/admin/OrderTrackingSettings")),
+  },
+  broadcast: {
+    BroadcastManager: dynamic(() => import("@/apps/broadcast/admin/BroadcastManager")),
+  },
 };
 
 export function loadAdminAppComponent(
@@ -137,6 +143,13 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     BundleCard: dynamic(() => import("@/apps/bundles/storefront/BundleCard")),
     FeaturedBundles: dynamic(() => import("@/apps/bundles/storefront/FeaturedBundles")),
     BundleCrossSell: dynamic(() => import("@/apps/bundles/storefront/BundleCrossSell")),
+  },
+  "order-tracking": {
+    TrackOrderPage: dynamic(() => import("@/apps/order-tracking/storefront/TrackOrderPage")),
+    OrderTimeline: dynamic(() => import("@/apps/order-tracking/storefront/OrderTimeline")),
+  },
+  broadcast: {
+    BroadcastPopup: dynamic(() => import("@/apps/broadcast/storefront/BroadcastPopup")),
   },
 };
 

@@ -862,3 +862,16 @@ export async function updateBulkAdminOrderStatus(
   return count;
 }
 
+// Re-export Order Tracking app helpers
+export {
+  trackOrder,
+  updateOrderTrackingStatus,
+  getOrderTrackingSettings,
+  invalidateTrackingCache,
+} from "@/apps/order-tracking/lib/order-tracking";
+export type {
+  TrackedOrder,
+  TrackedOrderItem,
+  OrderTrackingAppSettings,
+} from "@/apps/order-tracking/shared/types";
+

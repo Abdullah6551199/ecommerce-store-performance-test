@@ -33,6 +33,13 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     FeaturedBundles: dynamic(() => import("@/apps/bundles/storefront/FeaturedBundles")),
     BundleCrossSell: dynamic(() => import("@/apps/bundles/storefront/BundleCrossSell")),
   },
+  "order-tracking": {
+    TrackOrderPage: dynamic(() => import("@/apps/order-tracking/storefront/TrackOrderPage")),
+    OrderTimeline: dynamic(() => import("@/apps/order-tracking/storefront/OrderTimeline")),
+  },
+  broadcast: {
+    BroadcastPopup: dynamic(() => import("@/apps/broadcast/storefront/BroadcastPopup")),
+  },
 };
 
 export function loadAdminAppComponent(

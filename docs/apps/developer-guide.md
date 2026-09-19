@@ -208,4 +208,28 @@ The Bundles App demonstrates complex multi-item relationships, SQL aggregations,
 - **Root Re-Exports**: Root `lib/bundles.ts`, `components/bundles/BundleCard.tsx`, and `components/admin/BundlesManager.tsx` re-export directly from `apps/bundles/`, ensuring legacy imports continue to function without changes.
 - **Data Safety**: App uninstallation does NOT drop `product_bundles` or `bundle_items`. All bundle definitions and historical order associations are permanently safeguarded.
 
+---
+
+## 12. Real-World Case Study: The Order Tracking App (`apps/order-tracking/`)
+
+The Order Tracking App demonstrates zero-database-migration conversion of critical order fulfillment pipelines:
+- `apps/order-tracking/manifest.json`: Declares permissions (`read:orders`, `write:orders`, `read:customers`, `send:notifications`), extension points (`storefront.account.menu`, `admin.order.detail.below`), empty `databaseTables: []` (uses core `orders` table), and configurable settings (`enablePublicTracking`, `enableAutoNotifications`, `showCourierField`, `showTimeline`, `timelineStages`, `estimatedDeliveryDays`).
+- `apps/order-tracking/admin/`: Contains `OrderTrackingSettings.tsx` and `api/update-status/route.ts` for updating fulfillment milestones, courier waybills, and dispatching non-blocking customer notifications.
+- `apps/order-tracking/storefront/`: Contains `TrackOrderPage.tsx` (public CSR tracking island) and `OrderTimeline.tsx` (6-stage progress timeline with timestamps).
+- `apps/order-tracking/lib/order-tracking.ts`: Micro-cached query helpers resolving orders by ID or waybill number without requiring customer authentication.
+- **Root Re-Exports**: Root `lib/orders.ts`, `components/OrderStatusTimeline.tsx`, and `app/track-order/page.tsx` re-export from the app module.
+- **Data Safety**: The `orders` table is completely untouched during uninstallation and reinstallation.
+
+---
+
+## 13. Real-World Case Study: The Broadcast Notifications App (`apps/broadcast/`)
+
+The Broadcast App demonstrates modal overlay extensions, impression metrics, and campaign lifecycle management:
+- `apps/broadcast/manifest.json`: Declares permissions (`read:customers`, `read:settings`), extension points (`storefront.floating`, `admin.dashboard.widget`), platform database tables (`broadcasts`, `broadcast_views`), and settings schema (`enablePopup`, `popupPosition`, `popupDelaySeconds`, `showOncePerCustomer`, `enableExpiryDate`, `maxActiveBroadcasts`).
+- `apps/broadcast/admin/`: Contains `BroadcastManager.tsx` featuring live banner preview, schedule toggles, aggregate metrics, and administrative CRUD endpoints (`list`, `create`, `update`, `delete`, `stats`).
+- `apps/broadcast/storefront/`: Contains `BroadcastPopup.tsx` rendered dynamically on `storefront.floating` with dismissal tracking.
+- `apps/broadcast/lib/broadcasts.ts`: Database queries utilizing SQL aggregations (`count(*)`, `sum(case when is_dismissed then 1 else 0 end)`), auto-expiry filtering, and cross-worker invalidation.
+- **Data Safety**: Preserves all campaigns in `broadcasts` and impressions in `broadcast_views`. Uninstallation disables display overlays while safeguarding historical campaign performance.
+
+
 

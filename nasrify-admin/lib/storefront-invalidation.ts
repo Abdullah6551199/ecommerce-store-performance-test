@@ -99,3 +99,21 @@ export async function invalidateStorefront(options: InvalidationOptions = {}): P
   );
   return { success: false, attempts: maxAttempts };
 }
+
+/**
+ * Compatible alias for cross-worker invalidation
+ */
+export async function sendStorefrontInvalidation(
+  targetOrTags?: string | string[] | InvalidationOptions
+): Promise<{ success: boolean; attempts: number }> {
+  if (!targetOrTags) {
+    return invalidateStorefront({ target: "all" });
+  }
+  if (typeof targetOrTags === "string") {
+    return invalidateStorefront({ target: targetOrTags });
+  }
+  if (Array.isArray(targetOrTags)) {
+    return invalidateStorefront({ target: targetOrTags.join(",") });
+  }
+  return invalidateStorefront(targetOrTags);
+}

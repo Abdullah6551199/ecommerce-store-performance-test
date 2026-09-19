@@ -1,43 +1,53 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { WhatsAppOrderSettings, DEFAULT_WHATSAPP_SETTINGS } from "../shared/types";
 import { formatWhatsAppUrl, sanitizePhoneNumber } from "../lib/whatsapp";
 
 /**
  * Floating WhatsApp chat button for storefront bottom-right corner.
  * Loaded dynamically on client side via storefront.floating extension point.
+ * Stage 29.6: Sub-5s cache reflection via timestamp query & focus/visibility listeners.
  */
 export default function WhatsAppFloatingButton(): React.JSX.Element | null {
   const [settings, setSettings] = useState<WhatsAppOrderSettings | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-    async function loadSettings() {
-      try {
-        const res = await fetch("/api/apps/whatsapp-order/settings");
-        if (res.ok) {
-          const json = (await res.json()) as any;
-          if (json && json.success && json.data) {
-            if (isMounted) {
-              setSettings({ ...DEFAULT_WHATSAPP_SETTINGS, ...json.data });
-            }
-          }
-        }
-      } catch (err) {
-        // Silently catch to avoid disrupting storefront
-      } finally {
-        if (isMounted) {
-          setLoading(false);
+  const loadSettings = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/apps/whatsapp-order/settings?t=${Date.now()}`, {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const json = (await res.json()) as any;
+        if (json && json.success && json.data) {
+          setSettings({ ...DEFAULT_WHATSAPP_SETTINGS, ...json.data });
         }
       }
+    } catch {
+      // Silently catch to avoid disrupting storefront
+    } finally {
+      setLoading(false);
     }
-    loadSettings();
-    return () => {
-      isMounted = false;
-    };
   }, []);
+
+  useEffect(() => {
+    loadSettings();
+
+    const handleFocus = () => loadSettings();
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        loadSettings();
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [loadSettings]);
 
   if (loading || !settings) {
     return null;

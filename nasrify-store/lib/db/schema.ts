@@ -367,6 +367,7 @@ export const orders = sqliteTable("orders", {
   taxRate: real("tax_rate").default(0),
   taxLabel: text("tax_label"),
   shippingZoneId: text("shipping_zone_id"),
+  source: text("source").default("web"),
   createdAt: text("created_at")
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),

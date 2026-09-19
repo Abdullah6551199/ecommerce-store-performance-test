@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import type { OrderRecord, OrderWithItems, OrderStatus } from "@/lib/orders";
+import { fetchWithClientCache, invalidateClientCache } from "@/lib/client-cache";
 
 const STATUS_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   pending: { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400", border: "border-amber-500/30" },
@@ -33,6 +34,7 @@ export default function OrdersManager(): React.JSX.Element {
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sourceFilter, setSourceFilter] = useState<"all" | "web" | "whatsapp">("all");
 
   // Selected Order for Details Modal
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
@@ -105,25 +107,22 @@ export default function OrdersManager(): React.JSX.Element {
   const PAGE_SIZE = 20;
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
-  const fetchOrders = useCallback(async (pageToFetch = currentPage) => {
+  const fetchOrders = useCallback(async (pageToFetch = currentPage, forceRefresh: unknown = false) => {
     try {
       setIsLoading(true);
       setError(null);
 
       const params = new URLSearchParams();
       if (statusFilter !== "all") params.set("status", statusFilter);
+      if (sourceFilter !== "all") params.set("source", sourceFilter);
       if (searchQuery.trim()) params.set("search", searchQuery.trim());
       params.set("limit", String(PAGE_SIZE));
       params.set("offset", String((pageToFetch - 1) * PAGE_SIZE));
 
-      const res = await fetch(`/api/admin/orders?${params.toString()}`);
-      const json = (await res.json()) as {
-        success: boolean;
-        data?: { orders: (OrderRecord & { itemCount: number })[]; totalCount: number };
-        error?: string;
-      };
+      const url = `/api/admin/orders?${params.toString()}`;
+      const json = await fetchWithClientCache<any>(url, { forceRefresh: forceRefresh === true });
 
-      if (!res.ok || !json.success) {
+      if (!json.success) {
         throw new Error(json.error || "Failed to fetch orders");
       }
 
@@ -135,7 +134,7 @@ export default function OrdersManager(): React.JSX.Element {
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, searchQuery, currentPage, PAGE_SIZE]);
+  }, [statusFilter, sourceFilter, searchQuery, currentPage, PAGE_SIZE]);
 
   useEffect(() => {
     fetchOrders(currentPage);
@@ -220,6 +219,9 @@ export default function OrdersManager(): React.JSX.Element {
             : o
         )
       );
+
+      invalidateClientCache("/api/admin/orders");
+      showToast("Tracking details saved successfully", "success");
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Failed to update tracking", "error");
     } finally {
@@ -256,6 +258,7 @@ export default function OrdersManager(): React.JSX.Element {
         throw new Error(json.error || "Failed to update order status");
       }
 
+      invalidateClientCache("/api/admin/orders");
       showToast(`Order #${orderId.slice(0, 8).toUpperCase()} updated to ${newStatus}`, "success");
     } catch (err) {
       // Revert if failed
@@ -324,6 +327,7 @@ export default function OrdersManager(): React.JSX.Element {
       setOrdersList((prev) =>
         prev.map((o) => (selectedOrderIds.has(o.id) ? { ...o, status: newStatus } : o))
       );
+      invalidateClientCache("/api/admin/orders");
       showToast(`${idsToUpdate.length} orders updated to ${newStatus}`, "success");
       setSelectedOrderIds(new Set());
     } catch (err) {
@@ -483,25 +487,50 @@ export default function OrdersManager(): React.JSX.Element {
           </svg>
         </div>
 
-        {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-          {["all", ...ALL_STATUSES].map((st) => (
-            <button
-              key={st}
-              type="button"
-              onClick={() => {
-                setStatusFilter(st);
-                setCurrentPage(1);
-              }}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
-                statusFilter === st
-                  ? "bg-[#960DF2] text-white shadow-md shadow-[#960DF2]/20"
-                  : "bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
-              }`}
-            >
-              {st}
-            </button>
-          ))}
+        {/* Status & Source Filter Tabs */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Source Filter Tabs */}
+          <div className="flex items-center gap-1 bg-zinc-100 dark:bg-white/5 p-1 rounded-xl border border-zinc-200 dark:border-white/10 shrink-0">
+            <span className="text-[10px] uppercase font-mono font-bold px-1.5 text-zinc-400 dark:text-white/40">Source:</span>
+            {(["all", "web", "whatsapp"] as const).map((src) => (
+              <button
+                key={src}
+                type="button"
+                onClick={() => {
+                  setSourceFilter(src);
+                  setCurrentPage(1);
+                }}
+                className={`rounded-lg px-2.5 py-1 text-xs font-semibold capitalize transition-all cursor-pointer ${
+                  sourceFilter === src
+                    ? "bg-[#960DF2] text-white shadow-sm"
+                    : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
+                }`}
+              >
+                {src === "all" ? "All" : src === "web" ? "Web" : "WhatsApp"}
+              </button>
+            ))}
+          </div>
+
+          {/* Status Filter Tabs */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+            {["all", ...ALL_STATUSES].map((st) => (
+              <button
+                key={st}
+                type="button"
+                onClick={() => {
+                  setStatusFilter(st);
+                  setCurrentPage(1);
+                }}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
+                  statusFilter === st
+                    ? "bg-[#960DF2] text-white shadow-md shadow-[#960DF2]/20"
+                    : "bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 hover:text-zinc-900 dark:hover:text-white"
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -597,13 +626,26 @@ export default function OrdersManager(): React.JSX.Element {
 
                       {/* Order ID */}
                       <td className="px-5 py-4 font-mono font-bold text-zinc-900 dark:text-white">
-                        <button
-                          type="button"
-                          onClick={() => handleOpenDetails(order.id)}
-                          className="text-[#960DF2] dark:text-[#EACFFC] hover:underline cursor-pointer"
-                        >
-                          #{shortId}
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenDetails(order.id)}
+                            className="text-[#960DF2] dark:text-[#EACFFC] hover:underline cursor-pointer"
+                          >
+                            #{shortId}
+                          </button>
+                          {order.source === "whatsapp" && (
+                            <span
+                              title="Order placed via WhatsApp"
+                              className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400"
+                            >
+                              <svg className="h-3 w-3 fill-current shrink-0" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.276-.1-.476-.15-.677.15-.2.301-.777.98-.953 1.181-.176.201-.351.226-.652.075s-1.27-.468-2.42-1.493c-.894-.799-1.498-1.786-1.674-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.1-.201.05-.376-.025-.527s-.677-1.632-.928-2.234c-.244-.587-.492-.507-.677-.516l-.578-.01c-.2 0-.527.075-.803.376s-1.054 1.03-1.054 2.511 1.079 2.912 1.23 3.113c.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.722.23 1.38.197 1.9-.12.58-.352 1.781-1.28 2.032-1.882.251-.602.251-1.118.176-1.229-.075-.11-.276-.176-.577-.326zM12.04 2C6.52 2 2.04 6.48 2.04 12c0 1.98.58 3.82 1.58 5.38L2 22l4.77-1.58C8.28 21.36 10.1 22 12.04 22c5.52 0 10-4.48 10-10S17.56 2 12.04 2zm0 18.2c-1.68 0-3.24-.52-4.54-1.41l-.33-.22-2.82.93.94-2.75-.24-.37c-.98-1.5-1.51-3.25-1.51-5.08 0-4.69 3.81-8.5 8.5-8.5s8.5 3.81 8.5 8.5c0 4.69-3.81 8.5-8.5 8.5z" />
+                              </svg>
+                              <span>WhatsApp</span>
+                            </span>
+                          )}
+                        </div>
                       </td>
 
                       {/* Date */}
@@ -912,6 +954,15 @@ export default function OrdersManager(): React.JSX.Element {
                           }`}
                         >
                           {selectedOrderDetails.status}
+                        </span>
+                        <span
+                          className={`rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+                            selectedOrderDetails.source === "whatsapp"
+                              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                              : "border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                          }`}
+                        >
+                          {selectedOrderDetails.source === "whatsapp" ? "Source: WhatsApp" : "Source: Website"}
                         </span>
                       </div>
                     </div>

@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 
 const querySchema = z.object({
   status: z.enum(ORDER_STATUSES).optional(),
+  source: z.string().trim().optional(),
   search: z.string().trim().max(100).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(20),
   offset: z.coerce.number().int().min(0).default(0),
@@ -25,6 +26,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const parseResult = querySchema.safeParse({
       status: searchParams.get("status") || undefined,
+      source: searchParams.get("source") || undefined,
       search: searchParams.get("search") || undefined,
       limit: searchParams.get("limit") || undefined,
       offset: searchParams.get("offset") || undefined,

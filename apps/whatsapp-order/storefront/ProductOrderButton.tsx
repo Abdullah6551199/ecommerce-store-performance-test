@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { WhatsAppOrderSettings, DEFAULT_WHATSAPP_SETTINGS } from "../shared/types";
 import {
   formatWhatsAppUrl,
@@ -21,6 +21,7 @@ export interface ProductOrderButtonProps {
 /**
  * "Order on WhatsApp" button for single product pages.
  * Matches exact size, shape, padding, and border-radius of the "Order Now" / "Buy Now" button.
+ * Stage 29.6: Fast sub-5s settings reflection via timestamp query & focus/visibility listeners.
  */
 export default function ProductOrderButton({
   productId,
@@ -34,34 +35,41 @@ export default function ProductOrderButton({
   const [settings, setSettings] = useState<WhatsAppOrderSettings | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-    async function loadSettings() {
-      try {
-        const res = await fetch("/api/apps/whatsapp-order/settings", {
-          cache: "no-store",
-        });
-        if (res.ok) {
-          const json = (await res.json()) as any;
-          if (json && json.success && json.data) {
-            if (isMounted) {
-              setSettings({ ...DEFAULT_WHATSAPP_SETTINGS, ...json.data });
-            }
-          }
-        }
-      } catch {
-        // Silent fallback
-      } finally {
-        if (isMounted) {
-          setLoading(false);
+  const loadSettings = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/apps/whatsapp-order/settings?t=${Date.now()}`, {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const json = (await res.json()) as any;
+        if (json && json.success && json.data) {
+          setSettings({ ...DEFAULT_WHATSAPP_SETTINGS, ...json.data });
         }
       }
+    } catch {
+      // Silent fallback
+    } finally {
+      setLoading(false);
     }
-    loadSettings();
-    return () => {
-      isMounted = false;
-    };
   }, []);
+
+  useEffect(() => {
+    loadSettings();
+
+    const handleFocus = () => loadSettings();
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        loadSettings();
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [loadSettings]);
 
   if (loading || !settings) {
     return null;

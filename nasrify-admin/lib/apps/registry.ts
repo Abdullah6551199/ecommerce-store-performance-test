@@ -6,6 +6,8 @@ import compareManifest from "@/apps/compare/manifest.json";
 import bundlesManifest from "@/apps/bundles/manifest.json";
 import orderTrackingManifest from "@/apps/order-tracking/manifest.json";
 import broadcastManifest from "@/apps/broadcast/manifest.json";
+import trustBadgesManifest from "@/apps/trust-badges/manifest.json";
+import cookieConsentManifest from "@/apps/cookie-consent/manifest.json";
 import { type AppManifest } from "@/types/apps";
 import { validateManifest } from "./manifest";
 
@@ -22,6 +24,8 @@ const RAW_MANIFESTS: Record<string, unknown> = {
   bundles: bundlesManifest,
   "order-tracking": orderTrackingManifest,
   broadcast: broadcastManifest,
+  "trust-badges": trustBadgesManifest,
+  "cookie-consent": cookieConsentManifest,
 };
 
 const VALIDATED_MANIFESTS: Record<string, AppManifest> = {};

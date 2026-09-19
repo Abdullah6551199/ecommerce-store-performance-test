@@ -28,6 +28,12 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   broadcast: {
     BroadcastManager: dynamic(() => import("@/apps/broadcast/admin/BroadcastManager")),
   },
+  "trust-badges": {
+    TrustBadgesManager: dynamic(() => import("@/apps/trust-badges/admin/TrustBadgesManager")),
+  },
+  "cookie-consent": {
+    CookieConsentManager: dynamic(() => import("@/apps/cookie-consent/admin/CookieConsentManager")),
+  },
 };
 
 export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.ComponentType<any>>> = {
@@ -64,6 +70,15 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
   },
   broadcast: {
     BroadcastPopup: dynamic(() => import("@/apps/broadcast/storefront/BroadcastPopup")),
+  },
+  "trust-badges": {
+    TrustBadgesRow: dynamic(() => import("@/apps/trust-badges/storefront/TrustBadgesRow")),
+    PaymentIconsRow: dynamic(() => import("@/apps/trust-badges/storefront/PaymentIconsRow")),
+  },
+  "cookie-consent": {
+    CookieConsentBanner: dynamic(() => import("@/apps/cookie-consent/storefront/CookieConsentBanner")),
+    CookieCustomizeModal: dynamic(() => import("@/apps/cookie-consent/storefront/CookieCustomizeModal")),
+    ScriptBlocker: dynamic(() => import("@/apps/cookie-consent/storefront/ScriptBlocker")),
   },
 };
 

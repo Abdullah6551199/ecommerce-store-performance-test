@@ -27,6 +27,12 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   broadcast: {
     BroadcastManager: dynamic(() => import("@/apps/broadcast/admin/BroadcastManager")),
   },
+  "trust-badges": {
+    TrustBadgesManager: dynamic(() => import("@/apps/trust-badges/admin/TrustBadgesManager")),
+  },
+  "cookie-consent": {
+    CookieConsentManager: dynamic(() => import("@/apps/cookie-consent/admin/CookieConsentManager")),
+  },
 };
 
 export function loadAdminAppComponent(

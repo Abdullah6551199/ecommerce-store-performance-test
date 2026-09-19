@@ -231,5 +231,27 @@ The Broadcast App demonstrates modal overlay extensions, impression metrics, and
 - `apps/broadcast/lib/broadcasts.ts`: Database queries utilizing SQL aggregations (`count(*)`, `sum(case when is_dismissed then 1 else 0 end)`), auto-expiry filtering, and cross-worker invalidation.
 - **Data Safety**: Preserves all campaigns in `broadcasts` and impressions in `broadcast_views`. Uninstallation disables display overlays while safeguarding historical campaign performance.
 
+---
 
+## 14. Real-World Case Study: The Trust Badges App (`apps/trust-badges/`)
 
+The Trust Badges App demonstrates multi-extension-point component rendering, payment icon vector rendering, and drag-and-drop sort order:
+- `apps/trust-badges/manifest.json`: Declares permissions (`read:products`, `read:media`, `read:settings`), extension points (`storefront.product.below`, `storefront.cart.below`, `storefront.checkout.below`, `admin.dashboard.widget`), database tables (`trust_badges`, `payment_icons`), and configurable settings (`showOnProductPage`, `showOnCartPage`, `showOnCheckoutPage`, `showPaymentIcons`, `badgeAlignment`, `badgeSize`).
+- `apps/trust-badges/shared/payment-icons.tsx`: Shared vector SVG icons for credit card networks and digital wallets (Visa, Mastercard, AMEX, PayPal, Apple Pay, Google Pay) isolated from storefront DOM overhead.
+- `apps/trust-badges/admin/`: Contains `TrustBadgesManager.tsx` featuring badge CRUD, toggle switches, custom payment icon creator, alignment and size preview, and live storefront simulation.
+- `apps/trust-badges/storefront/`: Contains `TrustBadgesRow.tsx` and `PaymentIconsRow.tsx` rendering on product, cart, and checkout extension points.
+- `apps/trust-badges/lib/trust-badges.ts`: Strict column projection (never SELECT *), React.cache, 20s micro-cache, and cross-worker invalidation via `sendStorefrontInvalidation`.
+- **Root Re-Exports**: Root `lib/trust-badges.ts`, `components/TrustBadges.tsx`, `components/PaymentIcons.tsx`, and `components/admin/TrustBadgesManager.tsx` re-export directly from `apps/trust-badges/`.
+- **Data Safety**: The `trust_badges` and `payment_icons` tables are preserved across uninstall and reinstall cycles.
+
+---
+
+## 15. Real-World Case Study: The Cookie Consent & GDPR App (`apps/cookie-consent/`)
+
+The Cookie Consent App demonstrates zero-database-hit visitor consent tracking, client-side script blocker gating, and privacy regulation compliance:
+- `apps/cookie-consent/manifest.json`: Declares permissions (`read:settings`, `write:settings`, `read:customers`), extension points (`storefront.floating`, `admin.dashboard.widget`), database table (`cookie_consent_settings`), and settings schema (`enabled`, `bannerPosition`, `theme`, `showCustomizeButton`, `analyticsCategory`, `marketingCategory`, `functionalCategory`, `consentExpiryDays`, `blockScriptsUntilConsent`).
+- `apps/cookie-consent/admin/`: Contains `CookieConsentManager.tsx` with GDPR banner customization, per-category configuration, and consent analytics recording.
+- `apps/cookie-consent/storefront/`: Contains `CookieConsentBanner.tsx` (responsive floating overlay), `CookieCustomizeModal.tsx` (granular preference modal with accessible toggles), and `ScriptBlocker.tsx` (client-side script blocker running with 0 worker CPU).
+- `apps/cookie-consent/lib/cookie-consent.ts`: Dual localStorage and cookie storage engine ensuring zero database requests per page load, coupled with non-blocking asynchronous server-side logging.
+- **Root Re-Exports**: Root `lib/cookie-consent.ts`, `components/CookieConsentBanner.tsx`, `components/CookieCustomizeModal.tsx`, and `components/ScriptBlocker.tsx` re-export from `apps/cookie-consent/`.
+- **Data Safety**: All consent settings and records in `cookie_consent_settings` are permanently safeguarded across app uninstallation and reinstallation.

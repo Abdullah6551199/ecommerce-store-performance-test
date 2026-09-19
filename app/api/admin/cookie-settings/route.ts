@@ -7,9 +7,10 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export async function GET(_req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const admin = await getCurrentAdmin();
+    const sessionToken = req.cookies.get("admin_session")?.value;
+    const admin = await getCurrentAdmin(sessionToken);
     if (!admin) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
@@ -24,7 +25,8 @@ export async function GET(_req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const admin = await getCurrentAdmin();
+    const sessionToken = req.cookies.get("admin_session")?.value;
+    const admin = await getCurrentAdmin(sessionToken);
     if (!admin) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }

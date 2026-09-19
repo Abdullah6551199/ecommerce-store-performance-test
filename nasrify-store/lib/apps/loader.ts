@@ -40,6 +40,15 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
   broadcast: {
     BroadcastPopup: dynamic(() => import("@/apps/broadcast/storefront/BroadcastPopup")),
   },
+  "trust-badges": {
+    TrustBadgesRow: dynamic(() => import("@/apps/trust-badges/storefront/TrustBadgesRow")),
+    PaymentIconsRow: dynamic(() => import("@/apps/trust-badges/storefront/PaymentIconsRow")),
+  },
+  "cookie-consent": {
+    CookieConsentBanner: dynamic(() => import("@/apps/cookie-consent/storefront/CookieConsentBanner")),
+    CookieCustomizeModal: dynamic(() => import("@/apps/cookie-consent/storefront/CookieCustomizeModal")),
+    ScriptBlocker: dynamic(() => import("@/apps/cookie-consent/storefront/ScriptBlocker")),
+  },
 };
 
 export function loadAdminAppComponent(

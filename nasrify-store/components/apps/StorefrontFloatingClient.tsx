@@ -28,6 +28,22 @@ const BroadcastPopup = dynamic(
   }
 );
 
+const CookieConsentBanner = dynamic(
+  () => import("@/apps/cookie-consent/storefront/CookieConsentBanner"),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+const ScriptBlocker = dynamic(
+  () => import("@/apps/cookie-consent/storefront/ScriptBlocker"),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
 interface Props {
   enabledAppIds: string[];
 }
@@ -42,8 +58,9 @@ export default function StorefrontFloatingClient({
   const hasWhatsApp = enabledAppIds.includes("whatsapp-order");
   const hasCompare = enabledAppIds.includes("compare");
   const hasBroadcast = enabledAppIds.includes("broadcast");
+  const hasCookieConsent = enabledAppIds.includes("cookie-consent");
 
-  if (!hasWhatsApp && !hasCompare && !hasBroadcast) {
+  if (!hasWhatsApp && !hasCompare && !hasBroadcast && !hasCookieConsent) {
     return null;
   }
 
@@ -57,6 +74,12 @@ export default function StorefrontFloatingClient({
       {hasBroadcast && (
         <AppErrorBoundary appId="broadcast" extensionPoint="storefront.floating">
           <BroadcastPopup />
+        </AppErrorBoundary>
+      )}
+      {hasCookieConsent && (
+        <AppErrorBoundary appId="cookie-consent" extensionPoint="storefront.floating">
+          <CookieConsentBanner />
+          <ScriptBlocker />
         </AppErrorBoundary>
       )}
       {hasWhatsApp && (

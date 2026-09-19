@@ -14,16 +14,24 @@ const ReviewsList = dynamic(() => import("@/apps/reviews/storefront/ReviewsList"
   ),
 });
 
-const WhatsAppProductButton = dynamic(
-  () => import("@/apps/whatsapp-order/storefront/WhatsAppProductButton"),
+const WishlistButton = dynamic(
+  () => import("@/apps/wishlist/storefront/WishlistButton"),
   {
     ssr: false,
     loading: () => null,
   }
 );
 
-const WishlistButton = dynamic(
-  () => import("@/apps/wishlist/storefront/WishlistButton"),
+const CompareButton = dynamic(
+  () => import("@/apps/compare/storefront/CompareButton"),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+const BundleCrossSell = dynamic(
+  () => import("@/apps/bundles/storefront/BundleCrossSell"),
   {
     ssr: false,
     loading: () => null,
@@ -41,17 +49,33 @@ export default function StorefrontProductBelowClient({
 }: Props): React.JSX.Element | null {
   const hasReviews = Boolean(productId && enabledAppIds.includes("reviews"));
   const hasWishlist = Boolean(productId && enabledAppIds.includes("wishlist"));
+  const hasCompare = Boolean(productId && enabledAppIds.includes("compare"));
+  const hasBundles = Boolean(productId && enabledAppIds.includes("bundles"));
 
-  if (!hasReviews && !hasWishlist) {
+  if (!hasReviews && !hasWishlist && !hasCompare && !hasBundles) {
     return null;
   }
 
   return (
     <div className="w-full space-y-6 mt-8">
+      {hasBundles && (
+        <div data-app="bundles" className="w-full">
+          <AppErrorBoundary appId="bundles" extensionPoint="storefront.product.below">
+            <BundleCrossSell productId={productId!} />
+          </AppErrorBoundary>
+        </div>
+      )}
       {hasWishlist && (
         <div data-app="wishlist" className="w-full">
           <AppErrorBoundary appId="wishlist" extensionPoint="storefront.product.below">
             <WishlistButton productId={productId!} variant="detail" />
+          </AppErrorBoundary>
+        </div>
+      )}
+      {hasCompare && (
+        <div data-app="compare" className="w-full flex justify-end">
+          <AppErrorBoundary appId="compare" extensionPoint="storefront.product.below">
+            <CompareButton productId={productId!} variant="detail" />
           </AppErrorBoundary>
         </div>
       )}

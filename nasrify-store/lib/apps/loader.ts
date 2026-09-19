@@ -23,6 +23,16 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     WishlistPage: dynamic(() => import("@/apps/wishlist/storefront/WishlistPage")),
     WishlistHeaderIcon: dynamic(() => import("@/apps/wishlist/storefront/WishlistHeaderIcon")),
   },
+  compare: {
+    CompareButton: dynamic(() => import("@/apps/compare/storefront/CompareButton")),
+    CompareBar: dynamic(() => import("@/apps/compare/storefront/CompareBar")),
+    ComparePage: dynamic(() => import("@/apps/compare/storefront/ComparePage")),
+  },
+  bundles: {
+    BundleCard: dynamic(() => import("@/apps/bundles/storefront/BundleCard")),
+    FeaturedBundles: dynamic(() => import("@/apps/bundles/storefront/FeaturedBundles")),
+    BundleCrossSell: dynamic(() => import("@/apps/bundles/storefront/BundleCrossSell")),
+  },
 };
 
 export function loadAdminAppComponent(

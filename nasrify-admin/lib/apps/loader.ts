@@ -15,6 +15,12 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   "whatsapp-order": {
     WhatsAppSettings: dynamic(() => import("@/apps/whatsapp-order/admin/WhatsAppSettings")),
   },
+  compare: {
+    CompareSettings: dynamic(() => import("@/apps/compare/admin/CompareSettings")),
+  },
+  bundles: {
+    BundlesManager: dynamic(() => import("@/apps/bundles/admin/BundlesManager")),
+  },
 };
 
 export function loadAdminAppComponent(

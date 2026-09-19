@@ -1,0 +1,61 @@
+{
+  "id": "bundles",
+  "name": "Product Bundles",
+  "version": "1.0.0",
+  "description": "Package multiple products together into high-converting discounted bundle kits.",
+  "author": "Nasrify",
+  "authorUrl": "",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "sales",
+  "permissions": [
+    "read:products",
+    "write:products",
+    "read:media",
+    "read:orders"
+  ],
+  "extensionPoints": [
+    "storefront.homepage.section",
+    "storefront.product.below",
+    "storefront.cart.below",
+    "admin.dashboard.widget"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "databaseTables": [
+    "product_bundles",
+    "bundle_items"
+  ],
+  "settingsSchema": {
+    "enableHomepageSection": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable homepage featured bundles section"
+    },
+    "enableProductCrossSell": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable product detail cross-sell widgets"
+    },
+    "enableCartDiscount": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable bundle pricing & savings discount in cart"
+    },
+    "bundleBadgeText": {
+      "type": "string",
+      "default": "Save more with bundle",
+      "label": "Bundle badge display text"
+    },
+    "maxBundlesPerSection": {
+      "type": "number",
+      "default": 4,
+      "label": "Maximum bundles shown per section",
+      "description": "Limits the number of bundle cards rendered in showcase sections (1-8)"
+    }
+  },
+  "changelog": "1.0.0 — Initial release as modular app"
+}

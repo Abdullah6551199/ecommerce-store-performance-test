@@ -24,7 +24,14 @@ export async function GET(req: NextRequest) {
       offset,
     });
 
-    return NextResponse.json({ success: true, bundles, count: bundles.length });
+    return NextResponse.json(
+      { success: true, bundles, count: bundles.length },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=20, stale-while-revalidate=40",
+        },
+      }
+    );
   } catch (error) {
     console.error("GET /api/bundles error:", error);
     return NextResponse.json(

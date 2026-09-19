@@ -1,7 +1,6 @@
 import React, { Suspense } from "react";
 import type { Metadata } from "next";
-import CompareTable from "@/components/compare/CompareTable";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import ComparePageClient from "@/apps/compare/storefront/ComparePage";
 
 export const metadata: Metadata = {
   title: "Compare Products | Apex Store",
@@ -20,9 +19,7 @@ export default function ComparePage(): React.JSX.Element {
         </div>
       }
     >
-      <ErrorBoundary name="Compare">
-        <CompareTable />
-      </ErrorBoundary>
+      <ComparePageClient />
     </Suspense>
   );
 }

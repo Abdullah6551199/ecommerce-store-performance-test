@@ -16,6 +16,12 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   "whatsapp-order": {
     WhatsAppSettings: dynamic(() => import("@/apps/whatsapp-order/admin/WhatsAppSettings")),
   },
+  compare: {
+    CompareSettings: dynamic(() => import("@/apps/compare/admin/CompareSettings")),
+  },
+  bundles: {
+    BundlesManager: dynamic(() => import("@/apps/bundles/admin/BundlesManager")),
+  },
 };
 
 export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.ComponentType<any>>> = {
@@ -30,6 +36,21 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     WhatsAppProductButton: dynamic(() => import("@/apps/whatsapp-order/storefront/WhatsAppProductButton")),
     CartOrderButton: dynamic(() => import("@/apps/whatsapp-order/storefront/CartOrderButton")),
     CheckoutOrderButton: dynamic(() => import("@/apps/whatsapp-order/storefront/CheckoutOrderButton")),
+  },
+  wishlist: {
+    WishlistButton: dynamic(() => import("@/apps/wishlist/storefront/WishlistButton")),
+    WishlistPage: dynamic(() => import("@/apps/wishlist/storefront/WishlistPage")),
+    WishlistHeaderIcon: dynamic(() => import("@/apps/wishlist/storefront/WishlistHeaderIcon")),
+  },
+  compare: {
+    CompareButton: dynamic(() => import("@/apps/compare/storefront/CompareButton")),
+    CompareBar: dynamic(() => import("@/apps/compare/storefront/CompareBar")),
+    ComparePage: dynamic(() => import("@/apps/compare/storefront/ComparePage")),
+  },
+  bundles: {
+    BundleCard: dynamic(() => import("@/apps/bundles/storefront/BundleCard")),
+    FeaturedBundles: dynamic(() => import("@/apps/bundles/storefront/FeaturedBundles")),
+    BundleCrossSell: dynamic(() => import("@/apps/bundles/storefront/BundleCrossSell")),
   },
 };
 

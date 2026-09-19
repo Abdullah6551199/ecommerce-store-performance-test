@@ -21,6 +21,7 @@ export default async function StorefrontHomepageSection(): Promise<React.JSX.Ele
     <div className="w-full space-y-8 my-8">
       {matching.map((app) => {
         const Component =
+          loadAppStorefrontComponent(app.id, "FeaturedBundles") ||
           loadAppStorefrontComponent(app.id, "HelloWorldBanner") ||
           loadAppStorefrontComponent(app.id, "HomepageSection");
 

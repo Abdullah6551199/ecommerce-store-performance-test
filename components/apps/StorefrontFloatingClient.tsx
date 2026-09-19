@@ -12,6 +12,14 @@ const WhatsAppFloatingButton = dynamic(
   }
 );
 
+const CompareBar = dynamic(
+  () => import("@/apps/compare/storefront/CompareBar"),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
 interface Props {
   enabledAppIds: string[];
 }
@@ -24,22 +32,30 @@ export default function StorefrontFloatingClient({
   }
 
   const hasWhatsApp = enabledAppIds.includes("whatsapp-order");
+  const hasCompare = enabledAppIds.includes("compare");
 
-  if (!hasWhatsApp) {
+  if (!hasWhatsApp && !hasCompare) {
     return null;
   }
 
   return (
-    <div
-      id="storefront-floating-container"
-      className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-auto"
-      aria-label="Floating actions"
-    >
-      {hasWhatsApp && (
-        <AppErrorBoundary appId="whatsapp-order" extensionPoint="storefront.floating">
-          <WhatsAppFloatingButton />
+    <>
+      {hasCompare && (
+        <AppErrorBoundary appId="compare" extensionPoint="storefront.floating">
+          <CompareBar />
         </AppErrorBoundary>
       )}
-    </div>
+      {hasWhatsApp && (
+        <div
+          id="storefront-floating-container"
+          className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-auto"
+          aria-label="Floating actions"
+        >
+          <AppErrorBoundary appId="whatsapp-order" extensionPoint="storefront.floating">
+            <WhatsAppFloatingButton />
+          </AppErrorBoundary>
+        </div>
+      )}
+    </>
   );
 }

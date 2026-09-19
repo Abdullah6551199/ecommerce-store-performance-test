@@ -1,32 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { listBundles } from "@/lib/bundles";
-import { matchEdgeCache, putEdgeCache } from "@/lib/edge-cache";
-import { getStorefrontCache, setStorefrontCache, getStorefrontCacheKey } from "@/lib/store-cache";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
-    const cachedEdgeRes = await matchEdgeCache(req);
-    if (cachedEdgeRes) {
-      return cachedEdgeRes;
-    }
-
     const { searchParams } = new URL(req.url);
-    const cacheKey = getStorefrontCacheKey("bundles", searchParams);
-    const cached = getStorefrontCache(cacheKey);
-    if (cached) {
-      return NextResponse.json(cached, {
-        headers: {
-          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=600",
-          "CDN-Cache-Control": "public, max-age=60, stale-while-revalidate=600",
-          "Cloudflare-CDN-Cache-Control": "public, max-age=60, stale-while-revalidate=600",
-          "CF-Cache-Status": "HIT",
-          "X-Cache-Status": "HIT",
-        },
-      });
-    }
-
     const search = searchParams.get("search")?.trim() || "";
     const isFeaturedParam = searchParams.get("isFeatured");
     const isFeatured = isFeaturedParam !== null ? isFeaturedParam === "true" : undefined;
@@ -45,22 +24,14 @@ export async function GET(req: NextRequest) {
       offset,
     });
 
-    const result = { success: true, bundles, count: bundles.length };
-    setStorefrontCache(cacheKey, result, 30 * 1000);
-
-    const res = NextResponse.json(result, {
-      headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=600",
-        "CDN-Cache-Control": "public, max-age=60, stale-while-revalidate=600",
-        "Cloudflare-CDN-Cache-Control": "public, max-age=60, stale-while-revalidate=600",
-        "CF-Cache-Status": "MISS",
-        "X-Cache-Status": "MISS",
-      },
-    });
-
-    putEdgeCache(req, res, 60, 600);
-
-    return res;
+    return NextResponse.json(
+      { success: true, bundles, count: bundles.length },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=20, stale-while-revalidate=40",
+        },
+      }
+    );
   } catch (error) {
     console.error("GET /api/bundles error:", error);
     return NextResponse.json(
@@ -69,4 +40,3 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-

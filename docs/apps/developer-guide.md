@@ -186,3 +186,26 @@ The Wishlist App demonstrates how to convert an existing core platform feature i
 - **Root Re-Exports**: Root `lib/wishlist.ts` re-exports from `@/apps/wishlist/lib/wishlist`, ensuring existing imports continue functioning seamlessly.
 - **Data Preservation**: Uninstalling the app preserves all rows in `customer_wishlist`. Reinstalling restores previous items and restores previously saved configuration settings.
 
+---
+
+## 10. Real-World Case Study: The Product Compare App (`apps/compare/`)
+
+The Compare App demonstrates client-side data isolation (zero database tables) with dynamic floating UI and side-by-side matrices:
+- `apps/compare/manifest.json`: Declares permissions (`read:products`, `read:media`), extension points (`storefront.product.below`, `storefront.floating`), empty `databaseTables: []`, and configurable settings (`maxProducts`, `showInHeader`, `buttonStyle`).
+- `apps/compare/storefront/`: Contains `CompareButton.tsx` (product card & detail toggles), `CompareBar.tsx` (floating bottom drawer gated by `storefront.floating`), and `ComparePage.tsx` (responsive side-by-side comparison table).
+- `apps/compare/lib/compare.ts`: Provides product specification matrices and attributes normalization with micro-caching.
+- **Client State & Data Safety**: All items are managed in customer `localStorage` (`ecommerce_compare_items`). When the app is uninstalled or disabled, the floating bar and buttons cleanly unmount from the DOM. Reinstalling restores the UI immediately with previous customer comparison items intact.
+
+---
+
+## 11. Real-World Case Study: The Bundles App (`apps/bundles/`)
+
+The Bundles App demonstrates complex multi-item relationships, SQL aggregations, and cross-worker invalidation:
+- `apps/bundles/manifest.json`: Declares permissions (`read:products`, `write:products`, `read:media`, `read:orders`), extension points (`storefront.homepage.section`, `storefront.product.below`, `storefront.cart.below`, `admin.dashboard.widget`), and platform database tables (`product_bundles`, `bundle_items`).
+- `apps/bundles/admin/`: Contains `BundlesManager.tsx` with multi-product picker, drag-and-drop bundle assembly, pricing calculator, and admin API endpoints.
+- `apps/bundles/storefront/`: Contains `BundleCard.tsx`, `FeaturedBundles.tsx` (homepage section), and `BundleCrossSell.tsx` (product page cross-sell).
+- `apps/bundles/lib/bundles.ts`: Database query layer implementing SQL summation for regular price, savings calculation, `React.cache()`, and a 20s micro-cache with cross-worker invalidation via `CACHE_INVALIDATE_SECRET`.
+- **Root Re-Exports**: Root `lib/bundles.ts`, `components/bundles/BundleCard.tsx`, and `components/admin/BundlesManager.tsx` re-export directly from `apps/bundles/`, ensuring legacy imports continue to function without changes.
+- **Data Safety**: App uninstallation does NOT drop `product_bundles` or `bundle_items`. All bundle definitions and historical order associations are permanently safeguarded.
+
+

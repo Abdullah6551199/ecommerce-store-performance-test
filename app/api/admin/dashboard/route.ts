@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { getCurrentAdmin } from "@/lib/auth";
-import { getDb, products, categories, media, settings } from "@/lib/db";
-import { count } from "drizzle-orm";
+import { getDb, products, categories, media, settings, orders } from "@/lib/db";
+import { count, and, eq, sql } from "drizzle-orm";
 import {
   getAnalyticsKpis,
   getTodaySmartInsights,
 } from "@/lib/analytics";
+import { getAdminApiCache, setAdminApiCache, getAdminApiCacheKey } from "@/lib/admin-cache";
 
 export const dynamic = "force-dynamic";
 
@@ -18,24 +19,50 @@ export async function GET() {
     );
   }
 
+  const cacheKey = getAdminApiCacheKey(admin.id, "/api/admin/dashboard");
+  const cachedData = getAdminApiCache<any>(cacheKey);
+  if (cachedData) {
+    return NextResponse.json(
+      { success: true, data: cachedData },
+      { headers: { "Cache-Control": "private, no-store", "X-Admin-Cache": "HIT" } }
+    );
+  }
+
   const db = getDb();
   let totalProducts = 0;
   let totalCategories = 0;
   let totalMedia = 0;
   let totalSettings = 0;
+  let whatsappOrdersThisMonth = 0;
 
   if (db) {
     try {
-      const [prodRes, catRes, mediaRes, setRes] = await Promise.all([
+      const startOfMonth = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1
+      ).toISOString();
+
+      const [prodRes, catRes, mediaRes, setRes, waRes] = await Promise.all([
         db.select({ value: count() }).from(products),
         db.select({ value: count() }).from(categories),
         db.select({ value: count() }).from(media),
         db.select({ value: count() }).from(settings),
+        db
+          .select({ value: count() })
+          .from(orders)
+          .where(
+            and(
+              eq(orders.source, "whatsapp"),
+              sql`${orders.createdAt} >= ${startOfMonth}`
+            )
+          ),
       ]);
       totalProducts = prodRes[0]?.value || 0;
       totalCategories = catRes[0]?.value || 0;
       totalMedia = mediaRes[0]?.value || 0;
       totalSettings = setRes[0]?.value || 0;
+      whatsappOrdersThisMonth = waRes[0]?.value || 0;
     } catch (err) {
       console.warn("[Dashboard API] Error querying D1 counts:", err);
     }
@@ -55,28 +82,35 @@ export async function GET() {
     console.warn("[Dashboard API] Error querying analytics data:", err);
   }
 
+  const responseData = {
+    counts: {
+      totalProducts,
+      totalCategories,
+      totalMedia,
+      totalSettings,
+      whatsappOrdersThisMonth,
+    },
+    analyticsKpis,
+    smartInsights,
+    admin: {
+      email: admin.email,
+      role: admin.role,
+    },
+  };
+
+  setAdminApiCache(cacheKey, responseData);
+
   return NextResponse.json(
     {
       success: true,
-      data: {
-        counts: {
-          totalProducts,
-          totalCategories,
-          totalMedia,
-          totalSettings,
-        },
-        analyticsKpis,
-        smartInsights,
-        admin: {
-          email: admin.email,
-          role: admin.role,
-        },
-      },
+      data: responseData,
     },
     {
       headers: {
         "Cache-Control": "private, no-store",
+        "X-Admin-Cache": "MISS",
       },
     }
   );
 }
+

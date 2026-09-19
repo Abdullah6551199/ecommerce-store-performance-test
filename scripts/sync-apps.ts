@@ -71,6 +71,7 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   },
   "whatsapp-order": {
     WhatsAppSettings: dynamic(() => import("@/apps/whatsapp-order/admin/WhatsAppSettings")),
+    WhatsAppStatsWidget: dynamic(() => import("@/apps/whatsapp-order/admin/WhatsAppStatsWidget")),
   },
   compare: {
     CompareSettings: dynamic(() => import("@/apps/compare/admin/CompareSettings")),

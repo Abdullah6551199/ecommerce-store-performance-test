@@ -1,8 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import type { AnalyticsKpiResponse, SmartNotification } from "@/lib/analytics";
+import { fetchWithClientCache } from "@/lib/client-cache";
+
+const WhatsAppStatsWidget = dynamic(
+  () => import("@/apps/whatsapp-order/admin/WhatsAppStatsWidget"),
+  { ssr: false, loading: () => <div className="h-28 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/5 animate-pulse" /> }
+);
 
 interface DashboardData {
   counts: {
@@ -10,6 +17,7 @@ interface DashboardData {
     totalCategories: number;
     totalMedia: number;
     totalSettings: number;
+    whatsappOrdersThisMonth?: number;
   };
   analyticsKpis: AnalyticsKpiResponse | null;
   smartInsights: SmartNotification[];
@@ -24,13 +32,15 @@ export default function DashboardOverviewManager(): React.JSX.Element {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (forceRefresh: unknown = false) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/dashboard");
-      const json = (await res.json()) as any;
-      if (res.ok && json.success) {
+      const json = await fetchWithClientCache<any>("/api/admin/dashboard", {
+        ttlMs: 20000,
+        forceRefresh: forceRefresh === true,
+      });
+      if (json.success && json.data) {
         setData(json.data);
       } else {
         setError(json.error || "Failed to load dashboard metrics");
@@ -50,6 +60,7 @@ export default function DashboardOverviewManager(): React.JSX.Element {
   const totalCategories = data?.counts?.totalCategories ?? 0;
   const totalMedia = data?.counts?.totalMedia ?? 0;
   const totalSettings = data?.counts?.totalSettings ?? 0;
+  const whatsappOrdersThisMonth = (data?.counts as any)?.whatsappOrdersThisMonth ?? 0;
   const analyticsKpis = data?.analyticsKpis ?? null;
   const smartInsights = data?.smartInsights ?? [];
   const primaryInsight = smartInsights[0] ?? null;
@@ -63,6 +74,15 @@ export default function DashboardOverviewManager(): React.JSX.Element {
       icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
       accent: "#960DF2",
       href: "/admin/products",
+    },
+    {
+      title: "WhatsApp Orders",
+      value: whatsappOrdersThisMonth,
+      desc: "Orders this month via WhatsApp",
+      badge: "WhatsApp App",
+      icon: "M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z",
+      accent: "#25D366",
+      href: "/admin/orders?source=whatsapp",
     },
     {
       title: "Active Categories",
@@ -133,7 +153,7 @@ export default function DashboardOverviewManager(): React.JSX.Element {
           <span>{error}</span>
           <button
             type="button"
-            onClick={fetchDashboardData}
+            onClick={() => fetchDashboardData(true)}
             className="font-bold underline hover:text-red-700 dark:hover:text-white"
           >
             Retry Fetch
@@ -296,9 +316,9 @@ export default function DashboardOverviewManager(): React.JSX.Element {
         <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-purple-300/80">
           Catalog & Assets Inventory
         </h2>
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {loading ? (
-            [1, 2, 3, 4].map((i) => (
+            [1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
                 className="h-32 rounded-2xl border border-purple-200/50 dark:border-purple-800/40 bg-white dark:bg-[#3C0561]/60 p-5 shadow-sm animate-pulse flex flex-col justify-between"
@@ -347,6 +367,16 @@ export default function DashboardOverviewManager(): React.JSX.Element {
               </Link>
             ))
           )}
+        </div>
+      </div>
+
+      {/* App Extensions: Dashboard Widgets (Stage 29.6) */}
+      <div className="space-y-3">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-purple-300/80">
+          Installed App Extensions &amp; Integrations
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <WhatsAppStatsWidget />
         </div>
       </div>
 

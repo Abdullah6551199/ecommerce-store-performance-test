@@ -16,7 +16,8 @@
     "storefront.floating",
     "storefront.product.below",
     "storefront.cart.below",
-    "storefront.checkout.below"
+    "storefront.checkout.below",
+    "admin.dashboard.widget"
   ],
   "workerScope": {
     "admin": ["admin/"],

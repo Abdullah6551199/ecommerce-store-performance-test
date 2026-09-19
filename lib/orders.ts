@@ -358,6 +358,7 @@ export async function createOrderFromCart(
     taxRate: taxRateVal,
     taxLabel: taxLabelVal,
     shippingZoneId: shippingResult.zone?.id || null,
+    source: "web",
     notes: validated.notes || null,
     subtotal: calculatedSubtotal,
     shipping,

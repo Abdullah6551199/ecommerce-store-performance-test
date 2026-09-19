@@ -1,5 +1,5 @@
 /**
- * Helper utilities for WhatsApp Link Generation and Message Formatting
+ * Helper utilities for WhatsApp Link Generation and Message Formatting (Stage 29.6)
  */
 
 export function sanitizePhoneNumber(phone: string): string {
@@ -24,9 +24,19 @@ export function formatWhatsAppUrl(phone: string, text?: string): string {
 
 export function formatPrice(price: number | string | undefined | null): string {
   if (price === undefined || price === null || price === "") return "$0.00";
-  if (typeof price === "string" && price.startsWith("$")) return price;
+  if (typeof price === "string" && (price.startsWith("$") || price.startsWith("Rs."))) return price;
   const num = Number(price);
   return isNaN(num) ? String(price) : `$${num.toFixed(2)}`;
+}
+
+export interface WhatsAppCustomerInfo {
+  name?: string;
+  phone?: string;
+  email?: string | null;
+  address?: string;
+  city?: string;
+  postalCode?: string | null;
+  notes?: string | null;
 }
 
 export interface ProductMessageItem {
@@ -37,21 +47,10 @@ export interface ProductMessageItem {
   imageUrl?: string | null;
 }
 
-/**
- * Builds standard WhatsApp order message for a single product item.
- */
-export function buildProductMessage(item: ProductMessageItem): string {
-  const name = item.name || "Product";
-  const price = formatPrice(item.price);
-  const qty = item.quantity && item.quantity > 0 ? item.quantity : 1;
-  const link = item.url || (typeof window !== "undefined" ? window.location.href : "");
-
-  let msg = `Hello! I want to order:\n\n*Product:* ${name}\n*Price:* ${price}\n*Quantity:* ${qty}\n*Link:* ${link}`;
-  if (item.imageUrl && item.imageUrl.startsWith("http")) {
-    msg += `\n*Image:* ${item.imageUrl}`;
-  }
-  msg += `\n\nPlease confirm availability.`;
-  return msg;
+export interface ProductMessageOptions {
+  customer?: WhatsAppCustomerInfo;
+  orderRef?: string;
+  shipping?: number | string;
 }
 
 export interface CartMessageItem {
@@ -65,25 +64,107 @@ export interface CartMessageItem {
 
 export interface CartMessageTotals {
   subtotal: number | string;
+  shipping?: number | string;
   total: number | string;
 }
 
+export interface CartMessageOptions {
+  customer?: WhatsAppCustomerInfo;
+  orderRef?: string;
+}
+
+function formatDeliveryDetails(customer?: WhatsAppCustomerInfo): string {
+  if (!customer || (!customer.name && !customer.phone && !customer.address)) {
+    return "";
+  }
+
+  const lines: string[] = [
+    "📍 DELIVERY DETAILS",
+    "━━━━━━━━━━━━━━━━━",
+  ];
+
+  if (customer.name) lines.push(`Name: ${customer.name}`);
+  if (customer.phone) lines.push(`Phone: ${customer.phone}`);
+  if (customer.email) lines.push(`Email: ${customer.email}`);
+  if (customer.address) lines.push(`Address: ${customer.address}`);
+  if (customer.city) lines.push(`City: ${customer.city}`);
+  if (customer.postalCode) lines.push(`Postal Code: ${customer.postalCode}`);
+  if (customer.notes) lines.push(`Notes: ${customer.notes}`);
+
+  return lines.join("\n");
+}
+
+function formatOrderRef(orderRef?: string): string {
+  if (!orderRef) return "";
+  const cleanRef = orderRef.startsWith("#") ? orderRef : `#${orderRef}`;
+  return `Order Reference: ${cleanRef}`;
+}
+
 /**
- * Builds standard WhatsApp order message for multiple cart/checkout items.
+ * Builds standard clean WhatsApp order message for a single product.
+ */
+export function buildProductMessage(
+  item: ProductMessageItem,
+  options?: ProductMessageOptions
+): string {
+  const name = item.name || "Product";
+  const qty = item.quantity && item.quantity > 0 ? item.quantity : 1;
+  const unitPrice = formatPrice(item.price);
+  const numPrice = typeof item.price === "number" ? item.price : parseFloat(String(item.price).replace(/[^0-9.]/g, "")) || 0;
+  const lineTotal = formatPrice(numPrice * qty);
+  const link = item.url || (typeof window !== "undefined" ? window.location.href : "");
+
+  let itemBlock = `${name}\nQty: ${qty} × ${unitPrice} = ${lineTotal}`;
+  if (link) {
+    itemBlock += `\nLink: ${link}`;
+  }
+
+  const sections: string[] = [
+    "Hello! I want to place this order:\n",
+    "🛒 ORDER DETAILS\n━━━━━━━━━━━━━━━━━\n\n" + itemBlock,
+    "━━━━━━━━━━━━━━━━━",
+  ];
+
+  if (options?.shipping !== undefined && Number(options.shipping) > 0) {
+    sections.push(`Subtotal: ${lineTotal}`);
+    sections.push(`*Shipping:* ${formatPrice(options.shipping)}`);
+    sections.push(`Total: ${formatPrice(numPrice * qty + Number(options.shipping))}`);
+  } else {
+    sections.push(`Total: ${lineTotal}`);
+  }
+
+  const deliveryText = formatDeliveryDetails(options?.customer);
+  if (deliveryText) {
+    sections.push(`\n${deliveryText}`);
+  }
+
+  const refText = formatOrderRef(options?.orderRef);
+  if (refText) {
+    sections.push(refText);
+  }
+
+  sections.push("\nPlease confirm my order.");
+
+  return sections.join("\n").replace(/\n{3,}/g, "\n\n");
+}
+
+/**
+ * Builds clean WhatsApp order message for cart & checkout items according to Stage 29.6 specification.
  */
 export function buildCartMessage(
   items: CartMessageItem[],
-  totals: CartMessageTotals
+  totals: CartMessageTotals,
+  options?: CartMessageOptions
 ): string {
   if (!items || items.length === 0) {
-    return `Hello! I would like to inquire about placing an order.\n\nPlease let me know how to proceed.`;
+    return "Hello! I would like to inquire about placing an order.\n\nPlease let me know how to proceed.";
   }
 
-  const itemsText = items
-    .map((item, idx) => {
-      const name = item.name || `Item ${idx + 1}`;
-      const price = formatPrice(item.price);
+  const productsBlock = items
+    .map((item) => {
+      const name = item.name || "Product";
       const qty = item.quantity || 1;
+      const unitPrice = formatPrice(item.price);
       const numPrice =
         typeof item.price === "number"
           ? item.price
@@ -93,12 +174,9 @@ export function buildCartMessage(
         : formatPrice(numPrice * qty);
       const link = item.url || "";
 
-      let block = `${idx + 1}. ${name}\n   Price: ${price} x ${qty} = ${lineTotal}`;
+      let block = `${name}\nQty: ${qty} × ${unitPrice} = ${lineTotal}`;
       if (link) {
-        block += `\n   Link: ${link}`;
-      }
-      if (item.imageUrl && item.imageUrl.startsWith("http")) {
-        block += `\n   Image: ${item.imageUrl}`;
+        block += `\nLink: ${link}`;
       }
       return block;
     })
@@ -107,12 +185,33 @@ export function buildCartMessage(
   const subtotalStr = formatPrice(totals.subtotal);
   const totalStr = formatPrice(totals.total);
 
-  return `Hello! I want to place this order:\n\n${itemsText}\n\n*Subtotal:* ${subtotalStr}\n*Total:* ${totalStr}\n\nPlease confirm availability.`;
+  const sections: string[] = [
+    "Hello! I want to place this order:\n",
+    "🛒 ORDER DETAILS\n━━━━━━━━━━━━━━━━━\n\n" + productsBlock,
+    "━━━━━━━━━━━━━━━━━\nSubtotal: " + subtotalStr,
+  ];
+
+  if (totals.shipping !== undefined && Number(totals.shipping) > 0) {
+    sections.push(`*Shipping:* ${formatPrice(totals.shipping)}`);
+  }
+
+  sections.push(`Total: ${totalStr}`);
+
+  const deliveryText = formatDeliveryDetails(options?.customer);
+  if (deliveryText) {
+    sections.push(`\n${deliveryText}`);
+  }
+
+  const refText = formatOrderRef(options?.orderRef);
+  if (refText) {
+    sections.push(refText);
+  }
+
+  sections.push("\nPlease confirm my order.");
+
+  return sections.join("\n").replace(/\n{3,}/g, "\n\n");
 }
 
-/**
- * Backwards compatibility helper for custom string templates
- */
 export function interpolateProductMessage(
   template: string,
   product: {

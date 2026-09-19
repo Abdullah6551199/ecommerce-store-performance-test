@@ -22,6 +22,7 @@ export default async function AdminDashboardWidgets(): Promise<React.JSX.Element
       {matching.map((app) => {
         const Component =
           loadAppAdminComponent(app.id, "HelloWorldWidget") ||
+          loadAppAdminComponent(app.id, "WhatsAppStatsWidget") ||
           loadAppAdminComponent(app.id, "DashboardWidget");
 
         if (!Component) return null;

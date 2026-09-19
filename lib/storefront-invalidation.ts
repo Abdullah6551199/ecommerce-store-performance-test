@@ -60,7 +60,7 @@ export async function invalidateStorefront(options: InvalidationOptions = {}): P
     path: options.path || null,
   });
 
-  const maxAttempts = 2; // Initial attempt + 1 retry
+  const maxAttempts = 3; // 3 attempts for cold storefront
   let attempt = 0;
 
   while (attempt < maxAttempts) {
@@ -90,7 +90,7 @@ export async function invalidateStorefront(options: InvalidationOptions = {}): P
     }
 
     if (attempt < maxAttempts) {
-      await sleep(250); // 250ms backoff before retry
+      await sleep(500); // 500ms backoff between attempts
     }
   }
 

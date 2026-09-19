@@ -78,8 +78,28 @@ export async function isAppEnabled(appId: string): Promise<boolean> {
  * Retrieve parsed settings JSON for an installed app with 60s TTL caching.
  */
 export async function getAppSettings<T = Record<string, unknown>>(
-  appId: string
+  appId: string,
+  options?: { bypassCache?: boolean }
 ): Promise<T | null> {
+  if (appId === "whatsapp-order" || options?.bypassCache) {
+    // Stage 29.6: Sub-5s reflection for WhatsApp order settings
+    const db = getDb();
+    if (db) {
+      try {
+        const rows = await db
+          .select({ settings: installedApps.settings })
+          .from(installedApps)
+          .where(eq(installedApps.id, appId))
+          .limit(1);
+        if (rows.length > 0 && rows[0].settings) {
+          return typeof rows[0].settings === "string"
+            ? (JSON.parse(rows[0].settings) as T)
+            : (rows[0].settings as T);
+        }
+      } catch {}
+    }
+  }
+
   const app = await getInstalledApp(appId);
   if (!app || !app.settings) {
     return null;

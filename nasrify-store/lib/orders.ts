@@ -358,6 +358,7 @@ export async function createOrderFromCart(
     taxRate: taxRateVal,
     taxLabel: taxLabelVal,
     shippingZoneId: shippingResult.zone?.id || null,
+    source: "web",
     notes: validated.notes || null,
     subtotal: calculatedSubtotal,
     shipping,
@@ -548,6 +549,7 @@ export async function getStorefrontOrder(orderIdOrCode: string): Promise<OrderWi
  */
 export async function getAllAdminOrders(options?: {
   status?: string;
+  source?: string;
   search?: string;
   limit?: number;
   offset?: number;
@@ -559,6 +561,7 @@ export async function getAllAdminOrders(options?: {
   const limit = options?.limit ?? 20;
   const offset = options?.offset ?? 0;
   const statusFilter = options?.status && options.status !== "all" ? options.status : null;
+  const sourceFilter = options?.source && options.source !== "all" ? options.source : null;
   const searchFilter = options?.search?.trim() ? options.search.trim().toLowerCase() : null;
 
   if (db) {
@@ -566,6 +569,10 @@ export async function getAllAdminOrders(options?: {
 
     if (statusFilter) {
       conditions.push(eq(orders.status, statusFilter as OrderStatus));
+    }
+
+    if (sourceFilter) {
+      conditions.push(eq(orders.source, sourceFilter));
     }
 
     if (searchFilter) {
@@ -631,6 +638,9 @@ export async function getAllAdminOrders(options?: {
   let filtered = [...memoryOrders];
   if (statusFilter) {
     filtered = filtered.filter((o) => o.status === statusFilter);
+  }
+  if (sourceFilter) {
+    filtered = filtered.filter((o) => (o as any).source === sourceFilter);
   }
   if (searchFilter) {
     filtered = filtered.filter(

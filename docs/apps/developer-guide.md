@@ -297,3 +297,25 @@ The **Nasrify Apps Hub** (`nasrify-apps`) is the centralized public marketplace,
   - **Reject**: Prompts for a mandatory rejection reason and flags the listing as `rejected` with clear feedback visible in the developer portal.
   - **Delist**: Removes the app from public marketplace discovery without deleting developer data.
 
+---
+
+## 18. Nasrify Themes Hub & Themes Marketplace (Stage 37B)
+
+The **Nasrify Themes Hub** (`nasrify-themes`) is the parallel public marketplace, developer portal, and super admin approval queue for storefront themes, running as a dedicated Cloudflare Worker at `https://nasrify-themes.zia291930.workers.dev`.
+
+### 18.1 Public Themes Marketplace (`/` & `/themes/[themeId]`)
+- **Visual Discovery Grid**: Search, category filters (`Minimal`, `Bold`, `Luxury`, `Fashion`, `Kids`, `Corporate`, `Organic`), and sorting.
+- **Interactive Mockup Previews**: Modal and embedded device simulator (desktop, tablet, mobile) allowing shoppers and developers to test the live storefront look and feel in real time.
+- **Theme Detail Pages**: Large preview screenshot, multi-image gallery, color swatches palette from `config_json`, typography tokens, changelog, and related themes.
+- **1-Click Theme Installation**:
+  Clicking "Install to Admin" routes through `/api/themes/install?themeId=<themeId>`, which registers an active record in `theme_marketplace_installs` and 302-redirects to `https://nasrify-admin.zia291930.workers.dev/admin/themes?install=<themeId>`.
+
+### 18.2 Themes Developer Portal (`/developer`)
+- **Shared Session Authentication**: Integrates seamlessly with D1 `sessions` and `users` via the HTTP-only `admin_session` cookie or direct login at `/api/developer/login`.
+- **Theme Studio**: Create and edit themes, upload preview and gallery images directly to Cloudflare R2 (`ecommerce-perf-assets`), and edit design tokens via visual JSON editors.
+- **Submission & Version Tracking**: Submissions save to `theme_marketplace_listings` and create snapshots in `theme_marketplace_versions`.
+
+### 18.3 Super Admin Approval Queue (`/super/pending`)
+- **Access Control**: Super Admin only (`SUPER_ADMIN_EMAILS` or admin role).
+- **Review & Mockup Auditing**: Real-time mockup rendering, design token validation, one-click live approval, or rejection with custom feedback.
+

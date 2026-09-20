@@ -55,3 +55,13 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-37-02 | Auth / D1 Seed | The historical hash in `scripts/seed-admin.sql` did not match `admin123`. | Re-seeded remote D1 with verified bcrypt hash `$2b$10$bZa/sfWqu9TFmGB2nvZWkuvXagKX2Zwv/jsIb3YP7v2Z8B3Og/SH2` and cleared failed attempts. | Complete |
 | BUG-37-03 | Build Tooling | OpenNext on Windows outputs a non-blocking warning: `OpenNext is not fully compatible with Windows. While OpenNext may function on Windows, it could encounter unpredictable failures during runtime.` | Informational warning only; the worker compiled, bundled, and deployed cleanly to Cloudflare edge in 15 seconds. | Complete |
 
+---
+
+## Stage 37B (Themes Hub Worker, Themes Marketplace & Developer Portal)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-37B-01 | TypeScript / Build | Route `/api/themes/[themeId]` attempted to import non-exported alias `getThemeVersions` from `versions.ts`. | Added export alias `export const getThemeVersions = getVersionsForTheme;` in `lib/themes/versions.ts`. | Complete |
+| BUG-37B-02 | TypeScript / API | Route `/api/themes/install` passed separate arguments `(theme.id, storeId)` instead of the expected object `{ listingId, storeId }` to `recordThemeInstall`. | Fixed argument signature to `{ listingId: theme.id, storeId }`. | Complete |
+| BUG-37B-03 | TypeScript / State | `ThemeDeveloperPortalClient.tsx` test live preview modal omitted `authorUrl` in the temporary state payload. | Added `authorUrl: authorUrl || null` to satisfy `ThemeMarketplaceListing` type. | Complete |
+

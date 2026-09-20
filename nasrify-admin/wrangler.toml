@@ -24,5 +24,8 @@ JWT_SECRET = "8b051f18ed04fdbfc3aa401da65480ff4cb3b96a5e2082390693b2368a3f06e8"
 STOREFRONT_URL = "https://nasrify-store.zia291930.workers.dev"
 ADMIN_EMAIL = "admin@apexstore.com"
 
+[ai]
+binding = "AI"
+
 [observability]
 enabled = true

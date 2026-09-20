@@ -20,6 +20,11 @@ const ProductQAManager = dynamic(
   { ssr: false, loading: () => <p className="text-xs text-zinc-400 py-4 text-center">Loading Q&A manager...</p> }
 );
 
+const AIGeneratorPanel = dynamic(
+  () => import("@/apps/ai-review-generator/admin/AIGeneratorPanel").then((m) => m.AIGeneratorPanel),
+  { ssr: false, loading: () => <p className="text-xs text-zinc-400 py-4 text-center">Loading AI generator...</p> }
+);
+
 interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -37,7 +42,7 @@ export default function ProductModal({
   categoriesList,
   initialCategoryId,
 }: ProductModalProps): React.JSX.Element | null {
-  const [activeTab, setActiveTab] = useState<"basic" | "pricing" | "media" | "variants" | "seo" | "digital" | "qa">("basic");
+  const [activeTab, setActiveTab] = useState<"basic" | "pricing" | "media" | "variants" | "seo" | "digital" | "qa" | "ai_reviews">("basic");
   const [stagedVariants, setStagedVariants] = useState<ProductVariantInput[]>([]);
 
   // Basic info
@@ -392,6 +397,7 @@ export default function ProductModal({
             { id: "seo", label: "SEO & Attributes" },
             { id: "digital", label: "💾 Digital Files" },
             { id: "qa", label: "💬 Q&A" },
+            { id: "ai_reviews", label: "✨ AI Reviews" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -929,6 +935,27 @@ export default function ProductModal({
                   <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Save Product First</h4>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">
                     Please create and save this product before viewing and answering customer questions.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 8: AI REVIEWS (admin.product.form.below) */}
+          {activeTab === "ai_reviews" && (
+            <div className="space-y-4 pt-1">
+              {productToEdit ? (
+                <AIGeneratorPanel
+                  productId={productToEdit.id}
+                  productTitle={productToEdit.name}
+                  productDescription={productToEdit.description || productToEdit.shortDescription || ""}
+                />
+              ) : (
+                <div className="rounded-2xl border border-dashed border-zinc-300 dark:border-white/15 p-10 text-center bg-zinc-50/50 dark:bg-white/5">
+                  <span className="text-3xl block mb-2">✨</span>
+                  <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Save Product First</h4>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">
+                    Please create and save this product before generating automated AI reviews.
                   </p>
                 </div>
               )}

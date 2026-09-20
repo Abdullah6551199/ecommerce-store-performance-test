@@ -106,6 +106,11 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
     QADashboardWidget: dynamic(() => import("@/apps/product-qa/admin/QADashboardWidget")),
     DashboardWidget: dynamic(() => import("@/apps/product-qa/admin/QADashboardWidget")),
   },
+  "ai-review-generator": {
+    AIGeneratorPanel: dynamic(() => import("@/apps/ai-review-generator/admin/AIGeneratorPanel").then((m) => m.AIGeneratorPanel)),
+    AIDashboardWidget: dynamic(() => import("@/apps/ai-review-generator/admin/AIDashboardWidget").then((m) => m.AIDashboardWidget)),
+    DashboardWidget: dynamic(() => import("@/apps/ai-review-generator/admin/AIDashboardWidget").then((m) => m.AIDashboardWidget)),
+  },
 };
 
 export function loadAdminAppComponent(

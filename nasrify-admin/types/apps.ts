@@ -19,6 +19,7 @@ export const APP_PERMISSIONS = [
   "write:media",
   "read:analytics",
   "send:notifications",
+  "write:reviews",
 ] as const;
 
 export type AppPermission = (typeof APP_PERMISSIONS)[number];

@@ -375,5 +375,23 @@ The **Product Q&A App** (`apps/product-qa/`) demonstrates a community engagement
   - App uninstallation disables storefront rendering but **never drops** D1 Q&A tables.
   - Reinstallation reactivates the module with full question and answer history intact.
 
+---
+
+## 22. Case Study: AI Review Generator App (Stage 41)
+
+The **AI Review Generator App** (`apps/ai-review-generator/`) demonstrates integrating serverless AI models into the Nasrify ecosystem via Cloudflare Workers AI bindings without introducing external API keys or recurring SaaS costs.
+
+### 22.1 Architecture Highlights
+- **Cloudflare Workers AI Native Binding**: Uses `env.AI` (`@cf/meta/llama-3.1-8b-instruct`) natively within the worker runtime.
+- **Cross-App Data Integration**: Integrates directly with the `reviews` table established in Stage 26, using `is_ai_generated: 1` and `ai_generation_id` columns to maintain strict separation and administrative auditing.
+- **Cascade Batch Deletion**: Merchants can delete entire generation runs with one click, removing the batch metadata and all associated reviews from the database simultaneously.
+- **Extension Points**:
+  - `admin.product.form.below`: Mounts `AIGeneratorPanel` into `ProductModal` as an "✨ AI Reviews" tab.
+  - `admin.dashboard.widget`: Displays `AIDashboardWidget` showing total reviews generated, monthly volume, and Cloudflare AI quota status.
+- **Data Safety**:
+  - Uninstallation of the app leaves all historical reviews in the `reviews` table untouched.
+  - Reinstallation restores the batch management and generation UI seamlessly.
+
+
 
 

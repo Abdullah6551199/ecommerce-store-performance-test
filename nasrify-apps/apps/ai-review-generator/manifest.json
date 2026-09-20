@@ -1,0 +1,69 @@
+{
+  "id": "ai-review-generator",
+  "name": "AI Review Generator",
+  "version": "1.0.0",
+  "description": "Generate realistic, product-tailored customer reviews using Cloudflare Workers AI. AI-generated reviews are marked internally with is_ai_generated=1. Store owners are responsible for complying with local advertising and consumer protection laws. In some jurisdictions, publishing AI-generated reviews without disclosure may be illegal.",
+  "author": "Nasrify Team",
+  "category": "marketing",
+  "pricing": "free",
+  "icon": "/icons/ai-review-generator.svg",
+  "permissions": [
+    "read:products",
+    "write:reviews",
+    "read:media",
+    "write:settings"
+  ],
+  "extensionPoints": [
+    "admin.product.form.below",
+    "admin.dashboard.widget"
+  ],
+  "databaseTables": [
+    "ai_review_generations",
+    "ai_review_settings"
+  ],
+  "settingsSchema": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable AI Review Generator"
+    },
+    "defaultTone": {
+      "type": "select",
+      "default": "positive",
+      "options": ["positive", "casual", "detailed", "brief", "enthusiastic"],
+      "label": "Default Tone"
+    },
+    "defaultLanguage": {
+      "type": "select",
+      "default": "english",
+      "options": ["english", "urdu", "roman_urdu", "mixed"],
+      "label": "Default Language"
+    },
+    "defaultReviewerStyle": {
+      "type": "select",
+      "default": "mix",
+      "options": ["pakistani", "international", "mix"],
+      "label": "Default Reviewer Name Style"
+    },
+    "defaultApprovalMode": {
+      "type": "select",
+      "default": "pending",
+      "options": ["auto", "pending"],
+      "label": "Default Approval Mode"
+    },
+    "maxReviewsPerBatch": {
+      "type": "number",
+      "default": 50,
+      "min": 5,
+      "max": 200,
+      "label": "Max Reviews Per Batch"
+    },
+    "spreadOverDays": {
+      "type": "number",
+      "default": 30,
+      "min": 1,
+      "max": 365,
+      "label": "Default Review Spread Range (Days)"
+    }
+  }
+}

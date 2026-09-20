@@ -628,6 +628,8 @@ export const reviews = sqliteTable("reviews", {
   notHelpfulCount: integer("not_helpful_count").default(0).notNull(),
   adminReply: text("admin_reply"),
   adminReplyAt: text("admin_reply_at"),
+  isAiGenerated: integer("is_ai_generated").default(0).notNull(),
+  aiGenerationId: text("ai_generation_id"),
   createdAt: text("created_at")
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
@@ -1373,4 +1375,41 @@ export const productQaUpvotes = sqliteTable("product_qa_upvotes", {
 
 export type ProductQaUpvoteRecord = typeof productQaUpvotes.$inferSelect;
 export type NewProductQaUpvoteRecord = typeof productQaUpvotes.$inferInsert;
+
+// 56. AI Review Generations Table (Stage 41)
+export const aiReviewGenerations = sqliteTable("ai_review_generations", {
+  id: text("id").primaryKey(),
+  productId: text("product_id").notNull(),
+  requestedCount: integer("requested_count").notNull(),
+  generatedCount: integer("generated_count").default(0),
+  ratingMin: integer("rating_min").notNull(),
+  ratingMax: integer("rating_max").notNull(),
+  tone: text("tone"),
+  language: text("language"),
+  reviewerStyle: text("reviewer_style"),
+  dateRangeDays: integer("date_range_days"),
+  approvalMode: text("approval_mode"),
+  status: text("status").default("pending"),
+  errorMessage: text("error_message"),
+  createdBy: text("created_by"),
+  createdAt: integer("created_at"),
+  completedAt: integer("completed_at"),
+});
+
+export type AiReviewGenerationRecord = typeof aiReviewGenerations.$inferSelect;
+export type NewAiReviewGenerationRecord = typeof aiReviewGenerations.$inferInsert;
+
+// 57. AI Review Settings Table (Stage 41)
+export const aiReviewSettings = sqliteTable("ai_review_settings", {
+  id: text("id").primaryKey().default("default"),
+  provider: text("provider").default("cloudflare"),
+  defaultTone: text("default_tone").default("positive"),
+  defaultLanguage: text("default_language").default("english"),
+  maxReviewsPerBatch: integer("max_reviews_per_batch").default(50),
+  enabled: integer("enabled").default(1),
+  updatedAt: integer("updated_at"),
+});
+
+export type AiReviewSettingRecord = typeof aiReviewSettings.$inferSelect;
+export type NewAiReviewSettingRecord = typeof aiReviewSettings.$inferInsert;
 

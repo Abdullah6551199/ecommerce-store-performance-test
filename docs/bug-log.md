@@ -97,3 +97,14 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-40-02 | Edge Cache Invalidation | Setting changes (e.g. `requireLogin`) had 60-second in-memory cache delay in worker `installed.ts`. | Added direct D1 query reflection for `product-qa` in `isAppEnabled` and `getAppSettings`. | Complete |
 | BUG-40-03 | HTTP Method | `nasrify-admin/app/api/admin/apps/[appId]/settings/route.ts` originally only exported `PUT`. | Exported `export const POST = PUT;` so both POST and PUT update settings identically. | Complete |
 
+---
+
+## Stage 41 (AI Review Generator App)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-41-01 | Manifest Validation | `manifest.json` omitted required `"pricing": "free"` and used `"write:reviews"` which wasn't in `APP_PERMISSIONS`. | Added `"pricing": "free"` to manifest and registered `"write:reviews"` in `APP_PERMISSIONS`. | Complete |
+| BUG-41-02 | TypeScript / Turbopack | `ReviewsManager.tsx` and `ProductModal.tsx` had union type checking mismatch with new `"ai_reviews"` tab. | Extended `activeTab` type union with `\| "ai_reviews"` and cleaned JSX hierarchy. | Complete |
+| BUG-41-03 | Review Schema Expansion | Adding `isAiGenerated` and `aiGenerationId` columns to Drizzle schema required updating mock memory arrays and createReview payload in `apps/reviews/lib/reviews.ts`. | Added default values `isAiGenerated: 0, aiGenerationId: null` across all ReviewRecord constructions. | Complete |
+
+

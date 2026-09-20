@@ -25,6 +25,8 @@ interface ReviewRecord {
   adminReply: string | null;
   adminReplyAt: string | null;
   createdAt: string;
+  isAiGenerated?: number;
+  aiGenerationId?: string | null;
   images: ReviewImage[];
 }
 
@@ -60,6 +62,7 @@ export default function ReviewsManager(): React.JSX.Element {
   });
 
   const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
+  const [aiFilter, setAiFilter] = useState<"all" | "ai" | "real">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -445,25 +448,48 @@ export default function ReviewsManager(): React.JSX.Element {
 
       {/* FILTER TABS & SEARCH BAR & BULK ACTIONS */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/5">
-          {(["all", "pending", "approved", "rejected"] as const).map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => {
-                setStatusFilter(tab);
-                setPage(1);
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
-                statusFilter === tab
-                  ? "bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white shadow-sm"
-                  : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/5">
+            {(["all", "pending", "approved", "rejected"] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => {
+                  setStatusFilter(tab);
+                  setPage(1);
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
+                  statusFilter === tab
+                    ? "bg-white dark:bg-[#0c140f] text-zinc-900 dark:text-white shadow-sm"
+                    : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* AI vs Real Filter Pills */}
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/5">
+            {[
+              { id: "all", label: "All Sources" },
+              { id: "ai", label: "✨ AI Generated" },
+              { id: "real", label: "👤 Real" },
+            ].map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setAiFilter(f.id as any)}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  aiFilter === f.id
+                    ? "bg-purple-600 text-white shadow-sm"
+                    : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Search Input */}
@@ -540,7 +566,13 @@ export default function ReviewsManager(): React.JSX.Element {
           </div>
         ) : (
           <div className="divide-y divide-zinc-200 dark:divide-white/5">
-            {reviews.map((rev) => {
+            {reviews
+              .filter((rev) => {
+                if (aiFilter === "ai") return rev.isAiGenerated === 1;
+                if (aiFilter === "real") return rev.isAiGenerated !== 1;
+                return true;
+              })
+              .map((rev) => {
               const isSelected = selectedIds.includes(rev.id);
               const statusBadge =
                 rev.status === "approved"
@@ -573,6 +605,11 @@ export default function ReviewsManager(): React.JSX.Element {
                         {rev.isVerifiedPurchase === 1 && (
                           <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                             Verified Purchase
+                          </span>
+                        )}
+                        {rev.isAiGenerated === 1 && (
+                          <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-300 border border-purple-500/30 flex items-center gap-1 font-mono">
+                            ✨ AI
                           </span>
                         )}
                         <span className="text-[11px] text-zinc-400 font-mono">

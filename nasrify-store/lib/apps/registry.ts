@@ -11,6 +11,7 @@ import cookieConsentManifest from "@/apps/cookie-consent/manifest.json";
 import digitalProductsManifest from "@/apps/digital-products/manifest.json";
 import couponsManifest from "@/apps/coupons/manifest.json";
 import productQaManifest from "@/apps/product-qa/manifest.json";
+import aiReviewGeneratorManifest from "@/apps/ai-review-generator/manifest.json";
 import { type AppManifest } from "@/types/apps";
 import { validateManifest } from "./manifest";
 
@@ -32,6 +33,7 @@ const RAW_MANIFESTS: Record<string, unknown> = {
   "digital-products": digitalProductsManifest,
   coupons: couponsManifest,
   "product-qa": productQaManifest,
+  "ai-review-generator": aiReviewGeneratorManifest,
 };
 
 const VALIDATED_MANIFESTS: Record<string, AppManifest> = {};

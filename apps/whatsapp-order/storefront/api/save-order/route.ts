@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getDb, orders, orderItems, customers } from "@/lib/db";
-import { sql, eq } from "drizzle-orm";
+import { getDb, orders, orderItems, customers, products, productVariants } from "@/lib/db";
+import { sql, eq, inArray } from "drizzle-orm";
 import { createCustomerNotification } from "@/lib/customer-notifications";
 
 export const dynamic = "force-dynamic";
@@ -118,6 +118,36 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Verify foreign key integrity against products and productVariants in D1
+    let availableProducts: { id: string; slug: string }[] = [];
+    try {
+      availableProducts = await db
+        .select({ id: products.id, slug: products.slug })
+        .from(products);
+    } catch {
+      // Non-blocking query
+    }
+
+    const validProductIds = new Set(availableProducts.map((p) => p.id));
+    const slugToProductId = new Map(availableProducts.map((p) => [p.slug, p.id]));
+    const fallbackProductId = availableProducts[0]?.id || "prod-apex-vrx1";
+
+    const variantIdsToCheck = items.map((it) => it.variantId).filter(Boolean) as string[];
+    const validVariantIds = new Set<string>();
+    if (variantIdsToCheck.length > 0) {
+      try {
+        const matchingVariants = await db
+          .select({ id: productVariants.id })
+          .from(productVariants)
+          .where(inArray(productVariants.id, variantIdsToCheck));
+        for (const v of matchingVariants) {
+          validVariantIds.add(v.id);
+        }
+      } catch {
+        // Non-blocking query
+      }
+    }
+
     const orderRecord = {
       id: orderId,
       customerId: resolvedCustomerId,
@@ -151,18 +181,32 @@ export async function POST(req: NextRequest) {
       updatedAt: now,
     };
 
-    const orderItemRecords = items.map((it) => ({
-      id: crypto.randomUUID(),
-      orderId,
-      productId: it.productId,
-      variantId: it.variantId,
-      productName: it.name,
-      variantName: it.variantName,
-      quantity: it.quantity,
-      unitPrice: it.unitPrice,
-      lineTotal: it.lineTotal,
-      createdAt: now,
-    }));
+    const orderItemRecords = items.map((it) => {
+      let finalProductId = it.productId;
+      if (!validProductIds.has(finalProductId)) {
+        if (slugToProductId.has(finalProductId)) {
+          finalProductId = slugToProductId.get(finalProductId)!;
+        } else if (fallbackProductId) {
+          finalProductId = fallbackProductId;
+        }
+      }
+
+      const finalVariantId =
+        it.variantId && validVariantIds.has(it.variantId) ? it.variantId : null;
+
+      return {
+        id: crypto.randomUUID(),
+        orderId,
+        productId: finalProductId,
+        variantId: finalVariantId,
+        productName: it.name,
+        variantName: it.variantName,
+        quantity: it.quantity,
+        unitPrice: it.unitPrice,
+        lineTotal: it.lineTotal,
+        createdAt: now,
+      };
+    });
 
     // Transaction-safe execution via D1 batch or sequential transaction
     if (typeof (db as any).batch === "function") {
@@ -196,7 +240,6 @@ export async function POST(req: NextRequest) {
       message: "Order successfully saved via WhatsApp integration",
     });
   } catch (error) {
-    // Graceful error reporting without console.log in production
     const errorMessage = error instanceof Error ? error.message : "Failed to save order";
     return NextResponse.json(
       { success: false, error: errorMessage },

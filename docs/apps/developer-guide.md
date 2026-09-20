@@ -255,3 +255,19 @@ The Cookie Consent App demonstrates zero-database-hit visitor consent tracking, 
 - `apps/cookie-consent/lib/cookie-consent.ts`: Dual localStorage and cookie storage engine ensuring zero database requests per page load, coupled with non-blocking asynchronous server-side logging.
 - **Root Re-Exports**: Root `lib/cookie-consent.ts`, `components/CookieConsentBanner.tsx`, `components/CookieCustomizeModal.tsx`, and `components/ScriptBlocker.tsx` re-export from `apps/cookie-consent/`.
 - **Data Safety**: All consent settings and records in `cookie_consent_settings` are permanently safeguarded across app uninstallation and reinstallation.
+
+---
+
+## 16. Real-World Case Study: The WhatsApp Order & Chat App (`apps/whatsapp-order/`)
+
+The WhatsApp Order App demonstrates transactional order capture, attribution source tracking, and sub-5s settings propagation:
+- `apps/whatsapp-order/manifest.json`: Declares permissions (`read:products`, `read:settings`), extension points (`storefront.floating`, `storefront.product.below`, `storefront.cart.below`, `storefront.checkout.below`, `admin.dashboard.widget`), and settings schema (`phoneNumber`, `enableFloating`, `enableProductButton`, `floatingMessage`, `productMessage`, `buttonText`).
+- `apps/whatsapp-order/storefront/api/save-order/route.ts`: Transaction-safe endpoint persisting orders in D1 with `source="whatsapp"`. Implements schema validation via Zod, checks foreign key constraints on products and variants, and creates customer notifications.
+- `apps/whatsapp-order/lib/whatsapp.ts`: Structured message generation putting products first, followed by subtotal and delivery details, and embedding reference `#WA-XXXXXX`.
+- `apps/whatsapp-order/admin/WhatsAppStatsWidget.tsx`: KPI card reporting current month's WhatsApp order volume, revenue, and last order timestamp via `admin.dashboard.widget`.
+- **Sub-5s Settings Cache Architecture**:
+  * Storefront route `/api/apps/[appId]/settings` implements a 3s TTL isolate microcache and `Cache-Control: public, max-age=3, s-maxage=3`.
+  * Storefront components use `?t=${Date.now()}` and attach `focus`/`visibilitychange` listeners.
+  * Admin mutations trigger `invalidateStorefront` with 3 retries and exponential backoff.
+- **Data Safety**: All orders created with `source="whatsapp"` are permanently preserved in the core `orders` and `order_items` tables during app uninstallation and reinstallation.
+

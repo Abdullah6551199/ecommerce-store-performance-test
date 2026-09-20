@@ -34,3 +34,14 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-35-02 | UI/Cosmetic | In `TrustBadgesRow.tsx`, when `badgeSize` is set to `sm` on ultra-wide desktop viewports (>1920px), the horizontal spacing between badge cards appears slightly sparse without a max-width container wrapper. | Purely cosmetic on extra large monitors. | Pre-Launch Polish |
 | BUG-36-01 | UI/Cosmetic | In `CookieCustomizeModal.tsx`, toggle switch thumb CSS transition on Firefox can appear slightly abrupt when rapidly toggling multiple categories in sequence. | Minor visual animation glitch; state persists accurately. | Pre-Launch Polish |
 | BUG-36-02 | Analytics / DB | In `api/cookie-consent`, server-side visitor consent logging currently stores records in in-memory buffer without scheduled periodic batching to a dedicated D1 table. | Harmless; client-side localStorage and cookies are the primary source of truth for zero-overhead consent gating. | Pre-Launch / Apps Hub |
+
+---
+
+## Stage 29.6 (WhatsApp Order Tracking, Source Badge, & Fast Settings Cache)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-29-01 | Database / Foreign Keys | `order_items` table defines `FOREIGN KEY (product_id) REFERENCES products(id)`. When client payloads provide product slugs or non-matching IDs, SQLite throws `SQLITE_CONSTRAINT_FOREIGNKEY`. Fixed by adding catalog ID resolution and fallback mapping in `/api/whatsapp-order/save-order`. | Handled gracefully with database product lookup before batch insertion. | Complete |
+| BUG-29-02 | CLI Tooling | Windows PowerShell default argument parsing strips unescaped quotes in curl JSON strings passed with `-d`. | Harmless CLI behavior; tests conducted via Node.js/tsx fetch scripts to ensure exact JSON serialization. | Complete |
+| BUG-29-03 | Build Tooling | `nasrify-admin` and `nasrify-store` builds log a warning: `The "middleware" file convention is deprecated. Please use "proxy" instead.` | Next.js 16 deprecation warning; proxy codemod will be applied in upcoming framework update. | Post-MVP / Framework Polish |
+

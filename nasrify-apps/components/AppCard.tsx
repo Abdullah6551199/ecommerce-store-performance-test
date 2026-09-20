@@ -1,13 +1,29 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import type { MarketplaceListing } from "@/types/marketplace";
 
 interface AppCardProps {
   app: MarketplaceListing;
+  ratingSummary?: { averageRating: number; totalReviews: number } | null;
 }
 
-export function AppCard({ app }: AppCardProps): React.JSX.Element {
+export function AppCard({ app, ratingSummary }: AppCardProps): React.JSX.Element {
   const isFree = !app.pricing || app.pricing === "free" || !app.price || app.price === 0;
+  const [summary, setSummary] = useState<{ averageRating: number; totalReviews: number } | null>(
+    ratingSummary || null
+  );
+
+  useEffect(() => {
+    if (ratingSummary) return;
+    fetch(`/api/marketplace/reviews/summary?type=app&listingId=${app.id}`)
+      .then((r) => r.json())
+      .then((d: any) => {
+        if (d?.success && d?.summary) setSummary(d.summary);
+      })
+      .catch(() => {});
+  }, [app.id, ratingSummary]);
 
   return (
     <Link
@@ -47,6 +63,16 @@ export function AppCard({ app }: AppCardProps): React.JSX.Element {
             <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
               by {app.author || "Nasrify Partner"}
             </p>
+            {/* Small star + count under app name */}
+            <div className="flex items-center gap-1 text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+              <span className="text-amber-400 text-xs">★</span>
+              <span className="font-bold text-zinc-800 dark:text-zinc-200">
+                {summary && summary.totalReviews > 0 ? summary.averageRating.toFixed(1) : "5.0"}
+              </span>
+              <span className="text-zinc-400">
+                ({summary ? summary.totalReviews : 0})
+              </span>
+            </div>
           </div>
         </div>
 

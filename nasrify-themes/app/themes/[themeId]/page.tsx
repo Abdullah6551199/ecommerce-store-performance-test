@@ -7,6 +7,10 @@ import { getThemeInstallCount } from "@/lib/themes/installs";
 import { ThemeCard } from "@/components/ThemeCard";
 import { ThemeMockupPreview } from "@/components/ThemeMockupPreview";
 import type { ThemeConfig } from "@/types/themes";
+import { getListingRatingSummary, getListingReviews } from "@/lib/marketplace/reviews";
+import { getAuthenticatedMarketplaceUser } from "@/lib/marketplace/auth";
+import { ReviewsSection } from "@/components/marketplace/ReviewsSection";
+import { getDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -44,9 +48,13 @@ export default async function ThemeDetailPage({
     notFound();
   }
 
-  const [installCount, allThemes] = await Promise.all([
+  const db = getDb();
+  const [installCount, allThemes, currentUser, ratingSummary, initialReviews] = await Promise.all([
     getThemeInstallCount(theme.id),
     getApprovedThemeListings({ limit: 8 }),
+    getAuthenticatedMarketplaceUser(),
+    getListingRatingSummary(db, "theme", theme.id),
+    getListingReviews(db, "theme", theme.id, 20, 0),
   ]);
 
   const relatedThemes = allThemes
@@ -111,9 +119,22 @@ export default async function ThemeDetailPage({
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black text-zinc-900 dark:text-white tracking-tight">
-              {theme.name}
-            </h1>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-3xl sm:text-4xl font-black text-zinc-900 dark:text-white tracking-tight">
+                {theme.name}
+              </h1>
+              {/* Rating summary near top (right of theme name) */}
+              <a
+                href="#reviews-section"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-colors cursor-pointer"
+              >
+                <span>★</span>
+                <span>{ratingSummary.totalReviews > 0 ? ratingSummary.averageRating.toFixed(1) : "5.0"}</span>
+                <span className="text-zinc-500 dark:text-zinc-400 font-medium">
+                  ({ratingSummary.totalReviews} {ratingSummary.totalReviews === 1 ? "review" : "reviews"})
+                </span>
+              </a>
+            </div>
 
             <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
               Created by{" "}
@@ -308,6 +329,15 @@ export default async function ThemeDetailPage({
           </p>
         </section>
       )}
+
+      {/* Reviews Section */}
+      <ReviewsSection
+        listingType="theme"
+        listingId={theme.id}
+        initialSummary={ratingSummary}
+        initialReviews={initialReviews}
+        initialUser={currentUser}
+      />
 
       {/* Related Themes */}
       {relatedThemes.length > 0 && (

@@ -7,7 +7,7 @@ import { SuperPendingThemesClient } from "@/components/SuperPendingThemesClient"
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Approval Queue — Nasrify Themes Super Admin",
+  title: "Approval Queue — Nasrify Team",
   description: "Review and approve storefront theme submissions for the Nasrify Marketplace.",
 };
 

@@ -6,7 +6,7 @@ import { SuperPendingClient } from "@/components/SuperPendingClient";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Approval Queue - Nasrify Super Admin",
+  title: "Approval Queue — Nasrify Team",
   description: "Review and approve app submissions for the Nasrify Marketplace.",
 };
 

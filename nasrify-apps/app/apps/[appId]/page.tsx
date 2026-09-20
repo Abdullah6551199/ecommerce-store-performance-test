@@ -2,6 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getListingByAppId, getApprovedListings } from "@/lib/marketplace/listings";
 import { getInstallCount } from "@/lib/marketplace/installs";
+import { getListingRatingSummary, getListingReviews } from "@/lib/marketplace/reviews";
+import { getAuthenticatedMarketplaceUser } from "@/lib/marketplace/auth";
+import { ReviewsSection } from "@/components/marketplace/ReviewsSection";
+import { getDb } from "@/lib/db";
 import { AppCard } from "@/components/AppCard";
 
 export const dynamic = "force-dynamic";
@@ -36,9 +40,13 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
     notFound();
   }
 
-  const [installCount, allApps] = await Promise.all([
+  const db = getDb();
+  const [installCount, allApps, currentUser, ratingSummary, initialReviews] = await Promise.all([
     getInstallCount(app.id),
     getApprovedListings({ limit: 8 }),
+    getAuthenticatedMarketplaceUser(),
+    getListingRatingSummary(db, "app", app.id),
+    getListingReviews(db, "app", app.id, 20, 0),
   ]);
 
   const relatedApps = allApps
@@ -111,6 +119,17 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 capitalize">
                     {app.category}
                   </span>
+                  {/* Rating summary near top (right of app name) */}
+                  <a
+                    href="#reviews-section"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-colors cursor-pointer"
+                  >
+                    <span>★</span>
+                    <span>{ratingSummary.totalReviews > 0 ? ratingSummary.averageRating.toFixed(1) : "5.0"}</span>
+                    <span className="text-zinc-500 dark:text-zinc-400 font-medium">
+                      ({ratingSummary.totalReviews} {ratingSummary.totalReviews === 1 ? "review" : "reviews"})
+                    </span>
+                  </a>
                 </div>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
                   Developed by{" "}
@@ -190,26 +209,14 @@ export default async function AppDetailPage({ params }: AppDetailPageProps) {
               </section>
             )}
 
-            {/* Reviews / Ratings Placeholder */}
-            <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">
-                  Customer Ratings & Reviews
-                </h2>
-                <span className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                  Coming Soon in Stage 37C
-                </span>
-              </div>
-              <div className="text-center py-10 bg-zinc-50 dark:bg-zinc-950/60 rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-800">
-                <div className="text-3xl mb-2">⭐ ⭐ ⭐ ⭐ ⭐</div>
-                <p className="text-zinc-600 dark:text-zinc-400 font-medium text-sm">
-                  Verified reviews and merchant feedback system will be enabled soon.
-                </p>
-                <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
-                  Only merchants who installed this app will be eligible to submit reviews.
-                </p>
-              </div>
-            </section>
+            {/* Reviews Section */}
+            <ReviewsSection
+              listingType="app"
+              listingId={app.id}
+              initialSummary={ratingSummary}
+              initialReviews={initialReviews}
+              initialUser={currentUser}
+            />
           </div>
 
           {/* Sidebar */}

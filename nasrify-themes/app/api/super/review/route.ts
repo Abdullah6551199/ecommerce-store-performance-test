@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     if (!isSuperAdminUser(admin.email) && admin.role !== "admin") {
       return NextResponse.json(
-        { success: false, error: "Forbidden: Super Admin access required" },
+        { success: false, error: "Forbidden: Nasrify Team access required" },
         { status: 403 }
       );
     }

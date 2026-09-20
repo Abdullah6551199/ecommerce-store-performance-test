@@ -450,7 +450,7 @@ export function DeveloperPortalClient({ initialUser, initialApps }: Props) {
                 {editingId ? "Edit App Listing" : "Submit New App to Marketplace"}
               </h2>
               <p className="text-xs text-zinc-500 mt-0.5">
-                Fill in the details below. Once submitted, super admins review submissions before they appear on the public hub.
+                Fill in the details below. Once submitted, the Nasrify Team reviews submissions before they appear on the public hub.
               </p>
             </div>
             {editingId && (
@@ -713,7 +713,7 @@ export function DeveloperPortalClient({ initialUser, initialApps }: Props) {
               2. Approval Queue Process
             </h3>
             <p>
-              When submitted for review, your app is placed into the Super Admin approval queue. Reviewers inspect manifest security permissions, database schema compliance, and code quality before approving your app for public discovery.
+              When submitted for review, your app is placed into the Nasrify Team approval queue. Reviewers inspect manifest security permissions, database schema compliance, and code quality before approving your app for public discovery.
             </p>
           </div>
         </div>

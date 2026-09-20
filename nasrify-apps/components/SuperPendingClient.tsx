@@ -26,18 +26,18 @@ export function SuperPendingClient({ initialPending, isSuperAdmin, userEmail }: 
             🔒
           </div>
           <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
-            Super Admin Access Required
+            Nasrify Team Access Required
           </h1>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 mb-6">
             {userEmail
-              ? `Your account (${userEmail}) is not authorized to access the Super Admin approval queue.`
-              : "You must be signed in with a Super Admin account to review pending apps."}
+              ? `Your account (${userEmail}) is not authorized to access the Nasrify Team approval queue.`
+              : "You must be signed in with a Nasrify Team account to review pending apps."}
           </p>
           <a
             href="/developer"
             className="inline-flex px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm"
           >
-            Sign In with Super Admin Credentials
+            Sign In with Nasrify Team Credentials
           </a>
         </div>
       </div>
@@ -90,7 +90,7 @@ export function SuperPendingClient({ initialPending, isSuperAdmin, userEmail }: 
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-md text-xs font-black bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
-              Super Admin
+              Nasrify Team
             </span>
             <span className="text-xs text-zinc-400">• Authenticated as {userEmail}</span>
           </div>
@@ -103,7 +103,7 @@ export function SuperPendingClient({ initialPending, isSuperAdmin, userEmail }: 
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-            {pending.length} Pending Review{pending.length === 1 ? "" : "s"}
+            {pending.length} Pending Nasrify Team Review{pending.length === 1 ? "" : "s"}
           </span>
         </div>
       </div>

@@ -1241,4 +1241,36 @@ export const themeMarketplaceInstalls = sqliteTable("theme_marketplace_installs"
 export type ThemeMarketplaceInstallRecord = typeof themeMarketplaceInstalls.$inferSelect;
 export type NewThemeMarketplaceInstallRecord = typeof themeMarketplaceInstalls.$inferInsert;
 
+// 51. Marketplace Reviews Table (Stage 37C)
+export const marketplaceReviews = sqliteTable("marketplace_reviews", {
+  id: text("id").primaryKey(),
+  listingType: text("listing_type").notNull(), // 'app' | 'theme'
+  listingId: text("listing_id").notNull(),
+  userId: text("user_id"),
+  userEmail: text("user_email"),
+  userName: text("user_name"),
+  rating: integer("rating").notNull(), // 1 to 5
+  title: text("title"),
+  body: text("body"),
+  helpfulCount: integer("helpful_count").default(0).notNull(),
+  status: text("status").default("published").notNull(), // 'published' | 'hidden' | 'flagged'
+  teamResponse: text("team_response"),
+  teamResponseAt: integer("team_response_at"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
 
+export type MarketplaceReviewRecord = typeof marketplaceReviews.$inferSelect;
+export type NewMarketplaceReviewRecord = typeof marketplaceReviews.$inferInsert;
+
+// 52. Marketplace Review Votes Table (Stage 37C)
+export const marketplaceReviewVotes = sqliteTable("marketplace_review_votes", {
+  id: text("id").primaryKey(),
+  reviewId: text("review_id").notNull(),
+  userId: text("user_id").notNull(),
+  voteType: text("vote_type").notNull(), // 'helpful' | 'not_helpful'
+  createdAt: integer("created_at").notNull(),
+});
+
+export type MarketplaceReviewVoteRecord = typeof marketplaceReviewVotes.$inferSelect;
+export type NewMarketplaceReviewVoteRecord = typeof marketplaceReviewVotes.$inferInsert;

@@ -461,7 +461,7 @@ export function ThemeDeveloperPortalClient({
               {editingId ? `Editing Theme: ${name}` : "Submit New Storefront Theme"}
             </h2>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Provide theme metadata, screenshots, and configuration tokens. Submissions enter the Super Admin approval queue.
+              Provide theme metadata, screenshots, and configuration tokens. Submissions enter the Nasrify Team approval queue.
             </p>
           </div>
 

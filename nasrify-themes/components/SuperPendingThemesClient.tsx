@@ -30,18 +30,18 @@ export function SuperPendingThemesClient({
             🔒
           </div>
           <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
-            Super Admin Access Required
+            Nasrify Team Access Required
           </h1>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 mb-6">
             {userEmail
-              ? `Your account (${userEmail}) is not authorized to access the Super Admin theme approval queue.`
-              : "You must be signed in with a Super Admin account to review pending theme submissions."}
+              ? `Your account (${userEmail}) is not authorized to access the Nasrify Team theme approval queue.`
+              : "You must be signed in with a Nasrify Team account to review pending theme submissions."}
           </p>
           <a
             href="/developer"
             className="inline-flex px-5 py-2.5 rounded-xl text-xs font-semibold text-white bg-purple-600 hover:bg-purple-700 shadow-sm"
           >
-            Sign In with Super Admin Credentials
+            Sign In with Nasrify Team Credentials
           </a>
         </div>
       </div>
@@ -95,7 +95,7 @@ export function SuperPendingThemesClient({
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-md text-xs font-black bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
-              Super Admin
+              Nasrify Team
             </span>
             <span className="text-xs text-zinc-400 font-mono">• Authenticated as {userEmail}</span>
           </div>
@@ -112,7 +112,7 @@ export function SuperPendingThemesClient({
             {pending.length}
           </span>
           <span className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
-            Pending Submissions
+            Pending Nasrify Team Review
           </span>
         </div>
       </div>

@@ -1,16 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import type { ThemeMarketplaceListing, ThemeConfig } from "@/types/themes";
 import { ThemeMockupPreview } from "./ThemeMockupPreview";
 
 interface ThemeCardProps {
   theme: ThemeMarketplaceListing;
+  ratingSummary?: { averageRating: number; totalReviews: number } | null;
 }
 
-export function ThemeCard({ theme }: ThemeCardProps): React.JSX.Element {
+export function ThemeCard({ theme, ratingSummary }: ThemeCardProps): React.JSX.Element {
   const [showQuickPreview, setShowQuickPreview] = useState(false);
+  const [summary, setSummary] = useState<{ averageRating: number; totalReviews: number } | null>(
+    ratingSummary || null
+  );
+
+  useEffect(() => {
+    if (ratingSummary) return;
+    fetch(`/api/marketplace/reviews/summary?type=theme&listingId=${theme.id}`)
+      .then((r) => r.json())
+      .then((d: any) => {
+        if (d?.success && d?.summary) setSummary(d.summary);
+      })
+      .catch(() => {});
+  }, [theme.id, ratingSummary]);
+
   const isFree = !theme.pricing || theme.pricing === "free" || !theme.price || theme.price === 0;
 
   let config: ThemeConfig = {};
@@ -107,9 +122,20 @@ export function ThemeCard({ theme }: ThemeCardProps): React.JSX.Element {
               <span className="font-mono text-[10px] text-zinc-400">v{theme.version}</span>
             </div>
 
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-2 truncate">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1 truncate">
               by {theme.author || "Nasrify Design Partner"}
             </p>
+
+            {/* Small star + count under theme name */}
+            <div className="flex items-center gap-1 text-[11px] text-zinc-500 dark:text-zinc-400 mb-3">
+              <span className="text-amber-400 text-xs">★</span>
+              <span className="font-bold text-zinc-800 dark:text-zinc-200">
+                {summary && summary.totalReviews > 0 ? summary.averageRating.toFixed(1) : "5.0"}
+              </span>
+              <span className="text-zinc-400">
+                ({summary ? summary.totalReviews : 0})
+              </span>
+            </div>
 
             <p className="text-xs text-zinc-600 dark:text-zinc-300 line-clamp-2 leading-relaxed mb-4">
               {theme.description || "A responsive, high-performance storefront theme built for edge conversion."}

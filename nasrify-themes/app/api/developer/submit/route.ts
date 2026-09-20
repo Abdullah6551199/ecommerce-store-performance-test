@@ -146,7 +146,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         message: data.submitForReview
-          ? "Theme submitted for super admin approval"
+          ? "Theme submitted for Nasrify Team approval"
           : "Draft saved successfully",
         listingId: data.id,
         status: newStatus,
@@ -211,7 +211,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       message: data.submitForReview
-        ? "Theme submitted for super admin approval"
+        ? "Theme submitted for Nasrify Team approval"
         : "Draft saved successfully",
       listingId,
       status: newStatus,

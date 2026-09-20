@@ -94,13 +94,16 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
   }
 
   // Optimized parallel SSR pass: only fetch essential product data; eliminate heavy review list query
-  const [relatedProducts, ratingSummary, productBundles] = await Promise.all([
+  const [relatedProducts, ratingSummary, productBundles, qaData] = await Promise.all([
     getRelatedProducts(product.id, product.categoryId, 4),
     getProductRatingSummary(product.id),
     getProductBundles(product.id),
+    import("@/apps/product-qa/lib/questions")
+      .then((m) => m.getProductQuestions(product.id, 1, 5))
+      .catch(() => ({ questions: [] })),
   ]);
 
-  // Structured Data (JSON-LD) with aggregate rating
+  // Structured Data (JSON-LD) with aggregate rating and Q&A
   const productJsonLd = generateProductJsonLd(product, ratingSummary);
   const breadcrumbItems = [
     { name: "Home", url: "/" },
@@ -110,6 +113,8 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
     { name: product.name, url: `/product/${product.slug}` },
   ];
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
+  const { generateQAJsonLd } = await import("@/lib/seo");
+  const qaJsonLd = generateQAJsonLd(product.name, qaData?.questions || []);
   const productMainImageUrl = product.mainImage
     ? normalizeImageUrl(product.mainImage, { width: 900, quality: 80 })
     : null;
@@ -134,6 +139,12 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      {qaJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(qaJsonLd) }}
+        />
+      )}
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
         {/* B7: Breadcrumb Navigation */}

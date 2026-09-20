@@ -1163,3 +1163,54 @@ export const digitalLicenses = sqliteTable("digital_licenses", {
 export type DigitalLicenseRecord = typeof digitalLicenses.$inferSelect;
 export type NewDigitalLicenseRecord = typeof digitalLicenses.$inferInsert;
 
+// 53. Product Questions Table (Stage 40)
+export const productQuestions = sqliteTable("product_questions", {
+  id: text("id").primaryKey(),
+  productId: text("product_id").notNull(),
+  customerId: text("customer_id"),
+  customerName: text("customer_name").notNull(),
+  customerEmail: text("customer_email").notNull(),
+  question: text("question").notNull(),
+  status: text("status").default("pending").notNull(), // 'pending' | 'published' | 'hidden'
+  answerCount: integer("answer_count").default(0).notNull(),
+  upvoteCount: integer("upvote_count").default(0).notNull(),
+  isPinned: integer("is_pinned").default(0).notNull(),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export type ProductQuestionRecord = typeof productQuestions.$inferSelect;
+export type NewProductQuestionRecord = typeof productQuestions.$inferInsert;
+
+// 54. Product Answers Table (Stage 40)
+export const productAnswers = sqliteTable("product_answers", {
+  id: text("id").primaryKey(),
+  questionId: text("question_id").notNull(),
+  authorType: text("author_type").notNull(), // 'admin' | 'customer' | 'nasrify_team'
+  authorId: text("author_id"),
+  authorName: text("author_name").notNull(),
+  answer: text("answer").notNull(),
+  status: text("status").default("published").notNull(), // 'published' | 'hidden'
+  upvoteCount: integer("upvote_count").default(0).notNull(),
+  isAccepted: integer("is_accepted").default(0).notNull(),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export type ProductAnswerRecord = typeof productAnswers.$inferSelect;
+export type NewProductAnswerRecord = typeof productAnswers.$inferInsert;
+
+// 55. Product QA Upvotes Table (Stage 40)
+export const productQaUpvotes = sqliteTable("product_qa_upvotes", {
+  id: text("id").primaryKey(),
+  targetType: text("target_type").notNull(), // 'question' | 'answer'
+  targetId: text("target_id").notNull(),
+  customerId: text("customer_id"),
+  customerEmail: text("customer_email"),
+  createdAt: integer("created_at").notNull(),
+});
+
+export type ProductQaUpvoteRecord = typeof productQaUpvotes.$inferSelect;
+export type NewProductQaUpvoteRecord = typeof productQaUpvotes.$inferInsert;
+
+

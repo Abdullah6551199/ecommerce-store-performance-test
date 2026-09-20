@@ -45,6 +45,11 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
     CouponsDashboardWidget: dynamic(() => import("@/apps/coupons/admin/CouponsDashboardWidget")),
     DashboardWidget: dynamic(() => import("@/apps/coupons/admin/CouponsDashboardWidget")),
   },
+  "product-qa": {
+    ProductQAManager: dynamic(() => import("@/apps/product-qa/admin/ProductQAManager")),
+    QADashboardWidget: dynamic(() => import("@/apps/product-qa/admin/QADashboardWidget")),
+    DashboardWidget: dynamic(() => import("@/apps/product-qa/admin/QADashboardWidget")),
+  },
 };
 
 export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.ComponentType<any>>> = {
@@ -99,6 +104,9 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
   coupons: {
     CouponInput: dynamic(() => import("@/apps/coupons/storefront/CouponInput")),
     CouponBadge: dynamic(() => import("@/apps/coupons/storefront/CouponBadge")),
+  },
+  "product-qa": {
+    ProductQASection: dynamic(() => import("@/apps/product-qa/storefront/ProductQASection")),
   },
 };
 

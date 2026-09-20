@@ -15,6 +15,11 @@ const DigitalProductsManager = dynamic(
   { ssr: false, loading: () => <p className="text-xs text-zinc-400 py-4 text-center">Loading digital manager...</p> }
 );
 
+const ProductQAManager = dynamic(
+  () => import("@/apps/product-qa/admin/ProductQAManager"),
+  { ssr: false, loading: () => <p className="text-xs text-zinc-400 py-4 text-center">Loading Q&A manager...</p> }
+);
+
 interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -32,7 +37,7 @@ export default function ProductModal({
   categoriesList,
   initialCategoryId,
 }: ProductModalProps): React.JSX.Element | null {
-  const [activeTab, setActiveTab] = useState<"basic" | "pricing" | "media" | "variants" | "seo" | "digital">("basic");
+  const [activeTab, setActiveTab] = useState<"basic" | "pricing" | "media" | "variants" | "seo" | "digital" | "qa">("basic");
   const [stagedVariants, setStagedVariants] = useState<ProductVariantInput[]>([]);
 
   // Basic info
@@ -386,6 +391,7 @@ export default function ProductModal({
             { id: "variants", label: "Variants" },
             { id: "seo", label: "SEO & Attributes" },
             { id: "digital", label: "💾 Digital Files" },
+            { id: "qa", label: "💬 Q&A" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -904,6 +910,25 @@ export default function ProductModal({
                   <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Save Product First</h4>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">
                     Please create and save this product before attaching digital files, setting download limits, or generating license keys.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 7: PRODUCT Q&A (admin.product.form.below) */}
+          {activeTab === "qa" && (
+            <div className="space-y-4 pt-1">
+              {productToEdit ? (
+                <div className="rounded-2xl border border-zinc-200 dark:border-white/10 p-5 bg-zinc-50/50 dark:bg-white/5">
+                  <ProductQAManager initialProductId={productToEdit.id} />
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-zinc-300 dark:border-white/15 p-10 text-center bg-zinc-50/50 dark:bg-white/5">
+                  <span className="text-3xl block mb-2">💬</span>
+                  <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Save Product First</h4>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">
+                    Please create and save this product before viewing and answering customer questions.
                   </p>
                 </div>
               )}

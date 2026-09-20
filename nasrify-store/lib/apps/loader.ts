@@ -58,6 +58,9 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     CouponInput: dynamic(() => import("@/apps/coupons/storefront/CouponInput")),
     CouponBadge: dynamic(() => import("@/apps/coupons/storefront/CouponBadge")),
   },
+  "product-qa": {
+    ProductQASection: dynamic(() => import("@/apps/product-qa/storefront/ProductQASection")),
+  },
 };
 
 export function loadAdminAppComponent(

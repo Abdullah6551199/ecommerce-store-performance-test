@@ -46,6 +46,14 @@ const DigitalProductBadge = dynamic(
   }
 );
 
+const ProductQASection = dynamic(
+  () => import("@/apps/product-qa/storefront/ProductQASection"),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
 interface Props {
   productId?: string;
   enabledAppIds: string[];
@@ -60,8 +68,9 @@ export default function StorefrontProductBelowClient({
   const hasCompare = Boolean(productId && enabledAppIds.includes("compare"));
   const hasBundles = Boolean(productId && enabledAppIds.includes("bundles"));
   const hasDigital = Boolean(productId && enabledAppIds.includes("digital-products"));
+  const hasQA = Boolean(productId && enabledAppIds.includes("product-qa"));
 
-  if (!hasReviews && !hasWishlist && !hasCompare && !hasBundles && !hasDigital) {
+  if (!hasReviews && !hasWishlist && !hasCompare && !hasBundles && !hasDigital && !hasQA) {
     return null;
   }
 
@@ -99,6 +108,13 @@ export default function StorefrontProductBelowClient({
         <AppErrorBoundary appId="reviews" extensionPoint="storefront.product.below">
           <ReviewsList productId={productId!} />
         </AppErrorBoundary>
+      )}
+      {hasQA && (
+        <div data-app="product-qa" className="w-full">
+          <AppErrorBoundary appId="product-qa" extensionPoint="storefront.product.below">
+            <ProductQASection productId={productId!} />
+          </AppErrorBoundary>
+        </div>
       )}
     </div>
   );

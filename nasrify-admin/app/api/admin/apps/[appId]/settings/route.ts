@@ -145,3 +145,6 @@ export async function PUT(
     );
   }
 }
+
+export const POST = PUT;
+

@@ -145,3 +145,71 @@ export function generateBreadcrumbJsonLd(items: { name: string; url: string }[])
     })),
   };
 }
+
+/**
+ * Generate Question & Answer schema.org structured data (JSON-LD) for QAPage rich results
+ */
+export function generateQAJsonLd(
+  productName: string,
+  questions: Array<{
+    question: string;
+    createdAt?: number | null;
+    upvoteCount?: number;
+    answers?: Array<{
+      answer: string;
+      authorName: string;
+      createdAt?: number | null;
+      upvoteCount?: number;
+      isAccepted?: boolean | number;
+    }>;
+  }>
+) {
+  if (!questions || questions.length === 0) return null;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "QAPage",
+    mainEntity: questions.map((q) => {
+      const answers = q.answers || [];
+      const accepted = answers.find((a) => a.isAccepted) || answers[0];
+      const suggested = answers.filter((a) => a !== accepted);
+
+      return {
+        "@type": "Question",
+        name: q.question,
+        text: q.question,
+        answerCount: answers.length,
+        upvoteCount: q.upvoteCount || 0,
+        dateCreated: q.createdAt ? new Date(q.createdAt).toISOString() : undefined,
+        ...(accepted
+          ? {
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: accepted.answer,
+                dateCreated: accepted.createdAt ? new Date(accepted.createdAt).toISOString() : undefined,
+                upvoteCount: accepted.upvoteCount || 0,
+                author: {
+                  "@type": "Person",
+                  name: accepted.authorName,
+                },
+              },
+            }
+          : {}),
+        ...(suggested.length > 0
+          ? {
+              suggestedAnswer: suggested.map((s) => ({
+                "@type": "Answer",
+                text: s.answer,
+                dateCreated: s.createdAt ? new Date(s.createdAt).toISOString() : undefined,
+                upvoteCount: s.upvoteCount || 0,
+                author: {
+                  "@type": "Person",
+                  name: s.authorName,
+                },
+              })),
+            }
+          : {}),
+      };
+    }),
+  };
+}

@@ -356,4 +356,24 @@ The **Coupons & Discounts App** (`apps/coupons/`) demonstrates converting an exi
   - Storefront gates cleanly hide coupon UI elements when uninstalled (`data === null || enabled === false`).
   - Reinstallation restores all promo codes and usage redemption history instantaneously.
 
+---
+
+## 21. Case Study: Product Q&A App (Stage 40)
+
+The **Product Q&A App** (`apps/product-qa/`) demonstrates a community engagement and customer support extension that integrates directly into the storefront product detail page and the admin moderation dashboard with community upvoting and SEO rich results schema.
+
+### 21.1 Architecture Highlights
+- **Zero External API Dependencies**: All questions, answers, and upvotes persist directly in Cloudflare D1 (`ecommerce-perf-db`) via tables `product_questions`, `product_answers`, and `product_qa_upvotes`.
+- **Atomic Upvote Toggling**: `toggleQuestionUpvote` and `toggleAnswerUpvote` support both authenticated customer sessions and guest fingerprints, ensuring 1 vote per customer/email with automatic count updates.
+- **Extension Points**:
+  - `storefront.product.below`: Renders `ProductQASection` on product pages with paginated questions, threaded admin answers, upvote counters, and `AskQuestionForm`.
+  - `admin.dashboard.widget`: Renders `QADashboardWidget` displaying pending questions needing moderation, total questions asked this month, and top 5 most-upvoted questions.
+  - `admin.product.form.below`: Injects a contextual "💬 Product Q&A" tab directly into `ProductModal` for inline moderation while editing products.
+- **SEO Rich Results**:
+  - Automatically emits JSON-LD schema (`QAPage`, `Question`, `Answer`) into the product page `<head>` to improve search engine rankings on Google.
+- **Data Safety**:
+  - App uninstallation disables storefront rendering but **never drops** D1 Q&A tables.
+  - Reinstallation reactivates the module with full question and answer history intact.
+
+
 

@@ -1,0 +1,78 @@
+{
+  "id": "product-qa",
+  "name": "Product Q&A",
+  "version": "1.0.0",
+  "description": "Allow shoppers to ask questions directly on product pages, receive answers from store admins, and upvote helpful community responses.",
+  "author": "Nasrify",
+  "authorUrl": "https://nasrify.com",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "marketing",
+  "permissions": [
+    "read:products",
+    "read:customers",
+    "write:settings"
+  ],
+  "extensionPoints": [
+    "storefront.product.below",
+    "admin.dashboard.widget",
+    "admin.product.form.below"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "databaseTables": [
+    "product_questions",
+    "product_answers",
+    "product_qa_upvotes"
+  ],
+  "settingsSchema": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Product Q&A"
+    },
+    "requireLogin": {
+      "type": "boolean",
+      "default": false,
+      "label": "Require Account Login to Ask"
+    },
+    "autoPublish": {
+      "type": "boolean",
+      "default": false,
+      "label": "Auto-Publish New Questions"
+    },
+    "allowGuestQuestions": {
+      "type": "boolean",
+      "default": true,
+      "label": "Allow Guest Shoppers to Ask Questions"
+    },
+    "showUpvotes": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Community Upvoting"
+    },
+    "maxQuestionsPerProduct": {
+      "type": "number",
+      "default": 50,
+      "min": 5,
+      "max": 500,
+      "label": "Max Questions Stored per Product"
+    },
+    "questionsPerPage": {
+      "type": "number",
+      "default": 10,
+      "min": 5,
+      "max": 50,
+      "label": "Questions Displayed per Page"
+    },
+    "notifyAdminOnNewQuestion": {
+      "type": "boolean",
+      "default": true,
+      "label": "Queue Admin Notification for New Inquiries"
+    }
+  },
+  "changelog": "1.0.0 — Initial official release of Product Q&A app with community upvoting and admin answers."
+}

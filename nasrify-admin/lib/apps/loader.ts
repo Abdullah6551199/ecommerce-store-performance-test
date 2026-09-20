@@ -44,6 +44,11 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
     CouponsDashboardWidget: dynamic(() => import("@/apps/coupons/admin/CouponsDashboardWidget")),
     DashboardWidget: dynamic(() => import("@/apps/coupons/admin/CouponsDashboardWidget")),
   },
+  "product-qa": {
+    ProductQAManager: dynamic(() => import("@/apps/product-qa/admin/ProductQAManager")),
+    QADashboardWidget: dynamic(() => import("@/apps/product-qa/admin/QADashboardWidget")),
+    DashboardWidget: dynamic(() => import("@/apps/product-qa/admin/QADashboardWidget")),
+  },
 };
 
 export function loadAdminAppComponent(

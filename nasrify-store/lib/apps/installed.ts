@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { getDb, installedApps } from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import type { InstalledAppRecord } from "@/types/apps";
 
 interface CacheEntry {
@@ -69,7 +69,23 @@ export async function getInstalledApp(appId: string): Promise<InstalledAppRecord
 /**
  * Check if app is installed and actively enabled
  */
-export async function isAppEnabled(appId: string): Promise<boolean> {
+export async function isAppEnabled(
+  appId: string,
+  options?: { bypassCache?: boolean }
+): Promise<boolean> {
+  if (appId === "product-qa" || options?.bypassCache) {
+    const db = getDb();
+    if (db) {
+      try {
+        const rows = await db
+          .select({ id: installedApps.id, enabled: installedApps.enabled })
+          .from(installedApps)
+          .where(and(eq(installedApps.id, appId), eq(installedApps.enabled, true)))
+          .limit(1);
+        return rows.length > 0 && Boolean(rows[0].enabled);
+      } catch {}
+    }
+  }
   const app = await getInstalledApp(appId);
   return Boolean(app && app.enabled);
 }
@@ -81,8 +97,8 @@ export async function getAppSettings<T = Record<string, unknown>>(
   appId: string,
   options?: { bypassCache?: boolean }
 ): Promise<T | null> {
-  if (appId === "whatsapp-order" || options?.bypassCache) {
-    // Stage 29.6: Sub-5s reflection for WhatsApp order settings
+  if (appId === "whatsapp-order" || appId === "product-qa" || options?.bypassCache) {
+    // Sub-5s reflection for instant settings updates
     const db = getDb();
     if (db) {
       try {

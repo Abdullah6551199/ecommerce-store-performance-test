@@ -86,3 +86,14 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-39-01 | Module Resolution | Route forwarders in `apps/coupons/admin/api/*` and `storefront/api/*` used relative path `../../lib/coupons`, resolving to `apps/coupons/admin/lib/coupons` instead of `apps/coupons/lib/coupons`. | Updated all route handlers to import from `@/apps/coupons/lib/coupons`. | Complete |
 | BUG-39-02 | TypeScript / Types | Turbopack strict type checking caught `body` as `unknown` in `apps/coupons/admin/api/delete/route.ts`, `update/route.ts`, and `app/api/admin/coupons/[id]/route.ts`. | Explicitly cast `body` as `Record<string, any>` after `req.json().catch()`. | Complete |
 | BUG-39-03 | TypeScript / Generics | `CouponsDashboardWidget.tsx` called `fetchWithClientCache<{ success: boolean; data?: CouponStats }>`, causing `data.data` to be nested and incompatible with `SetStateAction<CouponStats | null>`. | Changed generic parameter to `fetchWithClientCache<CouponStats>` so `data` resolves directly to `CouponStats`. | Complete |
+
+---
+
+## Stage 40 (Product Q&A App)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-40-01 | Module Resolution | Route handlers in `apps/product-qa/admin/api/list/route.ts` used `../../../lib/questions` which traversed above app folder in worker build. | Changed import path to `@/apps/product-qa/lib/questions`. | Complete |
+| BUG-40-02 | Edge Cache Invalidation | Setting changes (e.g. `requireLogin`) had 60-second in-memory cache delay in worker `installed.ts`. | Added direct D1 query reflection for `product-qa` in `isAppEnabled` and `getAppSettings`. | Complete |
+| BUG-40-03 | HTTP Method | `nasrify-admin/app/api/admin/apps/[appId]/settings/route.ts` originally only exported `PUT`. | Exported `export const POST = PUT;` so both POST and PUT update settings identically. | Complete |
+

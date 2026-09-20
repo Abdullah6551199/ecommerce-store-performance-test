@@ -286,11 +286,7 @@ export async function createOrderFromCart(
       customerEmail: validated.email || null,
     });
 
-    if (!couponValidation.valid) {
-      throw new Error(`Coupon error: ${couponValidation.message}`);
-    }
-
-    if (couponValidation.coupon) {
+    if (couponValidation.valid && couponValidation.coupon) {
       verifiedCouponId = couponValidation.coupon.id;
       appliedDiscountCode = couponValidation.coupon.code;
       appliedDiscountType = couponValidation.coupon.type;
@@ -299,6 +295,8 @@ export async function createOrderFromCart(
         shipping = 0;
       }
       discountAmount = couponValidation.discount;
+    } else if (!couponValidation.valid) {
+      console.warn(`[Order Checkout] Invalid coupon ignored: ${couponValidation.message}`);
     }
   }
 

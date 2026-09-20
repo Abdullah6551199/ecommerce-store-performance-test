@@ -1,0 +1,70 @@
+{
+  "id": "coupons",
+  "name": "Coupons & Discounts",
+  "version": "1.0.0",
+  "description": "Create and manage promo codes, automated discounts, free shipping vouchers, and tiered offers.",
+  "author": "Nasrify",
+  "authorUrl": "https://nasrify.com",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "marketing",
+  "permissions": [
+    "read:products",
+    "read:orders",
+    "read:customers",
+    "read:settings"
+  ],
+  "extensionPoints": [
+    "storefront.cart.below",
+    "storefront.checkout.below",
+    "admin.dashboard.widget",
+    "admin.product.form.below"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "databaseTables": [
+    "coupons",
+    "coupon_usages"
+  ],
+  "settingsSchema": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Coupons & Discounts"
+    },
+    "showInCart": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Coupon Input in Cart"
+    },
+    "showInCheckout": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Coupon Input in Checkout"
+    },
+    "allowStacking": {
+      "type": "boolean",
+      "default": false,
+      "label": "Allow Stacking Multiple Coupons"
+    },
+    "autoApplyBest": {
+      "type": "boolean",
+      "default": false,
+      "label": "Auto-apply Best Available Coupon"
+    },
+    "showBadgeOnProducts": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Badge on Eligible Products"
+    },
+    "badgeText": {
+      "type": "string",
+      "default": "Coupon Available",
+      "label": "Product Badge Text"
+    }
+  },
+  "changelog": "1.0.0 — Initial modular release of Coupons as an installable app with cart & checkout integration."
+}

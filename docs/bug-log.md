@@ -77,4 +77,12 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-38-04 | App Validation | Manifest validation threw error for unrecognized extension point `admin.product.form.below`. | Added `admin.product.form.below` to `APP_EXTENSION_POINTS` in `types/apps.ts` across all workers. | Complete |
 | BUG-38-05 | TypeScript / Types | Nullable D1 integer fields (`downloadLimit`, `expiryDays`, `licenseEnabled`) were rejected by strict non-nullable interface. | Added null-coalescing fallbacks in Drizzle query mappings and adjusted `createdAt`/`updatedAt` type to `number \| null`. | Complete |
 
+---
 
+## Stage 39 (Coupons App Conversion)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-39-01 | Module Resolution | Route forwarders in `apps/coupons/admin/api/*` and `storefront/api/*` used relative path `../../lib/coupons`, resolving to `apps/coupons/admin/lib/coupons` instead of `apps/coupons/lib/coupons`. | Updated all route handlers to import from `@/apps/coupons/lib/coupons`. | Complete |
+| BUG-39-02 | TypeScript / Types | Turbopack strict type checking caught `body` as `unknown` in `apps/coupons/admin/api/delete/route.ts`, `update/route.ts`, and `app/api/admin/coupons/[id]/route.ts`. | Explicitly cast `body` as `Record<string, any>` after `req.json().catch()`. | Complete |
+| BUG-39-03 | TypeScript / Generics | `CouponsDashboardWidget.tsx` called `fetchWithClientCache<{ success: boolean; data?: CouponStats }>`, causing `data.data` to be nested and incompatible with `SetStateAction<CouponStats | null>`. | Changed generic parameter to `fetchWithClientCache<CouponStats>` so `data` resolves directly to `CouponStats`. | Complete |

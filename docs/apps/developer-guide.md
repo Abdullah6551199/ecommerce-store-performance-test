@@ -337,3 +337,23 @@ The **Digital Products App** (`apps/digital-products/`) represents the first net
   - `admin.dashboard.widget`: Live KPI metrics for active digital SKUs and monthly downloads.
 - **Data Safety**: All `digital_products`, `digital_downloads`, and `digital_licenses` tables remain permanently intact during app uninstallation and reinstallation.
 
+---
+
+## 20. Case Study: Coupons & Discounts App (Stage 39)
+
+The **Coupons & Discounts App** (`apps/coupons/`) demonstrates converting an existing, monolithic core e-commerce engine into a decoupled, installable modular application without breaking any backwards compatibility, database schemas, or checkout workflows.
+
+### 20.1 Architecture Highlights
+- **Engine Decoupling**: The 8 coupon calculation strategies (percentage, fixed amount, free shipping, BOGO / buy X get Y, category restriction, product restriction, minimum order value, and first-order restriction) were migrated into `apps/coupons/lib/coupons.ts` with React `cache()` and 20s micro-caching.
+- **Root Delegation Pattern**: Existing monolith imports in `lib/coupons.ts`, `components/admin/CouponsManager.tsx`, `components/CouponsSection.tsx`, and `/api/admin/coupons/*` were preserved as one-line delegation wrappers pointing into `@/apps/coupons/*`.
+- **Extension Points**:
+  - `storefront.cart.below`: Dynamically renders `CouponInput` inside cart drawers and the `/cart` page.
+  - `storefront.checkout.below`: Injects `CouponInput` directly into the `/checkout` order summary card.
+  - `admin.dashboard.widget`: Displays `CouponsDashboardWidget` with total active promo codes, monthly discount savings, and top-performing coupon codes.
+- **Data Safety & Lifecycle**:
+  - Uninstallation cleanly removes the app from `installed_apps` and saves settings to `app_install_logs`.
+  - The `coupons` and `coupon_usages` tables in Cloudflare D1 (`ecommerce-perf-db`) are **never dropped**.
+  - Storefront gates cleanly hide coupon UI elements when uninstalled (`data === null || enabled === false`).
+  - Reinstallation restores all promo codes and usage redemption history instantaneously.
+
+

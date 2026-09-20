@@ -54,6 +54,10 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     MyDownloadsPage: dynamic(() => import("@/apps/digital-products/storefront/MyDownloadsPage")),
     DigitalProductBadge: dynamic(() => import("@/apps/digital-products/storefront/DigitalProductBadge")),
   },
+  coupons: {
+    CouponInput: dynamic(() => import("@/apps/coupons/storefront/CouponInput")),
+    CouponBadge: dynamic(() => import("@/apps/coupons/storefront/CouponBadge")),
+  },
 };
 
 export function loadAdminAppComponent(

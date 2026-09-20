@@ -96,6 +96,11 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
     DigitalProductUploader: dynamic(() => import("@/apps/digital-products/admin/DigitalProductUploader")),
     DigitalStatsWidget: dynamic(() => import("@/apps/digital-products/admin/DigitalStatsWidget")),
   },
+  coupons: {
+    CouponsManager: dynamic(() => import("@/apps/coupons/admin/CouponsManager")),
+    CouponsDashboardWidget: dynamic(() => import("@/apps/coupons/admin/CouponsDashboardWidget")),
+    DashboardWidget: dynamic(() => import("@/apps/coupons/admin/CouponsDashboardWidget")),
+  },
 };
 
 export function loadAdminAppComponent(
@@ -176,6 +181,10 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     DownloadButton: dynamic(() => import("@/apps/digital-products/storefront/DownloadButton")),
     MyDownloadsPage: dynamic(() => import("@/apps/digital-products/storefront/MyDownloadsPage")),
     DigitalProductBadge: dynamic(() => import("@/apps/digital-products/storefront/DigitalProductBadge")),
+  },
+  coupons: {
+    CouponInput: dynamic(() => import("@/apps/coupons/storefront/CouponInput")),
+    CouponBadge: dynamic(() => import("@/apps/coupons/storefront/CouponBadge")),
   },
 };
 

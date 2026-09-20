@@ -8,6 +8,7 @@ import orderTrackingManifest from "@/apps/order-tracking/manifest.json";
 import broadcastManifest from "@/apps/broadcast/manifest.json";
 import trustBadgesManifest from "@/apps/trust-badges/manifest.json";
 import cookieConsentManifest from "@/apps/cookie-consent/manifest.json";
+import digitalProductsManifest from "@/apps/digital-products/manifest.json";
 import { type AppManifest } from "@/types/apps";
 import { validateManifest } from "./manifest";
 
@@ -26,6 +27,7 @@ const RAW_MANIFESTS: Record<string, unknown> = {
   broadcast: broadcastManifest,
   "trust-badges": trustBadgesManifest,
   "cookie-consent": cookieConsentManifest,
+  "digital-products": digitalProductsManifest,
 };
 
 const VALIDATED_MANIFESTS: Record<string, AppManifest> = {};

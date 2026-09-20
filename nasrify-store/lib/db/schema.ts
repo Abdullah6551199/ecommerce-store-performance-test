@@ -1114,3 +1114,52 @@ export const appInstallLogs = sqliteTable("app_install_log", {
 export type AppInstallLogDbRecord = typeof appInstallLogs.$inferSelect;
 export type NewAppInstallLogDbRecord = typeof appInstallLogs.$inferInsert;
 
+// 48. Digital Products Table (Stage 38)
+export const digitalProducts = sqliteTable("digital_products", {
+  id: text("id").primaryKey(),
+  productId: text("product_id").notNull(),
+  filesJson: text("files_json").notNull(),
+  downloadLimit: integer("download_limit").default(5),
+  expiryDays: integer("expiry_days").default(30),
+  licenseEnabled: integer("license_enabled").default(0),
+  createdAt: integer("created_at"),
+  updatedAt: integer("updated_at"),
+});
+
+export type DigitalProductRecord = typeof digitalProducts.$inferSelect;
+export type NewDigitalProductRecord = typeof digitalProducts.$inferInsert;
+
+// 49. Digital Downloads Table (Stage 38)
+export const digitalDownloads = sqliteTable("digital_downloads", {
+  id: text("id").primaryKey(),
+  orderId: text("order_id").notNull(),
+  productId: text("product_id").notNull(),
+  customerId: text("customer_id"),
+  customerEmail: text("customer_email"),
+  fileName: text("file_name"),
+  r2Key: text("r2_key"),
+  downloadToken: text("download_token").notNull().unique(),
+  downloadedCount: integer("downloaded_count").default(0),
+  maxDownloads: integer("max_downloads").default(5),
+  expiresAt: integer("expires_at"),
+  createdAt: integer("created_at"),
+  lastDownloadAt: integer("last_download_at"),
+});
+
+export type DigitalDownloadRecord = typeof digitalDownloads.$inferSelect;
+export type NewDigitalDownloadRecord = typeof digitalDownloads.$inferInsert;
+
+// 50. Digital Licenses Table (Stage 38)
+export const digitalLicenses = sqliteTable("digital_licenses", {
+  id: text("id").primaryKey(),
+  orderId: text("order_id").notNull(),
+  productId: text("product_id").notNull(),
+  licenseKey: text("license_key").unique(),
+  customerEmail: text("customer_email"),
+  status: text("status").default("active"),
+  createdAt: integer("created_at"),
+});
+
+export type DigitalLicenseRecord = typeof digitalLicenses.$inferSelect;
+export type NewDigitalLicenseRecord = typeof digitalLicenses.$inferInsert;
+

@@ -319,3 +319,21 @@ The **Nasrify Themes Hub** (`nasrify-themes`) is the parallel public marketplace
 - **Access Control**: Super Admin only (`SUPER_ADMIN_EMAILS` or admin role).
 - **Review & Mockup Auditing**: Real-time mockup rendering, design token validation, one-click live approval, or rejection with custom feedback.
 
+---
+
+## 19. Case Study: Digital Products App (Stage 38)
+
+The **Digital Products App** (`apps/digital-products/`) represents the first net-new extension built using the Nasrify Apps Framework, demonstrating private R2 file storage, cryptographic token delivery, post-checkout fulfillment hooks, and custom extension points.
+
+### 19.1 Architecture Highlights
+- **No Direct R2 Exposure**: Download assets are kept completely private inside the `ecommerce-perf-assets` Cloudflare R2 bucket under `digital-products/{productId}/{fileId}-{name}`.
+- **Cryptographic HMAC-SHA256 Tokens**: Download links use signed, tamper-evident tokens (`/api/apps/digital-products/download?token=<token>`). Modifying query params or expiry timestamps fails token verification with HTTP 403.
+- **Fulfillment Hook (`order-hook.ts`)**:
+  Integrated seamlessly into `createOrderFromCart`. When an order contains digital products, `hookAfterOrderPlaced()` provisions download tokens in `digital_downloads` and creates license keys in `digital_licenses` in a non-blocking operation.
+- **Extension Points**:
+  - `storefront.product.below`: Displays an "Instant Digital Delivery" badge on product pages.
+  - `storefront.account.menu`: Integrates "My Downloads" vault page (`/account/downloads`) for customer file downloads and license keys.
+  - `admin.product.form.below`: Adds a "💾 Digital Files" configuration tab directly to `ProductModal`.
+  - `admin.dashboard.widget`: Live KPI metrics for active digital SKUs and monthly downloads.
+- **Data Safety**: All `digital_products`, `digital_downloads`, and `digital_licenses` tables remain permanently intact during app uninstallation and reinstallation.
+

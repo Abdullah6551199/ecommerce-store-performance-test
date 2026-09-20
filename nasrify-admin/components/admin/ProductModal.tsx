@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import type { ProductWithImagesAndCategory } from "@/lib/products";
 import type { CategoryRecord } from "@/lib/categories";
 import { generateSlug } from "@/lib/categories";
@@ -8,6 +9,11 @@ import VariantsManager from "./VariantsManager";
 import type { ProductVariantInput } from "@/lib/variants";
 import { normalizeImageUrl } from "@/lib/utils";
 import Toggle from "@/components/ui/Toggle";
+
+const DigitalProductsManager = dynamic(
+  () => import("@/apps/digital-products/admin/DigitalProductsManager"),
+  { ssr: false, loading: () => <p className="text-xs text-zinc-400 py-4 text-center">Loading digital manager...</p> }
+);
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -26,7 +32,7 @@ export default function ProductModal({
   categoriesList,
   initialCategoryId,
 }: ProductModalProps): React.JSX.Element | null {
-  const [activeTab, setActiveTab] = useState<"basic" | "pricing" | "media" | "variants" | "seo">("basic");
+  const [activeTab, setActiveTab] = useState<"basic" | "pricing" | "media" | "variants" | "seo" | "digital">("basic");
   const [stagedVariants, setStagedVariants] = useState<ProductVariantInput[]>([]);
 
   // Basic info
@@ -379,6 +385,7 @@ export default function ProductModal({
             { id: "media", label: "Images & Gallery" },
             { id: "variants", label: "Variants" },
             { id: "seo", label: "SEO & Attributes" },
+            { id: "digital", label: "💾 Digital Files" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -873,6 +880,33 @@ export default function ProductModal({
                   />
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* TAB 6: DIGITAL FILES (admin.product.form.below) */}
+          {activeTab === "digital" && (
+            <div className="space-y-4 pt-1">
+              {productToEdit ? (
+                <div className="rounded-2xl border border-zinc-200 dark:border-white/10 p-5 bg-zinc-50/50 dark:bg-white/5">
+                  <div className="mb-4 pb-3 border-b border-zinc-200 dark:border-white/10">
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
+                      Digital Product Configuration
+                    </h4>
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+                      Attach files for instant customer delivery upon purchase of <strong>{productToEdit.name}</strong>.
+                    </p>
+                  </div>
+                  <DigitalProductsManager initialProductId={productToEdit.id} />
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-zinc-300 dark:border-white/15 p-10 text-center bg-zinc-50/50 dark:bg-white/5">
+                  <span className="text-3xl block mb-2">💾</span>
+                  <h4 className="text-sm font-bold text-zinc-900 dark:text-white">Save Product First</h4>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">
+                    Please create and save this product before attaching digital files, setting download limits, or generating license keys.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 

@@ -1,0 +1,72 @@
+{
+  "id": "digital-products",
+  "name": "Digital Products",
+  "version": "1.0.0",
+  "description": "Sell downloadable files (PDF, ZIP, MP3, Video, Images) with secure delivery, license keys, and download tracking.",
+  "author": "Nasrify",
+  "authorUrl": "https://nasrify.com",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "products",
+  "permissions": [
+    "read:products",
+    "write:products",
+    "read:orders",
+    "read:customers",
+    "read:media",
+    "write:media"
+  ],
+  "extensionPoints": [
+    "storefront.product.below",
+    "storefront.account.menu",
+    "admin.product.form.below",
+    "admin.dashboard.widget"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "databaseTables": [
+    "digital_products",
+    "digital_downloads",
+    "digital_licenses"
+  ],
+  "settingsSchema": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Digital Products"
+    },
+    "defaultDownloadLimit": {
+      "type": "number",
+      "default": 5,
+      "min": 1,
+      "max": 100,
+      "label": "Default Download Limit"
+    },
+    "defaultExpiryDays": {
+      "type": "number",
+      "default": 30,
+      "min": 1,
+      "max": 365,
+      "label": "Default Expiry (Days)"
+    },
+    "enableLicenseKeys": {
+      "type": "boolean",
+      "default": false,
+      "label": "Enable License Key Generation"
+    },
+    "downloadButtonText": {
+      "type": "string",
+      "default": "Download Now",
+      "label": "Download Button Text"
+    },
+    "emailDownloadLink": {
+      "type": "boolean",
+      "default": true,
+      "label": "Email Download Link with Order Receipt"
+    }
+  },
+  "changelog": "1.0.0 — Initial release with R2 secure delivery, token generation, and account downloads."
+}

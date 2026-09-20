@@ -35,6 +35,11 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   "cookie-consent": {
     CookieConsentManager: dynamic(() => import("@/apps/cookie-consent/admin/CookieConsentManager")),
   },
+  "digital-products": {
+    DigitalProductsManager: dynamic(() => import("@/apps/digital-products/admin/DigitalProductsManager")),
+    DigitalProductUploader: dynamic(() => import("@/apps/digital-products/admin/DigitalProductUploader")),
+    DigitalStatsWidget: dynamic(() => import("@/apps/digital-products/admin/DigitalStatsWidget")),
+  },
 };
 
 export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.ComponentType<any>>> = {
@@ -80,6 +85,11 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     CookieConsentBanner: dynamic(() => import("@/apps/cookie-consent/storefront/CookieConsentBanner")),
     CookieCustomizeModal: dynamic(() => import("@/apps/cookie-consent/storefront/CookieCustomizeModal")),
     ScriptBlocker: dynamic(() => import("@/apps/cookie-consent/storefront/ScriptBlocker")),
+  },
+  "digital-products": {
+    DownloadButton: dynamic(() => import("@/apps/digital-products/storefront/DownloadButton")),
+    MyDownloadsPage: dynamic(() => import("@/apps/digital-products/storefront/MyDownloadsPage")),
+    DigitalProductBadge: dynamic(() => import("@/apps/digital-products/storefront/DigitalProductBadge")),
   },
 };
 

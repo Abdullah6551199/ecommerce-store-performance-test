@@ -65,3 +65,16 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-37B-02 | TypeScript / API | Route `/api/themes/install` passed separate arguments `(theme.id, storeId)` instead of the expected object `{ listingId, storeId }` to `recordThemeInstall`. | Fixed argument signature to `{ listingId: theme.id, storeId }`. | Complete |
 | BUG-37B-03 | TypeScript / State | `ThemeDeveloperPortalClient.tsx` test live preview modal omitted `authorUrl` in the temporary state payload. | Added `authorUrl: authorUrl || null` to satisfy `ThemeMarketplaceListing` type. | Complete |
 
+---
+
+## Stage 38 (Digital Products App)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-38-01 | Module Resolution | Route forwarders in `apps/digital-products/admin/api/*` and `storefront/api/*` attempted relative import `../../lib/*` which resolved to `admin/` instead of app root. | Fixed all imports to use root alias `@/apps/digital-products/lib/*`. | Complete |
+| BUG-38-02 | TypeScript / Imports | `apps/digital-products/lib/downloads.ts` omitted `digitalProducts` from `@/lib/db` imports during KPI aggregation. | Added `digitalProducts` to import list. | Complete |
+| BUG-38-03 | Database Schema Sync | `nasrify-store/lib/db/schema.ts` lacked tables 48-50 (`digital_products`, `digital_downloads`, `digital_licenses`). | Appended schemas to `nasrify-store/lib/db/schema.ts` to ensure build-time export resolution. | Complete |
+| BUG-38-04 | App Validation | Manifest validation threw error for unrecognized extension point `admin.product.form.below`. | Added `admin.product.form.below` to `APP_EXTENSION_POINTS` in `types/apps.ts` across all workers. | Complete |
+| BUG-38-05 | TypeScript / Types | Nullable D1 integer fields (`downloadLimit`, `expiryDays`, `licenseEnabled`) were rejected by strict non-nullable interface. | Added null-coalescing fallbacks in Drizzle query mappings and adjusted `createdAt`/`updatedAt` type to `number \| null`. | Complete |
+
+

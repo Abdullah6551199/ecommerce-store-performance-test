@@ -1241,4 +1241,53 @@ export const themeMarketplaceInstalls = sqliteTable("theme_marketplace_installs"
 export type ThemeMarketplaceInstallRecord = typeof themeMarketplaceInstalls.$inferSelect;
 export type NewThemeMarketplaceInstallRecord = typeof themeMarketplaceInstalls.$inferInsert;
 
+// 48. Digital Products Table (Stage 38)
+export const digitalProducts = sqliteTable("digital_products", {
+  id: text("id").primaryKey(),
+  productId: text("product_id").notNull(),
+  filesJson: text("files_json").notNull(),
+  downloadLimit: integer("download_limit").default(5).notNull(),
+  expiryDays: integer("expiry_days").default(30).notNull(),
+  licenseEnabled: integer("license_enabled").default(0).notNull(),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export type DigitalProductRecord = typeof digitalProducts.$inferSelect;
+export type NewDigitalProductRecord = typeof digitalProducts.$inferInsert;
+
+// 49. Digital Downloads Table (Stage 38)
+export const digitalDownloads = sqliteTable("digital_downloads", {
+  id: text("id").primaryKey(),
+  orderId: text("order_id").notNull(),
+  productId: text("product_id").notNull(),
+  customerId: text("customer_id"),
+  customerEmail: text("customer_email"),
+  fileName: text("file_name").notNull(),
+  r2Key: text("r2_key").notNull(),
+  downloadToken: text("download_token").notNull(),
+  downloadedCount: integer("downloaded_count").default(0).notNull(),
+  maxDownloads: integer("max_downloads").default(5).notNull(),
+  expiresAt: integer("expires_at"),
+  createdAt: integer("created_at").notNull(),
+  lastDownloadAt: integer("last_download_at"),
+});
+
+export type DigitalDownloadRecord = typeof digitalDownloads.$inferSelect;
+export type NewDigitalDownloadRecord = typeof digitalDownloads.$inferInsert;
+
+// 50. Digital Licenses Table (Stage 38)
+export const digitalLicenses = sqliteTable("digital_licenses", {
+  id: text("id").primaryKey(),
+  orderId: text("order_id").notNull(),
+  productId: text("product_id").notNull(),
+  licenseKey: text("license_key").unique().notNull(),
+  customerEmail: text("customer_email"),
+  status: text("status").default("active").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
+
+export type DigitalLicenseRecord = typeof digitalLicenses.$inferSelect;
+export type NewDigitalLicenseRecord = typeof digitalLicenses.$inferInsert;
+
 

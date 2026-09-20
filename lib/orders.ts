@@ -480,6 +480,25 @@ export async function createOrderFromCart(
     }
   }
 
+  // Digital Products Hook: Provision secure download tokens and licenses
+  try {
+    const { hookAfterOrderPlaced } = await import("@/apps/digital-products/lib/order-hook");
+    await hookAfterOrderPlaced(
+      {
+        id: orderId,
+        customerId: resolvedCustomerId,
+        customerEmail: validated.email || null,
+      },
+      createdOrderItems.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.unitPrice,
+      }))
+    );
+  } catch (_digitalErr) {
+    // Non-blocking
+  }
+
   return {
     ...orderRecord,
     items: createdOrderItems,

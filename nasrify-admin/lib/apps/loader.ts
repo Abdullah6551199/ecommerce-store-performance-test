@@ -34,6 +34,11 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
   "cookie-consent": {
     CookieConsentManager: dynamic(() => import("@/apps/cookie-consent/admin/CookieConsentManager")),
   },
+  "digital-products": {
+    DigitalProductsManager: dynamic(() => import("@/apps/digital-products/admin/DigitalProductsManager")),
+    DigitalProductUploader: dynamic(() => import("@/apps/digital-products/admin/DigitalProductUploader")),
+    DigitalStatsWidget: dynamic(() => import("@/apps/digital-products/admin/DigitalStatsWidget")),
+  },
 };
 
 export function loadAdminAppComponent(

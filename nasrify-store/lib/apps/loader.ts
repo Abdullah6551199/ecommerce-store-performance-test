@@ -49,6 +49,11 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
     CookieCustomizeModal: dynamic(() => import("@/apps/cookie-consent/storefront/CookieCustomizeModal")),
     ScriptBlocker: dynamic(() => import("@/apps/cookie-consent/storefront/ScriptBlocker")),
   },
+  "digital-products": {
+    DownloadButton: dynamic(() => import("@/apps/digital-products/storefront/DownloadButton")),
+    MyDownloadsPage: dynamic(() => import("@/apps/digital-products/storefront/MyDownloadsPage")),
+    DigitalProductBadge: dynamic(() => import("@/apps/digital-products/storefront/DigitalProductBadge")),
+  },
 };
 
 export function loadAdminAppComponent(

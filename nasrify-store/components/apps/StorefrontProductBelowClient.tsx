@@ -38,6 +38,14 @@ const BundleCrossSell = dynamic(
   }
 );
 
+const DigitalProductBadge = dynamic(
+  () => import("@/apps/digital-products/storefront/DigitalProductBadge"),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
 interface Props {
   productId?: string;
   enabledAppIds: string[];
@@ -51,13 +59,21 @@ export default function StorefrontProductBelowClient({
   const hasWishlist = Boolean(productId && enabledAppIds.includes("wishlist"));
   const hasCompare = Boolean(productId && enabledAppIds.includes("compare"));
   const hasBundles = Boolean(productId && enabledAppIds.includes("bundles"));
+  const hasDigital = Boolean(productId && enabledAppIds.includes("digital-products"));
 
-  if (!hasReviews && !hasWishlist && !hasCompare && !hasBundles) {
+  if (!hasReviews && !hasWishlist && !hasCompare && !hasBundles && !hasDigital) {
     return null;
   }
 
   return (
     <div className="w-full space-y-6 mt-8">
+      {hasDigital && (
+        <div data-app="digital-products" className="w-full">
+          <AppErrorBoundary appId="digital-products" extensionPoint="storefront.product.below">
+            <DigitalProductBadge productId={productId!} />
+          </AppErrorBoundary>
+        </div>
+      )}
       {hasBundles && (
         <div data-app="bundles" className="w-full">
           <AppErrorBoundary appId="bundles" extensionPoint="storefront.product.below">

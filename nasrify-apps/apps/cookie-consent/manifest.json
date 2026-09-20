@@ -1,0 +1,88 @@
+{
+  "id": "cookie-consent",
+  "name": "Cookie Consent",
+  "version": "1.0.0",
+  "description": "GDPR and ePrivacy compliant cookie banner, preferences modal, and third-party script blocking engine.",
+  "author": "Nasrify Partner",
+  "authorUrl": "https://nasrify.com",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "compliance",
+  "permissions": [
+    "read:settings",
+    "write:settings",
+    "read:customers"
+  ],
+  "extensionPoints": [
+    "storefront.floating",
+    "admin.dashboard.widget"
+  ],
+  "databaseTables": [
+    "cookie_consent_settings"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "settingsSchema": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Cookie Consent",
+      "description": "Activate cookie consent banner and script blocker across storefront"
+    },
+    "bannerPosition": {
+      "type": "select",
+      "options": ["bottom", "top"],
+      "default": "bottom",
+      "label": "Banner Position",
+      "description": "Display banner at the bottom or top of the viewport"
+    },
+    "theme": {
+      "type": "select",
+      "options": ["light", "dark", "auto"],
+      "default": "auto",
+      "label": "Banner Theme",
+      "description": "Color theme for the cookie banner and preferences modal"
+    },
+    "showCustomizeButton": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Customize Button",
+      "description": "Allow visitors to inspect and toggle individual cookie categories"
+    },
+    "analyticsCategory": {
+      "type": "boolean",
+      "default": true,
+      "label": "Analytics Cookies Category",
+      "description": "Offer consent toggle for analytical reporting (Google Analytics, Hotjar)"
+    },
+    "marketingCategory": {
+      "type": "boolean",
+      "default": true,
+      "label": "Marketing Cookies Category",
+      "description": "Offer consent toggle for marketing pixels (Meta, TikTok)"
+    },
+    "functionalCategory": {
+      "type": "boolean",
+      "default": true,
+      "label": "Functional Cookies Category",
+      "description": "Offer consent toggle for functional user preferences"
+    },
+    "consentExpiryDays": {
+      "type": "number",
+      "default": 365,
+      "min": 30,
+      "max": 730,
+      "label": "Consent Expiry (Days)",
+      "description": "Days before prompting returning visitors for renewed consent"
+    },
+    "blockScriptsUntilConsent": {
+      "type": "boolean",
+      "default": true,
+      "label": "Block Scripts Until Consent",
+      "description": "Prevent third-party tracking scripts from firing until explicit consent is granted"
+    }
+  }
+}

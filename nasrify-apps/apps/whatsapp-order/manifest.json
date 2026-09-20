@@ -1,0 +1,63 @@
+{
+  "id": "whatsapp-order",
+  "name": "WhatsApp Order & Chat",
+  "version": "1.0.0",
+  "description": "Enable direct WhatsApp ordering on product pages and a floating customer support chat widget.",
+  "author": "Nasrify",
+  "authorUrl": "",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "sales",
+  "permissions": [
+    "read:products",
+    "read:settings"
+  ],
+  "extensionPoints": [
+    "storefront.floating",
+    "storefront.product.below",
+    "storefront.cart.below",
+    "storefront.checkout.below",
+    "admin.dashboard.widget"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "databaseTables": [
+    "app_whatsapp_clicks"
+  ],
+  "settingsSchema": {
+    "phoneNumber": {
+      "type": "string",
+      "default": "",
+      "label": "WhatsApp Phone Number (with country code, e.g. 15551234567)"
+    },
+    "enableFloating": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Floating WhatsApp Button"
+    },
+    "enableProductButton": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable 'Order on WhatsApp' on Product Pages"
+    },
+    "floatingMessage": {
+      "type": "string",
+      "default": "Hello! I am browsing your store and have a question.",
+      "label": "Default Floating Chat Message"
+    },
+    "productMessage": {
+      "type": "string",
+      "default": "Hello! I would like to order: {product_name} ({product_url}).",
+      "label": "Product Order Message Template"
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Order on WhatsApp",
+      "label": "Product Button Text"
+    }
+  },
+  "changelog": "1.0.0 — Initial release"
+}

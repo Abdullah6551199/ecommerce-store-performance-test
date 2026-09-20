@@ -45,3 +45,13 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-29-02 | CLI Tooling | Windows PowerShell default argument parsing strips unescaped quotes in curl JSON strings passed with `-d`. | Harmless CLI behavior; tests conducted via Node.js/tsx fetch scripts to ensure exact JSON serialization. | Complete |
 | BUG-29-03 | Build Tooling | `nasrify-admin` and `nasrify-store` builds log a warning: `The "middleware" file convention is deprecated. Please use "proxy" instead.` | Next.js 16 deprecation warning; proxy codemod will be applied in upcoming framework update. | Post-MVP / Framework Polish |
 
+---
+
+## Stage 37A (Apps Hub Worker, Marketplace & Developer Portal)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-37-01 | Build Tooling | Next.js Turbopack build panic when traversing Windows directory junction `apps` pointing to `..\apps` (`FileSystemPath("").join("../apps") leaves the filesystem root`). | Resolved by copying local standalone JSON manifest folders into `nasrify-apps/apps/`. | Complete |
+| BUG-37-02 | Auth / D1 Seed | The historical hash in `scripts/seed-admin.sql` did not match `admin123`. | Re-seeded remote D1 with verified bcrypt hash `$2b$10$bZa/sfWqu9TFmGB2nvZWkuvXagKX2Zwv/jsIb3YP7v2Z8B3Og/SH2` and cleared failed attempts. | Complete |
+| BUG-37-03 | Build Tooling | OpenNext on Windows outputs a non-blocking warning: `OpenNext is not fully compatible with Windows. While OpenNext may function on Windows, it could encounter unpredictable failures during runtime.` | Informational warning only; the worker compiled, bundled, and deployed cleanly to Cloudflare edge in 15 seconds. | Complete |
+

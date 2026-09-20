@@ -1,0 +1,45 @@
+{
+  "id": "compare",
+  "name": "Product Compare",
+  "version": "1.0.0",
+  "description": "Allow shoppers to compare technical specifications, prices, and ratings side-by-side.",
+  "author": "Nasrify",
+  "authorUrl": "",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "sales",
+  "permissions": [
+    "read:products",
+    "read:media"
+  ],
+  "extensionPoints": [
+    "storefront.product.below",
+    "storefront.floating"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "databaseTables": [],
+  "settingsSchema": {
+    "maxProducts": {
+      "type": "number",
+      "default": 4,
+      "label": "Maximum products to compare",
+      "description": "Limit of products that can be compared simultaneously (2-6)"
+    },
+    "showInHeader": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show compare icon in header"
+    },
+    "buttonStyle": {
+      "type": "select",
+      "default": "icon-text",
+      "options": ["icon", "icon-text"],
+      "label": "Compare button display style"
+    }
+  },
+  "changelog": "1.0.0 — Initial release as modular app"
+}

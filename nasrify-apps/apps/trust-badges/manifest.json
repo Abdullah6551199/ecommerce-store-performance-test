@@ -1,0 +1,71 @@
+{
+  "id": "trust-badges",
+  "name": "Trust Badges",
+  "version": "1.0.0",
+  "description": "Showcase trust seals, security guarantees, and accepted payment method icons across product, cart, and checkout pages.",
+  "author": "Nasrify Partner",
+  "authorUrl": "https://nasrify.com",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "marketing",
+  "permissions": [
+    "read:products",
+    "read:media",
+    "read:settings"
+  ],
+  "extensionPoints": [
+    "storefront.product.below",
+    "storefront.cart.below",
+    "storefront.checkout.below",
+    "admin.dashboard.widget"
+  ],
+  "databaseTables": [
+    "trust_badges",
+    "payment_icons"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "settingsSchema": {
+    "showOnProductPage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show on Product Page",
+      "description": "Display trust badges beneath the product purchase actions"
+    },
+    "showOnCartPage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show on Cart Page",
+      "description": "Display trust badges and payment icons on the shopping cart page"
+    },
+    "showOnCheckoutPage": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show on Checkout Page",
+      "description": "Display trust badges and payment security icons during checkout"
+    },
+    "showPaymentIcons": {
+      "type": "boolean",
+      "default": true,
+      "label": "Show Payment Icons",
+      "description": "Display accepted payment method icons (Visa, Mastercard, etc.)"
+    },
+    "badgeAlignment": {
+      "type": "select",
+      "options": ["left", "center", "right"],
+      "default": "center",
+      "label": "Badge Alignment",
+      "description": "Horizontal alignment of badges within their containers"
+    },
+    "badgeSize": {
+      "type": "select",
+      "options": ["sm", "md", "lg"],
+      "default": "md",
+      "label": "Badge Size",
+      "description": "Display sizing for trust badges"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+#:schema ../node_modules/wrangler/config-schema.json
+name = "nasrify-apps"
+main = ".open-next/worker.js"
+compatibility_date = "2025-02-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ecommerce-perf-db"
+database_id = "3a60804b-1009-4451-972b-87cec6d46bcb"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "ecommerce-perf-assets"
+
+[vars]
+NEXT_PUBLIC_APP_URL = "https://nasrify-apps.zia291930.workers.dev"
+ADMIN_URL = "https://nasrify-admin.zia291930.workers.dev"
+STOREFRONT_URL = "https://nasrify-store.zia291930.workers.dev"
+SESSION_SECRET = "8b051f18ed04fdbfc3aa401da65480ff4cb3b96a5e2082390693b2368a3f06e8"
+JWT_SECRET = "8b051f18ed04fdbfc3aa401da65480ff4cb3b96a5e2082390693b2368a3f06e8"
+ADMIN_EMAIL = "admin@apexstore.com"
+SUPER_ADMIN_EMAILS = "admin@apexstore.com,admin@example.com"
+
+# routes = [
+#   { pattern = "nasrify.com/apps/*", zone_name = "nasrify.com" },
+#   { pattern = "nasrify.com/developer/*", zone_name = "nasrify.com" }
+# ]
+
+[observability]
+enabled = true

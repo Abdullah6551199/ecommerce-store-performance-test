@@ -1114,3 +1114,67 @@ export const appInstallLogs = sqliteTable("app_install_log", {
 export type AppInstallLogDbRecord = typeof appInstallLogs.$inferSelect;
 export type NewAppInstallLogDbRecord = typeof appInstallLogs.$inferInsert;
 
+// 42. App Marketplace Listings Table (Stage 37A)
+export const appMarketplaceListings = sqliteTable("app_marketplace_listings", {
+  id: text("id").primaryKey(),
+  appId: text("app_id").notNull(),
+  version: text("version").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  author: text("author"),
+  authorUrl: text("author_url"),
+  iconUrl: text("icon_url"),
+  category: text("category"),
+  pricing: text("pricing"),
+  price: real("price"),
+  status: text("status", {
+    enum: ["draft", "pending", "approved", "rejected", "delisted"],
+  }),
+  submittedBy: text("submitted_by"),
+  submittedAt: integer("submitted_at"),
+  approvedBy: text("approved_by"),
+  approvedAt: integer("approved_at"),
+  rejectionReason: text("rejection_reason"),
+  downloadUrl: text("download_url"),
+  manifestJson: text("manifest_json"),
+  changelog: text("changelog"),
+  createdAt: integer("created_at"),
+  updatedAt: integer("updated_at"),
+});
+
+export type AppMarketplaceListingRecord = typeof appMarketplaceListings.$inferSelect;
+export type NewAppMarketplaceListingRecord = typeof appMarketplaceListings.$inferInsert;
+
+// 43. App Marketplace Versions Table (Stage 37A)
+export const appMarketplaceVersions = sqliteTable("app_marketplace_versions", {
+  id: text("id").primaryKey(),
+  listingId: text("listing_id").notNull(),
+  version: text("version").notNull(),
+  submittedAt: integer("submitted_at"),
+  manifestJson: text("manifest_json"),
+  downloadUrl: text("download_url"),
+  status: text("status", {
+    enum: ["pending", "approved", "rejected"],
+  }),
+  notes: text("notes"),
+});
+
+export type AppMarketplaceVersionRecord = typeof appMarketplaceVersions.$inferSelect;
+export type NewAppMarketplaceVersionRecord = typeof appMarketplaceVersions.$inferInsert;
+
+// 44. App Marketplace Installs Table (Stage 37A)
+export const appMarketplaceInstalls = sqliteTable("app_marketplace_installs", {
+  id: text("id").primaryKey(),
+  listingId: text("listing_id").notNull(),
+  storeId: text("store_id"),
+  installedAt: integer("installed_at"),
+  uninstalledAt: integer("uninstalled_at"),
+  status: text("status", {
+    enum: ["active", "uninstalled"],
+  }),
+});
+
+export type AppMarketplaceInstallRecord = typeof appMarketplaceInstalls.$inferSelect;
+export type NewAppMarketplaceInstallRecord = typeof appMarketplaceInstalls.$inferInsert;
+
+

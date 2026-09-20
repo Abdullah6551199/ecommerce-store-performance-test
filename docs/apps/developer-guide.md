@@ -271,3 +271,29 @@ The WhatsApp Order App demonstrates transactional order capture, attribution sou
   * Admin mutations trigger `invalidateStorefront` with 3 retries and exponential backoff.
 - **Data Safety**: All orders created with `source="whatsapp"` are permanently preserved in the core `orders` and `order_items` tables during app uninstallation and reinstallation.
 
+---
+
+## 17. Nasrify Apps Hub & Marketplace Ecosystem (Stage 37A)
+
+The **Nasrify Apps Hub** (`nasrify-apps`) is the centralized public marketplace, developer portal, and admin approval queue running as a dedicated Cloudflare Worker.
+
+### 17.1 Public Marketplace (`/` & `/apps/[appId]`)
+- **Discovery Grid**: Search, category filters, and sorting by newest, name, or price.
+- **Micro-Caching**: All marketplace queries use `React.cache()` and an isolate-level in-memory cache with 20-second TTL.
+- **App Detail Pages**: Shows app metadata, developer author links, version history, required permissions, extension points, changelog, and related apps.
+- **1-Click Install Flow**:
+  Clicking "Install App" routes through `/api/marketplace/install?appId=<appId>`, which registers an active install in the `app_marketplace_installs` table and returns a 302 redirect directly to `https://nasrify-admin.zia291930.workers.dev/admin/apps?install=<appId>`.
+
+### 17.2 Developer Portal (`/developer`)
+- **Shared Session Authentication**: Uses the shared D1 `sessions` table. Developers logged into `nasrify-admin` are recognized automatically via the HTTP-only `admin_session` cookie. Direct login is also available via `/api/developer/login`.
+- **My Listings**: Real-time listing management displaying status tags (`draft`, `pending`, `approved`, `rejected`, `delisted`), version history, and rejection notes.
+- **App Submission**: Form enforcing Zod schema validation for kebab-case App ID, semver, pricing, description, and manifest JSON validation. Submitting sets status to `pending` and inserts an initial record into `app_marketplace_versions`.
+
+### 17.3 Super Admin Approval Queue (`/super/pending`)
+- **Role & Access Verification**: Restricted to authenticated administrators defined in `SUPER_ADMIN_EMAILS`.
+- **Manifest Security Inspection**: Super admins audit declared permissions (`read:products`, `read:orders`, etc.) and storefront extension points.
+- **One-Click Actions**:
+  - **Approve**: Sets status to `approved`, stamps `approved_by` and `approved_at`, invalidates the listings cache, and publishes the app live immediately.
+  - **Reject**: Prompts for a mandatory rejection reason and flags the listing as `rejected` with clear feedback visible in the developer portal.
+  - **Delist**: Removes the app from public marketplace discovery without deleting developer data.
+

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { ThemeConfig, StoreData } from "@/lib/themes/types";
 import { renderTheme } from "@/lib/themes/engine";
 import { generateThemeVarsCss } from "@/lib/themes/css";
+import { getFontsInUse, getFontFaceCSS } from "@/lib/themes/fonts";
 
 interface ThemePreviewWrapperProps {
   initialTheme: ThemeConfig;
@@ -36,6 +37,13 @@ export default function ThemePreviewWrapper({
           const styleTag = document.getElementById("nasrify-theme-vars");
           if (styleTag) {
             styleTag.innerHTML = generateThemeVarsCss(newTheme);
+          }
+
+          // Live update @font-face declarations for newly selected fonts
+          const fontStyleTag = document.getElementById("nasrify-fonts-css");
+          if (fontStyleTag) {
+            const inUse = getFontsInUse(newTheme);
+            fontStyleTag.innerHTML = getFontFaceCSS(inUse);
           }
         }
       };

@@ -14,6 +14,7 @@ import StorefrontOverlays from "@/components/StorefrontOverlays";
 import StorefrontFloating from "@/components/apps/StorefrontFloating";
 import { getActiveTheme } from "@/lib/themes/loader";
 import { generateThemeVarsCss } from "@/lib/themes/css";
+import { getFontsInUse, getFontFaceCSS, getFontPreloadLinks } from "@/lib/themes/fonts";
 import StorefrontLayoutWrapper from "@/components/StorefrontLayoutWrapper";
 
 
@@ -104,6 +105,9 @@ export default async function RootLayout({
 
   const themeCss = generateThemeCss(theme);
   const activeThemeCss = generateThemeVarsCss(activeThemeConfig);
+  const fontsInUse = getFontsInUse(activeThemeConfig);
+  const fontFaceCss = getFontFaceCSS(fontsInUse);
+  const preloadLinks = getFontPreloadLinks(fontsInUse);
 
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
@@ -115,6 +119,16 @@ export default async function RootLayout({
         />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        {preloadLinks.map((p) => (
+          <link
+            key={p.href}
+            rel="preload"
+            href={p.href}
+            as={p.as}
+            type={p.type}
+            crossOrigin="anonymous"
+          />
+        ))}
         <style
           id="apex-theme-vars"
           dangerouslySetInnerHTML={{ __html: themeCss }}
@@ -122,6 +136,10 @@ export default async function RootLayout({
         <style
           id="nasrify-theme-vars"
           dangerouslySetInnerHTML={{ __html: activeThemeCss }}
+        />
+        <style
+          id="nasrify-fonts-css"
+          dangerouslySetInnerHTML={{ __html: fontFaceCss }}
         />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col antialiased selection:bg-[#960DF2] selection:text-white bg-[var(--bg-primary)] text-[var(--text-body)]`}>

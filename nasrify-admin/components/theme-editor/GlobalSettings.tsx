@@ -2,6 +2,7 @@
 
 import React from "react";
 import ImageUploadField from "./ImageUploadField";
+import FontPicker from "./FontPicker";
 
 interface GlobalSettingsProps {
   settings: {
@@ -166,40 +167,20 @@ export function GlobalSettings({ settings, onChange }: GlobalSettingsProps) {
           Typography
         </h4>
 
-        <div className="space-y-2">
-          <div>
-            <label className="text-gray-600 dark:text-gray-400 font-medium">
-              Heading Font
-            </label>
-            <select
-              value={fonts.heading || "Inter"}
-              onChange={(e) => handleFontChange("heading", e.target.value)}
-              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
-            >
-              {FONT_OPTIONS.map((f) => (
-                <option key={f} value={f}>
-                  {f}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="space-y-3">
+          <FontPicker
+            label="Heading Font"
+            value={fonts.heading || "Inter"}
+            onChange={(val) => handleFontChange("heading", val)}
+            description="Titles, hero, and section headers"
+          />
 
-          <div>
-            <label className="text-gray-600 dark:text-gray-400 font-medium">
-              Body Font
-            </label>
-            <select
-              value={fonts.body || "Inter"}
-              onChange={(e) => handleFontChange("body", e.target.value)}
-              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
-            >
-              {FONT_OPTIONS.map((f) => (
-                <option key={f} value={f}>
-                  {f}
-                </option>
-              ))}
-            </select>
-          </div>
+          <FontPicker
+            label="Body Font"
+            value={fonts.body || "Inter"}
+            onChange={(val) => handleFontChange("body", val)}
+            description="Paragraphs, cards, and navigation"
+          />
         </div>
       </div>
 

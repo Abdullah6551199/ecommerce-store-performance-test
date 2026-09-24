@@ -1,4 +1,5 @@
 import { ThemeConfig } from "./types";
+import { getFontFamilyWithFallback } from "./fonts";
 
 /**
  * Generate CSS variables style string from active theme settings
@@ -15,8 +16,8 @@ export function generateThemeVarsCss(theme: ThemeConfig): string {
       --theme-text: ${colors.text || "#18181B"};
       --theme-text-muted: ${colors.text_muted || "#71717A"};
       --theme-border: ${colors.border || "#E4E4E7"};
-      --theme-font-heading: '${fonts.heading || "Inter"}', sans-serif;
-      --theme-font-body: '${fonts.body || "Inter"}', sans-serif;
+      --theme-font-heading: ${getFontFamilyWithFallback(fonts.heading || "Inter")};
+      --theme-font-body: ${getFontFamilyWithFallback(fonts.body || "Inter")};
       --theme-radius: ${layout.border_radius || "8px"};
       --theme-spacing: ${layout.section_spacing || "64px"};
       --theme-container-width: ${layout.container_width || "1280px"};

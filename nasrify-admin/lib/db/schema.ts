@@ -1482,7 +1482,42 @@ export const themeEditorHistory = sqliteTable("theme_editor_history", {
 });
 
 export type ThemeEditorHistoryRecord = typeof themeEditorHistory.$inferSelect;
-export type NewThemeEditorHistoryRecord = typeof themeEditorHistory.$inferInsert;
+// 63. Fonts Table (Stage 42.7)
+export const fonts = sqliteTable("fonts", {
+  id: text("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  family: text("family").notNull(),
+  category: text("category").notNull(), // sans | serif | display | handwriting | mono
+  variants: text("variants").notNull(), // JSON array: [400, 700]
+  styles: text("styles").notNull(), // JSON array: [normal, italic]
+  subsets: text("subsets").notNull(), // JSON array: [latin, arabic]
+  license: text("license"),
+  source: text("source"), // google | fontsource | custom
+  isCurated: integer("is_curated").default(0),
+  isActive: integer("is_active").default(1),
+  previewUrl: text("preview_url"),
+  fileUrls: text("file_urls").notNull(), // JSON: { "400-normal-latin": "r2-key", ... }
+  totalSizeKb: integer("total_size_kb"),
+  createdAt: integer("created_at"),
+  updatedAt: integer("updated_at"),
+});
+
+export type FontRecord = typeof fonts.$inferSelect;
+export type NewFontRecord = typeof fonts.$inferInsert;
+
+// 64. Font Settings Table (Stage 42.7)
+export const fontSettings = sqliteTable("font_settings", {
+  id: text("id").primaryKey().default("default"),
+  defaultHeadingFont: text("default_heading_font").default("inter"),
+  defaultBodyFont: text("default_body_font").default("inter"),
+  preloadFonts: text("preload_fonts"), // JSON array of font slugs/ids
+  enableLocalHosting: integer("enable_local_hosting").default(1),
+  fontDisplay: text("font_display").default("swap"), // swap | fallback | optional
+  updatedAt: integer("updated_at"),
+});
+
+export type FontSettingRecord = typeof fontSettings.$inferSelect;
+export type NewFontSettingRecord = typeof fontSettings.$inferInsert;
 
 
 

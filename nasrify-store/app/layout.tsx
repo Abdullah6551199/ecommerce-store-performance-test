@@ -12,6 +12,9 @@ import { CompareProvider } from "@/components/CompareContext";
 import "./globals.css";
 import StorefrontOverlays from "@/components/StorefrontOverlays";
 import StorefrontFloating from "@/components/apps/StorefrontFloating";
+import { getActiveTheme } from "@/lib/themes/loader";
+import { generateThemeVarsCss } from "@/lib/themes/css";
+import StorefrontLayoutWrapper from "@/components/StorefrontLayoutWrapper";
 
 
 const inter = Inter({
@@ -86,7 +89,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [settings, theme] = await Promise.all([getStoreSettings(), getThemeSettings()]);
+  const [settings, theme, activeThemeConfig] = await Promise.all([
+    getStoreSettings(),
+    getThemeSettings(),
+    getActiveTheme(),
+  ]);
 
   // Synchronize dynamic appearance overrides into store settings if provided
   const mergedSettings = {
@@ -96,6 +103,7 @@ export default async function RootLayout({
   };
 
   const themeCss = generateThemeCss(theme);
+  const activeThemeCss = generateThemeVarsCss(activeThemeConfig);
 
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
@@ -111,6 +119,10 @@ export default async function RootLayout({
           id="apex-theme-vars"
           dangerouslySetInnerHTML={{ __html: themeCss }}
         />
+        <style
+          id="nasrify-theme-vars"
+          dangerouslySetInnerHTML={{ __html: activeThemeCss }}
+        />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col antialiased selection:bg-[#960DF2] selection:text-white bg-[var(--bg-primary)] text-[var(--text-body)]`}>
         <CartProvider>
@@ -120,9 +132,12 @@ export default async function RootLayout({
               <div className="relative flex min-h-screen flex-col bg-[var(--bg-primary)] transition-colors duration-300">
                 {/* Foreground content stack */}
                 <div className="relative z-10 flex min-h-screen flex-col">
-                  <Header settings={mergedSettings} />
-                  <main className="flex-1">{children}</main>
-                  <Footer settings={mergedSettings} />
+                  <StorefrontLayoutWrapper
+                    legacyHeader={<Header settings={mergedSettings} />}
+                    legacyFooter={<Footer settings={mergedSettings} />}
+                  >
+                    {children}
+                  </StorefrontLayoutWrapper>
                 </div>
               </div>
               {/* Global Overlays & Modals (Lazy Loaded on Demand) */}

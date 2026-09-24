@@ -1252,4 +1252,50 @@ export const aiReviewSettings = sqliteTable("ai_review_settings", {
 export type AiReviewSettingRecord = typeof aiReviewSettings.$inferSelect;
 export type NewAiReviewSettingRecord = typeof aiReviewSettings.$inferInsert;
 
+// 58. Themes Table (Stage 42)
+export const themes = sqliteTable("themes", {
+  id: text("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  version: text("version").default("1.0.0"),
+  description: text("description"),
+  author: text("author").default("Nasrify"),
+  authorUrl: text("author_url"),
+  previewUrl: text("preview_url"),
+  screenshotUrls: text("screenshot_urls"), // JSON array
+  category: text("category"),
+  themeJson: text("theme_json").notNull(),
+  isBuiltIn: integer("is_built_in").default(0),
+  status: text("status").default("published"), // draft | published | archived
+  createdAt: integer("created_at"),
+  updatedAt: integer("updated_at"),
+});
+
+export type ThemeRecord = typeof themes.$inferSelect;
+export type NewThemeRecord = typeof themes.$inferInsert;
+
+// 59. Active Theme Table (Stage 42)
+export const activeTheme = sqliteTable("active_theme", {
+  id: text("id").primaryKey().default("default"),
+  themeId: text("theme_id").notNull(),
+  themeJson: text("theme_json").notNull(),
+  activatedAt: integer("activated_at"),
+  activatedBy: text("activated_by"),
+});
+
+export type ActiveThemeRecord = typeof activeTheme.$inferSelect;
+export type NewActiveThemeRecord = typeof activeTheme.$inferInsert;
+
+// 60. Theme Audit Log Table (Stage 42)
+export const themeAuditLog = sqliteTable("theme_audit_log", {
+  id: text("id").primaryKey(),
+  themeId: text("theme_id").notNull(),
+  action: text("action").notNull(), // activated | deactivated | created | updated | deleted
+  performedBy: text("performed_by"),
+  createdAt: integer("created_at"),
+});
+
+export type ThemeAuditLogRecord = typeof themeAuditLog.$inferSelect;
+export type NewThemeAuditLogRecord = typeof themeAuditLog.$inferInsert;
+
 

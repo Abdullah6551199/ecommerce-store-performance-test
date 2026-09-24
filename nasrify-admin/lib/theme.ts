@@ -44,13 +44,13 @@ export interface ThemeSettings {
 
 export const DEFAULT_THEME_SETTINGS: ThemeSettings = {
   colors: {
-    primary: "#960DF2",
-    secondary: "#AB3DF5",
-    accent: "#C06EF7",
+    primary: "#25D366",
+    secondary: "#128C7E",
+    accent: "#18181B",
     background: "#FFFFFF",
-    text: "#3C0561",
-    mutedText: "#780AC2",
-    border: "#D59EFA",
+    text: "#18181B",
+    mutedText: "#71717A",
+    border: "#E4E4E7",
     success: "#10b981",
     error: "#ef4444",
   },

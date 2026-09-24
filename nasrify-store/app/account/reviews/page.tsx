@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Button from "@/components/themes/blocks/Button";
+import Badge from "@/components/themes/blocks/Badge";
 
 interface CustomerReview {
   id: string;
@@ -17,17 +19,6 @@ interface CustomerReview {
   adminReply: string | null;
   adminReplyAt: string | null;
   createdAt: string;
-}
-
-function getReviewStatusBadge(status: string) {
-  switch (status) {
-    case "approved":
-      return "bg-purple-100 text-[#960DF2] dark:bg-purple-900/60 dark:text-[#EACFFC] border-purple-300 dark:border-purple-700";
-    case "rejected":
-      return "bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-800";
-    default:
-      return "bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800";
-  }
 }
 
 export default function AccountReviewsPage(): React.JSX.Element {
@@ -109,12 +100,12 @@ export default function AccountReviewsPage(): React.JSX.Element {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-[family-name:var(--theme-font-body)] text-[var(--theme-text,#18181B)]">
       <div className="pb-2">
-        <h1 className="text-2xl font-black text-[#3C0561] dark:text-white tracking-tight">
+        <h1 className="text-2xl font-black text-[var(--theme-text,#18181B)] tracking-tight font-[family-name:var(--theme-font-heading)]">
           My Product Reviews
         </h1>
-        <p className="text-xs text-slate-500 dark:text-purple-300/80 mt-0.5">
+        <p className="text-xs text-[var(--theme-text-muted,#71717A)] mt-0.5">
           View, edit, or delete feedback and star ratings you submitted ({reviews.length} total)
         </p>
       </div>
@@ -122,25 +113,24 @@ export default function AccountReviewsPage(): React.JSX.Element {
       {isLoading ? (
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="h-36 rounded-3xl bg-purple-100/50 dark:bg-purple-950/40 animate-pulse" />
+            <div key={i} className="h-36 rounded-2xl bg-[var(--theme-surface,#F4F4F5)] animate-pulse" />
           ))}
         </div>
       ) : reviews.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm">
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] mb-4">
+        <div className="p-12 text-center rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-white shadow-sm">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-text-muted,#71717A)] mb-4">
             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
             </svg>
           </div>
-          <h3 className="text-base font-extrabold text-[#3C0561] dark:text-white">No Reviews Yet</h3>
-          <p className="text-xs text-slate-500 dark:text-purple-300/70 mt-1 mb-6 max-w-sm mx-auto">
-            Share your thoughts on products you purchased to guide fellow athletes and shoppers.
+          <h3 className="text-base font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">No Reviews Yet</h3>
+          <p className="text-xs text-[var(--theme-text-muted,#71717A)] mt-1 mb-6 max-w-sm mx-auto">
+            Share your thoughts on products you purchased to guide fellow shoppers.
           </p>
-          <Link
-            href="/account/orders"
-            className="inline-flex items-center px-6 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-          >
-            Review Past Orders &rarr;
+          <Link href="/account/orders">
+            <Button variant="primary" size="md">
+              Review Past Orders &rarr;
+            </Button>
           </Link>
         </div>
       ) : (
@@ -148,11 +138,11 @@ export default function AccountReviewsPage(): React.JSX.Element {
           {reviews.map((rev) => (
             <div
               key={rev.id}
-              className="p-5 sm:p-6 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm space-y-4"
+              className="p-5 sm:p-6 rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-white shadow-sm space-y-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-center gap-3.5">
-                  <div className="relative h-14 w-14 rounded-2xl bg-purple-50 dark:bg-purple-950/40 overflow-hidden border border-purple-100 dark:border-purple-800 shrink-0">
+                  <div className="relative h-14 w-14 rounded-xl bg-[var(--theme-surface,#F4F4F5)] overflow-hidden border border-[var(--theme-border,#E4E4E7)] shrink-0">
                     {rev.productImage ? (
                       <Image
                         src={rev.productImage}
@@ -161,7 +151,7 @@ export default function AccountReviewsPage(): React.JSX.Element {
                         className="object-cover"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-purple-400 text-xs font-bold">
+                      <div className="flex h-full w-full items-center justify-center text-[var(--theme-text-muted,#71717A)] text-xs font-bold">
                         ★
                       </div>
                     )}
@@ -170,7 +160,7 @@ export default function AccountReviewsPage(): React.JSX.Element {
                   <div>
                     <Link
                       href={`/product/${rev.productSlug || rev.productId}`}
-                      className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white hover:text-[#960DF2] dark:hover:text-[#EACFFC] line-clamp-1"
+                      className="text-xs sm:text-sm font-extrabold text-[var(--theme-text,#18181B)] hover:text-[var(--theme-primary,#25D366)] line-clamp-1 transition-colors"
                     >
                       {rev.productName || "Product Item"}
                     </Link>
@@ -180,7 +170,7 @@ export default function AccountReviewsPage(): React.JSX.Element {
                           <span key={star}>{star <= rev.rating ? "★" : "☆"}</span>
                         ))}
                       </div>
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-[11px] text-[var(--theme-text-muted,#71717A)]">
                         {new Date(rev.createdAt).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
@@ -192,27 +182,25 @@ export default function AccountReviewsPage(): React.JSX.Element {
                 </div>
 
                 <div className="flex items-center gap-2.5">
-                  <span
-                    className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${getReviewStatusBadge(
-                      rev.status
-                    )}`}
-                  >
-                    {rev.status}
-                  </span>
+                  <Badge
+                    text={rev.status}
+                    variant={rev.status === "approved" ? "new" : "secondary"}
+                    size="sm"
+                  />
 
                   {rev.status === "pending" && (
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={() => openEditModal(rev)}
-                        className="px-3 py-1 text-xs font-bold rounded-lg border border-purple-200 dark:border-purple-800 text-[#960DF2] dark:text-[#EACFFC] hover:bg-purple-50 dark:hover:bg-purple-900/40 transition"
+                        className="px-3 py-1 text-xs font-bold rounded-lg border border-[var(--theme-border,#E4E4E7)] text-[var(--theme-text,#18181B)] hover:border-[var(--theme-primary,#25D366)] transition cursor-pointer"
                       >
                         Edit
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(rev.id)}
-                        className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition"
+                        className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition cursor-pointer"
                         title="Delete Review"
                       >
                         ✕
@@ -223,21 +211,21 @@ export default function AccountReviewsPage(): React.JSX.Element {
               </div>
 
               {rev.title && (
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                <h4 className="text-xs font-bold text-[var(--theme-text,#18181B)]">
                   {rev.title}
                 </h4>
               )}
 
-              <p className="text-xs text-slate-600 dark:text-purple-200/80 leading-relaxed">
+              <p className="text-xs text-[var(--theme-text-muted,#71717A)] leading-relaxed">
                 {rev.content}
               </p>
 
               {rev.adminReply && (
-                <div className="p-4 rounded-2xl bg-purple-50/60 dark:bg-[#2A0344]/50 border border-purple-100 dark:border-purple-800/60 space-y-1">
-                  <span className="text-[10px] font-black text-[#960DF2] dark:text-[#EACFFC] uppercase tracking-wider block">
-                    Response from ApexStore Concierge
+                <div className="p-4 rounded-xl bg-[var(--theme-surface,#F4F4F5)] border border-[var(--theme-border,#E4E4E7)] space-y-1">
+                  <span className="text-[10px] font-black text-[var(--theme-primary,#25D366)] uppercase tracking-wider block">
+                    Response from Store Concierge
                   </span>
-                  <p className="text-xs text-slate-700 dark:text-purple-200/90 leading-relaxed">
+                  <p className="text-xs text-[var(--theme-text,#18181B)] leading-relaxed">
                     {rev.adminReply}
                   </p>
                 </div>
@@ -249,82 +237,88 @@ export default function AccountReviewsPage(): React.JSX.Element {
 
       {/* Edit Review Modal */}
       {editingReview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-[#1E0230] border border-purple-200 dark:border-purple-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-purple-100 dark:border-purple-900/40">
-              <h3 className="text-base font-black text-[#3C0561] dark:text-white">Edit Your Review</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="bg-white border border-[var(--theme-border,#E4E4E7)] rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--theme-border,#E4E4E7)]">
+              <h3 className="text-base font-black text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
+                Edit Product Review
+              </h3>
               <button
                 type="button"
                 onClick={() => setEditingReview(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                className="text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-text,#18181B)] cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             {formError && (
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-300">
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-700">
                 {formError}
               </div>
             )}
 
             <form onSubmit={handleSaveEdit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">Rating</label>
+                <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1.5">Rating</label>
                 <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
                       type="button"
                       onClick={() => setEditRating(star)}
-                      className={`text-2xl transition-transform hover:scale-110 ${
-                        star <= editRating ? "text-amber-400" : "text-slate-300 dark:text-slate-600"
+                      className={`text-xl cursor-pointer transition ${
+                        star <= editRating ? "text-amber-400" : "text-[var(--theme-border,#E4E4E7)]"
                       }`}
                     >
                       ★
                     </button>
                   ))}
+                  <span className="text-xs font-bold text-[var(--theme-text,#18181B)] ml-2">
+                    {editRating} / 5 Stars
+                  </span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">Headline (Optional)</label>
+                <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1.5">Headline (Optional)</label>
                 <input
                   type="text"
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  placeholder="e.g. Great lightweight feel!"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">Your Feedback</label>
+                <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1.5">Your Feedback</label>
                 <textarea
-                  required
                   rows={4}
+                  required
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
-                  className="w-full p-3 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2] resize-none"
+                  className="w-full p-3 text-xs rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)] resize-none"
                 />
               </div>
 
               <div className="flex items-center justify-end gap-2.5 pt-2">
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => setEditingReview(null)}
                   disabled={submitting}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-purple-900/40 rounded-xl transition"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
+                  variant="primary"
+                  size="sm"
                   disabled={submitting}
-                  className="px-5 py-2 text-xs font-bold bg-[#960DF2] hover:bg-[#850bd8] text-white rounded-xl shadow-md shadow-purple-500/20 transition disabled:opacity-50"
                 >
-                  {submitting ? "Saving..." : "Update Review"}
-                </button>
+                  {submitting ? "Saving..." : "Save Changes"}
+                </Button>
               </div>
             </form>
           </div>

@@ -198,6 +198,11 @@ Beginning in Stage 42.8b, the Themes Framework supports defining page-specific l
     "account": [
       { "id": "pd-account", "type": "account_dashboard", "variant": "sidebar", "enabled": true, "settings": { ... } }
     ],
+    "shop": [
+      { "id": "pd-shop-hdr", "type": "page_header", "variant": "simple", "enabled": true, "settings": { ... } },
+      { "id": "pd-shop-flt", "type": "category_filters", "variant": "sidebar", "enabled": true, "settings": { ... } },
+      { "id": "pd-shop-grd", "type": "category_grid", "variant": "standard", "enabled": true, "settings": { ... } }
+    ],
     "page": [
       { "id": "pd-page-hdr", "type": "page_header", "variant": "simple", "enabled": true, "settings": { ... } },
       { "id": "pd-page-cnt", "type": "page_content", "variant": "standard", "enabled": true, "settings": { ... } }

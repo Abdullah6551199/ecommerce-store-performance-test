@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Button from "@/components/themes/blocks/Button";
+import Badge from "@/components/themes/blocks/Badge";
 
 interface AddressRecord {
   id: string;
@@ -141,93 +143,95 @@ export default function AccountAddressesPage(): React.JSX.Element {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-[family-name:var(--theme-font-body)] text-[var(--theme-text,#18181B)]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
         <div>
-          <h1 className="text-2xl font-black text-[#3C0561] dark:text-white tracking-tight">
+          <h1 className="text-2xl font-black text-[var(--theme-text,#18181B)] tracking-tight font-[family-name:var(--theme-font-heading)]">
             Saved Addresses
           </h1>
-          <p className="text-xs text-slate-500 dark:text-purple-300/80 mt-0.5">
+          <p className="text-xs text-[var(--theme-text-muted,#71717A)] mt-0.5">
             Manage your destination shipping addresses for expedited 1-click checkout
           </p>
         </div>
 
-        <button
+        <Button
           type="button"
+          variant="primary"
+          size="sm"
           onClick={openCreateModal}
-          className="px-5 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-1.5 self-start sm:self-auto"
         >
           <span>+ Add New Address</span>
-        </button>
+        </Button>
       </div>
 
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {[1, 2].map((i) => (
-            <div key={i} className="h-44 rounded-3xl bg-purple-100/50 dark:bg-purple-950/40 animate-pulse" />
+            <div key={i} className="h-44 rounded-2xl bg-[var(--theme-surface,#F4F4F5)] animate-pulse" />
           ))}
         </div>
       ) : addresses.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm">
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] mb-4">
+        <div className="p-12 text-center rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-white shadow-sm">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-text-muted,#71717A)] mb-4">
             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             </svg>
           </div>
-          <h3 className="text-base font-extrabold text-[#3C0561] dark:text-white">No Saved Addresses</h3>
-          <p className="text-xs text-slate-500 dark:text-purple-300/70 mt-1 mb-6 max-w-sm mx-auto">
-            Save your home, office, or training facility address to speed up order checkouts.
+          <h3 className="text-base font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
+            No Saved Addresses
+          </h3>
+          <p className="text-xs text-[var(--theme-text-muted,#71717A)] mt-1 mb-6 max-w-sm mx-auto">
+            Save your delivery addresses to speed up future order checkouts.
           </p>
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="md"
             onClick={openCreateModal}
-            className="inline-flex items-center px-6 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             Add First Address &rarr;
-          </button>
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {addresses.map((addr) => (
             <div
               key={addr.id}
-              className={`p-6 rounded-3xl border relative shadow-sm transition flex flex-col justify-between ${
+              className={`p-6 rounded-2xl border relative shadow-sm transition flex flex-col justify-between ${
                 addr.isDefault
-                  ? "border-[#960DF2] bg-purple-50/30 dark:bg-[#2A0344]/50 ring-2 ring-[#960DF2]/25"
-                  : "border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]"
+                  ? "border-[var(--theme-primary,#25D366)] bg-white ring-1 ring-[var(--theme-primary,#25D366)]/30"
+                  : "border-[var(--theme-border,#E4E4E7)] bg-white"
               }`}
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC]">
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-text,#18181B)]">
                     {addr.label || "Home"}
                   </span>
                   {addr.isDefault && (
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-[#960DF2] text-white shadow-sm">
-                      Default
-                    </span>
+                    <Badge text="Default" variant="new" size="sm" />
                   )}
                 </div>
 
-                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
+                <h3 className="text-sm font-extrabold text-[var(--theme-text,#18181B)]">
                   {addr.fullName}
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-purple-300/70 mt-0.5">{addr.phone}</p>
-                <p className="text-xs text-slate-600 dark:text-purple-200/90 mt-2.5 leading-relaxed">
+                <p className="text-xs text-[var(--theme-text-muted,#71717A)] mt-0.5">{addr.phone}</p>
+                <p className="text-xs text-[var(--theme-text,#18181B)] mt-2.5 leading-relaxed">
                   {addr.address}
                 </p>
-                <p className="text-xs text-slate-600 dark:text-purple-200/90 font-semibold">
+                <p className="text-xs text-[var(--theme-text-muted,#71717A)] font-semibold">
                   {addr.city}, {addr.country} {addr.postalCode ? `(${addr.postalCode})` : ""}
                 </p>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-purple-100 dark:border-purple-800/60 flex items-center justify-between text-xs">
+              <div className="pt-4 mt-4 border-t border-[var(--theme-border,#E4E4E7)] flex items-center justify-between text-xs">
                 <div>
                   {!addr.isDefault && (
                     <button
                       type="button"
                       onClick={() => handleSetDefault(addr.id)}
-                      className="text-xs font-bold text-slate-500 hover:text-[#960DF2] dark:text-purple-300 dark:hover:text-white transition"
+                      className="text-xs font-bold text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-primary,#25D366)] transition cursor-pointer"
                     >
                       Set as Default
                     </button>
@@ -238,14 +242,14 @@ export default function AccountAddressesPage(): React.JSX.Element {
                   <button
                     type="button"
                     onClick={() => openEditModal(addr)}
-                    className="font-bold text-[#960DF2] dark:text-[#EACFFC] hover:underline"
+                    className="font-bold text-[var(--theme-primary,#25D366)] hover:underline cursor-pointer"
                   >
                     Edit
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDelete(addr.id)}
-                    className="font-bold text-rose-500 hover:text-rose-700"
+                    className="font-bold text-rose-500 hover:text-rose-700 cursor-pointer"
                   >
                     Delete
                   </button>
@@ -258,23 +262,23 @@ export default function AccountAddressesPage(): React.JSX.Element {
 
       {/* Add / Edit Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-[#1E0230] border border-purple-200 dark:border-purple-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-purple-100 dark:border-purple-900/40">
-              <h3 className="text-base font-black text-[#3C0561] dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="bg-white border border-[var(--theme-border,#E4E4E7)] rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--theme-border,#E4E4E7)]">
+              <h3 className="text-base font-black text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
                 {editingAddress ? "Edit Saved Address" : "Add New Address"}
               </h3>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                className="text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-text,#18181B)] cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             {formError && (
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-300">
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-700">
                 {formError}
               </div>
             )}
@@ -282,7 +286,7 @@ export default function AccountAddressesPage(): React.JSX.Element {
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                  <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1">
                     Label (e.g. Home, Gym)
                   </label>
                   <input
@@ -290,11 +294,11 @@ export default function AccountAddressesPage(): React.JSX.Element {
                     required
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                  <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1">
                     Full Recipient Name
                   </label>
                   <input
@@ -302,13 +306,13 @@ export default function AccountAddressesPage(): React.JSX.Element {
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1">
                   Contact Phone Number
                 </label>
                 <input
@@ -317,12 +321,12 @@ export default function AccountAddressesPage(): React.JSX.Element {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="0300-1234567"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1">
                   Street Address
                 </label>
                 <input
@@ -331,13 +335,13 @@ export default function AccountAddressesPage(): React.JSX.Element {
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="House #, Street, Area"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                  <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1">
                     City
                   </label>
                   <input
@@ -346,11 +350,11 @@ export default function AccountAddressesPage(): React.JSX.Element {
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     placeholder="e.g. Lahore, Karachi"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1">
+                  <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1">
                     Postal Code (Optional)
                   </label>
                   <input
@@ -358,37 +362,39 @@ export default function AccountAddressesPage(): React.JSX.Element {
                     value={postalCode}
                     onChange={(e) => setPostalCode(e.target.value)}
                     placeholder="e.g. 54000"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
                   />
                 </div>
               </div>
 
-              <label className="flex items-center gap-2 cursor-pointer pt-1 text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label className="flex items-center gap-2 cursor-pointer pt-1 text-xs font-bold text-[var(--theme-text,#18181B)] select-none">
                 <input
                   type="checkbox"
                   checked={isDefault}
                   onChange={(e) => setIsDefault(e.target.checked)}
-                  className="w-4 h-4 rounded text-[#960DF2] border-purple-300 dark:border-purple-700 focus:ring-[#960DF2]"
+                  className="w-4 h-4 rounded text-[var(--theme-primary,#25D366)] border-[var(--theme-border,#E4E4E7)] focus:ring-[var(--theme-primary,#25D366)]"
                 />
                 <span>Set as default delivery address</span>
               </label>
 
               <div className="flex items-center justify-end gap-2.5 pt-3">
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => setModalOpen(false)}
                   disabled={submitting}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-purple-900/40 rounded-xl transition"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
+                  variant="primary"
+                  size="sm"
                   disabled={submitting}
-                  className="px-5 py-2 text-xs font-bold bg-[#960DF2] hover:bg-[#850bd8] text-white rounded-xl shadow-md shadow-purple-500/20 transition disabled:opacity-50"
                 >
                   {submitting ? "Saving..." : "Save Address"}
-                </button>
+                </Button>
               </div>
             </form>
           </div>

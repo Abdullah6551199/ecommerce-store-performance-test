@@ -4,13 +4,13 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProductBySlug, getRelatedProducts, listCatalogProducts } from "@/lib/products";
 import { getProductBundles } from "@/lib/bundles";
-import ProductShowcase from "@/components/ProductShowcase";
 import StorefrontProductBelow from "@/components/apps/StorefrontProductBelow";
 import { getProductRatingSummary } from "@/lib/reviews";
 import { getAbsoluteUrl, generateProductJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 import { normalizeImageUrl } from "@/lib/utils";
-
-import ProductBelowFoldClient from "@/components/product/ProductBelowFoldClient";
+import { getActiveTheme } from "@/lib/themes/loader";
+import { renderSection } from "@/lib/themes/engine";
+import { StoreData } from "@/lib/themes/types";
 
 export const revalidate = 300;
 
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   if (!product || product.status !== "published") {
     return {
-      title: "Product Not Found | Apex Store",
+      title: "Product Not Found | Nasrify Store",
     };
   }
 
@@ -41,12 +41,12 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     ? Number(product.salePrice).toFixed(2)
     : Number(product.price).toFixed(2);
 
-  const title = `${product.name} - $${effectivePrice} | Apex Store`;
+  const title = `${product.name} - $${effectivePrice} | Nasrify Store`;
   const description =
     product.seoDescription ||
     product.shortDescription ||
     product.description ||
-    `Buy ${product.name} for $${effectivePrice} at Apex Store with fast shipping, 30-day returns, and full warranty.`;
+    `Buy ${product.name} for $${effectivePrice} at Nasrify Store with fast shipping, 30-day returns, and full warranty.`;
   const canonicalUrl = getAbsoluteUrl(`/product/${product.slug}`);
   const mainImage = product.mainImage?.startsWith("http")
     ? product.mainImage
@@ -93,8 +93,8 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
     notFound();
   }
 
-  // Optimized parallel SSR pass: only fetch essential product data; eliminate heavy review list query
-  const [relatedProducts, ratingSummary, productBundles, qaData] = await Promise.all([
+  const [theme, relatedProducts, ratingSummary, productBundles, qaData] = await Promise.all([
+    getActiveTheme(),
     getRelatedProducts(product.id, product.categoryId, 4),
     getProductRatingSummary(product.id),
     getProductBundles(product.id),
@@ -118,6 +118,27 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
   const productMainImageUrl = product.mainImage
     ? normalizeImageUrl(product.mainImage, { width: 900, quality: 80 })
     : null;
+
+  // Prepare normalized storeData for theme section engine
+  const storeData: StoreData = {
+    product: {
+      ...product,
+      images:
+        (product as any).images && (product as any).images.length > 0
+          ? (product as any).images
+          : product.mainImage
+          ? [product.mainImage]
+          : [],
+      imageUrl: product.mainImage,
+      rating: ratingSummary?.averageRating || 4.8,
+      reviewsCount: ratingSummary?.totalReviews || 0,
+      variants: product.variants || [],
+      brand: (product as any).brand || "Nasrify Essentials",
+    },
+    products: relatedProducts,
+    rating_summary: ratingSummary,
+    product_bundles: productBundles,
+  };
 
   return (
     <>
@@ -146,53 +167,110 @@ export default async function ProductDetailsPage({ params }: ProductPageProps): 
         />
       )}
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
-        {/* B7: Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs text-purple-700/80 dark:text-purple-300">
-          <Link href="/" className="hover:text-purple-900 dark:hover:text-white transition-colors">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10 sm:space-y-12 font-[family-name:var(--theme-font-body)]">
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs text-[var(--theme-text-muted,#71717A)]">
+          <Link href="/" className="hover:text-[var(--theme-primary,#25D366)] transition-colors">
             Home
           </Link>
-          <span className="text-purple-300 dark:text-purple-600">/</span>
+          <span>/</span>
           {product.categorySlug && product.categoryName ? (
             <>
               <Link
                 href={`/category/${product.categorySlug}`}
-                className="hover:text-purple-900 dark:hover:text-white transition-colors"
+                className="hover:text-[var(--theme-primary,#25D366)] transition-colors"
               >
                 {product.categoryName}
               </Link>
-              <span className="text-purple-300 dark:text-purple-600">/</span>
+              <span>/</span>
             </>
           ) : (
             <>
-              <Link href="/shop" className="hover:text-purple-900 dark:hover:text-white transition-colors">
+              <Link href="/shop" className="hover:text-[var(--theme-primary,#25D366)] transition-colors">
                 Shop
               </Link>
-              <span className="text-purple-300 dark:text-purple-600">/</span>
+              <span>/</span>
             </>
           )}
-          <span className="text-purple-500 dark:text-purple-200 font-semibold truncate max-w-xs sm:max-w-md">
+          <span className="font-semibold text-[var(--theme-text,#18181B)] truncate max-w-xs sm:max-w-md">
             {product.name}
           </span>
         </nav>
 
-        {/* B1-B3: Main Product Showcase (Big White Card with 3-Column Layout & Walmart Hover Zoom) */}
-        <ProductShowcase
-          product={product}
-          averageRating={ratingSummary.averageRating || 4.8}
-          reviewCount={ratingSummary.totalReviews || 24}
-        />
+        {/* Gallery & Info Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+          {renderSection(
+            {
+              id: "sec-product-gallery",
+              type: "product_gallery",
+              variant: "classic",
+              enabled: true,
+              settings: { layout: "carousel", thumbnails_position: "bottom", zoom: "on" },
+            },
+            theme.settings,
+            storeData
+          )}
 
-        {/* Below-the-fold interactive CSR Islands */}
-        <ProductBelowFoldClient
-          product={product}
-          reviewCount={ratingSummary.totalReviews || 0}
-          productBundles={productBundles}
-          relatedProducts={relatedProducts}
-        >
-          {/* Extension Point: Apps rendering below product/tabs */}
-          <StorefrontProductBelow productId={product.id} />
-        </ProductBelowFoldClient>
+          {renderSection(
+            {
+              id: "sec-product-info",
+              type: "product_info",
+              variant: "standard",
+              enabled: true,
+              settings: {
+                show_sku: true,
+                show_brand: true,
+                show_rating: true,
+                show_compare: true,
+                show_wishlist: true,
+              },
+            },
+            theme.settings,
+            storeData
+          )}
+        </div>
+
+        {/* Product Tabs */}
+        {renderSection(
+          {
+            id: "sec-product-tabs",
+            type: "product_tabs",
+            variant: "standard",
+            enabled: true,
+            settings: { default_tab: "description" },
+          },
+          theme.settings,
+          storeData
+        )}
+
+        {/* Product Reviews */}
+        {renderSection(
+          {
+            id: "sec-product-reviews",
+            type: "product_reviews_section",
+            variant: "standard",
+            enabled: true,
+            settings: { heading: "Customer Reviews", show_summary: true, show_form: true },
+          },
+          theme.settings,
+          storeData
+        )}
+
+        {/* Related Products */}
+        {renderSection(
+          {
+            id: "sec-product-related",
+            type: "product_related",
+            variant: "grid",
+            enabled: true,
+            settings: { heading: "Related Products", max_products: 4, columns: 4 },
+          },
+          theme.settings,
+          storeData
+        )}
+
+        {/* Extension Point: Apps rendering below product/tabs */}
+        <StorefrontProductBelow productId={product.id} />
       </div>
     </>
   );

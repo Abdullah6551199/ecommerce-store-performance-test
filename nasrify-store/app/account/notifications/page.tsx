@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Button from "@/components/themes/blocks/Button";
 
 interface NotificationItem {
   id: string;
@@ -17,7 +18,7 @@ function getNotificationIcon(type: string) {
   switch (type) {
     case "order_status":
       return (
-        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] shrink-0 shadow-sm">
+        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-primary,#25D366)] shrink-0 shadow-sm">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
@@ -25,7 +26,7 @@ function getNotificationIcon(type: string) {
       );
     case "review_approved":
       return (
-        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-[#960DF2] dark:text-[#EACFFC] shrink-0 shadow-sm">
+        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-primary,#25D366)] shrink-0 shadow-sm">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
           </svg>
@@ -33,7 +34,7 @@ function getNotificationIcon(type: string) {
       );
     case "coupon":
       return (
-        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] shrink-0 shadow-sm">
+        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-primary,#25D366)] shrink-0 shadow-sm">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
           </svg>
@@ -41,7 +42,7 @@ function getNotificationIcon(type: string) {
       );
     default:
       return (
-        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] shrink-0 shadow-sm">
+        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-primary,#25D366)] shrink-0 shadow-sm">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
@@ -134,41 +135,43 @@ export default function AccountNotificationsPage(): React.JSX.Element {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-[family-name:var(--theme-font-body)] text-[var(--theme-text,#18181B)]">
       {/* Page Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-2xl font-black text-[#3C0561] dark:text-white tracking-tight">
+          <h1 className="text-2xl font-black text-[var(--theme-text,#18181B)] tracking-tight font-[family-name:var(--theme-font-heading)]">
             Notification Center
           </h1>
-          <p className="text-xs text-slate-500 dark:text-purple-300/80 mt-0.5">
+          <p className="text-xs text-[var(--theme-text-muted,#71717A)] mt-0.5">
             Real-time updates regarding order status, tracking, and account security ({total} total)
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           {unreadCount > 0 && (
-            <button
+            <Button
               type="button"
+              variant="primary"
+              size="sm"
               onClick={handleMarkAllRead}
-              className="px-4 py-2 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white text-xs font-bold shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               Mark All as Read ({unreadCount})
-            </button>
+            </Button>
           )}
 
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={handleClearRead}
-            className="px-3.5 py-2 rounded-xl border border-purple-200 dark:border-purple-800 text-xs font-bold text-slate-600 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition"
           >
             Clear Read
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1.5 p-1 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-[#1E0230] max-w-xs">
+      <div className="flex items-center gap-1.5 p-1 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] max-w-xs">
         {(["all", "unread", "read"] as const).map((tab) => (
           <button
             key={tab}
@@ -177,10 +180,10 @@ export default function AccountNotificationsPage(): React.JSX.Element {
               setFilter(tab);
               setPage(1);
             }}
-            className={`flex-1 py-1.5 rounded-xl text-xs font-black capitalize transition ${
+            className={`flex-1 py-1.5 rounded-lg text-xs font-black capitalize transition cursor-pointer ${
               filter === tab
-                ? "bg-[#960DF2] text-white shadow-sm"
-                : "text-slate-500 dark:text-purple-300 hover:text-[#960DF2] dark:hover:text-white"
+                ? "bg-[var(--theme-primary,#25D366)] text-white shadow-sm"
+                : "text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-text,#18181B)]"
             }`}
           >
             {tab} {tab === "unread" && unreadCount > 0 && `(${unreadCount})`}
@@ -192,20 +195,20 @@ export default function AccountNotificationsPage(): React.JSX.Element {
       {isLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 rounded-3xl bg-purple-100/50 dark:bg-purple-950/40 animate-pulse" />
+            <div key={i} className="h-24 rounded-2xl bg-[var(--theme-surface,#F4F4F5)] animate-pulse" />
           ))}
         </div>
       ) : notifications.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm">
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] mb-4">
+        <div className="p-12 text-center rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-white shadow-sm">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-text-muted,#71717A)] mb-4">
             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
           </div>
-          <h3 className="text-base font-extrabold text-[#3C0561] dark:text-white">
+          <h3 className="text-base font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
             No {filter !== "all" ? filter : ""} Notifications
           </h3>
-          <p className="text-xs text-slate-500 dark:text-purple-300/70 mt-1">
+          <p className="text-xs text-[var(--theme-text-muted,#71717A)] mt-1">
             You&apos;re completely up to date. New updates will be logged here.
           </p>
         </div>
@@ -214,20 +217,20 @@ export default function AccountNotificationsPage(): React.JSX.Element {
           {notifications.map((notif) => (
             <div
               key={notif.id}
-              className={`p-4 sm:p-5 rounded-3xl border transition shadow-sm flex items-start gap-4 ${
+              className={`p-4 sm:p-5 rounded-2xl border transition shadow-sm flex items-start gap-4 ${
                 !notif.isRead
-                  ? "border-purple-300 dark:border-purple-700 bg-purple-50/60 dark:bg-[#2A0344]/60"
-                  : "border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]"
+                  ? "border-[var(--theme-primary,#25D366)] bg-white ring-1 ring-[var(--theme-primary,#25D366)]/20"
+                  : "border-[var(--theme-border,#E4E4E7)] bg-white"
               }`}
             >
               {getNotificationIcon(notif.type)}
 
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                  <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
+                  <h3 className="text-xs sm:text-sm font-black text-[var(--theme-text,#18181B)] truncate font-[family-name:var(--theme-font-heading)]">
                     {notif.title}
                   </h3>
-                  <span className="text-[10px] text-slate-400 dark:text-purple-300/60">
+                  <span className="text-[10px] text-[var(--theme-text-muted,#71717A)]">
                     {new Date(notif.createdAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -237,11 +240,11 @@ export default function AccountNotificationsPage(): React.JSX.Element {
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-600 dark:text-purple-200/80 leading-relaxed mb-3">
+                <p className="text-xs text-[var(--theme-text-muted,#71717A)] leading-relaxed mb-3">
                   {notif.message}
                 </p>
 
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-purple-100 dark:border-purple-800/60 text-xs">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[var(--theme-border,#E4E4E7)] text-xs">
                   <div>
                     {notif.link && (
                       <Link
@@ -249,7 +252,7 @@ export default function AccountNotificationsPage(): React.JSX.Element {
                         onClick={() => {
                           if (!notif.isRead) handleMarkRead(notif.id);
                         }}
-                        className="font-bold text-[#960DF2] dark:text-[#EACFFC] hover:underline inline-flex items-center gap-1"
+                        className="font-bold text-[var(--theme-primary,#25D366)] hover:underline inline-flex items-center gap-1"
                       >
                         <span>View Details</span>
                         <span>&rarr;</span>
@@ -262,7 +265,7 @@ export default function AccountNotificationsPage(): React.JSX.Element {
                       <button
                         type="button"
                         onClick={() => handleMarkRead(notif.id)}
-                        className="font-bold text-[#960DF2] dark:text-[#EACFFC] hover:underline"
+                        className="font-bold text-[var(--theme-primary,#25D366)] hover:underline cursor-pointer"
                       >
                         Mark as Read
                       </button>
@@ -270,7 +273,7 @@ export default function AccountNotificationsPage(): React.JSX.Element {
                     <button
                       type="button"
                       onClick={() => handleDelete(notif.id)}
-                      className="font-bold text-rose-500 hover:text-rose-700"
+                      className="font-bold text-rose-500 hover:text-rose-700 cursor-pointer"
                     >
                       Delete
                     </button>
@@ -283,25 +286,27 @@ export default function AccountNotificationsPage(): React.JSX.Element {
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-4">
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
                 disabled={page <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="px-4 py-2 rounded-xl border border-purple-200 dark:border-purple-800 text-xs font-bold text-[#3C0561] dark:text-white disabled:opacity-30 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition"
               >
                 &larr; Previous
-              </button>
-              <span className="text-xs font-bold text-slate-500 dark:text-purple-300">
+              </Button>
+              <span className="text-xs font-bold text-[var(--theme-text-muted,#71717A)]">
                 Page {page} of {totalPages}
               </span>
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
                 disabled={page >= totalPages}
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                className="px-4 py-2 rounded-xl border border-purple-200 dark:border-purple-800 text-xs font-bold text-[#3C0561] dark:text-white disabled:opacity-30 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition"
               >
                 Next &rarr;
-              </button>
+              </Button>
             </div>
           )}
         </div>

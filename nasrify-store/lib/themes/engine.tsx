@@ -29,6 +29,8 @@ import AccountDashboard from "@/components/themes/sections/AccountDashboard";
 import PageHeader from "@/components/themes/sections/PageHeader";
 import PageContent from "@/components/themes/sections/PageContent";
 
+import { DEFAULT_THEME } from "./default-theme";
+
 /**
  * High-performance Theme Rendering Engine (<10ms CPU target)
  * Iterates through enabled sections and dynamically mounts React section components.
@@ -51,24 +53,28 @@ export function renderTheme(theme: ThemeConfig, storeData: StoreData): React.Rea
 /**
  * Render a page-specific theme layout defined in theme.page_defaults[pageType].
  * Used by product, category, cart, checkout, account, and cms pages.
+ * Falls back to DEFAULT_THEME.page_defaults[pageType] if custom theme doesn't define it.
  */
 export function renderPageTheme(
   theme: ThemeConfig,
   pageType: string,
   storeData: StoreData
 ): React.ReactNode {
-  if (!theme) return null;
+  const activeTheme = theme || DEFAULT_THEME;
+  const pageSections =
+    activeTheme.page_defaults?.[pageType] || DEFAULT_THEME.page_defaults?.[pageType];
 
-  const pageSections = theme.page_defaults?.[pageType];
   if (!pageSections || !Array.isArray(pageSections)) {
     return null;
   }
+
+  const settings = activeTheme.settings || DEFAULT_THEME.settings;
 
   return (
     <>
       {pageSections
         .filter((s) => s.enabled !== false)
-        .map((section) => renderSection(section, theme.settings, storeData))}
+        .map((section) => renderSection(section, settings, storeData))}
     </>
   );
 }

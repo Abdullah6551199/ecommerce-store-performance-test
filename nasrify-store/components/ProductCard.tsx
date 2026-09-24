@@ -1,31 +1,33 @@
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
-import type { ProductWithImagesAndCategory, CatalogProductItem } from "@/lib/products";
+import Link from "next/link";
+import QuickAddToCart from "./QuickAddToCart";
 import { normalizeImageUrl } from "@/lib/utils";
-import QuickAddToCart from "@/components/QuickAddToCart";
-import WishlistHeartButton from "@/components/WishlistHeartButton";
-import CompareButton from "@/components/CompareButton";
 
 interface ProductCardProps {
-  product: ProductWithImagesAndCategory | CatalogProductItem;
+  product: any;
   isPriority?: boolean;
 }
 
-/**
- * High-performance Server Component for Product Card (Stage 18.1 Chronicles Redesign).
- * Features 1:1 square media, purple discount pills, slide-up quick add-to-cart on hover,
- * star ratings, and purple price accents.
- */
-export default function ProductCard({ product, isPriority = false }: ProductCardProps): React.JSX.Element {
-  const hasSale = Boolean(product.salePrice && product.salePrice < product.price);
+export default function ProductCard({
+  product,
+  isPriority = false,
+}: ProductCardProps): React.JSX.Element {
+  const hasSale = Boolean(
+    product.salePrice &&
+      product.salePrice > 0 &&
+      product.salePrice < product.price
+  );
+
   const discountPercent = hasSale
-    ? Math.round(((product.price - (product.salePrice || 0)) / product.price) * 100)
+    ? Math.round(
+        ((product.price - (product.salePrice || 0)) / product.price) * 100
+      )
     : 0;
 
   const isOutOfStock =
-    product.stockStatus === "out_of_stock" ||
-    (product.trackInventory && product.stockQuantity <= 0 && !product.allowBackorders);
+    product.trackInventory && product.stockQuantity <= 0;
+
   const isLowStock =
     !isOutOfStock && product.trackInventory && product.stockQuantity <= product.lowStockThreshold;
 
@@ -34,9 +36,9 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
   const defaultVariantId = product.variants?.[0]?.id || null;
 
   return (
-    <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-purple-200/60 dark:border-purple-800/40 bg-white dark:bg-[#5A0891]/85 p-3.5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-purple-400 dark:hover:border-purple-600 hover:shadow-xl hover:shadow-purple-500/15 text-zinc-900 dark:text-white">
+    <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white p-3.5 transition-all duration-300 hover:scale-[1.02] hover:border-[var(--theme-primary,#25D366)] hover:shadow-lg text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-body)]">
       {/* 1. Image Container (1:1 Square) */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-purple-50/40 dark:bg-purple-950/40">
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[var(--theme-surface,#F4F4F5)]">
         <Link
           href={`/product/${product.slug}`}
           prefetch={false}
@@ -53,8 +55,8 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center bg-purple-50 dark:bg-purple-950/20 text-center p-4">
-              <svg className="h-8 w-8 text-purple-300 dark:text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex h-full w-full flex-col items-center justify-center bg-[var(--theme-surface,#F4F4F5)] text-center p-4">
+              <svg className="h-8 w-8 text-[var(--theme-text-muted,#71717A)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -62,7 +64,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
                   d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <span className="mt-1 text-[10px] text-purple-400">No Image</span>
+              <span className="mt-1 text-[10px] text-[var(--theme-text-muted,#71717A)]">No Image</span>
             </div>
           )}
         </Link>
@@ -70,7 +72,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
         {/* Top Badges (Top-Left) */}
         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 items-start z-10 pointer-events-none">
           {hasSale && (
-            <span className="rounded-full bg-[#960DF2] text-white px-2 py-0.5 text-[10px] font-bold shadow-md tracking-wider">
+            <span className="rounded-full bg-[var(--theme-primary,#25D366)] text-white px-2 py-0.5 text-[10px] font-bold shadow-md tracking-wider">
               -{discountPercent}%
             </span>
           )}
@@ -80,28 +82,13 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
             </span>
           ) : isLowStock ? (
             <span className="rounded-full bg-amber-500 text-white px-2 py-0.5 text-[9px] font-semibold">
-              Low Stock
+              Only {product.stockQuantity} left
             </span>
           ) : null}
         </div>
 
-        {/* Actions (Top-Right): Wishlist Heart & Compare Button */}
-        <div className="absolute top-2.5 right-2.5 z-20 flex flex-col gap-1.5 items-center">
-          <WishlistHeartButton
-            product={{
-              productId: product.id,
-              slug: product.slug,
-              name: product.name,
-              price: product.price,
-              salePrice: product.salePrice,
-              imageUrl: resolvedImage,
-            }}
-          />
-          <CompareButton productId={product.id} />
-        </div>
-
-        {/* Quick Add To Cart overlay (slides up on hover) */}
-        <div className="absolute bottom-2 inset-x-2 z-20 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+        {/* Floating Quick Add Overlay (Desktop Hover) */}
+        <div className="hidden sm:block absolute inset-x-2 bottom-2 z-20 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
           <QuickAddToCart
             productId={product.id}
             productSlug={product.slug}
@@ -112,7 +99,6 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
             price={hasSale ? Number(product.salePrice) : Number(product.price)}
             imageUrl={resolvedImage}
             stockQuantity={product.stockQuantity ?? (isOutOfStock ? 0 : 99)}
-            className="w-full py-2 shadow-lg"
           />
         </div>
       </div>
@@ -125,16 +111,16 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
             <div className="flex items-center text-amber-400">
               {"★".repeat(5)}
             </div>
-            <span className="font-semibold text-zinc-700 dark:text-purple-200 text-[11px]">
+            <span className="font-semibold text-[var(--theme-text,#18181B)] text-[11px]">
               {product.averageRating ? Number(product.averageRating).toFixed(1) : "4.9"}
             </span>
-            <span className="text-zinc-400 dark:text-purple-300/60 text-[10px]">
+            <span className="text-[var(--theme-text-muted,#71717A)] text-[10px]">
               ({product.reviewCount !== undefined && product.reviewCount !== null ? product.reviewCount : 12})
             </span>
           </div>
 
           {/* Product Title (Truncated to 2 lines) */}
-          <h3 className="mt-1 text-xs sm:text-sm font-bold text-[#3C0561] dark:text-white group-hover:text-[#960DF2] dark:group-hover:text-[#C06EF7] transition-colors line-clamp-2 leading-snug">
+          <h3 className="mt-1 text-xs sm:text-sm font-bold text-[var(--theme-text,#18181B)] group-hover:text-[var(--theme-primary,#25D366)] transition-colors line-clamp-2 leading-snug font-[family-name:var(--theme-font-heading)]">
             <Link href={`/product/${product.slug}`} prefetch={false}>
               {product.name}
             </Link>
@@ -142,19 +128,19 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
         </div>
 
         {/* Price Row */}
-        <div className="pt-2 border-t border-purple-100 dark:border-purple-800/40 flex items-center justify-between">
+        <div className="pt-2 border-t border-[var(--theme-border,#E4E4E7)] flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             {hasSale ? (
               <>
-                <span className="text-sm sm:text-base font-extrabold text-[#960DF2] dark:text-[#C06EF7]">
+                <span className="text-sm sm:text-base font-extrabold text-[var(--theme-primary,#25D366)]">
                   ${Number(product.salePrice).toFixed(2)}
                 </span>
-                <span className="text-xs text-zinc-400 dark:text-purple-300/50 line-through">
+                <span className="text-xs text-[var(--theme-text-muted,#71717A)] line-through">
                   ${Number(product.price).toFixed(2)}
                 </span>
               </>
             ) : (
-              <span className="text-sm sm:text-base font-extrabold text-[#3C0561] dark:text-white">
+              <span className="text-sm sm:text-base font-extrabold text-[var(--theme-text,#18181B)]">
                 ${Number(product.price).toFixed(2)}
               </span>
             )}

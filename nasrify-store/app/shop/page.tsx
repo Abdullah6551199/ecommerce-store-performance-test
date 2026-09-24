@@ -1,10 +1,12 @@
 import React from "react";
 import type { Metadata } from "next";
 import { searchProductsAdvanced, type AdvancedSearchParams } from "@/lib/products";
-import SearchClient from "@/components/search/SearchClient";
 import { getAbsoluteUrl } from "@/lib/seo";
 import { normalizeImageUrl } from "@/lib/utils";
 import { getStoreSettings } from "@/lib/settings";
+import { getActiveTheme } from "@/lib/themes/loader";
+import { renderPageTheme } from "@/lib/themes/engine";
+import { StoreData } from "@/lib/themes/types";
 
 export const revalidate = 60;
 
@@ -26,17 +28,17 @@ interface ShopPageProps {
 export async function generateMetadata({ searchParams }: ShopPageProps): Promise<Metadata> {
   const sp = await searchParams;
   const settings = await getStoreSettings();
-  const storeName = settings?.storeName || "ApexStore";
+  const storeName = settings?.storeName || "Nasrify Store";
 
   const category = sp.category?.trim();
   const brand = sp.brand?.trim();
 
   let title = `Shop All Products | ${storeName}`;
-  let description = `Explore the full catalog of high-performance gear, athletic footwear, and apparel at ${storeName}.`;
+  let description = `Explore the full catalog of high-performance gear and apparel at ${storeName}.`;
 
   if (category) {
     title = `Shop ${category} | ${storeName}`;
-    description = `Explore high-performance ${category} products engineered for peak athletes.`;
+    description = `Explore high-performance ${category} products engineered for everyday living.`;
   } else if (brand) {
     title = `Shop ${brand} Gear | ${storeName}`;
     description = `Discover authentic gear crafted by ${brand} at ${storeName}.`;
@@ -106,13 +108,31 @@ export default async function ShopPage({ searchParams }: ShopPageProps): Promise
     publishedOnly: true,
   };
 
-  const results = await searchProductsAdvanced(advancedParams);
+  const [theme, results] = await Promise.all([
+    getActiveTheme(),
+    searchProductsAdvanced(advancedParams),
+  ]);
+
   const firstProductImage = results.products[0]?.mainImage
     ? normalizeImageUrl(results.products[0].mainImage, { width: 640, quality: 75 })
     : null;
 
+  const storeData: StoreData = {
+    page: {
+      title: "Shop All Products",
+      slug: "shop",
+    },
+    category: {
+      name: "Shop All Products",
+      description: "Browse our complete collection of essentials, engineered gear, and lifestyle products.",
+    },
+    products: results.products,
+    categories: results.facets?.categories || [],
+    total: results.total,
+  };
+
   return (
-    <div className="min-h-screen bg-white dark:bg-[#3C0561]">
+    <>
       {firstProductImage && (
         <link
           rel="preload"
@@ -122,36 +142,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps): Promise
         />
       )}
 
-      {/* Shop Hero Header Banner */}
-      <section className="relative overflow-hidden border-b border-purple-100 dark:border-purple-800/80 bg-gradient-to-r from-purple-700 via-purple-800 to-[#3C0561] py-10 sm:py-14 text-white">
-        {/* Subtle ambient light glow */}
-        <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-purple-500/20 blur-3xl" />
-        <div className="pointer-events-none absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-purple-400/15 blur-3xl" />
-
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl space-y-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-500/30 text-purple-200 border border-purple-400/40 backdrop-blur-sm">
-              ⚡ Full Store Catalog
-            </span>
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-              Shop All Products
-            </h1>
-            <p className="text-sm sm:text-base text-purple-100/80 leading-relaxed max-w-xl">
-              Browse our complete collection of engineered athletic footwear, technical training apparel, and performance gear.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Catalog & Filter Grid */}
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <SearchClient
-          initialProducts={results.products}
-          initialTotal={results.total}
-          initialFacets={results.facets}
-          initialParams={advancedParams}
-        />
-      </main>
-    </div>
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8 font-[family-name:var(--theme-font-body)]">
+        {renderPageTheme(theme, "shop", storeData)}
+      </div>
+    </>
   );
 }

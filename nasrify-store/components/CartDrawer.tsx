@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useCart } from "./CartContext";
 import { normalizeImageUrl } from "@/lib/utils";
 import CouponsSection from "./CouponsSection";
+import Button from "@/components/themes/blocks/Button";
 
 interface CartDrawerPanelProps {
   isOpen: boolean;
@@ -70,7 +71,7 @@ const CartDrawerPanel = memo(function CartDrawerPanel({
       id="cart-drawer-panel"
       aria-label="Shopping Cart Drawer"
       aria-hidden={!isOpen}
-      className={`cart-drawer-panel bg-white dark:bg-[#3C0561] text-zinc-900 dark:text-purple-100 border-l border-purple-100 dark:border-purple-800 shadow-[-12px_0_40px_rgba(60,5,97,0.12)] dark:shadow-[-12px_0_40px_rgba(0,0,0,0.85)] flex flex-col justify-between z-50 ${
+      className={`cart-drawer-panel bg-white text-[var(--theme-text,#18181B)] border-l border-[var(--theme-border,#E4E4E7)] shadow-2xl flex flex-col justify-between z-50 font-[family-name:var(--theme-font-body)] ${
         isOpen ? "open drawer-open" : "drawer-closed"
       }`}
       style={{
@@ -111,9 +112,9 @@ export default function CartDrawer(): React.JSX.Element {
   return (
     <CartDrawerPanel isOpen={isDrawerOpen} onClose={closeDrawer}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-purple-100 dark:border-purple-800/80 bg-purple-50/50 dark:bg-purple-950/60 shrink-0">
+      <div className="flex items-center justify-between px-4 py-3.5 border-b border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] shrink-0">
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--theme-primary-light,#DCFCE7)] text-[var(--theme-accent,#18181B)]">
             <svg
               className="h-3.5 w-3.5"
               fill="none"
@@ -128,9 +129,9 @@ export default function CartDrawer(): React.JSX.Element {
               />
             </svg>
           </div>
-          <h2 className="text-xs font-extrabold text-purple-950 dark:text-purple-100 tracking-tight flex items-center gap-1.5">
+          <h2 className="text-xs font-extrabold text-[var(--theme-text,#18181B)] tracking-tight flex items-center gap-1.5 font-[family-name:var(--theme-font-heading)]">
             <span>Your Cart</span>
-            <span className="rounded-full bg-purple-100 dark:bg-purple-900/60 px-1.5 py-0.2 text-[9px] font-mono text-purple-700 dark:text-purple-300">
+            <span className="rounded-full bg-[var(--theme-primary-light,#DCFCE7)] px-2 py-0.2 text-[9px] font-mono font-bold text-[var(--theme-accent,#18181B)]">
               {itemCount}
             </span>
           </h2>
@@ -139,7 +140,7 @@ export default function CartDrawer(): React.JSX.Element {
         <button
           type="button"
           onClick={closeDrawer}
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-300 hover:text-purple-900 dark:hover:text-white hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--theme-border,#E4E4E7)] text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-text,#18181B)] hover:bg-zinc-100 transition-colors"
           aria-label="Close cart drawer"
           title="Close Cart"
         >
@@ -150,23 +151,23 @@ export default function CartDrawer(): React.JSX.Element {
       </div>
 
       {/* Free Shipping Progress Bar */}
-      <div className="px-4 py-2 bg-purple-50/70 dark:bg-purple-950/40 border-b border-purple-100 dark:border-purple-800/80 shrink-0">
-        <div className="flex items-center justify-between text-[10px] mb-1">
+      <div className="px-4 py-2.5 bg-zinc-50 border-b border-[var(--theme-border,#E4E4E7)] shrink-0">
+        <div className="flex items-center justify-between text-[10px] mb-1.5">
           {freeShippingRemaining > 0 ? (
-            <span className="text-purple-900 dark:text-purple-200">
-              Add <strong className="text-purple-700 dark:text-purple-300 font-bold">${freeShippingRemaining.toFixed(2)}</strong> for{" "}
-              <strong className="text-purple-600 dark:text-purple-400 font-bold">FREE Shipping</strong>
+            <span className="text-[var(--theme-text,#18181B)]">
+              Add <strong className="text-[var(--theme-primary,#25D366)] font-bold">${freeShippingRemaining.toFixed(2)}</strong> for{" "}
+              <strong className="text-[var(--theme-accent,#18181B)] font-bold">FREE Shipping</strong>
             </span>
           ) : (
-            <span className="text-purple-700 dark:text-purple-300 font-bold flex items-center gap-1">
+            <span className="text-[var(--theme-primary,#25D366)] font-bold flex items-center gap-1">
               ✓ FREE Delivery Unlocked!
             </span>
           )}
-          <span className="text-[9px] font-mono text-purple-600 dark:text-purple-400 font-semibold">{progressPercent}%</span>
+          <span className="text-[9px] font-mono text-[var(--theme-text-muted,#71717A)] font-semibold">{progressPercent}%</span>
         </div>
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-purple-200 dark:bg-purple-950">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-200">
           <div
-            className="h-full bg-gradient-to-r from-purple-400 to-purple-600 transition-[width] duration-300 ease-out rounded-full"
+            className="h-full bg-[var(--theme-primary,#25D366)] transition-[width] duration-300 ease-out rounded-full"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -176,9 +177,9 @@ export default function CartDrawer(): React.JSX.Element {
       <div className="flex-1 min-h-[180px] overflow-y-scroll px-3 py-2 space-y-2 [scrollbar-gutter:stable]">
         {items.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center py-6 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-900/40 border border-purple-200 dark:border-purple-800 mb-2">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--theme-surface,#F4F4F5)] border border-[var(--theme-border,#E4E4E7)] mb-2">
               <svg
-                className="h-6 w-6 text-purple-400 dark:text-purple-300"
+                className="h-6 w-6 text-[var(--theme-text-muted,#71717A)]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -191,26 +192,24 @@ export default function CartDrawer(): React.JSX.Element {
                 />
               </svg>
             </div>
-            <h3 className="text-xs font-bold text-zinc-900 dark:text-purple-100 mb-0.5">Your cart is empty</h3>
-            <p className="text-[11px] text-zinc-500 dark:text-purple-300/70 max-w-xs mb-3">
-              Explore our catalog to add athletic apparel and footwear.
+            <h3 className="text-xs font-bold text-[var(--theme-text,#18181B)] mb-0.5 font-[family-name:var(--theme-font-heading)]">Your cart is empty</h3>
+            <p className="text-[11px] text-[var(--theme-text-muted,#71717A)] max-w-xs mb-3">
+              Explore our catalog to add modern products.
             </p>
-            <button
-              type="button"
-              onClick={closeDrawer}
-              className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 min-h-[36px] inline-flex items-center justify-center text-xs font-bold transition-all shadow-md shadow-purple-500/25"
-            >
-              Browse Catalog
-            </button>
+            <Link href="/shop" onClick={closeDrawer}>
+              <Button variant="primary" size="sm">
+                Browse Catalog
+              </Button>
+            </Link>
           </div>
         ) : (
           items.map((item) => (
             <div
               key={item.id}
-              className="flex gap-2.5 rounded-xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-purple-900/30 p-2 transition-colors hover:border-purple-300"
+              className="flex gap-2.5 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white p-2 transition-colors hover:border-[var(--theme-primary,#25D366)]"
             >
               {/* Product Thumbnail (h-12 w-12) */}
-              <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-purple-100 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/60">
+              <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)]">
                 <Image
                   src={normalizeImageUrl(item.imageUrl, { width: 96, quality: 75 })}
                   alt={item.productName}
@@ -228,7 +227,7 @@ export default function CartDrawer(): React.JSX.Element {
                     <Link
                       href={`/product/${item.productSlug}`}
                       onClick={closeDrawer}
-                      className="text-xs font-bold text-zinc-900 dark:text-purple-100 hover:text-purple-600 dark:hover:text-purple-300 transition-colors truncate block"
+                      className="text-xs font-bold text-[var(--theme-text,#18181B)] hover:text-[var(--theme-primary,#25D366)] transition-colors truncate block"
                       title={item.productName}
                     >
                       {item.productName}
@@ -236,7 +235,7 @@ export default function CartDrawer(): React.JSX.Element {
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
-                      className="text-zinc-400 dark:text-purple-300/50 hover:text-red-500 p-0.5 transition-colors shrink-0"
+                      className="text-[var(--theme-text-muted,#71717A)] hover:text-red-500 p-0.5 transition-colors shrink-0 cursor-pointer"
                       title="Remove item"
                       aria-label={`Remove ${item.productName}`}
                     >
@@ -258,7 +257,7 @@ export default function CartDrawer(): React.JSX.Element {
 
                   {item.bundleName && (
                     <div className="flex items-center gap-1 mt-0.5">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#960DF2]/15 dark:bg-[#960DF2]/30 px-1.5 py-0.5 text-[9px] font-bold text-[#960DF2] dark:text-[#EACFFC]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[var(--theme-primary-light,#DCFCE7)] px-1.5 py-0.5 text-[9px] font-bold text-[var(--theme-accent,#18181B)]">
                         <span>Bundle:</span>
                         <span className="truncate max-w-[140px]">{item.bundleName}</span>
                       </span>
@@ -270,7 +269,7 @@ export default function CartDrawer(): React.JSX.Element {
                       {Object.entries(item.variantOptions).map(([key, val]) => (
                         <span
                           key={key}
-                          className="rounded bg-purple-50 dark:bg-purple-950/60 px-1 py-0.2 text-[9px] text-purple-700 dark:text-purple-300 font-medium"
+                          className="rounded bg-[var(--theme-surface,#F4F4F5)] px-1 py-0.2 text-[9px] text-[var(--theme-text-muted,#71717A)] font-medium"
                         >
                           {key}: {val}
                         </span>
@@ -280,30 +279,30 @@ export default function CartDrawer(): React.JSX.Element {
                 </div>
 
                 {/* Quantity Controls & Price */}
-                <div className="flex items-center justify-between pt-1 mt-0.5 border-t border-purple-100 dark:border-purple-800/40">
-                  <div className="flex items-center rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/60">
+                <div className="flex items-center justify-between pt-1 mt-0.5 border-t border-[var(--theme-border,#E4E4E7)]">
+                  <div className="flex items-center rounded-lg border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)]">
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="flex h-6 w-6 items-center justify-center text-xs font-bold text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800 rounded-l-lg transition-colors"
+                      className="flex h-6 w-6 items-center justify-center text-xs font-bold text-[var(--theme-text,#18181B)] hover:bg-zinc-200 rounded-l-lg transition-colors cursor-pointer"
                       aria-label="Decrease quantity"
                     >
                       -
                     </button>
-                    <span className="min-w-[20px] text-center text-[11px] font-bold text-zinc-900 dark:text-purple-100">
+                    <span className="min-w-[20px] text-center text-[11px] font-bold text-[var(--theme-text,#18181B)]">
                       {item.quantity}
                     </span>
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="flex h-6 w-6 items-center justify-center text-xs font-bold text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800 rounded-r-lg transition-colors"
+                      className="flex h-6 w-6 items-center justify-center text-xs font-bold text-[var(--theme-text,#18181B)] hover:bg-zinc-200 rounded-r-lg transition-colors cursor-pointer"
                       aria-label="Increase quantity"
                     >
                       +
                     </button>
                   </div>
 
-                  <span className="text-[11px] font-extrabold text-purple-900 dark:text-purple-200">
+                  <span className="text-[11px] font-extrabold text-[var(--theme-text,#18181B)]">
                     ${item.lineTotal.toFixed(2)}
                   </span>
                 </div>
@@ -315,35 +314,35 @@ export default function CartDrawer(): React.JSX.Element {
 
       {/* Footer Summary & Checkout */}
       {items.length > 0 && (
-        <div className="border-t border-purple-100 dark:border-purple-800/80 bg-purple-50/40 dark:bg-purple-950/60 p-3 space-y-2 shrink-0">
+        <div className="border-t border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] p-3 space-y-2 shrink-0">
           {/* Simplified Drawer Coupon UI */}
           <CouponsSection compact={true} />
 
           {/* Compact Order Summary */}
           <div className="space-y-1 text-[11px]">
-            <div className="flex justify-between text-zinc-600 dark:text-purple-300/80">
+            <div className="flex justify-between text-[var(--theme-text-muted,#71717A)]">
               <span>Subtotal ({itemCount} {itemCount === 1 ? "item" : "items"})</span>
-              <span className="font-semibold text-zinc-900 dark:text-purple-100">${subtotal.toFixed(2)}</span>
+              <span className="font-semibold text-[var(--theme-text,#18181B)]">${subtotal.toFixed(2)}</span>
             </div>
             {appliedCoupon && (
-              <div className="flex justify-between text-purple-600 dark:text-purple-400 font-bold">
+              <div className="flex justify-between text-[var(--theme-primary,#25D366)] font-bold">
                 <span>Discount ({appliedCoupon.code})</span>
                 <span>{freeShippingCoupon ? "FREE" : `-$${discountAmount.toFixed(2)}`}</span>
               </div>
             )}
-            <div className="flex justify-between text-zinc-600 dark:text-purple-300/80">
+            <div className="flex justify-between text-[var(--theme-text-muted,#71717A)]">
               <span>Shipping</span>
               <span>
                 {cart?.shipping === 0 ? (
-                  <strong className="text-purple-600 dark:text-purple-400">FREE</strong>
+                  <strong className="text-[var(--theme-primary,#25D366)] font-bold">FREE</strong>
                 ) : (
                   `$${(cart?.shipping || 15).toFixed(2)}`
                 )}
               </span>
             </div>
-            <div className="flex justify-between text-xs font-bold text-zinc-900 dark:text-purple-100 pt-1 border-t border-purple-100 dark:border-purple-800/60">
+            <div className="flex justify-between text-xs font-bold text-[var(--theme-text,#18181B)] pt-1 border-t border-[var(--theme-border,#E4E4E7)]">
               <span>Total</span>
-              <span className="text-purple-700 dark:text-purple-300 text-sm">${total.toFixed(2)}</span>
+              <span className="text-[var(--theme-text,#18181B)] text-sm font-extrabold">${total.toFixed(2)}</span>
             </div>
           </div>
 
@@ -352,20 +351,24 @@ export default function CartDrawer(): React.JSX.Element {
             <Link
               href="/checkout"
               onClick={closeDrawer}
-              className="w-full min-h-[38px] inline-flex items-center justify-center gap-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white py-2 text-xs font-bold shadow-md shadow-purple-500/25 transition-all cursor-pointer active:scale-[0.99]"
+              className="block w-full"
             >
-              <span>Proceed to Checkout</span>
-              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
+              <Button variant="primary" size="md" className="w-full justify-center">
+                <span>Proceed to Checkout</span>
+                <svg className="h-3 w-3 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Button>
             </Link>
 
             <Link
               href="/cart"
               onClick={closeDrawer}
-              className="w-full min-h-[32px] inline-flex items-center justify-center rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-900/40 py-1.5 text-xs font-semibold text-purple-800 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-800/50 transition-colors"
+              className="block w-full"
             >
-              View Full Cart
+              <Button variant="outline" size="sm" className="w-full justify-center">
+                View Full Cart
+              </Button>
             </Link>
           </div>
         </div>

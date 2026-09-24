@@ -1,9 +1,10 @@
 import React from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getPageBySlug, DEFAULT_PAGE_TEMPLATES } from "@/lib/cms";
 import { getStoreSettings } from "@/lib/settings";
 import { getAbsoluteUrl } from "@/lib/seo";
+import { getActiveTheme } from "@/lib/themes/loader";
+import { renderPageTheme } from "@/lib/themes/engine";
 
 export const revalidate = 60;
 
@@ -37,37 +38,22 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function TermsPage(): Promise<React.JSX.Element> {
-  const page = await getPageBySlug("terms");
+  const [page, theme] = await Promise.all([
+    getPageBySlug("terms"),
+    getActiveTheme(),
+  ]);
   const fallback = DEFAULT_PAGE_TEMPLATES.terms;
 
-  const title = page?.title || fallback.title;
-  const content = page?.content || fallback.content;
+  const pageData = {
+    title: page?.title || fallback.title,
+    content: page?.content || fallback.content,
+    slug: "terms",
+  };
 
   return (
-    <div className="py-12 sm:py-16">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <nav className="mb-6 flex items-center text-xs text-zinc-500 dark:text-zinc-400 space-x-2">
-          <Link href="/" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
-            Home
-          </Link>
-          <span>/</span>
-          <span className="text-zinc-900 dark:text-white font-medium">{title}</span>
-        </nav>
-
-        <article className="rounded-3xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-8 sm:p-12 shadow-sm">
-          <div
-            className="prose dark:prose-invert max-w-none text-zinc-700 dark:text-zinc-300 leading-relaxed
-              prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-zinc-900 dark:prose-headings:text-white
-              prose-h1:text-3xl sm:prose-h1:text-4xl prose-h1:mb-6
-              prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
-              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-              prose-p:my-4 prose-p:text-base prose-p:leading-relaxed
-              prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
-              prose-li:my-1.5
-              prose-strong:font-bold prose-strong:text-zinc-900 dark:prose-strong:text-white"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
-        </article>
+    <div className="py-8 sm:py-12 bg-white">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        {renderPageTheme(theme, "page", { page: pageData })}
       </div>
     </div>
   );

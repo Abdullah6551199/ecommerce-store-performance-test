@@ -67,12 +67,12 @@ export default function QuickAddToCart({
       onClick={handleQuickAdd}
       disabled={isOutOfStock}
       title={isOutOfStock ? "Out of Stock" : "Add to Cart"}
-      className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+      className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer font-[family-name:var(--theme-font-body)] ${
         isOutOfStock
-          ? "bg-zinc-100 dark:bg-purple-950/40 text-zinc-400 dark:text-purple-400 cursor-not-allowed border border-zinc-200 dark:border-purple-800/40"
+          ? "bg-zinc-100 text-zinc-400 cursor-not-allowed border border-zinc-200"
           : addedNotice
-          ? "bg-[#780AC2] text-white shadow-md shadow-purple-500/30"
-          : "bg-[#960DF2] hover:bg-[#780AC2] text-white shadow-sm hover:shadow-md hover:shadow-purple-500/25 active:scale-95"
+          ? "bg-[var(--theme-accent,#18181B)] text-white shadow-sm"
+          : "bg-[var(--theme-primary,#25D366)] hover:brightness-95 text-white shadow-xs active:scale-95"
       } ${className}`}
     >
       {addedNotice ? (

@@ -9,10 +9,10 @@ const MyDownloadsPage = dynamic(
     ssr: false,
     loading: () => (
       <div className="space-y-6 animate-pulse">
-        <div className="h-6 w-48 bg-purple-100 dark:bg-purple-950/40 rounded-xl" />
+        <div className="h-6 w-48 bg-[var(--theme-surface,#F4F4F5)] rounded-xl" />
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-28 rounded-2xl bg-purple-100/50 dark:bg-purple-950/40" />
+            <div key={i} className="h-28 rounded-2xl bg-[var(--theme-surface,#F4F4F5)]" />
           ))}
         </div>
       </div>

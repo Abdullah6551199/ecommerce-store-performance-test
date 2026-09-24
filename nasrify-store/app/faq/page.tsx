@@ -40,27 +40,27 @@ export default async function FaqPage(): Promise<React.JSX.Element> {
   const faqs = await getActiveFaqs();
 
   return (
-    <div className="py-12 sm:py-16">
+    <div className="py-12 sm:py-16 bg-white text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-body)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="mb-6 flex items-center text-xs text-zinc-500 dark:text-zinc-400 space-x-2">
-          <Link href="/" className="hover:text-zinc-900 dark:hover:text-white transition-colors">
+        <nav className="mb-6 flex items-center text-xs text-[var(--theme-text-muted,#71717A)] space-x-2">
+          <Link href="/" className="hover:text-[var(--theme-primary,#25D366)] transition-colors">
             Home
           </Link>
           <span>/</span>
-          <span className="text-zinc-900 dark:text-white font-medium">Frequently Asked Questions</span>
+          <span className="text-[var(--theme-text,#18181B)] font-medium">Frequently Asked Questions</span>
         </nav>
 
         {/* Page Header */}
         <div className="max-w-2xl mx-auto text-center mb-10">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700 mb-3">
-            Help & Knowledge Base
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--theme-primary-light,#DCFCE7)] text-[var(--theme-accent,#18181B)] border border-[var(--theme-border,#E4E4E7)] mb-3">
+            Help &amp; Knowledge Base
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
             Frequently Asked Questions
           </h1>
-          <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Everything you need to know about our engineered footwear, expedited dispatch, 30-day trial guarantee, and payments.
+          <p className="mt-3 text-sm text-[var(--theme-text-muted,#71717A)] leading-relaxed">
+            Everything you need to know about our products, expedited dispatch, 30-day trial guarantee, and payments.
           </p>
         </div>
 

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Button from "@/components/themes/blocks/Button";
 
 export default function AccountProfilePage(): React.JSX.Element {
   const router = useRouter();
@@ -99,7 +100,6 @@ export default function AccountProfilePage(): React.JSX.Element {
         body: JSON.stringify({
           currentPassword,
           newPassword,
-          confirmPassword,
         }),
       });
 
@@ -108,7 +108,7 @@ export default function AccountProfilePage(): React.JSX.Element {
         throw new Error(data.error || "Failed to change password");
       }
 
-      setPasswordMsg({ text: "Password updated successfully!", type: "success" });
+      setPasswordMsg({ text: "Password changed successfully!", type: "success" });
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -128,10 +128,10 @@ export default function AccountProfilePage(): React.JSX.Element {
     setIsDeleting(true);
 
     try {
-      const res = await fetch("/api/customer/account", {
-        method: "DELETE",
+      const res = await fetch("/api/customer/delete", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ confirmationPassword: deletePassword }),
+        body: JSON.stringify({ password: deletePassword }),
       });
 
       const data = (await res.json()) as { error?: string };
@@ -142,7 +142,8 @@ export default function AccountProfilePage(): React.JSX.Element {
       router.push("/");
       router.refresh();
     } catch (err: unknown) {
-      setDeleteError(err instanceof Error ? err.message : "Failed to delete account");
+      setDeleteError(err instanceof Error ? err.message : "Error deleting account");
+    } finally {
       setIsDeleting(false);
     }
   };
@@ -150,34 +151,34 @@ export default function AccountProfilePage(): React.JSX.Element {
   if (isLoading) {
     return (
       <div className="space-y-6 max-w-2xl">
-        <div className="h-64 rounded-3xl bg-purple-100/50 dark:bg-purple-950/40 animate-pulse" />
+        <div className="h-64 rounded-2xl bg-[var(--theme-surface,#F4F4F5)] animate-pulse" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 max-w-2xl">
+    <div className="space-y-8 max-w-2xl font-[family-name:var(--theme-font-body)] text-[var(--theme-text,#18181B)]">
       <div className="pb-2">
-        <h1 className="text-2xl font-black text-[#3C0561] dark:text-white tracking-tight">
+        <h1 className="text-2xl font-black text-[var(--theme-text,#18181B)] tracking-tight font-[family-name:var(--theme-font-heading)]">
           Profile Settings
         </h1>
-        <p className="text-xs text-slate-500 dark:text-purple-300/80 mt-0.5">
+        <p className="text-xs text-[var(--theme-text-muted,#71717A)] mt-0.5">
           Manage your personal customer profile details and security credentials
         </p>
       </div>
 
       {/* 1. Personal Information */}
-      <div className="p-6 sm:p-8 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm space-y-6">
-        <h2 className="text-base font-extrabold text-[#3C0561] dark:text-white">
+      <div className="p-6 sm:p-8 rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-white shadow-sm space-y-6">
+        <h2 className="text-base font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
           Personal Information
         </h2>
 
         {profileMsg && (
           <div
-            className={`p-3.5 rounded-2xl text-xs font-bold border ${
+            className={`p-3.5 rounded-xl text-xs font-bold border ${
               profileMsg.type === "success"
-                ? "bg-purple-50 text-[#960DF2] border-purple-200 dark:bg-purple-950/40 dark:text-[#EACFFC] dark:border-purple-800"
-                : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800"
+                ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                : "bg-rose-50 text-rose-700 border-rose-200"
             }`}
           >
             {profileMsg.text}
@@ -186,7 +187,7 @@ export default function AccountProfilePage(): React.JSX.Element {
 
         <form onSubmit={handleUpdateProfile} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
+            <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1.5">
               Full Name
             </label>
             <input
@@ -194,27 +195,27 @@ export default function AccountProfilePage(): React.JSX.Element {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+              className="w-full h-11 px-4 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-sm text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
+            <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1.5">
               Email Address (Account ID)
             </label>
             <input
               type="email"
               disabled
               value={email}
-              className="w-full h-11 px-4 rounded-xl border border-purple-200/50 dark:border-purple-900/50 bg-slate-100 dark:bg-purple-950/40 text-sm text-slate-400 cursor-not-allowed font-mono"
+              className="w-full h-11 px-4 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] text-sm text-[var(--theme-text-muted,#71717A)] cursor-not-allowed font-mono"
             />
-            <p className="text-[10px] text-slate-400 mt-1">
+            <p className="text-[10px] text-[var(--theme-text-muted,#71717A)] mt-1">
               Contact store support if you need to transfer this account to a different email.
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
+            <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1.5">
               Phone Number
             </label>
             <input
@@ -222,32 +223,34 @@ export default function AccountProfilePage(): React.JSX.Element {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="0300-1234567"
-              className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+              className="w-full h-11 px-4 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-sm text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
             />
           </div>
 
-          <button
+          <Button
             type="submit"
+            variant="primary"
+            size="md"
+            isLoading={isSavingProfile}
             disabled={isSavingProfile}
-            className="px-6 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
           >
             {isSavingProfile ? "Saving..." : "Save Profile Details"}
-          </button>
+          </Button>
         </form>
       </div>
 
       {/* 2. Security & Password */}
-      <div className="p-6 sm:p-8 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm space-y-6">
-        <h2 className="text-base font-extrabold text-[#3C0561] dark:text-white">
+      <div className="p-6 sm:p-8 rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-white shadow-sm space-y-6">
+        <h2 className="text-base font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
           Change Password
         </h2>
 
         {passwordMsg && (
           <div
-            className={`p-3.5 rounded-2xl text-xs font-bold border ${
+            className={`p-3.5 rounded-xl text-xs font-bold border ${
               passwordMsg.type === "success"
-                ? "bg-purple-50 text-[#960DF2] border-purple-200 dark:bg-purple-950/40 dark:text-[#EACFFC] dark:border-purple-800"
-                : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800"
+                ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                : "bg-rose-50 text-rose-700 border-rose-200"
             }`}
           >
             {passwordMsg.text}
@@ -256,7 +259,7 @@ export default function AccountProfilePage(): React.JSX.Element {
 
         <form onSubmit={handleChangePassword} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
+            <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1.5">
               Current Password
             </label>
             <input
@@ -264,13 +267,13 @@ export default function AccountProfilePage(): React.JSX.Element {
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+              className="w-full h-11 px-4 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-sm text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
+              <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1.5">
                 New Password
               </label>
               <input
@@ -280,12 +283,12 @@ export default function AccountProfilePage(): React.JSX.Element {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Min. 8 characters"
-                className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+                className="w-full h-11 px-4 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-sm text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-purple-300 mb-1.5">
+              <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1.5">
                 Confirm New Password
               </label>
               <input
@@ -295,80 +298,85 @@ export default function AccountProfilePage(): React.JSX.Element {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Repeat new password"
-                className="w-full h-11 px-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-[#2A0344] text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+                className="w-full h-11 px-4 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-sm text-[var(--theme-text,#18181B)] focus:outline-none focus:border-[var(--theme-primary,#25D366)]"
               />
             </div>
           </div>
 
-          <button
+          <Button
             type="submit"
+            variant="primary"
+            size="md"
+            isLoading={isChangingPassword}
             disabled={isChangingPassword}
-            className="px-6 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
           >
             {isChangingPassword ? "Updating..." : "Update Password"}
-          </button>
+          </Button>
         </form>
       </div>
 
       {/* 3. Danger Zone: Delete Account */}
-      <div className="p-6 sm:p-8 rounded-3xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/30 dark:bg-rose-950/20 shadow-sm space-y-4">
-        <h2 className="text-base font-extrabold text-rose-600 dark:text-rose-400">
+      <div className="p-6 sm:p-8 rounded-2xl border border-rose-200 bg-rose-50/30 shadow-sm space-y-4">
+        <h2 className="text-base font-extrabold text-rose-600">
           Delete Customer Account
         </h2>
-        <p className="text-xs text-slate-600 dark:text-rose-200/80 leading-relaxed">
+        <p className="text-xs text-[var(--theme-text-muted,#71717A)] leading-relaxed">
           Permanently erase your customer profile, saved addresses, order history, and product wishlist. This action cannot be reversed.
         </p>
+
         <button
           type="button"
           onClick={() => setDeleteModalOpen(true)}
-          className="px-5 py-2.5 rounded-xl border border-rose-300 dark:border-rose-800 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white font-extrabold text-xs transition"
+          className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition cursor-pointer"
         >
-          Delete Account...
+          Delete My Account
         </button>
       </div>
 
-      {/* Delete Account Confirmation Modal */}
+      {/* Delete Confirmation Modal */}
       {deleteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-[#1E0230] border border-rose-200 dark:border-rose-900/50 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
-            <h3 className="text-base font-black text-rose-600 dark:text-rose-400">Confirm Account Deletion</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Please enter your current account password to authorize the permanent deletion of your profile:
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="bg-white border border-[var(--theme-border,#E4E4E7)] rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <h3 className="text-base font-black text-rose-600">
+              Confirm Account Deletion
+            </h3>
+            <p className="text-xs text-[var(--theme-text-muted,#71717A)] leading-relaxed">
+              Please enter your password to confirm permanent deletion of your account.
             </p>
 
             {deleteError && (
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-700 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-300">
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-700">
                 {deleteError}
               </div>
             )}
 
             <form onSubmit={handleDeleteAccount} className="space-y-4">
-              <input
-                type="password"
-                required
-                value={deletePassword}
-                onChange={(e) => setDeletePassword(e.target.value)}
-                placeholder="Enter your current password"
-                className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-rose-200 dark:border-rose-800 bg-rose-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-rose-500"
-              />
+              <div>
+                <label className="block text-xs font-bold text-[var(--theme-text,#18181B)] mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] focus:outline-none focus:border-rose-500"
+                />
+              </div>
 
               <div className="flex items-center justify-end gap-2.5 pt-2">
-                <button
+                <Button
                   type="button"
-                  onClick={() => {
-                    setDeleteModalOpen(false);
-                    setDeleteError(null);
-                    setDeletePassword("");
-                  }}
-                  disabled={isDeleting}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-purple-900/40 rounded-xl transition"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setDeleteModalOpen(false)}
                 >
                   Cancel
-                </button>
+                </Button>
                 <button
                   type="submit"
                   disabled={isDeleting}
-                  className="px-5 py-2 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-md transition disabled:opacity-50"
+                  className="px-4 py-2 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-xl transition cursor-pointer disabled:opacity-50"
                 >
                   {isDeleting ? "Deleting..." : "Permanently Delete"}
                 </button>

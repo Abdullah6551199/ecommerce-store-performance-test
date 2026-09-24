@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Button from "@/components/themes/blocks/Button";
 
 export default function OpenCookiePreferencesButton(): React.JSX.Element {
   const handleOpen = () => {
@@ -8,13 +9,14 @@ export default function OpenCookiePreferencesButton(): React.JSX.Element {
   };
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="primary"
+      size="sm"
       onClick={handleOpen}
-      className="inline-flex items-center gap-2 rounded-xl bg-[#960DF2] hover:bg-[#AB3DF5] px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-purple-500/25 transition-all cursor-pointer active:scale-95 shrink-0"
+      className="inline-flex items-center gap-2"
     >
       <span>🍪</span>
       <span>Manage Cookie Preferences</span>
-    </button>
+    </Button>
   );
 }

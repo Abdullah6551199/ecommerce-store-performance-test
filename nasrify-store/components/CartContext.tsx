@@ -231,13 +231,13 @@ function CartToastNotification({
       <div
         className={`flex items-center gap-3 rounded-2xl px-4 py-3 shadow-2xl backdrop-blur-md border ${
           isSuccess
-            ? "border-purple-400/40 bg-[#3C0561]/95 text-white shadow-purple-500/20"
+            ? "border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-accent,#18181B)]/95 text-white shadow-xl"
             : "border-red-500/30 bg-[#1c0c0c]/95 text-red-100 shadow-red-500/10"
         }`}
       >
         <div
           className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl ${
-            isSuccess ? "bg-purple-400/20 text-purple-200" : "bg-red-500/20 text-red-400"
+            isSuccess ? "bg-[var(--theme-primary,#25D366)]/20 text-[var(--theme-primary,#25D366)]" : "bg-red-500/20 text-red-400"
           }`}
         >
           {isSuccess ? (

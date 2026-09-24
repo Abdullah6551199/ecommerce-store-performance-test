@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import dynamic from "next/dynamic";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/themes/sections/Header";
+import Footer from "@/components/themes/sections/Footer";
 import { siteConfig } from "@/config/site";
 import { getStoreSettings } from "@/lib/settings";
 import { getThemeSettings, generateThemeCss } from "@/lib/theme";
@@ -78,8 +77,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#960DF2" },
-    { media: "(prefers-color-scheme: dark)", color: "#3C0561" },
+    { media: "(prefers-color-scheme: light)", color: "#25D366" },
+    { media: "(prefers-color-scheme: dark)", color: "#18181B" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -147,17 +146,34 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: fontFaceCss }}
         />
       </head>
-      <body className={`${inter.className} min-h-screen flex flex-col antialiased selection:bg-[#960DF2] selection:text-white bg-[var(--bg-primary)] text-[var(--text-body)]`}>
+      <body className={`${inter.className} min-h-screen flex flex-col antialiased selection:bg-[var(--theme-primary,#25D366)] selection:text-white bg-[var(--theme-background,#FFFFFF)] text-[var(--theme-text,#18181B)]`}>
         <CartProvider>
           <WishlistProvider>
             <CompareProvider>
               {/* Main Background Wrapper */}
-              <div className="relative flex min-h-screen flex-col bg-[var(--bg-primary)] transition-colors duration-300">
+              <div className="relative flex min-h-screen flex-col bg-[var(--theme-background,#FFFFFF)] transition-colors duration-300">
                 {/* Foreground content stack */}
                 <div className="relative z-10 flex min-h-screen flex-col">
                   <StorefrontLayoutWrapper
-                    legacyHeader={<Header settings={mergedSettings} />}
-                    legacyFooter={<Footer settings={mergedSettings} />}
+                    legacyHeader={
+                      <Header
+                        id="layout-header"
+                        themeSettings={activeThemeConfig.settings}
+                        settings={{
+                          logo_text: mergedSettings.storeName,
+                          logo_url: mergedSettings.logoUrl,
+                        }}
+                      />
+                    }
+                    legacyFooter={
+                      <Footer
+                        id="layout-footer"
+                        themeSettings={activeThemeConfig.settings}
+                        settings={{
+                          logo_text: mergedSettings.storeName,
+                        }}
+                      />
+                    }
                   >
                     {children}
                   </StorefrontLayoutWrapper>

@@ -38,7 +38,7 @@ async function main() {
   `;
 
   // Write temporary SQL file
-  const tmpSqlPath = "backups/update_theme_42_8b.sql";
+  const tmpSqlPath = `backups/update_theme_42_8c.sql`;
   writeFileSync(tmpSqlPath, sql, "utf-8");
 
   console.log("Executing remote theme update...");

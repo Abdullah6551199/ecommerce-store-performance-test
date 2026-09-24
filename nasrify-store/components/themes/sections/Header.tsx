@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { SectionProps } from "@/lib/themes/types";
 import { useCart } from "@/components/CartContext";
 
@@ -27,6 +28,7 @@ export default function Header({
   themeSettings,
 }: SectionProps<HeaderSettings>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
   const { itemCount } = useCart();
 
   const logoText = settings.logo_text || "Nasrify";
@@ -93,7 +95,7 @@ export default function Header({
                   />
                 </div>
               ) : (
-                <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-[var(--theme-text,#18181B)] group-hover:text-[var(--theme-accent,#2563EB)] transition-colors font-[family-name:var(--theme-font-heading)]">
+                <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-[var(--theme-accent,#18181B)] group-hover:text-[var(--theme-primary,#25D366)] transition-colors font-[family-name:var(--theme-font-heading)]">
                   {logoText}
                 </span>
               )}
@@ -108,15 +110,22 @@ export default function Header({
                 variant === "centered" ? "mr-auto" : "mx-8"
               }`}
             >
-              {menuItems.map((item, idx) => (
-                <Link
-                  key={idx}
-                  href={item.url}
-                  className="text-sm font-medium text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-text,#18181B)] transition-colors"
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {menuItems.map((item, idx) => {
+                const isActive = pathname === item.url;
+                return (
+                  <Link
+                    key={idx}
+                    href={item.url}
+                    className={`text-sm font-medium transition-colors ${
+                      isActive
+                        ? "text-[var(--theme-primary,#25D366)] font-bold"
+                        : "text-[var(--theme-text,#18181B)] hover:text-[var(--theme-primary,#25D366)]"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
           )}
 
@@ -125,7 +134,7 @@ export default function Header({
             {showSearch && (
               <Link
                 href="/search"
-                className="p-2 text-[var(--theme-text,#18181B)] hover:text-[var(--theme-accent,#2563EB)] hover:bg-[var(--theme-surface,#F4F4F5)] rounded-full transition-colors"
+                className="p-2 text-[var(--theme-text,#18181B)] hover:text-[var(--theme-primary,#25D366)] hover:bg-[var(--theme-surface,#F4F4F5)] rounded-full transition-colors"
                 aria-label="Search"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +151,7 @@ export default function Header({
             {showAccount && (
               <Link
                 href="/account"
-                className="p-2 text-[var(--theme-text,#18181B)] hover:text-[var(--theme-accent,#2563EB)] hover:bg-[var(--theme-surface,#F4F4F5)] rounded-full transition-colors"
+                className="p-2 text-[var(--theme-text,#18181B)] hover:text-[var(--theme-primary,#25D366)] hover:bg-[var(--theme-surface,#F4F4F5)] rounded-full transition-colors"
                 aria-label="My Account"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +168,7 @@ export default function Header({
             {showCart && (
               <Link
                 href="/cart"
-                className="relative p-2 text-[var(--theme-text,#18181B)] hover:text-[var(--theme-accent,#2563EB)] hover:bg-[var(--theme-surface,#F4F4F5)] rounded-full transition-colors"
+                className="relative p-2 text-[var(--theme-text,#18181B)] hover:text-[var(--theme-primary,#25D366)] hover:bg-[var(--theme-surface,#F4F4F5)] rounded-full transition-colors"
                 aria-label="Cart"
                 title={`Shopping Cart (${itemCount} items)`}
               >
@@ -172,7 +181,7 @@ export default function Header({
                   />
                 </svg>
                 {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--theme-accent,#2563EB)] text-[10px] font-bold text-white shadow-xs animate-in zoom-in-75">
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--theme-primary,#25D366)] text-[10px] font-bold text-white shadow-xs animate-in zoom-in-75">
                     {itemCount}
                   </span>
                 )}
@@ -186,16 +195,23 @@ export default function Header({
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-background,#FFFFFF)] px-4 pt-3 pb-6 space-y-3 animate-in slide-in-from-top-2 duration-150">
           <nav className="flex flex-col gap-2">
-            {menuItems.map((item, idx) => (
-              <Link
-                key={idx}
-                href={item.url}
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 text-base font-medium rounded-lg text-[var(--theme-text,#18181B)] hover:bg-[var(--theme-surface,#F4F4F5)] transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {menuItems.map((item, idx) => {
+              const isActive = pathname === item.url;
+              return (
+                <Link
+                  key={idx}
+                  href={item.url}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`py-2 px-3 text-base font-medium rounded-lg transition-colors ${
+                    isActive
+                      ? "text-[var(--theme-primary,#25D366)] font-bold bg-[var(--theme-surface,#F4F4F5)]"
+                      : "text-[var(--theme-text,#18181B)] hover:bg-[var(--theme-surface,#F4F4F5)]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       )}

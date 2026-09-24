@@ -1,79 +1,88 @@
 import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
 import { getBundleBySlug, listBundles } from "@/lib/bundles";
 import { normalizeImageUrl } from "@/lib/utils";
 import BundleAddToCartButton from "@/components/bundles/BundleAddToCartButton";
 import BundleCard from "@/components/bundles/BundleCard";
 
-export const revalidate = 300;
-
 interface BundlePageProps {
   params: Promise<{ slug: string }>;
 }
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: BundlePageProps): Promise<Metadata> {
   const { slug } = await params;
   const bundle = await getBundleBySlug(slug);
 
   if (!bundle) {
-    return { title: "Bundle Not Found | Apex Store" };
+    return {
+      title: "Bundle Not Found | ApexStore",
+    };
   }
 
+  const metaTitle = `${bundle.name} - Bundle Deal | ApexStore`;
+  const metaDesc =
+    bundle.description ||
+    `Save on ${bundle.name}. Get ${bundle.items.length} items bundled together at special pricing.`;
+
   return {
-    title: `${bundle.name} — Bundle Deal | Apex Store`,
-    description:
-      bundle.description ||
-      `Save ${bundle.discountPercentage}% with the ${bundle.name}. Package price $${bundle.bundlePrice.toFixed(
-        2
-      )} including free shipping and 30-day returns.`,
+    title: metaTitle,
+    description: metaDesc,
+    openGraph: {
+      title: metaTitle,
+      description: metaDesc,
+      images: bundle.imageUrl ? [{ url: bundle.imageUrl }] : undefined,
+    },
   };
 }
 
 export default async function BundleDetailPage({ params }: BundlePageProps): Promise<React.JSX.Element> {
   const { slug } = await params;
-  const bundle = await getBundleBySlug(slug);
+  const [bundle, allBundlesResult] = await Promise.all([
+    getBundleBySlug(slug),
+    listBundles({ status: "active", limit: 10 }).catch(() => ({ bundles: [] })),
+  ]);
+  const allBundles = Array.isArray(allBundlesResult) ? allBundlesResult : (allBundlesResult?.bundles || []);
 
-  if (!bundle || bundle.status !== "active") {
+  if (!bundle) {
     notFound();
   }
 
-  // Load related bundles
-  const allBundles = await listBundles({ status: "active", limit: 6 });
   const relatedBundles = allBundles.filter((b) => b.id !== bundle.id).slice(0, 3);
-
-  const savings = Math.max(0, bundle.originalPrice - bundle.bundlePrice);
+  const savings = bundle.originalPrice - bundle.bundlePrice;
   const mainImage = bundle.imageUrl
-    ? normalizeImageUrl(bundle.imageUrl, { width: 900, quality: 85 })
+    ? normalizeImageUrl(bundle.imageUrl, { width: 800, quality: 85 })
     : bundle.items[0]?.product?.mainImage
-    ? normalizeImageUrl(bundle.items[0].product.mainImage, { width: 900, quality: 85 })
+    ? normalizeImageUrl(bundle.items[0].product.mainImage, { width: 800, quality: 85 })
     : null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-12">
-      {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-purple-700/80 dark:text-purple-300">
-        <Link href="/" className="hover:text-purple-950 dark:hover:text-white transition">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10 font-[family-name:var(--theme-font-body)] text-[var(--theme-text,#18181B)]">
+      {/* Breadcrumbs */}
+      <nav className="flex items-center gap-2 text-xs text-[var(--theme-text-muted,#71717A)]">
+        <Link href="/" className="hover:text-[var(--theme-primary,#25D366)] transition">
           Home
         </Link>
         <span>/</span>
-        <Link href="/bundles" className="hover:text-purple-950 dark:hover:text-white transition">
+        <Link href="/bundles" className="hover:text-[var(--theme-primary,#25D366)] transition">
           Bundles
         </Link>
         <span>/</span>
-        <span className="font-bold text-[#960DF2] dark:text-[#EACFFC] truncate max-w-xs">
+        <span className="font-bold text-[var(--theme-text,#18181B)] truncate max-w-xs">
           {bundle.name}
         </span>
       </nav>
 
-      {/* Main Big White Card Layout (Chronicles Style) */}
-      <div className="rounded-3xl border border-purple-200/80 dark:border-purple-800/60 bg-white dark:bg-[#3C0561] p-6 sm:p-10 shadow-xl shadow-purple-500/5 backdrop-blur-md">
+      {/* Main Card Layout */}
+      <div className="rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-white p-6 sm:p-10 shadow-sm">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column (6 cols): Image Gallery */}
           <div className="lg:col-span-6 space-y-4">
-            <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-purple-200 dark:border-purple-800/60 bg-purple-50/40 dark:bg-purple-950/40">
+            <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)]">
               {mainImage ? (
                 <Image
                   src={mainImage}
@@ -84,14 +93,14 @@ export default async function BundleDetailPage({ params }: BundlePageProps): Pro
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-purple-400">
+                <div className="flex h-full w-full items-center justify-center text-[var(--theme-text-muted,#71717A)]">
                   Bundle Package
                 </div>
               )}
 
               {bundle.discountPercentage && bundle.discountPercentage > 0 && (
                 <div className="absolute top-4 left-4 z-10">
-                  <span className="rounded-full bg-[#960DF2] text-white px-3 py-1 text-xs font-black shadow-lg tracking-wider">
+                  <span className="rounded-full bg-[var(--theme-primary,#25D366)] text-white px-3 py-1 text-xs font-black shadow-sm tracking-wider">
                     SAVE {Math.round(bundle.discountPercentage)}%
                   </span>
                 </div>
@@ -107,17 +116,17 @@ export default async function BundleDetailPage({ params }: BundlePageProps): Pro
                 return (
                   <div
                     key={item.id}
-                    className="flex flex-col items-center rounded-xl border border-purple-100 dark:border-purple-800/50 bg-purple-50/30 dark:bg-purple-950/30 p-2 text-center"
+                    className="flex flex-col items-center rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] p-2 text-center"
                   >
                     <div className="relative h-14 w-14 rounded-lg overflow-hidden mb-1">
                       {itemImg && (
                         <Image src={itemImg} alt={item.product?.name || "Product"} fill className="object-cover" />
                       )}
                     </div>
-                    <span className="text-[10px] font-bold text-[#3C0561] dark:text-purple-200 line-clamp-1">
+                    <span className="text-[10px] font-bold text-[var(--theme-text,#18181B)] line-clamp-1">
                       {item.product?.name}
                     </span>
-                    <span className="text-[9px] text-purple-400 font-mono">
+                    <span className="text-[9px] text-[var(--theme-text-muted,#71717A)] font-mono">
                       Qty: {item.quantity}
                     </span>
                   </div>
@@ -129,33 +138,33 @@ export default async function BundleDetailPage({ params }: BundlePageProps): Pro
           {/* Right Column (6 cols): Pricing & Details */}
           <div className="lg:col-span-6 space-y-6">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-purple-100 dark:bg-purple-900/50 px-3 py-1 text-xs font-bold text-[#960DF2] dark:text-[#EACFFC]">
+              <div className="inline-flex items-center gap-2 rounded-full bg-[var(--theme-primary-light,#DCFCE7)] px-3 py-1 text-xs font-bold text-[var(--theme-accent,#18181B)]">
                 <span>Bundle Package</span>
                 <span>•</span>
                 <span>{bundle.items.length} Products Included</span>
               </div>
 
-              <h1 className="text-2xl sm:text-4xl font-black text-[#3C0561] dark:text-white leading-tight">
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-[var(--theme-text,#18181B)] leading-tight font-[family-name:var(--theme-font-heading)]">
                 {bundle.name}
               </h1>
 
               {bundle.description && (
-                <p className="text-sm text-zinc-600 dark:text-purple-200/80 leading-relaxed pt-1">
+                <p className="text-sm text-[var(--theme-text-muted,#71717A)] leading-relaxed pt-1">
                   {bundle.description}
                 </p>
               )}
             </div>
 
             {/* Products Included List */}
-            <div className="space-y-2.5 rounded-2xl border border-purple-100 dark:border-purple-800/50 bg-purple-50/40 dark:bg-purple-950/30 p-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-200">
+            <div className="space-y-2.5 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] p-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
                 Products in this Bundle:
               </h3>
-              <div className="divide-y divide-purple-100 dark:divide-purple-800/40">
+              <div className="divide-y divide-[var(--theme-border,#E4E4E7)]">
                 {bundle.items.map((item) => (
                   <div key={item.id} className="flex items-center justify-between py-2.5 gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="relative h-10 w-10 shrink-0 rounded-lg overflow-hidden bg-purple-50 border border-purple-200/60">
+                      <div className="relative h-10 w-10 shrink-0 rounded-lg overflow-hidden bg-white border border-[var(--theme-border,#E4E4E7)]">
                         {item.product?.mainImage && (
                           <Image
                             src={normalizeImageUrl(item.product.mainImage, { width: 80, quality: 75 })}
@@ -168,16 +177,16 @@ export default async function BundleDetailPage({ params }: BundlePageProps): Pro
                       <div className="min-w-0">
                         <Link
                           href={`/product/${item.product?.slug || ""}`}
-                          className="font-bold text-xs text-[#3C0561] dark:text-white hover:text-[#960DF2] transition truncate block"
+                          className="font-bold text-xs text-[var(--theme-text,#18181B)] hover:text-[var(--theme-primary,#25D366)] transition truncate block"
                         >
                           {item.product?.name || item.productId}
                         </Link>
-                        <p className="text-[10px] text-purple-400">
+                        <p className="text-[10px] text-[var(--theme-text-muted,#71717A)]">
                           Qty: {item.quantity}
                         </p>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-zinc-700 dark:text-purple-200 shrink-0">
+                    <span className="text-xs font-bold text-[var(--theme-text,#18181B)] shrink-0">
                       ${Number(item.product?.price || 0).toFixed(2)}
                     </span>
                   </div>
@@ -186,23 +195,23 @@ export default async function BundleDetailPage({ params }: BundlePageProps): Pro
             </div>
 
             {/* Pricing Card & Savings Highlight */}
-            <div className="space-y-3 rounded-2xl border border-purple-200 dark:border-purple-700/80 bg-purple-50/50 dark:bg-purple-950/40 p-5">
+            <div className="space-y-3 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] p-5">
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl sm:text-4xl font-black text-[#960DF2] dark:text-[#C06EF7]">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
                   ${bundle.bundlePrice.toFixed(2)}
                 </span>
-                <span className="text-lg text-zinc-400 line-through">
+                <span className="text-lg text-[var(--theme-text-muted,#71717A)] line-through">
                   ${bundle.originalPrice.toFixed(2)}
                 </span>
                 {bundle.discountPercentage && (
-                  <span className="rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 px-2.5 py-0.5 text-xs font-extrabold">
+                  <span className="rounded-full bg-emerald-100 text-emerald-800 px-2.5 py-0.5 text-xs font-bold">
                     {Math.round(bundle.discountPercentage)}% OFF
                   </span>
                 )}
               </div>
 
               {savings > 0 && (
-                <div className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                <div className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-800">
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
@@ -216,15 +225,15 @@ export default async function BundleDetailPage({ params }: BundlePageProps): Pro
               </div>
 
               {/* Trust Badges */}
-              <div className="grid grid-cols-2 gap-3 pt-3 text-[11px] font-semibold text-purple-700 dark:text-purple-300 border-t border-purple-200/50 dark:border-purple-800/40">
+              <div className="grid grid-cols-2 gap-3 pt-3 text-[11px] font-semibold text-[var(--theme-text-muted,#71717A)] border-t border-[var(--theme-border,#E4E4E7)]">
                 <div className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-[#960DF2]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="h-4 w-4 text-[var(--theme-primary,#25D366)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Free Standard Shipping</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-[#960DF2]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="h-4 w-4 text-[var(--theme-primary,#25D366)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                   <span>30-Day Free Returns</span>
@@ -235,15 +244,15 @@ export default async function BundleDetailPage({ params }: BundlePageProps): Pro
         </div>
       </div>
 
-      {/* Related Bundles Carousel / Grid */}
+      {/* Related Bundles */}
       {relatedBundles.length > 0 && (
         <section className="space-y-6 pt-4">
-          <div className="flex items-center justify-between border-b border-purple-200/70 dark:border-purple-800/50 pb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-[#3C0561] dark:text-white">
+          <div className="flex items-center justify-between border-b border-[var(--theme-border,#E4E4E7)] pb-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
               Related Product Bundles
             </h2>
-            <Link href="/bundles" className="text-xs font-bold text-[#960DF2] dark:text-[#C06EF7] hover:underline">
-              View All Bundles →
+            <Link href="/bundles" className="text-xs font-bold text-[var(--theme-primary,#25D366)] hover:underline">
+              View All Bundles &rarr;
             </Link>
           </div>
 

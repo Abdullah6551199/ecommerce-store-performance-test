@@ -44,13 +44,13 @@ export interface ThemeSettings {
 
 export const DEFAULT_THEME_SETTINGS: ThemeSettings = {
   colors: {
-    primary: "#960DF2",
-    secondary: "#AB3DF5",
-    accent: "#C06EF7",
+    primary: "#25D366",
+    secondary: "#128C7E",
+    accent: "#18181B",
     background: "#FFFFFF",
-    text: "#3C0561",
-    mutedText: "#780AC2",
-    border: "#D59EFA",
+    text: "#18181B",
+    mutedText: "#71717A",
+    border: "#E4E4E7",
     success: "#10b981",
     error: "#ef4444",
   },
@@ -337,9 +337,9 @@ export async function updateThemeSettings(
 export function generateThemeCss(theme: ThemeSettings): string {
   const shadowMap = {
     none: "none",
-    soft: "0 10px 25px -5px rgba(150, 13, 242, 0.12), 0 8px 10px -6px rgba(150, 13, 242, 0.08)",
-    medium: "0 15px 30px -5px rgba(150, 13, 242, 0.18), 0 10px 15px -5px rgba(120, 10, 194, 0.12)",
-    intense: "0 20px 40px -6px rgba(150, 13, 242, 0.25), 0 0 25px 0px rgba(150, 13, 242, 0.15)",
+    soft: "0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03)",
+    medium: "0 15px 30px -5px rgba(0, 0, 0, 0.08), 0 10px 15px -5px rgba(0, 0, 0, 0.04)",
+    intense: "0 20px 40px -6px rgba(0, 0, 0, 0.12), 0 0 25px 0px rgba(0, 0, 0, 0.06)",
   };
 
   return `

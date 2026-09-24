@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Button from "@/components/themes/blocks/Button";
 
 export default function ContactForm(): React.JSX.Element {
   const [name, setName] = useState("");
@@ -57,13 +58,13 @@ export default function ContactForm(): React.JSX.Element {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 font-[family-name:var(--theme-font-body)]">
       {status && (
         <div
-          className={`p-4 rounded-2xl text-sm border ${
+          className={`p-4 rounded-xl text-sm border ${
             status.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50"
-              : "bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/50"
+              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+              : "bg-rose-50 text-rose-800 border-rose-200"
           }`}
         >
           {status.message}
@@ -72,7 +73,7 @@ export default function ContactForm(): React.JSX.Element {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1.5">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted,#71717A)] mb-1.5">
             Your Name <span className="text-rose-500">*</span>
           </label>
           <input
@@ -81,12 +82,12 @@ export default function ContactForm(): React.JSX.Element {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Alex Mercer"
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-full px-4 py-2.5 text-sm rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] placeholder-[var(--theme-text-muted,#71717A)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary,#25D366)]"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1.5">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted,#71717A)] mb-1.5">
             Email Address <span className="text-rose-500">*</span>
           </label>
           <input
@@ -95,13 +96,13 @@ export default function ContactForm(): React.JSX.Element {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="alex@example.com"
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-full px-4 py-2.5 text-sm rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] placeholder-[var(--theme-text-muted,#71717A)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary,#25D366)]"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1.5">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted,#71717A)] mb-1.5">
           Subject
         </label>
         <input
@@ -109,12 +110,12 @@ export default function ContactForm(): React.JSX.Element {
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
           placeholder="Order Inquiry, Sizing Advice, Partnership..."
-          className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          className="w-full px-4 py-2.5 text-sm rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] placeholder-[var(--theme-text-muted,#71717A)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary,#25D366)]"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1.5">
+        <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted,#71717A)] mb-1.5">
           Message <span className="text-rose-500">*</span>
         </label>
         <textarea
@@ -122,18 +123,19 @@ export default function ContactForm(): React.JSX.Element {
           rows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="How can our technical support and athletic team assist you today?"
-          className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-y"
+          placeholder="How can our customer support team assist you today?"
+          className="w-full px-4 py-2.5 text-sm rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] placeholder-[var(--theme-text-muted,#71717A)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary,#25D366)] resize-y"
         />
       </div>
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
+        size="lg"
         disabled={isSubmitting}
-        className="w-full sm:w-auto px-6 py-3 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-bold text-sm shadow-md shadow-purple-500/20 transition-all disabled:opacity-50 cursor-pointer"
       >
         {isSubmitting ? "Sending Message..." : "Send Message"}
-      </button>
+      </Button>
     </form>
   );
 }

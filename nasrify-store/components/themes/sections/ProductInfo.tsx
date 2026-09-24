@@ -10,6 +10,8 @@ import RatingStars from "../blocks/RatingStars";
 import Button from "../blocks/Button";
 import Badge from "../blocks/Badge";
 
+import ProductOrderButton from "@/apps/whatsapp-order/storefront/ProductOrderButton";
+
 export interface ProductInfoSettings {
   show_sku?: boolean;
   show_brand?: boolean;
@@ -32,6 +34,7 @@ export default function ProductInfo({
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
 
   const product = storeData?.product || {
     id: "prod-sample-1",
@@ -73,6 +76,23 @@ export default function ProductInfo({
       console.error(e);
     } finally {
       setTimeout(() => setIsAdding(false), 500);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    setIsBuyingNow(true);
+    try {
+      await addItem(product.id, selectedVariant, quantity, {
+        productName: product.name,
+        productSlug: product.slug,
+        price: product.price,
+        salePrice: product.salePrice,
+        imageUrl: product.imageUrl || (product.images && product.images[0]),
+      });
+      window.location.href = "/checkout";
+    } catch (e) {
+      console.error(e);
+      setIsBuyingNow(false);
     }
   };
 
@@ -207,6 +227,29 @@ export default function ProductInfo({
         >
           {isAdding ? "Adding..." : buttonText}
         </Button>
+
+        {/* Buy Now Button */}
+        <Button
+          variant="secondary"
+          size="lg"
+          fullWidth
+          isLoading={isBuyingNow}
+          onClick={handleBuyNow}
+          className="h-11 !bg-[var(--theme-accent,#18181B)] !text-white hover:!bg-black"
+        >
+          {isBuyingNow ? "Preparing..." : "Buy Now"}
+        </Button>
+      </div>
+
+      {/* WhatsApp Quick Order Button */}
+      <div className="pt-1">
+        <ProductOrderButton
+          productId={product.id}
+          productSlug={product.slug || product.id}
+          productName={product.name}
+          price={product.salePrice ?? product.price}
+          quantity={quantity}
+        />
       </div>
 
       {/* Wishlist & Compare actions */}

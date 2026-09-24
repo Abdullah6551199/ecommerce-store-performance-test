@@ -13,13 +13,13 @@ export default function CartNavButton(): React.JSX.Element {
     <button
       type="button"
       onClick={openDrawer}
-      className="group relative flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-full border border-purple-200 bg-white text-[#3C0561] shadow-xs hover:border-[#960DF2] hover:bg-purple-50 hover:text-[#960DF2] active:scale-95 transition-all cursor-pointer"
+      className="group relative flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-full border border-[var(--theme-border,#E4E4E7)] bg-white text-[var(--theme-text,#18181B)] shadow-xs hover:border-[var(--theme-primary,#25D366)] hover:bg-[var(--theme-surface,#F4F4F5)] hover:text-[var(--theme-primary,#25D366)] active:scale-95 transition-all cursor-pointer"
       aria-label="Cart"
       title={`Shopping Cart (${itemCount} items)`}
     >
       {/* ShoppingBag Icon */}
       <svg
-        className="h-5 w-5 text-[#3C0561] group-hover:text-[#960DF2] transition-colors"
+        className="h-5 w-5 text-[var(--theme-text,#18181B)] group-hover:text-[var(--theme-primary,#25D366)] transition-colors"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -35,7 +35,7 @@ export default function CartNavButton(): React.JSX.Element {
 
       {/* Item count badge */}
       {itemCount > 0 && (
-        <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#960DF2] px-1 text-[10px] font-bold text-white shadow-xs animate-in zoom-in-75">
+        <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--theme-primary,#25D366)] px-1 text-[10px] font-bold text-white shadow-xs animate-in zoom-in-75">
           {itemCount > 99 ? "99+" : itemCount}
         </span>
       )}

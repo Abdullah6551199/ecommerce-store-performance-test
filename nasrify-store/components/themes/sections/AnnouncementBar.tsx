@@ -29,7 +29,7 @@ export default function AnnouncementBar({
 
   let variantClass = "py-2 px-4 text-xs sm:text-sm font-medium transition-all";
   if (variant === "gradient") {
-    variantClass += " bg-gradient-to-r from-[var(--theme-primary)] via-purple-700 to-[var(--theme-accent)]";
+    variantClass += " bg-gradient-to-r from-[var(--theme-primary)] via-[var(--theme-primary)] to-[var(--theme-accent)]";
   } else if (variant === "minimal") {
     variantClass += " border-b border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-text)]";
   }

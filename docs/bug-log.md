@@ -135,4 +135,15 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-42.8b-01 | Database / D1 File Upload | Wrangler D1 cached file uploads with the same filename even if the file content was modified on disk (`File already uploaded. Processing.`), preventing execution of the revised SQL statement. | Fixed by generating uniquely named SQL migration scripts (`update_theme_42_8b_v2.sql`) when uploading. | Complete |
 | BUG-42.8b-02 | D1 Table Schema | Schema in `themes` table uses column name `theme_json` rather than `config`. | Corrected SQL column name to `theme_json` across theme updater scripts. | Complete |
 
+---
+
+## Stage 42.8c (Storefront Theme Wiring & Complete Color Unification)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-42.8c-01 | CLI / PowerShell Escaping | Updating JSON strings in D1 via `wrangler d1 execute --command` in PowerShell can result in doubly-escaped backslashes (`{\\colors\\...`), causing `JSON.parse` failures at edge runtime. | Use `--file=<script.sql>` with clean JSON serialization instead of inline `--command` strings in PowerShell. | Complete |
+| BUG-42.8c-02 | Theme Style Ingestion | Legacy `apex-theme-vars` `<style>` tag in `app/layout.tsx` was reading pre-framework theme settings containing `#960DF2`. | Updated `DEFAULT_THEME_SETTINGS` and remote D1 `settings.theme_settings` to WhatsApp Green (`#25D366`) and neutral darks (`#18181B`). | Complete |
+| BUG-42.8c-03 | Apps Storefront Sync | Editing synced files directly inside `nasrify-store/apps/` is undone during prebuild by `sync-apps.ts`. | Edit source app files in root `apps/<app>/storefront/` prior to building storefront worker. | Complete |
+
+
 

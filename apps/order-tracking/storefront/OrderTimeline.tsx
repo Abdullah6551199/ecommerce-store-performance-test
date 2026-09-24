@@ -66,47 +66,47 @@ export default function OrderTimeline({
   return (
     <div
       data-app="order-tracking"
-      className="rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] p-6 sm:p-8 shadow-sm space-y-8"
+      className="rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-white p-6 sm:p-8 shadow-sm space-y-8 font-[family-name:var(--theme-font-body)] text-[var(--theme-text,#18181B)]"
     >
       {/* Header bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-purple-100 dark:border-purple-900/40 pb-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--theme-border,#E4E4E7)] pb-5">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300 block">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--theme-primary,#25D366)] block">
             Live Shipment Tracker
           </span>
-          <h2 className="text-lg sm:text-xl font-black text-[#3C0561] dark:text-white tracking-tight mt-0.5">
+          <h2 className="text-lg sm:text-xl font-black text-[var(--theme-text,#18181B)] tracking-tight mt-0.5 font-[family-name:var(--theme-font-heading)]">
             Order Status Progression
           </h2>
         </div>
 
         <div className="flex items-center gap-2">
           {isCancelled ? (
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30">
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-red-500/10 text-red-600 border border-red-500/30">
               Cancelled
             </span>
           ) : isReturned ? (
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/30">
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-orange-500/10 text-orange-600 border border-orange-500/30">
               Returned
             </span>
           ) : (
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] border border-purple-200 dark:border-purple-700 flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#960DF2] animate-pulse" />
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-text,#18181B)] border border-[var(--theme-border,#E4E4E7)] flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[var(--theme-primary,#25D366)] animate-pulse" />
               <span>{order.status.replace(/_/g, " ").toUpperCase()}</span>
             </span>
           )}
         </div>
       </div>
 
-      {/* Tracking Metadata Box (Courier, Tracking #, Est Delivery) */}
+      {/* Tracking Metadata Box */}
       {showCourier && (order.courierName || order.trackingNumber || order.estimatedDelivery || order.statusNotes) && (
-        <div className="rounded-2xl border border-purple-200 dark:border-purple-800/60 bg-gradient-to-r from-purple-50/70 via-purple-50/40 to-transparent dark:from-purple-950/40 dark:via-purple-950/20 dark:to-transparent p-4 sm:p-5 space-y-3">
+        <div className="rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] p-4 sm:p-5 space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {order.courierName && (
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--theme-text-muted,#71717A)] block">
                   Logistics Carrier
                 </span>
-                <p className="text-sm font-black text-[#3C0561] dark:text-white mt-0.5 flex items-center gap-1.5">
+                <p className="text-sm font-black text-[var(--theme-text,#18181B)] mt-0.5 flex items-center gap-1.5">
                   <span>🚚</span>
                   <span>{order.courierName}</span>
                 </p>
@@ -115,21 +115,21 @@ export default function OrderTimeline({
 
             {order.trackingNumber && (
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--theme-text-muted,#71717A)] block">
                   Waybill / Tracking Number
                 </span>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="font-mono text-xs font-bold text-[#3C0561] dark:text-white bg-purple-100/60 dark:bg-purple-900/60 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-700">
+                  <span className="font-mono text-xs font-bold text-[var(--theme-text,#18181B)] bg-white px-2.5 py-1 rounded-lg border border-[var(--theme-border,#E4E4E7)]">
                     {order.trackingNumber}
                   </span>
                   <button
                     type="button"
                     onClick={() => handleCopyTracking(order.trackingNumber!)}
-                    className="p-1 rounded-md text-purple-600 hover:text-purple-800 dark:text-purple-300 dark:hover:text-white transition"
+                    className="p-1 rounded-md text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-text,#18181B)] transition cursor-pointer"
                     title="Copy tracking code"
                   >
                     {copied ? (
-                      <span className="text-[11px] font-bold text-[#960DF2] dark:text-[#EACFFC]">Copied!</span>
+                      <span className="text-[11px] font-bold text-[var(--theme-primary,#25D366)]">Copied!</span>
                     ) : (
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -142,10 +142,10 @@ export default function OrderTimeline({
 
             {order.estimatedDelivery && (
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--theme-text-muted,#71717A)] block">
                   Estimated Delivery
                 </span>
-                <p className="text-sm font-black text-[#3C0561] dark:text-white mt-0.5 flex items-center gap-1.5">
+                <p className="text-sm font-black text-[var(--theme-text,#18181B)] mt-0.5 flex items-center gap-1.5">
                   <span>📅</span>
                   <span>{order.estimatedDelivery}</span>
                 </p>
@@ -154,11 +154,11 @@ export default function OrderTimeline({
           </div>
 
           {order.statusNotes && (
-            <div className="pt-3 border-t border-purple-200/60 dark:border-purple-800/40">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-500 dark:text-purple-300/80 block">
+            <div className="pt-3 border-t border-[var(--theme-border,#E4E4E7)]">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--theme-text-muted,#71717A)] block">
                 Public Dispatch Update
               </span>
-              <p className="text-xs text-slate-700 dark:text-purple-200 mt-0.5 italic">
+              <p className="text-xs text-[var(--theme-text,#18181B)] mt-0.5 italic">
                 &ldquo;{order.statusNotes}&rdquo;
               </p>
             </div>
@@ -169,7 +169,7 @@ export default function OrderTimeline({
       {/* Vertical Status Timeline */}
       {showTimeline && (
         <div className="relative pl-6 sm:pl-8 space-y-8">
-          <div className="absolute left-[17px] sm:left-[21px] top-4 bottom-4 w-0.5 bg-purple-100 dark:bg-purple-900/40" />
+          <div className="absolute left-[17px] sm:left-[21px] top-4 bottom-4 w-0.5 bg-[var(--theme-border,#E4E4E7)]" />
 
           {DEFAULT_TIMELINE_STEPS.map((step, idx) => {
             let state: "completed" | "current" | "pending" = "pending";
@@ -212,10 +212,10 @@ export default function OrderTimeline({
                 <div
                   className={`absolute -left-[24px] sm:-left-[28px] flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full text-xs font-black transition-all ${
                     isCompleted
-                      ? "bg-[#960DF2] text-white ring-4 ring-purple-400/20 shadow-md shadow-purple-500/20"
+                      ? "bg-[var(--theme-primary,#25D366)] text-white shadow-sm"
                       : isCurrent
-                      ? "bg-white dark:bg-[#1E0230] text-[#960DF2] dark:text-[#EACFFC] border-2 border-[#960DF2] ring-4 ring-purple-500/30 animate-pulse shadow-md"
-                      : "bg-slate-100 dark:bg-purple-950/60 text-slate-400 dark:text-purple-400/40 border border-purple-200/50 dark:border-purple-800/40"
+                      ? "bg-white text-[var(--theme-primary,#25D366)] border-2 border-[var(--theme-primary,#25D366)] ring-4 ring-[var(--theme-primary,#25D366)]/20 animate-pulse shadow-sm"
+                      : "bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-text-muted,#71717A)] border border-[var(--theme-border,#E4E4E7)]"
                   }`}
                 >
                   {isCompleted ? (
@@ -223,7 +223,7 @@ export default function OrderTimeline({
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   ) : isCurrent ? (
-                    <span className="h-3 w-3 rounded-full bg-[#960DF2]" />
+                    <span className="h-3 w-3 rounded-full bg-[var(--theme-primary,#25D366)]" />
                   ) : (
                     <span className="text-[11px] font-mono opacity-80">{idx + 1}</span>
                   )}
@@ -233,16 +233,16 @@ export default function OrderTimeline({
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <h3
-                        className={`text-sm sm:text-base font-extrabold ${
+                        className={`text-sm sm:text-base font-extrabold font-[family-name:var(--theme-font-heading)] ${
                           isCompleted || isCurrent
-                            ? "text-[#3C0561] dark:text-white"
-                            : "text-slate-400 dark:text-purple-400/60"
+                            ? "text-[var(--theme-text,#18181B)]"
+                            : "text-[var(--theme-text-muted,#71717A)]"
                         }`}
                       >
                         {step.title}
                       </h3>
                       {isCurrent && (
-                        <span className="rounded-full bg-[#960DF2] text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 shadow-sm">
+                        <span className="rounded-full bg-[var(--theme-primary,#25D366)] text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 shadow-sm">
                           Current Status
                         </span>
                       )}
@@ -251,8 +251,8 @@ export default function OrderTimeline({
                     <span
                       className={`text-xs font-mono ${
                         isCompleted || isCurrent
-                          ? "text-purple-700 dark:text-purple-300 font-semibold"
-                          : "text-slate-400 dark:text-purple-500/40"
+                          ? "text-[var(--theme-primary,#25D366)] font-semibold"
+                          : "text-[var(--theme-text-muted,#71717A)]"
                       }`}
                     >
                       {timeDisplay}
@@ -262,8 +262,8 @@ export default function OrderTimeline({
                   <p
                     className={`text-xs mt-1 leading-relaxed ${
                       isCompleted || isCurrent
-                        ? "text-slate-600 dark:text-purple-200/80"
-                        : "text-slate-400 dark:text-purple-400/40"
+                        ? "text-[var(--theme-text-muted,#71717A)]"
+                        : "text-[var(--theme-text-muted,#71717A)]/70"
                     }`}
                   >
                     {step.description}

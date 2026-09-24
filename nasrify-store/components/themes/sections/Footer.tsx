@@ -108,7 +108,7 @@ export default function Footer({
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-full border border-[var(--theme-border,#E4E4E7)] bg-white flex items-center justify-center text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-accent,#2563EB)] hover:border-gray-400 transition-colors shadow-2xs"
+                  className="w-8 h-8 rounded-full border border-[var(--theme-border,#E4E4E7)] bg-white flex items-center justify-center text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-primary,#25D366)] hover:border-[var(--theme-primary,#25D366)] transition-colors shadow-2xs"
                   aria-label={s.platform}
                 >
                   <span className="capitalize text-xs font-bold">{s.platform[0]}</span>

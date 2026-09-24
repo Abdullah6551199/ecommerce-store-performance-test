@@ -1,79 +1,62 @@
 /**
- * Design Tokens for Stage 18.1 Purple Brand & Chronicles Redesign
+ * Design Tokens for Nasrify Admin Professional Theme
  */
 
-export const PURPLE_PALETTE = {
-  50: "#EACFFC", // Very Light Lavender
-  100: "#D59EFA", // Light Purple
-  200: "#C06EF7", // Medium Light Purple
-  300: "#AB3DF5", // Medium Purple
-  400: "#960DF2", // PRIMARY BRAND COLOR
-  500: "#780AC2", // Deep Purple
-  600: "#5A0891", // Dark Purple
-  700: "#3C0561", // Very Dark Purple
+export const ADMIN_BRAND_PALETTE = {
+  50: "#F4F4F5",
+  100: "#DCFCE7",
+  200: "#86EFAC",
+  300: "#4ADE80",
+  400: "#25D366", // PRIMARY BRAND GREEN
+  500: "#22C55E",
+  600: "#1EA855", // DARK HOVER GREEN
+  700: "#18181B", // NEUTRAL ACCENT DARK
 } as const;
+
+// Backward-compatible alias
+export const PURPLE_PALETTE = ADMIN_BRAND_PALETTE;
 
 export const LIGHT_THEME_TOKENS = {
   bgPrimary: "#FFFFFF",
-  bgSecondary: "#EACFFC",
+  bgSecondary: "#F4F4F5",
   surface: "#FFFFFF",
-  surfaceHover: "#EACFFC",
-  primary: "#960DF2",
-  primaryHover: "#780AC2",
-  secondary: "#AB3DF5",
-  accent: "#C06EF7",
-  textHeading: "#3C0561",
-  textBody: "#5A0891",
-  textMuted: "#780AC2",
-  border: "#D59EFA",
-  borderSubtle: "#EACFFC",
+  surfaceHover: "#F4F4F5",
+  primary: "#25D366",
+  primaryHover: "#1EA855",
+  secondary: "#18181B",
+  accent: "#25D366",
+  textHeading: "#18181B",
+  textBody: "#27272A",
+  textMuted: "#71717A",
+  border: "#E4E4E7",
+  borderSubtle: "#F4F4F5",
 } as const;
 
 export const DARK_THEME_TOKENS = {
-  bgPrimary: "#3C0561",
-  bgSecondary: "#5A0891",
-  surface: "#5A0891",
-  surfaceHover: "#780AC2",
-  primary: "#960DF2",
-  primaryHover: "#AB3DF5",
-  secondary: "#AB3DF5",
-  accent: "#C06EF7",
-  textHeading: "#EACFFC",
-  textBody: "#D59EFA",
-  textMuted: "#C06EF7",
-  border: "#780AC2",
-  borderSubtle: "#5A0891",
+  bgPrimary: "#09090B",
+  bgSecondary: "#18181B",
+  surface: "#18181B",
+  surfaceHover: "#27272A",
+  primary: "#25D366",
+  primaryHover: "#1EA855",
+  secondary: "#E4E4E7",
+  accent: "#25D366",
+  textHeading: "#FAFAFA",
+  textBody: "#E4E4E7",
+  textMuted: "#A1A1AA",
+  border: "#27272A",
+  borderSubtle: "#18181B",
 } as const;
 
 export const SPACING_SCALE = {
-  containerMaxWidth: "1280px", // max-w-7xl
-  sectionPaddingY: "5rem", // py-20
-  sectionGap: "4rem", // space-y-16 / space-y-20
+  containerMaxWidth: "1280px",
+  sectionPaddingY: "5rem",
+  sectionGap: "4rem",
 } as const;
 
 export const BORDER_RADIUS_TOKENS = {
-  card: "12px", // rounded-xl
-  button: "8px", // rounded-lg
-  pill: "9999px", // rounded-full
-  section: "24px", // rounded-3xl
-} as const;
-
-export const SHADOW_TOKENS = {
-  softPurple: "0 10px 25px -5px rgba(150, 13, 242, 0.12), 0 8px 10px -6px rgba(150, 13, 242, 0.08)",
-  cardHover: "0 20px 30px -10px rgba(150, 13, 242, 0.20), 0 10px 15px -5px rgba(120, 10, 194, 0.15)",
-  glowPurple: "0 0 35px -5px rgba(150, 13, 242, 0.35)",
-} as const;
-
-export const TRANSITION_TOKENS = {
-  default: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
-  smooth: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-  transformOnly: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-} as const;
-
-export const Z_INDEX_SCALE = {
-  dropdown: 50,
-  stickyHeader: 40,
-  modalOverlay: 100,
-  cartDrawer: 120,
-  toast: 150,
+  card: "12px",
+  button: "8px",
+  pill: "9999px",
+  section: "24px",
 } as const;

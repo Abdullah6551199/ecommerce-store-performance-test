@@ -20,10 +20,10 @@ export default function ExampleWidget({ className = "" }: AdminDashboardWidgetPr
 
   return (
     <div
-      className={`rounded-2xl border border-purple-200 dark:border-purple-800/60 bg-white dark:bg-[#0c140f] p-5 shadow-sm space-y-2 ${className}`}
+      className={`rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#0c140f] p-5 shadow-sm space-y-2 ${className}`}
     >
       <div className="flex items-center justify-between">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400">
           Template App Widget
         </h4>
         <span className="rounded-full bg-emerald-100 dark:bg-emerald-950 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">

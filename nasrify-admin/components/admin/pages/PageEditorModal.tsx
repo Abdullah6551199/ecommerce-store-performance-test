@@ -157,10 +157,10 @@ export default function PageEditorModal({
       title: "Hero Section",
       desc: "Vibrant high-contrast hero banner with heading, subheading, and CTA button.",
       icon: "🌟",
-      snippet: `<section class="py-16 px-8 rounded-3xl bg-gradient-to-br from-[#960DF2] via-[#850bd8] to-[#3C0561] text-white text-center my-8 shadow-xl">
+      snippet: `<section class="py-16 px-8 rounded-3xl bg-gradient-to-br from-[#25D366] via-[#1EA855] to-[#18181B] text-white text-center my-8 shadow-xl">
   <h1 class="text-4xl sm:text-5xl font-black tracking-tight mb-4">Engineered for Human Velocity</h1>
-  <p class="text-base sm:text-lg text-purple-100 max-w-2xl mx-auto mb-8">Uncompromising technical activewear and marathon footwear crafted for dynamic peak performance.</p>
-  <a href="/shop" class="inline-block px-8 py-3.5 rounded-xl bg-white text-purple-900 font-extrabold text-sm shadow-md hover:bg-purple-50 transition">Explore Latest Releases</a>
+  <p class="text-base sm:text-lg text-zinc-200 max-w-2xl mx-auto mb-8">Uncompromising technical activewear and marathon footwear crafted for dynamic peak performance.</p>
+  <a href="/shop" class="inline-block px-8 py-3.5 rounded-xl bg-white text-[#18181B] font-extrabold text-sm shadow-md hover:bg-[#F4F4F5] transition">Explore Latest Releases</a>
 </section>`,
     },
     {
@@ -179,7 +179,7 @@ export default function PageEditorModal({
     </ul>
   </div>
   <div>
-    <img src="/images/placeholder.svg" alt="Precision Craft" class="w-full rounded-3xl object-cover shadow-md border border-purple-100 dark:border-purple-900/40" />
+    <img src="/images/placeholder.svg" alt="Precision Craft" class="w-full rounded-3xl object-cover shadow-md border border-[#E4E4E7] dark:border-zinc-800/40" />
   </div>
 </section>`,
     },
@@ -189,17 +189,17 @@ export default function PageEditorModal({
       desc: "Card trio highlighting key product benefits, core pillars, or service guarantees.",
       icon: "🃏",
       snippet: `<section class="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-  <div class="p-6 rounded-3xl border border-purple-100 dark:border-purple-900/50 bg-white dark:bg-[#1E0230] shadow-sm">
+  <div class="p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#09090B] shadow-sm">
     <div class="text-3xl mb-3">🚀</div>
     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Maximum Kinetic Return</h3>
     <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Aerodynamic contours engineered for rapid split-second responsiveness.</p>
   </div>
-  <div class="p-6 rounded-3xl border border-purple-100 dark:border-purple-900/50 bg-white dark:bg-[#1E0230] shadow-sm">
+  <div class="p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#09090B] shadow-sm">
     <div class="text-3xl mb-3">🛡️</div>
     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Tested Durability</h3>
     <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Triple-stitched stress contours built to withstand rigorous daily workouts.</p>
   </div>
-  <div class="p-6 rounded-3xl border border-purple-100 dark:border-purple-900/50 bg-white dark:bg-[#1E0230] shadow-sm">
+  <div class="p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#09090B] shadow-sm">
     <div class="text-3xl mb-3">🌱</div>
     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Sustainable Threads</h3>
     <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Crafted with certified recycled ocean polymers without sacrificing performance.</p>
@@ -214,22 +214,22 @@ export default function PageEditorModal({
       snippet: `<section class="my-12">
   <h2 class="text-2xl font-extrabold text-center text-slate-900 dark:text-white mb-8">Meet Our Leadership Team</h2>
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-    <div class="text-center p-6 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]">
-      <div class="w-16 h-16 mx-auto rounded-full bg-purple-100 dark:bg-purple-900/60 text-xl flex items-center justify-center font-bold text-purple-600 mb-3">JD</div>
+    <div class="text-center p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B]">
+      <div class="w-16 h-16 mx-auto rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/60 text-xl flex items-center justify-center font-bold text-[#25D366] mb-3">JD</div>
       <h3 class="font-bold text-sm text-slate-900 dark:text-white">Jane Doe</h3>
-      <p class="text-[11px] text-purple-600 dark:text-purple-400 font-semibold mb-1">Founder & Lead Designer</p>
+      <p class="text-[11px] text-[#25D366] dark:text-zinc-400 font-semibold mb-1">Founder & Lead Designer</p>
       <p class="text-xs text-slate-500">Former competitive triathlete passionate about ergonomics.</p>
     </div>
-    <div class="text-center p-6 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]">
-      <div class="w-16 h-16 mx-auto rounded-full bg-purple-100 dark:bg-purple-900/60 text-xl flex items-center justify-center font-bold text-purple-600 mb-3">AS</div>
+    <div class="text-center p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B]">
+      <div class="w-16 h-16 mx-auto rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/60 text-xl flex items-center justify-center font-bold text-[#25D366] mb-3">AS</div>
       <h3 class="font-bold text-sm text-slate-900 dark:text-white">Alex Smith</h3>
-      <p class="text-[11px] text-purple-600 dark:text-purple-400 font-semibold mb-1">Biomechanics Director</p>
+      <p class="text-[11px] text-[#25D366] dark:text-zinc-400 font-semibold mb-1">Biomechanics Director</p>
       <p class="text-xs text-slate-500">Over a decade optimizing thermal heat reduction in sports.</p>
     </div>
-    <div class="text-center p-6 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]">
-      <div class="w-16 h-16 mx-auto rounded-full bg-purple-100 dark:bg-purple-900/60 text-xl flex items-center justify-center font-bold text-purple-600 mb-3">EL</div>
+    <div class="text-center p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B]">
+      <div class="w-16 h-16 mx-auto rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/60 text-xl flex items-center justify-center font-bold text-[#25D366] mb-3">EL</div>
       <h3 class="font-bold text-sm text-slate-900 dark:text-white">Emma Lin</h3>
-      <p class="text-[11px] text-purple-600 dark:text-purple-400 font-semibold mb-1">VP of Global Logistics</p>
+      <p class="text-[11px] text-[#25D366] dark:text-zinc-400 font-semibold mb-1">VP of Global Logistics</p>
       <p class="text-xs text-slate-500">Delivering expedited courier orders to athletes worldwide.</p>
     </div>
   </div>
@@ -240,12 +240,12 @@ export default function PageEditorModal({
       title: "Testimonial Card",
       desc: "Large quoted testimonial block with star rating and customer attribution.",
       icon: "💬",
-      snippet: `<section class="my-12 p-8 rounded-3xl bg-purple-50 dark:bg-[#25033d] border border-purple-200/60 dark:border-purple-900/50 text-center">
+      snippet: `<section class="my-12 p-8 rounded-3xl bg-[#F4F4F5] dark:bg-[#25033d] border border-[#E4E4E7]/60 dark:border-zinc-800/50 text-center">
   <div class="text-amber-400 text-lg mb-3">★★★★★</div>
   <blockquote class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white max-w-2xl mx-auto italic mb-4">
     &quot;ApexStore delivers the highest quality technical gear I have ever worn during marathon training. Simply unmatched comfort.&quot;
   </blockquote>
-  <p class="text-xs font-black text-[#960DF2] dark:text-[#EACFFC] uppercase tracking-wider">— Marcus Sterling, Ultra Runner</p>
+  <p class="text-xs font-black text-[#25D366] dark:text-[#DCFCE7] uppercase tracking-wider">— Marcus Sterling, Ultra Runner</p>
 </section>`,
     },
     {
@@ -254,20 +254,20 @@ export default function PageEditorModal({
       desc: "Four punchy metric counters showcasing scale, rating, and customer happiness.",
       icon: "📊",
       snippet: `<section class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-10 text-center">
-  <div class="p-6 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]">
-    <p class="text-3xl sm:text-4xl font-black text-[#960DF2] dark:text-[#EACFFC]">50K+</p>
+  <div class="p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B]">
+    <p class="text-3xl sm:text-4xl font-black text-[#25D366] dark:text-[#DCFCE7]">50K+</p>
     <p class="text-xs text-slate-500 mt-1 font-semibold">Active Athletes</p>
   </div>
-  <div class="p-6 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]">
-    <p class="text-3xl sm:text-4xl font-black text-[#960DF2] dark:text-[#EACFFC]">99.8%</p>
+  <div class="p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B]">
+    <p class="text-3xl sm:text-4xl font-black text-[#25D366] dark:text-[#DCFCE7]">99.8%</p>
     <p class="text-xs text-slate-500 mt-1 font-semibold">On-Time Dispatch</p>
   </div>
-  <div class="p-6 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]">
-    <p class="text-3xl sm:text-4xl font-black text-[#960DF2] dark:text-[#EACFFC]">30-Day</p>
+  <div class="p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B]">
+    <p class="text-3xl sm:text-4xl font-black text-[#25D366] dark:text-[#DCFCE7]">30-Day</p>
     <p class="text-xs text-slate-500 mt-1 font-semibold">Money-Back Guarantee</p>
   </div>
-  <div class="p-6 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230]">
-    <p class="text-3xl sm:text-4xl font-black text-[#960DF2] dark:text-[#EACFFC]">4.9 / 5</p>
+  <div class="p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B]">
+    <p class="text-3xl sm:text-4xl font-black text-[#25D366] dark:text-[#DCFCE7]">4.9 / 5</p>
     <p class="text-xs text-slate-500 mt-1 font-semibold">Average Rating</p>
   </div>
 </section>`,
@@ -277,10 +277,10 @@ export default function PageEditorModal({
       title: "CTA Banner",
       desc: "Compelling call to action block with purple gradient and primary link button.",
       icon: "🚀",
-      snippet: `<section class="my-12 p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#960DF2] via-[#850bd8] to-[#3C0561] text-white text-center shadow-xl">
+      snippet: `<section class="my-12 p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#25D366] via-[#1EA855] to-[#18181B] text-white text-center shadow-xl">
   <h2 class="text-2xl sm:text-3xl font-black tracking-tight mb-3">Ready to Elevate Your Training?</h2>
-  <p class="text-sm text-purple-100 max-w-xl mx-auto mb-6">Join thousands of competitive athletes training in ApexStore technical apparel.</p>
-  <a href="/shop" class="inline-block px-6 py-3 rounded-xl bg-white text-purple-900 font-extrabold text-xs shadow-md hover:bg-purple-50 transition">Shop New Releases</a>
+  <p class="text-sm text-zinc-200 max-w-xl mx-auto mb-6">Join thousands of competitive athletes training in ApexStore technical apparel.</p>
+  <a href="/shop" class="inline-block px-6 py-3 rounded-xl bg-white text-[#18181B] font-extrabold text-xs shadow-md hover:bg-[#F4F4F5] transition">Shop New Releases</a>
 </section>`,
     },
     {
@@ -290,11 +290,11 @@ export default function PageEditorModal({
       icon: "❓",
       snippet: `<section class="my-12 space-y-3">
   <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-6">Common Questions</h2>
-  <details class="p-5 rounded-2xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] cursor-pointer">
+  <details class="p-5 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B] cursor-pointer">
     <summary class="font-bold text-slate-900 dark:text-white text-sm">How long does standard delivery take?</summary>
     <p class="mt-3 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Domestic ground orders arrive within 3 to 5 business days with live courier tracking updates.</p>
   </details>
-  <details class="p-5 rounded-2xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] cursor-pointer">
+  <details class="p-5 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B] cursor-pointer">
     <summary class="font-bold text-slate-900 dark:text-white text-sm">What is your exchange and return policy?</summary>
     <p class="mt-3 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">We provide a 30-day money-back guarantee on all unworn items with original technical tags intact.</p>
   </details>
@@ -305,7 +305,7 @@ export default function PageEditorModal({
       title: "Custom HTML Block",
       desc: "Empty HTML container ready for custom code, scripts, or embeds.",
       icon: "💻",
-      snippet: `<div class="custom-block my-8 p-6 rounded-3xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-[#1E0230]">
+      snippet: `<div class="custom-block my-8 p-6 rounded-3xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#09090B]">
   <!-- Insert custom code, widgets, or embeds below -->
   <p class="text-sm font-semibold">Custom HTML Content Area</p>
 </div>`,
@@ -408,20 +408,20 @@ export default function PageEditorModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-white dark:bg-[#1E0230] border border-purple-200 dark:border-purple-800 rounded-3xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white dark:bg-[#09090B] border border-[#E4E4E7] dark:border-zinc-800 rounded-3xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-150">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-purple-100 dark:border-purple-900/40 bg-purple-50/50 dark:bg-[#2A0344]/50">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E4E4E7] dark:border-zinc-800/40 bg-[#F4F4F5]/50 dark:bg-[#18181B]/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] flex items-center justify-center font-bold text-lg">
+            <div className="w-10 h-10 rounded-2xl bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7] flex items-center justify-center font-bold text-lg">
               📄
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-black text-[#3C0561] dark:text-white">
+              <h2 className="text-base sm:text-lg font-black text-[#18181B] dark:text-white">
                 {isEditing ? `Edit: ${page?.title}` : "Create New Custom Page"}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-purple-300/80">
+              <p className="text-xs text-slate-500 dark:text-zinc-400/80">
                 {isCore ? "Core Protected Page" : "Custom Storefront Page"} • Route:{" "}
-                <span className="font-mono text-[#960DF2] dark:text-[#C06EF7]">{pagePath}</span>
+                <span className="font-mono text-[#25D366] dark:text-[#1EA855]">{pagePath}</span>
               </p>
             </div>
           </div>
@@ -432,14 +432,14 @@ export default function PageEditorModal({
                 href={pagePath}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-[#960DF2] dark:text-[#EACFFC] bg-white dark:bg-[#2A0344] border border-purple-200 dark:border-purple-700 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/50 transition"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-[#25D366] dark:text-[#DCFCE7] bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-zinc-700 rounded-xl hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/50 transition"
               >
                 <span>Live View ↗</span>
               </a>
             )}
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-purple-900/40 transition"
+              className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#18181B]/40 transition"
             >
               ✕
             </button>
@@ -461,7 +461,7 @@ export default function PageEditorModal({
           {/* Top Page Metadata Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-purple-300 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-1.5">
                 Page Title <span className="text-rose-500">*</span>
               </label>
               <input
@@ -469,16 +469,16 @@ export default function PageEditorModal({
                 value={title}
                 onChange={(e) => handleTitleChange(e.target.value)}
                 placeholder="e.g. Sustainability Mission"
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-purple-200 dark:border-purple-800/80 bg-purple-50/30 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-[#F4F4F5]/30 dark:bg-[#18181B] text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-purple-300 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-1.5">
                 URL Slug <span className="text-rose-500">*</span>
               </label>
               <div className="flex items-center">
-                <span className="px-3 py-2.5 text-xs font-mono text-slate-400 bg-purple-100/50 dark:bg-purple-950/50 border border-r-0 border-purple-200 dark:border-purple-800/80 rounded-l-xl">
+                <span className="px-3 py-2.5 text-xs font-mono text-slate-400 bg-[#DCFCE7]/50 dark:bg-[#18181B]/50 border border-r-0 border-[#E4E4E7] dark:border-zinc-800/80 rounded-l-xl">
                   /
                 </span>
                 <input
@@ -487,19 +487,19 @@ export default function PageEditorModal({
                   disabled={isCore}
                   onChange={(e) => setSlug(e.target.value)}
                   placeholder="sustainability"
-                  className="flex-1 px-3.5 py-2.5 text-sm rounded-r-xl border border-purple-200 dark:border-purple-800/80 bg-purple-50/30 dark:bg-[#2A0344] text-slate-900 dark:text-white disabled:bg-slate-100 dark:disabled:bg-purple-950/40 disabled:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#960DF2] font-mono"
+                  className="flex-1 px-3.5 py-2.5 text-sm rounded-r-xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-[#F4F4F5]/30 dark:bg-[#18181B] text-slate-900 dark:text-white disabled:bg-slate-100 dark:disabled:bg-[#18181B]/40 disabled:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#25D366] font-mono"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-purple-300 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-1.5">
                 Layout Template
               </label>
               <select
                 value={template}
                 onChange={(e) => handleTemplateChange(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-purple-200 dark:border-purple-800/80 bg-purple-50/30 dark:bg-[#2A0344] text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+                className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-[#F4F4F5]/30 dark:bg-[#18181B] text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
               >
                 <option value="blank">Blank (Empty Canvas)</option>
                 <option value="standard">Standard Content (Heading + Text)</option>
@@ -514,19 +514,19 @@ export default function PageEditorModal({
           {/* Content Editor Section */}
           <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-purple-300">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
                 Page Content &amp; Sections
               </label>
 
               {/* Edit / Pre-built Sections / Preview Switcher */}
-              <div className="flex items-center gap-1 bg-purple-100/60 dark:bg-purple-950/60 p-1 rounded-xl text-xs font-bold">
+              <div className="flex items-center gap-1 bg-[#DCFCE7]/60 dark:bg-[#18181B]/60 p-1 rounded-xl text-xs font-bold">
                 <button
                   type="button"
                   onClick={() => setActiveTab("edit")}
                   className={`px-3 py-1 rounded-lg transition ${
                     activeTab === "edit"
-                      ? "bg-white dark:bg-[#3C0561] text-[#960DF2] dark:text-white shadow-sm"
-                      : "text-slate-500 dark:text-purple-300 hover:text-slate-900 dark:hover:text-white"
+                      ? "bg-white dark:bg-[#18181B] text-[#25D366] dark:text-white shadow-sm"
+                      : "text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   Editor
@@ -536,8 +536,8 @@ export default function PageEditorModal({
                   onClick={() => setActiveTab("sections")}
                   className={`px-3 py-1 rounded-lg transition ${
                     activeTab === "sections"
-                      ? "bg-white dark:bg-[#3C0561] text-[#960DF2] dark:text-white shadow-sm"
-                      : "text-slate-500 dark:text-purple-300 hover:text-slate-900 dark:hover:text-white"
+                      ? "bg-white dark:bg-[#18181B] text-[#25D366] dark:text-white shadow-sm"
+                      : "text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   + Add Sections
@@ -547,8 +547,8 @@ export default function PageEditorModal({
                   onClick={() => setActiveTab("preview")}
                   className={`px-3 py-1 rounded-lg transition ${
                     activeTab === "preview"
-                      ? "bg-white dark:bg-[#3C0561] text-[#960DF2] dark:text-white shadow-sm"
-                      : "text-slate-500 dark:text-purple-300 hover:text-slate-900 dark:hover:text-white"
+                      ? "bg-white dark:bg-[#18181B] text-[#25D366] dark:text-white shadow-sm"
+                      : "text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   Preview
@@ -557,12 +557,12 @@ export default function PageEditorModal({
             </div>
 
             {activeTab === "sections" ? (
-              <div className="p-4 rounded-2xl border border-purple-200 dark:border-purple-800/80 bg-purple-50/30 dark:bg-[#2A0344]/30 space-y-4">
+              <div className="p-4 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-[#F4F4F5]/30 dark:bg-[#18181B]/30 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#3C0561] dark:text-white">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B] dark:text-white">
                     Pre-built Section Library (Click to Insert)
                   </h3>
-                  <span className="text-[11px] text-slate-500 dark:text-purple-300">
+                  <span className="text-[11px] text-slate-500 dark:text-zinc-400">
                     Snippets are appended to your active content
                   </span>
                 </div>
@@ -572,19 +572,19 @@ export default function PageEditorModal({
                     <div
                       key={sec.id}
                       onClick={() => insertSnippet(sec.snippet)}
-                      className="p-4 rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#1E0230] hover:border-[#960DF2] hover:shadow-md hover:scale-[1.01] cursor-pointer transition flex flex-col justify-between space-y-2 group"
+                      className="p-4 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#09090B] hover:border-[#25D366] hover:shadow-md hover:scale-[1.01] cursor-pointer transition flex flex-col justify-between space-y-2 group"
                     >
                       <div className="flex items-center gap-2">
                         <span className="text-xl">{sec.icon}</span>
-                        <h4 className="text-xs font-extrabold text-slate-900 dark:text-white group-hover:text-[#960DF2] dark:group-hover:text-[#EACFFC] transition">
+                        <h4 className="text-xs font-extrabold text-slate-900 dark:text-white group-hover:text-[#25D366] dark:group-hover:text-[#DCFCE7] transition">
                           {sec.title}
                         </h4>
                       </div>
-                      <p className="text-[11px] text-slate-500 dark:text-purple-300/70 line-clamp-2">
+                      <p className="text-[11px] text-slate-500 dark:text-zinc-400/70 line-clamp-2">
                         {sec.desc}
                       </p>
                       <div className="pt-2 text-right">
-                        <span className="text-[11px] font-bold text-[#960DF2] dark:text-[#C06EF7]">
+                        <span className="text-[11px] font-bold text-[#25D366] dark:text-[#1EA855]">
                           Insert Section &rarr;
                         </span>
                       </div>
@@ -593,13 +593,13 @@ export default function PageEditorModal({
                 </div>
               </div>
             ) : activeTab === "edit" ? (
-              <div className="rounded-2xl border border-purple-200 dark:border-purple-800/80 overflow-hidden bg-white dark:bg-[#1E0230]">
+              <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/80 overflow-hidden bg-white dark:bg-[#09090B]">
                 {/* Formatting Toolbar */}
-                <div className="flex flex-wrap items-center gap-1 p-2 bg-purple-50/50 dark:bg-[#2A0344]/60 border-b border-purple-100 dark:border-purple-900/40 text-xs">
+                <div className="flex flex-wrap items-center gap-1 p-2 bg-[#F4F4F5]/50 dark:bg-[#18181B]/60 border-b border-[#E4E4E7] dark:border-zinc-800/40 text-xs">
                   <button
                     type="button"
                     onClick={() => insertFormatting("<h1>", "</h1>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-black"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-black"
                     title="Heading 1"
                   >
                     H1
@@ -607,7 +607,7 @@ export default function PageEditorModal({
                   <button
                     type="button"
                     onClick={() => insertFormatting("<h2>", "</h2>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-extrabold"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-extrabold"
                     title="Heading 2"
                   >
                     H2
@@ -615,7 +615,7 @@ export default function PageEditorModal({
                   <button
                     type="button"
                     onClick={() => insertFormatting("<h3>", "</h3>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-bold"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-bold"
                     title="Heading 3"
                   >
                     H3
@@ -623,18 +623,18 @@ export default function PageEditorModal({
                   <button
                     type="button"
                     onClick={() => insertFormatting("<h4>", "</h4>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-bold"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-bold"
                     title="Heading 4"
                   >
                     H4
                   </button>
 
-                  <span className="w-px h-4 bg-purple-200 dark:bg-purple-800 mx-1" />
+                  <span className="w-px h-4 bg-[#DCFCE7] dark:bg-[#15803D] mx-1" />
 
                   <button
                     type="button"
                     onClick={() => insertFormatting("<p>", "</p>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-semibold"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-semibold"
                     title="Paragraph"
                   >
                     ¶
@@ -642,7 +642,7 @@ export default function PageEditorModal({
                   <button
                     type="button"
                     onClick={() => insertFormatting("<strong>", "</strong>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-bold"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-bold"
                     title="Bold"
                   >
                     B
@@ -650,7 +650,7 @@ export default function PageEditorModal({
                   <button
                     type="button"
                     onClick={() => insertFormatting("<em>", "</em>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 italic font-bold"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] italic font-bold"
                     title="Italic"
                   >
                     I
@@ -658,18 +658,18 @@ export default function PageEditorModal({
                   <button
                     type="button"
                     onClick={() => insertFormatting("<u>", "</u>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 underline font-bold"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] underline font-bold"
                     title="Underline"
                   >
                     U
                   </button>
 
-                  <span className="w-px h-4 bg-purple-200 dark:bg-purple-800 mx-1" />
+                  <span className="w-px h-4 bg-[#DCFCE7] dark:bg-[#15803D] mx-1" />
 
                   <button
                     type="button"
                     onClick={() => insertFormatting("<ul>\n  <li>", "</li>\n</ul>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-medium"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-medium"
                     title="Bullet List"
                   >
                     • List
@@ -677,7 +677,7 @@ export default function PageEditorModal({
                   <button
                     type="button"
                     onClick={() => insertFormatting("<ol>\n  <li>", "</li>\n</ol>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-medium"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-medium"
                     title="Numbered List"
                   >
                     1. List
@@ -685,30 +685,30 @@ export default function PageEditorModal({
                   <button
                     type="button"
                     onClick={() => insertFormatting("<blockquote>\n  ", "\n</blockquote>")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-medium"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-medium"
                     title="Blockquote"
                   >
                     Quote
                   </button>
                   <button
                     type="button"
-                    onClick={() => insertFormatting("\n<hr class=\"my-8 border-purple-200 dark:border-purple-800\" />\n")}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-medium"
+                    onClick={() => insertFormatting("\n<hr class=\"my-8 border-[#E4E4E7] dark:border-zinc-800\" />\n")}
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-medium"
                     title="Divider"
                   >
                     Divider
                   </button>
 
-                  <span className="w-px h-4 bg-purple-200 dark:bg-purple-800 mx-1" />
+                  <span className="w-px h-4 bg-[#DCFCE7] dark:bg-[#15803D] mx-1" />
 
                   {/* Link */}
                   <button
                     type="button"
                     onClick={() => {
                       const url = prompt("Enter Link URL:", "https://");
-                      if (url) insertFormatting(`<a href="${url}" class="text-[#960DF2] underline hover:text-[#850bd8]">`, "</a>");
+                      if (url) insertFormatting(`<a href="${url}" class="text-[#25D366] underline hover:text-[#1EA855]">`, "</a>");
                     }}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-medium"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-medium"
                     title="Insert Link"
                   >
                     🔗 Link
@@ -721,10 +721,10 @@ export default function PageEditorModal({
                       const btnUrl = prompt("Button Link URL:", "/shop");
                       const btnText = prompt("Button Label:", "Shop Now") || "Shop Now";
                       if (btnUrl) {
-                        insertSnippet(`<a href="${btnUrl}" class="inline-block px-6 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-bold text-xs shadow-md transition my-4">${btnText}</a>`);
+                        insertSnippet(`<a href="${btnUrl}" class="inline-block px-6 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white font-bold text-xs shadow-md transition my-4">${btnText}</a>`);
                       }
                     }}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-medium"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-medium"
                     title="Insert Button"
                   >
                     🔘 Button
@@ -739,7 +739,7 @@ export default function PageEditorModal({
                         insertSnippet(`<div class="aspect-video w-full rounded-2xl overflow-hidden my-6 shadow-md"><iframe src="${videoUrl}" class="w-full h-full border-0" allowfullscreen></iframe></div>`);
                       }
                     }}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-medium"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-medium"
                     title="Embed Video"
                   >
                     🎬 Video
@@ -749,17 +749,17 @@ export default function PageEditorModal({
                   <button
                     type="button"
                     onClick={() => {
-                      insertSnippet(`<table class="w-full my-6 text-sm border border-purple-200 dark:border-purple-800 rounded-xl overflow-hidden">
-  <thead class="bg-purple-100 dark:bg-purple-900/40 text-xs uppercase font-bold text-[#3C0561] dark:text-white">
+                      insertSnippet(`<table class="w-full my-6 text-sm border border-[#E4E4E7] dark:border-zinc-800 rounded-xl overflow-hidden">
+  <thead class="bg-[#DCFCE7] dark:bg-[#18181B]/40 text-xs uppercase font-bold text-[#18181B] dark:text-white">
     <tr><th class="p-3 text-left">Feature</th><th class="p-3 text-left">Standard</th><th class="p-3 text-left">Pro</th></tr>
   </thead>
-  <tbody class="divide-y divide-purple-100 dark:divide-purple-800">
+  <tbody class="divide-y divide-zinc-200 dark:divide-zinc-800 dark:divide-zinc-200 dark:divide-zinc-800">
     <tr><td class="p-3">Weight</td><td class="p-3">180g</td><td class="p-3">140g Ultra</td></tr>
     <tr><td class="p-3">Water Repellent</td><td class="p-3">DWR Basic</td><td class="p-3">HydroPro 3.0</td></tr>
   </tbody>
 </table>`);
                     }}
-                    className="px-2 py-1 rounded hover:bg-purple-200/50 dark:hover:bg-purple-900 font-medium"
+                    className="px-2 py-1 rounded hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B] font-medium"
                     title="Insert Table"
                   >
                     📊 Table
@@ -777,7 +777,7 @@ export default function PageEditorModal({
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploadingImage}
-                    className="px-2.5 py-1 rounded bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] font-bold hover:bg-purple-200 transition"
+                    className="px-2.5 py-1 rounded bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7] font-bold hover:bg-[#DCFCE7] transition"
                     title="Upload image to Cloudflare R2"
                   >
                     {isUploadingImage ? "Uploading..." : "📷 Upload Image"}
@@ -794,21 +794,21 @@ export default function PageEditorModal({
                 />
               </div>
             ) : (
-              <div className="p-8 rounded-2xl border border-purple-200 dark:border-purple-800/80 bg-purple-50/20 dark:bg-[#1E0230] min-h-[350px] max-h-[450px] overflow-y-auto prose dark:prose-invert max-w-none text-sm">
+              <div className="p-8 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-[#F4F4F5]/20 dark:bg-[#09090B] min-h-[350px] max-h-[450px] overflow-y-auto prose dark:prose-invert max-w-none text-sm">
                 <div dangerouslySetInnerHTML={{ __html: content }} />
               </div>
             )}
           </div>
 
           {/* SEO & Metadata Section */}
-          <div className="p-5 rounded-2xl border border-purple-100 dark:border-purple-900/40 bg-purple-50/30 dark:bg-[#2A0344]/30 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[#3C0561] dark:text-white flex items-center gap-1.5">
+          <div className="p-5 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-[#F4F4F5]/30 dark:bg-[#18181B]/30 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B] dark:text-white flex items-center gap-1.5">
               <span>🔍</span> SEO &amp; Social Graph Settings
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-purple-300 mb-1">
+                <label className="block text-xs font-bold text-slate-500 dark:text-zinc-400 mb-1">
                   Meta Title ({seoTitle.length}/60 chars)
                 </label>
                 <input
@@ -816,12 +816,12 @@ export default function PageEditorModal({
                   value={seoTitle}
                   onChange={(e) => setSeoTitle(e.target.value)}
                   placeholder="e.g. Sustainability Mission | ApexStore"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-[#1E0230] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#09090B] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#25D366]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 dark:text-purple-300 mb-1">
+                <label className="block text-xs font-bold text-slate-500 dark:text-zinc-400 mb-1">
                   Open Graph (OG) Image URL
                 </label>
                 <input
@@ -829,13 +829,13 @@ export default function PageEditorModal({
                   value={ogImage}
                   onChange={(e) => setOgImage(e.target.value)}
                   placeholder="https://..."
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-[#1E0230] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2]"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#09090B] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#25D366]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-500 dark:text-purple-300 mb-1">
+              <label className="block text-xs font-bold text-slate-500 dark:text-zinc-400 mb-1">
                 Meta Description ({seoDescription.length}/160 chars)
               </label>
               <textarea
@@ -843,14 +843,14 @@ export default function PageEditorModal({
                 onChange={(e) => setSeoDescription(e.target.value)}
                 rows={2}
                 placeholder="Summary snippet displayed in search engine results and social card previews..."
-                className="w-full px-3.5 py-2 text-xs rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-[#1E0230] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#960DF2] resize-none"
+                className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#09090B] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#25D366] resize-none"
               />
             </div>
           </div>
 
           {/* Visibility, Navigation & Access Level Toggles */}
-          <div className="p-5 rounded-2xl border border-purple-100 dark:border-purple-900/40 bg-purple-50/30 dark:bg-[#2A0344]/30 space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[#3C0561] dark:text-white">
+          <div className="p-5 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-[#F4F4F5]/30 dark:bg-[#18181B]/30 space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B] dark:text-white">
               Navigation &amp; Access Controls
             </h3>
 
@@ -881,11 +881,11 @@ export default function PageEditorModal({
 
               {/* Access Level */}
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-500 dark:text-purple-300">Access:</span>
+                <span className="text-xs font-bold text-slate-500 dark:text-zinc-400">Access:</span>
                 <select
                   value={accessLevel}
                   onChange={(e) => setAccessLevel(e.target.value as "public" | "auth")}
-                  className="px-2 py-1 text-xs font-bold rounded-lg border border-purple-200 dark:border-purple-800 bg-white dark:bg-[#1E0230] text-slate-900 dark:text-white"
+                  className="px-2 py-1 text-xs font-bold rounded-lg border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#09090B] text-slate-900 dark:text-white"
                 >
                   <option value="public">Public</option>
                   <option value="auth">Logged-in only</option>
@@ -896,12 +896,12 @@ export default function PageEditorModal({
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-purple-100 dark:border-purple-900/40 bg-purple-50/50 dark:bg-[#2A0344]/50">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-[#E4E4E7] dark:border-zinc-800/40 bg-[#F4F4F5]/50 dark:bg-[#18181B]/50">
           <button
             type="button"
             onClick={onClose}
             disabled={isSaving}
-            className="px-4 py-2 text-xs font-bold rounded-xl border border-purple-200 dark:border-purple-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-purple-900/40 transition"
+            className="px-4 py-2 text-xs font-bold rounded-xl border border-[#E4E4E7] dark:border-zinc-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#18181B]/40 transition"
           >
             Cancel
           </button>
@@ -911,7 +911,7 @@ export default function PageEditorModal({
               type="button"
               onClick={() => handleSave(false)}
               disabled={isSaving}
-              className="px-4 py-2 text-xs font-bold rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-[#1E0230] text-slate-700 dark:text-slate-300 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition disabled:opacity-50"
+              className="px-4 py-2 text-xs font-bold rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#09090B] text-slate-700 dark:text-slate-300 hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/40 transition disabled:opacity-50"
             >
               Save as Draft
             </button>
@@ -919,7 +919,7 @@ export default function PageEditorModal({
               type="button"
               onClick={() => handleSave(true)}
               disabled={isSaving}
-              className="px-5 py-2 text-xs font-bold rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white shadow-md shadow-purple-500/20 transition disabled:opacity-50"
+              className="px-5 py-2 text-xs font-bold rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white shadow-md shadow-[#25D366]/20 transition disabled:opacity-50"
             >
               {isSaving ? "Saving..." : "Publish Page"}
             </button>

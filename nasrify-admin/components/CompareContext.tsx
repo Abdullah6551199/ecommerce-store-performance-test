@@ -136,10 +136,10 @@ export function CompareProvider({ children }: { children: React.ReactNode }): Re
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-24 right-5 z-50 flex items-center gap-2.5 rounded-xl border border-purple-300 dark:border-purple-600 bg-white/95 dark:bg-[#3C0561]/95 px-4 py-3 shadow-2xl backdrop-blur-md transition-all animate-in fade-in slide-in-from-bottom-5 text-xs font-semibold text-zinc-900 dark:text-white"
+          className="fixed bottom-24 right-5 z-50 flex items-center gap-2.5 rounded-xl border border-[#E4E4E7] dark:border-[#1EA855] bg-white/95 dark:bg-[#18181B]/95 px-4 py-3 shadow-2xl backdrop-blur-md transition-all animate-in fade-in slide-in-from-bottom-5 text-xs font-semibold text-zinc-900 dark:text-white"
         >
           {toast.type === "success" && (
-            <svg className="h-4 w-4 text-[#960DF2] dark:text-[#C06EF7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="h-4 w-4 text-[#25D366] dark:text-[#1EA855]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           )}
@@ -149,7 +149,7 @@ export function CompareProvider({ children }: { children: React.ReactNode }): Re
             </svg>
           )}
           {toast.type === "info" && (
-            <svg className="h-4 w-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           )}

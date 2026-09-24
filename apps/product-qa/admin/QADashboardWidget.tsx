@@ -30,7 +30,7 @@ export default function QADashboardWidget(): React.JSX.Element {
       {/* Header */}
       <div className="flex items-center justify-between pb-4 border-b border-zinc-100 dark:border-white/5">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/40 text-[#25D366] dark:text-zinc-400">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -48,7 +48,7 @@ export default function QADashboardWidget(): React.JSX.Element {
 
         <Link
           href="/admin/product-qa"
-          className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline"
+          className="text-xs font-semibold text-[#25D366] dark:text-zinc-400 hover:underline"
         >
           View all &rarr;
         </Link>
@@ -78,7 +78,7 @@ export default function QADashboardWidget(): React.JSX.Element {
           <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider block">
             Answers
           </span>
-          <span className="text-xl font-bold text-purple-600 dark:text-purple-400 mt-0.5 block">
+          <span className="text-xl font-bold text-[#25D366] dark:text-zinc-400 mt-0.5 block">
             {loading ? "..." : stats?.totalAnswers ?? 0}
           </span>
         </div>
@@ -111,7 +111,7 @@ export default function QADashboardWidget(): React.JSX.Element {
                     <p className="text-[10px] text-zinc-400 truncate">{q.productName}</p>
                   )}
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0 text-[11px] font-semibold text-purple-600 dark:text-purple-400">
+                <div className="flex items-center gap-1.5 shrink-0 text-[11px] font-semibold text-[#25D366] dark:text-zinc-400">
                   <span>👍 {q.upvoteCount}</span>
                   <span className="text-zinc-300 dark:text-zinc-600">•</span>
                   <span className="text-zinc-500">💬 {q.answerCount}</span>

@@ -34,9 +34,9 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
   const defaultVariantId = product.variants?.[0]?.id || null;
 
   return (
-    <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-purple-200/60 dark:border-purple-800/40 bg-white dark:bg-[#5A0891]/85 p-3.5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-purple-400 dark:hover:border-purple-600 hover:shadow-xl hover:shadow-purple-500/15 text-zinc-900 dark:text-white">
+    <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-[#E4E4E7]/60 dark:border-zinc-800/40 bg-white dark:bg-[#15803D]/85 p-3.5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-[#25D366] dark:hover:border-[#1EA855] hover:shadow-xl hover:shadow-[#25D366]/20 text-zinc-900 dark:text-white">
       {/* 1. Image Container (1:1 Square) */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-purple-50/40 dark:bg-purple-950/40">
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#F4F4F5]/40 dark:bg-[#18181B]/40">
         <Link
           href={`/product/${product.slug}`}
           prefetch={false}
@@ -53,8 +53,8 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center bg-purple-50 dark:bg-purple-950/20 text-center p-4">
-              <svg className="h-8 w-8 text-purple-300 dark:text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex h-full w-full flex-col items-center justify-center bg-[#F4F4F5] dark:bg-[#18181B]/20 text-center p-4">
+              <svg className="h-8 w-8 text-zinc-400 dark:text-[#25D366]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -62,7 +62,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
                   d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <span className="mt-1 text-[10px] text-purple-400">No Image</span>
+              <span className="mt-1 text-[10px] text-zinc-400">No Image</span>
             </div>
           )}
         </Link>
@@ -70,7 +70,7 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
         {/* Top Badges (Top-Left) */}
         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 items-start z-10 pointer-events-none">
           {hasSale && (
-            <span className="rounded-full bg-[#960DF2] text-white px-2 py-0.5 text-[10px] font-bold shadow-md tracking-wider">
+            <span className="rounded-full bg-[#25D366] text-white px-2 py-0.5 text-[10px] font-bold shadow-md tracking-wider">
               -{discountPercent}%
             </span>
           )}
@@ -125,16 +125,16 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
             <div className="flex items-center text-amber-400">
               {"★".repeat(5)}
             </div>
-            <span className="font-semibold text-zinc-700 dark:text-purple-200 text-[11px]">
+            <span className="font-semibold text-zinc-700 dark:text-zinc-300 text-[11px]">
               {product.averageRating ? Number(product.averageRating).toFixed(1) : "4.9"}
             </span>
-            <span className="text-zinc-400 dark:text-purple-300/60 text-[10px]">
+            <span className="text-zinc-400 dark:text-zinc-400/60 text-[10px]">
               ({product.reviewCount !== undefined && product.reviewCount !== null ? product.reviewCount : 12})
             </span>
           </div>
 
           {/* Product Title (Truncated to 2 lines) */}
-          <h3 className="mt-1 text-xs sm:text-sm font-bold text-[#3C0561] dark:text-white group-hover:text-[#960DF2] dark:group-hover:text-[#C06EF7] transition-colors line-clamp-2 leading-snug">
+          <h3 className="mt-1 text-xs sm:text-sm font-bold text-[#18181B] dark:text-white group-hover:text-[#25D366] dark:group-hover:text-[#1EA855] transition-colors line-clamp-2 leading-snug">
             <Link href={`/product/${product.slug}`} prefetch={false}>
               {product.name}
             </Link>
@@ -142,19 +142,19 @@ export default function ProductCard({ product, isPriority = false }: ProductCard
         </div>
 
         {/* Price Row */}
-        <div className="pt-2 border-t border-purple-100 dark:border-purple-800/40 flex items-center justify-between">
+        <div className="pt-2 border-t border-[#E4E4E7] dark:border-zinc-800/40 flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             {hasSale ? (
               <>
-                <span className="text-sm sm:text-base font-extrabold text-[#960DF2] dark:text-[#C06EF7]">
+                <span className="text-sm sm:text-base font-extrabold text-[#25D366] dark:text-[#1EA855]">
                   ${Number(product.salePrice).toFixed(2)}
                 </span>
-                <span className="text-xs text-zinc-400 dark:text-purple-300/50 line-through">
+                <span className="text-xs text-zinc-400 dark:text-zinc-400/50 line-through">
                   ${Number(product.price).toFixed(2)}
                 </span>
               </>
             ) : (
-              <span className="text-sm sm:text-base font-extrabold text-[#3C0561] dark:text-white">
+              <span className="text-sm sm:text-base font-extrabold text-[#18181B] dark:text-white">
                 ${Number(product.price).toFixed(2)}
               </span>
             )}

@@ -70,23 +70,23 @@ export default function MobileStickyCartBar({
     <div
       role="region"
       aria-label="Sticky Add to Cart Bar"
-      className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#3C0561]/95 backdrop-blur-md border-t border-purple-100 dark:border-purple-700 px-4 py-3 shadow-2xl flex items-center justify-between gap-3 animate-in slide-in-from-bottom-5 duration-200"
+      className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-[#18181B]/95 backdrop-blur-md border-t border-[#E4E4E7] dark:border-zinc-700 px-4 py-3 shadow-2xl flex items-center justify-between gap-3 animate-in slide-in-from-bottom-5 duration-200"
     >
       <div className="flex items-center gap-2.5 min-w-0 flex-1">
         {imageUrl ? (
-          <div className="relative h-11 w-11 shrink-0 rounded-xl overflow-hidden border border-purple-200 dark:border-purple-700/60 bg-purple-50">
+          <div className="relative h-11 w-11 shrink-0 rounded-xl overflow-hidden border border-[#E4E4E7] dark:border-zinc-700/60 bg-[#F4F4F5]">
             <Image src={imageUrl} alt={productName} fill className="object-cover" />
           </div>
         ) : (
-          <div className="h-11 w-11 shrink-0 rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-xs font-bold text-purple-600">
+          <div className="h-11 w-11 shrink-0 rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/40 flex items-center justify-center text-xs font-bold text-[#25D366]">
             AP
           </div>
         )}
         <div className="min-w-0">
-          <h3 className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC] truncate">
+          <h3 className="text-xs font-bold text-[#18181B] dark:text-[#DCFCE7] truncate">
             {productName}
           </h3>
-          <p className="text-sm font-black text-purple-600 dark:text-purple-300">
+          <p className="text-sm font-black text-[#25D366] dark:text-zinc-400">
             ${effectivePrice.toFixed(2)}
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function MobileStickyCartBar({
         type="button"
         onClick={handleAddToCart}
         disabled={isOutOfStock || isAdding}
-        className="shrink-0 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-purple-400 hover:bg-purple-500 disabled:opacity-40 transition-all shadow-md shadow-purple-500/25 active:scale-95 cursor-pointer"
+        className="shrink-0 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-[#25D366] hover:bg-[#25D366] disabled:opacity-40 transition-all shadow-md shadow-[#25D366]/20 active:scale-95 cursor-pointer"
       >
         {isAdding ? "Adding..." : isOutOfStock ? "Sold Out" : "Add to Cart"}
       </button>

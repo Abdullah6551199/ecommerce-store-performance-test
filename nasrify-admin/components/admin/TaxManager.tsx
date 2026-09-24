@@ -309,7 +309,7 @@ export default function TaxManager(): React.JSX.Element {
         <div
           className={`fixed top-4 right-4 z-50 rounded-2xl border px-5 py-3 text-xs font-bold shadow-2xl backdrop-blur-md transition-all ${
             feedback.type === "success"
-              ? "border-purple-500/40 bg-purple-950/90 text-purple-100"
+              ? "border-[#25D366]/40 bg-[#18181B]/90 text-zinc-200"
               : "border-red-500/40 bg-red-950/90 text-red-100"
           }`}
         >
@@ -318,15 +318,15 @@ export default function TaxManager(): React.JSX.Element {
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 dark:border-purple-800/60 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E4E4E7] dark:border-zinc-800/60 pb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#3C0561] dark:text-[#EACFFC] flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#18181B] dark:text-[#DCFCE7] flex items-center gap-2.5">
             <span>Tax Management</span>
-            <span className="rounded-full bg-purple-100 dark:bg-purple-900/60 px-3 py-0.5 text-xs font-mono font-bold text-purple-700 dark:text-purple-300">
+            <span className="rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/60 px-3 py-0.5 text-xs font-mono font-bold text-[#1EA855] dark:text-zinc-400">
               {rates.length} Rates
             </span>
           </h1>
-          <p className="text-xs text-purple-700/80 dark:text-purple-300/80 mt-1">
+          <p className="text-xs text-[#1EA855]/80 dark:text-zinc-400/80 mt-1">
             Configure global tax settings, country-specific rates, and Cloudflare visitor IP detection.
           </p>
         </div>
@@ -335,7 +335,7 @@ export default function TaxManager(): React.JSX.Element {
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 text-xs font-bold shadow-lg shadow-purple-600/25 transition-all cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-5 py-2.5 text-xs font-bold shadow-lg shadow-[#25D366]/20 transition-all cursor-pointer"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -346,16 +346,16 @@ export default function TaxManager(): React.JSX.Element {
       </div>
 
       {/* 1. Global Tax Settings Card */}
-      <div className="rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-6 shadow-sm space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-purple-100 dark:border-purple-800/40 pb-4">
+      <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#18181B]/20 p-6 shadow-sm space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E4E4E7] dark:border-zinc-800/40 pb-4">
           <div>
-            <h2 className="text-base font-bold text-[#3C0561] dark:text-[#EACFFC]">Global Tax Settings</h2>
-            <p className="text-xs text-purple-700/80 dark:text-purple-300/80">
+            <h2 className="text-base font-bold text-[#18181B] dark:text-[#DCFCE7]">Global Tax Settings</h2>
+            <p className="text-xs text-[#1EA855]/80 dark:text-zinc-400/80">
               Controls whether tax calculation is enabled store-wide and default behavior.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${settingsForm.isEnabled ? "bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-200" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"}`}>
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${settingsForm.isEnabled ? "bg-[#DCFCE7] text-[#15803D] dark:bg-[#18181B]/60 dark:text-zinc-300" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"}`}>
               {settingsForm.isEnabled ? "Tax Enabled" : "Tax Disabled"}
             </span>
           </div>
@@ -363,10 +363,10 @@ export default function TaxManager(): React.JSX.Element {
 
         <form onSubmit={handleSaveSettings} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Enabled Toggle */}
-          <div className="flex items-center justify-between p-3.5 rounded-xl border border-purple-100 dark:border-purple-800/50 bg-purple-50/40 dark:bg-purple-950/30">
+          <div className="flex items-center justify-between p-3.5 rounded-xl border border-[#E4E4E7] dark:border-zinc-800/50 bg-[#F4F4F5]/40 dark:bg-[#18181B]/30">
             <div>
-              <p className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">Enable Tax</p>
-              <p className="text-[10px] text-purple-600/70 dark:text-purple-300/70">Show tax at checkout</p>
+              <p className="text-xs font-bold text-[#18181B] dark:text-[#DCFCE7]">Enable Tax</p>
+              <p className="text-[10px] text-[#25D366]/70 dark:text-zinc-400/70">Show tax at checkout</p>
             </div>
             <Toggle
               size="sm"
@@ -377,10 +377,10 @@ export default function TaxManager(): React.JSX.Element {
           </div>
 
           {/* Apply to Shipping Toggle */}
-          <div className="flex items-center justify-between p-3.5 rounded-xl border border-purple-100 dark:border-purple-800/50 bg-purple-50/40 dark:bg-purple-950/30">
+          <div className="flex items-center justify-between p-3.5 rounded-xl border border-[#E4E4E7] dark:border-zinc-800/50 bg-[#F4F4F5]/40 dark:bg-[#18181B]/30">
             <div>
-              <p className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">Tax on Shipping</p>
-              <p className="text-[10px] text-purple-600/70 dark:text-purple-300/70">Apply tax to shipping fees</p>
+              <p className="text-xs font-bold text-[#18181B] dark:text-[#DCFCE7]">Tax on Shipping</p>
+              <p className="text-[10px] text-[#25D366]/70 dark:text-zinc-400/70">Apply tax to shipping fees</p>
             </div>
             <Toggle
               size="sm"
@@ -392,7 +392,7 @@ export default function TaxManager(): React.JSX.Element {
 
           {/* Default Label */}
           <div>
-            <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+            <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
               Default Tax Label
             </label>
             <input
@@ -400,13 +400,13 @@ export default function TaxManager(): React.JSX.Element {
               value={settingsForm.defaultLabel}
               onChange={(e) => setSettingsForm({ ...settingsForm, defaultLabel: e.target.value })}
               placeholder="e.g. Sales Tax, GST"
-              className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+              className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/50 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
             />
           </div>
 
           {/* Default Rate & Tax Type */}
           <div>
-            <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+            <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
               Default Fallback Rate (%)
             </label>
             <div className="flex gap-2">
@@ -417,12 +417,12 @@ export default function TaxManager(): React.JSX.Element {
                 max="100"
                 value={settingsForm.defaultRate}
                 onChange={(e) => setSettingsForm({ ...settingsForm, defaultRate: parseFloat(e.target.value) || 0 })}
-                className="w-24 rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                className="w-24 rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/50 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
               />
               <select
                 value={settingsForm.defaultTaxType}
                 onChange={(e) => setSettingsForm({ ...settingsForm, defaultTaxType: e.target.value as any })}
-                className="flex-1 rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/50 px-2 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                className="flex-1 rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/50 px-2 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
               >
                 <option value="exclusive">Exclusive</option>
                 <option value="inclusive">Inclusive</option>
@@ -430,7 +430,7 @@ export default function TaxManager(): React.JSX.Element {
               <button
                 type="submit"
                 disabled={isSavingSettings}
-                className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 text-xs font-bold transition-all shadow-sm cursor-pointer disabled:opacity-50 shrink-0"
+                className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-3 py-2 text-xs font-bold transition-all shadow-sm cursor-pointer disabled:opacity-50 shrink-0"
               >
                 {isSavingSettings ? "Saving..." : "Save"}
               </button>
@@ -440,11 +440,11 @@ export default function TaxManager(): React.JSX.Element {
       </div>
 
       {/* 2. Quick Preset Buttons Bar */}
-      <div className="rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-4 shadow-sm">
+      <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#18181B]/20 p-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">Quick Pre-set Tax Rates</p>
-            <p className="text-[11px] text-purple-600/70 dark:text-purple-300/70">
+            <p className="text-xs font-bold text-[#18181B] dark:text-[#DCFCE7]">Quick Pre-set Tax Rates</p>
+            <p className="text-[11px] text-[#25D366]/70 dark:text-zinc-400/70">
               One-click install standard official tax rates for common countries.
             </p>
           </div>
@@ -452,35 +452,35 @@ export default function TaxManager(): React.JSX.Element {
             <button
               type="button"
               onClick={() => handleLoadPreset("PK")}
-              className="rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/40 hover:bg-purple-100 dark:hover:bg-purple-800/60 px-3 py-1.5 text-xs font-bold text-purple-900 dark:text-purple-100 transition-colors cursor-pointer"
+              className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5] dark:bg-[#18181B]/40 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]/60 px-3 py-1.5 text-xs font-bold text-[#18181B] dark:text-zinc-200 transition-colors cursor-pointer"
             >
               🇵🇰 Pakistan (17% GST)
             </button>
             <button
               type="button"
               onClick={() => handleLoadPreset("IN")}
-              className="rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/40 hover:bg-purple-100 dark:hover:bg-purple-800/60 px-3 py-1.5 text-xs font-bold text-purple-900 dark:text-purple-100 transition-colors cursor-pointer"
+              className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5] dark:bg-[#18181B]/40 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]/60 px-3 py-1.5 text-xs font-bold text-[#18181B] dark:text-zinc-200 transition-colors cursor-pointer"
             >
               🇮🇳 India (18% GST)
             </button>
             <button
               type="button"
               onClick={() => handleLoadPreset("US")}
-              className="rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/40 hover:bg-purple-100 dark:hover:bg-purple-800/60 px-3 py-1.5 text-xs font-bold text-purple-900 dark:text-purple-100 transition-colors cursor-pointer"
+              className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5] dark:bg-[#18181B]/40 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]/60 px-3 py-1.5 text-xs font-bold text-[#18181B] dark:text-zinc-200 transition-colors cursor-pointer"
             >
               🇺🇸 USA (State-based)
             </button>
             <button
               type="button"
               onClick={() => handleLoadPreset("GB")}
-              className="rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/40 hover:bg-purple-100 dark:hover:bg-purple-800/60 px-3 py-1.5 text-xs font-bold text-purple-900 dark:text-purple-100 transition-colors cursor-pointer"
+              className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5] dark:bg-[#18181B]/40 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]/60 px-3 py-1.5 text-xs font-bold text-[#18181B] dark:text-zinc-200 transition-colors cursor-pointer"
             >
               🇬🇧 UK (20% VAT)
             </button>
             <button
               type="button"
               onClick={() => handleLoadPreset("AE")}
-              className="rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/40 hover:bg-purple-100 dark:hover:bg-purple-800/60 px-3 py-1.5 text-xs font-bold text-purple-900 dark:text-purple-100 transition-colors cursor-pointer"
+              className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5] dark:bg-[#18181B]/40 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]/60 px-3 py-1.5 text-xs font-bold text-[#18181B] dark:text-zinc-200 transition-colors cursor-pointer"
             >
               🇦🇪 UAE (5% VAT)
             </button>
@@ -489,7 +489,7 @@ export default function TaxManager(): React.JSX.Element {
       </div>
 
       {/* 3. Filter & Bulk Actions Bar */}
-      <div className="rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
+      <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#18181B]/20 p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
         <div className="flex flex-1 flex-col sm:flex-row gap-3 w-full">
           {/* Search */}
           <div className="relative flex-1">
@@ -498,10 +498,10 @@ export default function TaxManager(): React.JSX.Element {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by country, state, city, label..."
-              className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/30 dark:bg-purple-950/40 px-3.5 py-2 pl-9 text-xs font-medium text-zinc-900 dark:text-white placeholder-purple-400 focus:outline-none focus:border-purple-500"
+              className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/30 dark:bg-[#18181B]/40 px-3.5 py-2 pl-9 text-xs font-medium text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-[#25D366]"
             />
             <svg
-              className="absolute left-3 top-2.5 h-4 w-4 text-purple-400"
+              className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -514,7 +514,7 @@ export default function TaxManager(): React.JSX.Element {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as any)}
-            className="rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+            className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/50 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
           >
             <option value="all">All Statuses</option>
             <option value="active">Active Only</option>
@@ -525,7 +525,7 @@ export default function TaxManager(): React.JSX.Element {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+            className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/50 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
           >
             <option value="country_asc">Country (A-Z)</option>
             <option value="country_desc">Country (Z-A)</option>
@@ -536,14 +536,14 @@ export default function TaxManager(): React.JSX.Element {
 
         {/* Bulk Action Controls */}
         {selectedIds.length > 0 && (
-          <div className="flex items-center gap-2 shrink-0 bg-purple-100 dark:bg-purple-900/40 px-3 py-1.5 rounded-xl border border-purple-200 dark:border-purple-700">
-            <span className="text-xs font-bold text-purple-900 dark:text-purple-200">
+          <div className="flex items-center gap-2 shrink-0 bg-[#DCFCE7] dark:bg-[#18181B]/40 px-3 py-1.5 rounded-xl border border-[#E4E4E7] dark:border-zinc-700">
+            <span className="text-xs font-bold text-[#18181B] dark:text-zinc-300">
               {selectedIds.length} selected
             </span>
             <button
               type="button"
               onClick={() => handleBulkToggle(true)}
-              className="text-[11px] font-bold text-purple-700 dark:text-purple-300 hover:underline cursor-pointer"
+              className="text-[11px] font-bold text-[#1EA855] dark:text-zinc-400 hover:underline cursor-pointer"
             >
               Enable
             </button>
@@ -551,7 +551,7 @@ export default function TaxManager(): React.JSX.Element {
             <button
               type="button"
               onClick={() => handleBulkToggle(false)}
-              className="text-[11px] font-bold text-purple-700 dark:text-purple-300 hover:underline cursor-pointer"
+              className="text-[11px] font-bold text-[#1EA855] dark:text-zinc-400 hover:underline cursor-pointer"
             >
               Disable
             </button>
@@ -568,17 +568,17 @@ export default function TaxManager(): React.JSX.Element {
       </div>
 
       {/* 4. Tax Rates Table */}
-      <div className="overflow-hidden rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#18181B]/20 shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-purple-100 dark:border-purple-800/60 bg-purple-50/50 dark:bg-purple-950/40 text-[11px] font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300">
+            <thead className="border-b border-[#E4E4E7] dark:border-zinc-800/60 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 text-[11px] font-bold uppercase tracking-wider text-[#1EA855] dark:text-zinc-400">
               <tr>
                 <th className="p-4 w-10 text-center">
                   <input
                     type="checkbox"
                     checked={selectedIds.length === rates.length && rates.length > 0}
                     onChange={handleSelectAll}
-                    className="w-3.5 h-3.5 rounded text-purple-600 focus:ring-purple-500 border-purple-300"
+                    className="w-3.5 h-3.5 rounded text-[#25D366] focus:ring-[#25D366] border-[#E4E4E7]"
                   />
                 </th>
                 <th className="py-4 px-3">Country</th>
@@ -591,17 +591,17 @@ export default function TaxManager(): React.JSX.Element {
                 <th className="py-4 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-purple-100 dark:divide-purple-800/40 text-zinc-900 dark:text-zinc-100">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 dark:divide-zinc-200 dark:divide-zinc-800 text-zinc-900 dark:text-zinc-100">
               {isLoading ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-xs text-purple-600 dark:text-purple-300">
-                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-purple-500 border-t-transparent mx-auto mb-2" />
+                  <td colSpan={9} className="py-12 text-center text-xs text-[#25D366] dark:text-zinc-400">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#25D366] border-t-transparent mx-auto mb-2" />
                     Loading tax rates...
                   </td>
                 </tr>
               ) : rates.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-xs text-purple-600/70 dark:text-purple-300/70">
+                  <td colSpan={9} className="py-12 text-center text-xs text-[#25D366]/70 dark:text-zinc-400/70">
                     No tax rates found matching your filters.
                   </td>
                 </tr>
@@ -611,8 +611,8 @@ export default function TaxManager(): React.JSX.Element {
                   return (
                     <tr
                       key={rate.id}
-                      className={`hover:bg-purple-50/40 dark:hover:bg-purple-900/20 transition-colors ${
-                        isChecked ? "bg-purple-50/60 dark:bg-purple-900/30" : ""
+                      className={`hover:bg-[#F4F4F5]/40 dark:hover:bg-[#18181B]/20 transition-colors ${
+                        isChecked ? "bg-[#F4F4F5]/60 dark:bg-[#18181B]/30" : ""
                       }`}
                     >
                       <td className="p-4 text-center">
@@ -626,13 +626,13 @@ export default function TaxManager(): React.JSX.Element {
                               setSelectedIds((prev) => prev.filter((id) => id !== rate.id));
                             }
                           }}
-                          className="w-3.5 h-3.5 rounded text-purple-600 focus:ring-purple-500 border-purple-300"
+                          className="w-3.5 h-3.5 rounded text-[#25D366] focus:ring-[#25D366] border-[#E4E4E7]"
                         />
                       </td>
 
                       {/* Country */}
                       <td className="py-4 px-3 font-bold flex items-center gap-1.5">
-                        <span className="font-mono bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded text-[11px] text-purple-800 dark:text-purple-200">
+                        <span className="font-mono bg-[#DCFCE7] dark:bg-[#18181B]/60 px-2 py-0.5 rounded text-[11px] text-[#15803D] dark:text-zinc-300">
                           {rate.country}
                         </span>
                         <span className="text-zinc-600 dark:text-zinc-400 font-normal">
@@ -643,7 +643,7 @@ export default function TaxManager(): React.JSX.Element {
                       {/* State */}
                       <td className="py-4 px-3 font-mono text-[11px]">
                         {rate.state ? (
-                          <span className="bg-purple-50 dark:bg-purple-950/60 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300">
+                          <span className="bg-[#F4F4F5] dark:bg-[#18181B]/60 px-2 py-0.5 rounded border border-[#E4E4E7] dark:border-zinc-800 text-[#1EA855] dark:text-zinc-400">
                             {rate.state}
                           </span>
                         ) : (
@@ -657,7 +657,7 @@ export default function TaxManager(): React.JSX.Element {
                       </td>
 
                       {/* Rate */}
-                      <td className="py-4 px-3 font-mono font-bold text-sm text-[#3C0561] dark:text-[#EACFFC]">
+                      <td className="py-4 px-3 font-mono font-bold text-sm text-[#18181B] dark:text-[#DCFCE7]">
                         {Number(rate.rate).toFixed(2)}%
                       </td>
 
@@ -672,7 +672,7 @@ export default function TaxManager(): React.JSX.Element {
                           className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             rate.taxType === "inclusive"
                               ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
-                              : "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
+                              : "bg-[#DCFCE7] text-[#1EA855] dark:bg-[#18181B]/40 dark:text-zinc-400"
                           }`}
                         >
                           {rate.taxType === "inclusive" ? "Inclusive" : "Exclusive"}
@@ -686,13 +686,13 @@ export default function TaxManager(): React.JSX.Element {
                           onClick={() => handleToggleActive(rate)}
                           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold cursor-pointer transition-colors ${
                             rate.isActive
-                              ? "bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-200 hover:opacity-80"
+                              ? "bg-[#DCFCE7] text-[#15803D] dark:bg-[#18181B]/60 dark:text-zinc-300 hover:opacity-80"
                               : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:opacity-80"
                           }`}
                         >
                           <span
                             className={`h-1.5 w-1.5 rounded-full ${
-                              rate.isActive ? "bg-purple-600 dark:bg-purple-400" : "bg-zinc-400"
+                              rate.isActive ? "bg-[#25D366] dark:bg-[#25D366]" : "bg-zinc-400"
                             }`}
                           />
                           <span>{rate.isActive ? "Active" : "Inactive"}</span>
@@ -704,7 +704,7 @@ export default function TaxManager(): React.JSX.Element {
                         <button
                           type="button"
                           onClick={() => handleOpenEdit(rate)}
-                          className="text-xs font-bold text-purple-600 dark:text-purple-300 hover:underline cursor-pointer"
+                          className="text-xs font-bold text-[#25D366] dark:text-zinc-400 hover:underline cursor-pointer"
                         >
                           Edit
                         </button>
@@ -729,9 +729,9 @@ export default function TaxManager(): React.JSX.Element {
       {/* 5. Add / Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg rounded-2xl border border-purple-100 dark:border-purple-800 bg-white dark:bg-[#200434] p-6 sm:p-8 shadow-2xl space-y-6">
-            <div className="flex items-center justify-between border-b border-purple-100 dark:border-purple-800/60 pb-4">
-              <h2 className="text-lg font-bold text-[#3C0561] dark:text-[#EACFFC]">
+          <div className="relative w-full max-w-lg rounded-2xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#200434] p-6 sm:p-8 shadow-2xl space-y-6">
+            <div className="flex items-center justify-between border-b border-[#E4E4E7] dark:border-zinc-800/60 pb-4">
+              <h2 className="text-lg font-bold text-[#18181B] dark:text-[#DCFCE7]">
                 {editingRate ? "Edit Tax Rate" : "Add New Tax Rate"}
               </h2>
               <button
@@ -748,13 +748,13 @@ export default function TaxManager(): React.JSX.Element {
             <form onSubmit={handleSaveRate} className="space-y-4">
               {/* Country */}
               <div>
-                <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+                <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
                   Country <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={rateForm.country}
                   onChange={(e) => setRateForm({ ...rateForm, country: e.target.value })}
-                  className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                 >
                   {COMMON_COUNTRIES.map((c) => (
                     <option key={c.code} value={c.code}>
@@ -767,14 +767,14 @@ export default function TaxManager(): React.JSX.Element {
 
               {/* State */}
               <div>
-                <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
-                  State / Province Code <span className="text-purple-400 font-normal">(Optional)</span>
+                <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
+                  State / Province Code <span className="text-zinc-400 font-normal">(Optional)</span>
                 </label>
                 {rateForm.country === "US" ? (
                   <select
                     value={rateForm.state}
                     onChange={(e) => setRateForm({ ...rateForm, state: e.target.value })}
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   >
                     <option value="">All US States (Federal / Default)</option>
                     {US_STATES.map((st) => (
@@ -789,29 +789,29 @@ export default function TaxManager(): React.JSX.Element {
                     value={rateForm.state}
                     onChange={(e) => setRateForm({ ...rateForm, state: e.target.value })}
                     placeholder="e.g. CA, NY, Sindh, Punjab"
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   />
                 )}
               </div>
 
               {/* City */}
               <div>
-                <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
-                  City <span className="text-purple-400 font-normal">(Optional for local tax)</span>
+                <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
+                  City <span className="text-zinc-400 font-normal">(Optional for local tax)</span>
                 </label>
                 <input
                   type="text"
                   value={rateForm.city}
                   onChange={(e) => setRateForm({ ...rateForm, city: e.target.value })}
                   placeholder="e.g. Karachi, New York, London"
-                  className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                 />
               </div>
 
               {/* Rate & Label grid */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
                     Tax Percentage (%) <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -823,12 +823,12 @@ export default function TaxManager(): React.JSX.Element {
                     value={rateForm.rate}
                     onChange={(e) => setRateForm({ ...rateForm, rate: parseFloat(e.target.value) || 0 })}
                     placeholder="17.0"
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
                     Display Label <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -837,7 +837,7 @@ export default function TaxManager(): React.JSX.Element {
                     value={rateForm.label}
                     onChange={(e) => setRateForm({ ...rateForm, label: e.target.value })}
                     placeholder="e.g. GST, VAT, Sales Tax"
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   />
                 </div>
               </div>
@@ -845,20 +845,20 @@ export default function TaxManager(): React.JSX.Element {
               {/* Tax Type & Active */}
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div>
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
                     Tax Type
                   </label>
                   <select
                     value={rateForm.taxType}
                     onChange={(e) => setRateForm({ ...rateForm, taxType: e.target.value as any })}
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   >
                     <option value="exclusive">Exclusive (Added to subtotal)</option>
                     <option value="inclusive">Inclusive (Included in product price)</option>
                   </select>
                 </div>
 
-                <div className="p-3 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 mt-3">
+                <div className="p-3 rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 mt-3">
                   <Toggle
                     size="sm"
                     checked={rateForm.isActive}
@@ -869,18 +869,18 @@ export default function TaxManager(): React.JSX.Element {
               </div>
 
               {/* Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-purple-100 dark:border-purple-800/60">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E4E4E7] dark:border-zinc-800/60">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-xl border border-purple-200 dark:border-purple-700 px-4 py-2.5 text-xs font-bold text-zinc-700 dark:text-zinc-300 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors cursor-pointer"
+                  className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 px-4 py-2.5 text-xs font-bold text-zinc-700 dark:text-zinc-300 hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/40 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSavingRate}
-                  className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 text-xs font-bold shadow-lg shadow-purple-600/25 transition-all cursor-pointer disabled:opacity-50"
+                  className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-5 py-2.5 text-xs font-bold shadow-lg shadow-[#25D366]/20 transition-all cursor-pointer disabled:opacity-50"
                 >
                   {isSavingRate ? "Saving..." : editingRate ? "Update Tax Rate" : "Create Tax Rate"}
                 </button>

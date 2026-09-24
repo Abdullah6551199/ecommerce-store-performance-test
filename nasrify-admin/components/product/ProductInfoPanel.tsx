@@ -20,9 +20,9 @@ const COLOR_HEX_MAP: Record<string, string> = {
   crimson: "#DC2626",
   blue: "#3B82F6",
   navy: "#1E3A8A",
-  purple: "#960DF2",
-  lavender: "#EACFFC",
-  violet: "#780AC2",
+  purple: "#25D366",
+  lavender: "#DCFCE7",
+  violet: "#1EA855",
   green: "#10B981",
   olive: "#556B2F",
   gold: "#F59E0B",
@@ -268,43 +268,43 @@ export default function ProductInfoPanel({
             </span>
           ))}
         </div>
-        <span className="font-extrabold text-sm text-purple-600 dark:text-purple-300">
+        <span className="font-extrabold text-sm text-[#25D366] dark:text-zinc-400">
           {Number(averageRating).toFixed(1)}
         </span>
-        <span className="text-zinc-300 dark:text-purple-800">•</span>
+        <span className="text-zinc-300 dark:text-[#15803D]">•</span>
         <button
           type="button"
           onClick={handleScrollToReviews}
-          className="text-xs font-semibold text-purple-600 dark:text-purple-300 hover:text-purple-800 dark:hover:text-purple-100 hover:underline cursor-pointer"
+          className="text-xs font-semibold text-[#25D366] dark:text-zinc-400 hover:text-[#15803D] dark:hover:text-zinc-200 hover:underline cursor-pointer"
         >
           ({reviewCount} reviews)
         </button>
         {brand && (
-          <span className="ml-auto inline-block rounded-full bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700/60 px-2.5 py-0.5 text-[11px] font-bold text-purple-700 dark:text-[#EACFFC] uppercase tracking-wider">
+          <span className="ml-auto inline-block rounded-full bg-[#F4F4F5] dark:bg-[#18181B]/30 border border-[#E4E4E7] dark:border-zinc-700/60 px-2.5 py-0.5 text-[11px] font-bold text-[#1EA855] dark:text-[#DCFCE7] uppercase tracking-wider">
             {brand}
           </span>
         )}
       </div>
 
       {/* 2. Product Title */}
-      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#3C0561] dark:text-[#EACFFC] leading-tight">
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#18181B] dark:text-[#DCFCE7] leading-tight">
         {productName}
       </h1>
 
       {/* 3. Price Block */}
-      <div className="flex flex-wrap items-baseline gap-2 pt-1 border-b border-purple-100 dark:border-purple-800/40 pb-4">
-        <span className="text-3xl sm:text-4xl font-black text-purple-600 dark:text-purple-300">
+      <div className="flex flex-wrap items-baseline gap-2 pt-1 border-b border-[#E4E4E7] dark:border-zinc-800/40 pb-4">
+        <span className="text-3xl sm:text-4xl font-black text-[#25D366] dark:text-zinc-400">
           ${effectivePrice.toFixed(2)}
         </span>
 
         {strikethroughPrice && strikethroughPrice > effectivePrice && (
-          <span className="text-lg sm:text-xl text-purple-400 dark:text-purple-200/60 line-through font-mono">
+          <span className="text-lg sm:text-xl text-zinc-400 dark:text-zinc-300/60 line-through font-mono">
             ${strikethroughPrice.toFixed(2)}
           </span>
         )}
 
         {discountPercent > 0 && (
-          <span className="inline-flex items-center rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-200 px-2.5 py-0.5 text-xs font-bold border border-purple-200 dark:border-purple-700">
+          <span className="inline-flex items-center rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/40 text-[#1EA855] dark:text-zinc-300 px-2.5 py-0.5 text-xs font-bold border border-[#E4E4E7] dark:border-zinc-700">
             Save ${savingsAmount} ({discountPercent}%)
           </span>
         )}
@@ -312,13 +312,13 @@ export default function ProductInfoPanel({
 
       {/* 4. Short Description */}
       {shortDescription && (
-        <p className="text-sm text-purple-700 dark:text-purple-200 line-clamp-3 leading-relaxed">
+        <p className="text-sm text-[#1EA855] dark:text-zinc-300 line-clamp-3 leading-relaxed">
           {shortDescription}
         </p>
       )}
 
       {/* 5. Trust Badges Row */}
-      <div className="grid grid-cols-3 gap-2 py-3 px-3.5 rounded-2xl bg-purple-50/60 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-800/50 text-xs text-purple-600 dark:text-purple-200">
+      <div className="grid grid-cols-3 gap-2 py-3 px-3.5 rounded-2xl bg-[#F4F4F5]/60 dark:bg-[#18181B]/40 border border-[#E4E4E7] dark:border-zinc-800/50 text-xs text-[#25D366] dark:text-zinc-300">
         <div className="flex items-center gap-2">
           <span className="text-base">🚚</span>
           <span className="font-semibold leading-tight">Free Shipping</span>
@@ -343,11 +343,11 @@ export default function ProductInfoPanel({
             return (
               <div key={attrName} className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="text-[#3C0561] dark:text-[#EACFFC]">
-                    {attrName}: <span className="font-bold text-purple-600 dark:text-purple-300">{currentVal}</span>
+                  <span className="text-[#18181B] dark:text-[#DCFCE7]">
+                    {attrName}: <span className="font-bold text-[#25D366] dark:text-zinc-400">{currentVal}</span>
                   </span>
                   {activeVariant && isColor && (
-                    <span className="text-[11px] font-mono text-purple-400">SKU: {activeVariant.sku}</span>
+                    <span className="text-[11px] font-mono text-zinc-400">SKU: {activeVariant.sku}</span>
                   )}
                 </div>
 
@@ -356,7 +356,7 @@ export default function ProductInfoPanel({
                   <div className="flex flex-wrap gap-2.5 items-center">
                     {optionValues.map((val) => {
                       const isSelected = currentVal === val;
-                      const hexColor = COLOR_HEX_MAP[val.toLowerCase()] || "#960DF2";
+                      const hexColor = COLOR_HEX_MAP[val.toLowerCase()] || "#25D366";
 
                       return (
                         <button
@@ -365,7 +365,7 @@ export default function ProductInfoPanel({
                           onClick={() => handleSelectOption(attrName, val)}
                           className={`group relative h-9 w-9 rounded-full transition-all cursor-pointer flex items-center justify-center ${
                             isSelected
-                              ? "ring-2 ring-purple-400 ring-offset-2 dark:ring-offset-[#3C0561] scale-110 shadow-md"
+                              ? "ring-2 ring-[#25D366] ring-offset-2 dark:ring-offset-[#18181B] scale-110 shadow-md"
                               : "hover:scale-105 opacity-85 hover:opacity-100"
                           }`}
                           title={`Color: ${val}`}
@@ -399,10 +399,10 @@ export default function ProductInfoPanel({
                           onClick={() => handleSelectOption(attrName, val)}
                           className={`min-h-[42px] min-w-[48px] px-3.5 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                             isSelected
-                              ? "bg-purple-400 text-white border-purple-400 shadow-md shadow-purple-500/25 scale-105"
+                              ? "bg-[#25D366] text-white border-[#25D366] shadow-md shadow-[#25D366]/20 scale-105"
                               : isComboOutOfStock
                               ? "opacity-40 cursor-not-allowed line-through bg-zinc-100 dark:bg-white/5 border-zinc-200 dark:border-white/10 text-zinc-400 dark:text-white/30"
-                              : "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-200 dark:border-purple-700 hover:border-purple-400 hover:bg-purple-100"
+                              : "bg-[#F4F4F5] text-[#1EA855] border-[#E4E4E7] dark:bg-[#18181B]/30 dark:text-zinc-300 dark:border-zinc-700 hover:border-[#25D366] hover:bg-[#DCFCE7]"
                           }`}
                         >
                           {val}
@@ -419,31 +419,31 @@ export default function ProductInfoPanel({
 
       {/* 7. Quantity Selector */}
       <div className="flex items-center gap-3 pt-2">
-        <span className="text-xs font-bold text-[#3C0561] dark:text-[#EACFFC]">Quantity:</span>
-        <div className="flex items-center rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/50 p-1">
+        <span className="text-xs font-bold text-[#18181B] dark:text-[#DCFCE7]">Quantity:</span>
+        <div className="flex items-center rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/50 p-1">
           <button
             type="button"
             disabled={quantity <= 1 || isOutOfStock}
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-purple-700 dark:text-purple-200 hover:bg-purple-200/50 dark:hover:bg-purple-800/50 disabled:opacity-30 transition cursor-pointer font-bold"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-[#1EA855] dark:text-zinc-300 hover:bg-[#DCFCE7]/50 dark:hover:bg-[#15803D]/50 disabled:opacity-30 transition cursor-pointer font-bold"
             aria-label="Decrease quantity"
           >
             -
           </button>
-          <span className="w-10 text-center text-sm font-bold text-[#3C0561] dark:text-white">
+          <span className="w-10 text-center text-sm font-bold text-[#18181B] dark:text-white">
             {quantity}
           </span>
           <button
             type="button"
             disabled={isOutOfStock || quantity >= remainingStock}
             onClick={() => setQuantity((q) => q + 1)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-purple-700 dark:text-purple-200 hover:bg-purple-200/50 dark:hover:bg-purple-800/50 disabled:opacity-30 transition cursor-pointer font-bold"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-[#1EA855] dark:text-zinc-300 hover:bg-[#DCFCE7]/50 dark:hover:bg-[#15803D]/50 disabled:opacity-30 transition cursor-pointer font-bold"
             aria-label="Increase quantity"
           >
             +
           </button>
         </div>
-        <span className="text-xs text-purple-400 font-mono">
+        <span className="text-xs text-zinc-400 font-mono">
           {remainingStock > 0 ? `(${remainingStock} available)` : "Out of stock"}
         </span>
       </div>
@@ -454,7 +454,7 @@ export default function ProductInfoPanel({
           type="button"
           onClick={handleAddToCart}
           disabled={isOutOfStock || isAdding}
-          className="w-full inline-flex items-center justify-center gap-2 py-4 px-8 rounded-xl text-lg font-bold text-white bg-purple-400 hover:bg-purple-500 active:scale-[0.98] shadow-lg shadow-purple-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          className="w-full inline-flex items-center justify-center gap-2 py-4 px-8 rounded-xl text-lg font-bold text-white bg-[#25D366] hover:bg-[#25D366] active:scale-[0.98] shadow-lg shadow-[#25D366]/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
           {isAdding ? (
             <span>Adding to Cart...</span>
@@ -474,7 +474,7 @@ export default function ProductInfoPanel({
           type="button"
           onClick={handleBuyNow}
           disabled={isOutOfStock || isBuyingNow}
-          className="w-full inline-flex items-center justify-center gap-2 py-4 px-8 rounded-xl text-lg font-bold text-white bg-[#3C0561] hover:bg-[#5A0891] active:scale-[0.98] shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          className="w-full inline-flex items-center justify-center gap-2 py-4 px-8 rounded-xl text-lg font-bold text-white bg-[#18181B] hover:bg-[#15803D] active:scale-[0.98] shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
           {isBuyingNow ? <span>Preparing Checkout...</span> : <span>Buy Now</span>}
         </button>
@@ -486,7 +486,7 @@ export default function ProductInfoPanel({
       </div>
 
       {/* 9. Wishlist, Compare & Share Row */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-purple-100 dark:border-purple-800/40">
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#E4E4E7] dark:border-zinc-800/40">
         <button
           type="button"
           onClick={() =>
@@ -501,7 +501,7 @@ export default function ProductInfoPanel({
           className={`inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-xl border transition-all cursor-pointer ${
             inWishlist
               ? "border-rose-400 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400"
-              : "border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-200 hover:border-purple-400"
+              : "border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/30 text-[#1EA855] dark:text-zinc-300 hover:border-[#25D366]"
           }`}
         >
           <svg
@@ -520,7 +520,7 @@ export default function ProductInfoPanel({
         <button
           type="button"
           onClick={handleShare}
-          className="inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-200 hover:border-purple-400 transition-all cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/30 text-[#1EA855] dark:text-zinc-300 hover:border-[#25D366] transition-all cursor-pointer"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -530,7 +530,7 @@ export default function ProductInfoPanel({
       </div>
 
       {/* 10. Social Proof & Urgency */}
-      <div className="space-y-1.5 pt-1 text-xs text-purple-600 dark:text-purple-200">
+      <div className="space-y-1.5 pt-1 text-xs text-[#25D366] dark:text-zinc-300">
         <div className="flex items-center gap-2">
           <span>🔥</span>
           <span className="font-semibold">{viewerCount} people viewing this right now</span>

@@ -81,7 +81,7 @@ export default function ContactForm(): React.JSX.Element {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Alex Mercer"
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#25D366]"
           />
         </div>
 
@@ -95,7 +95,7 @@ export default function ContactForm(): React.JSX.Element {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="alex@example.com"
-            className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#25D366]"
           />
         </div>
       </div>
@@ -109,7 +109,7 @@ export default function ContactForm(): React.JSX.Element {
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
           placeholder="Order Inquiry, Sizing Advice, Partnership..."
-          className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#25D366]"
         />
       </div>
 
@@ -123,14 +123,14 @@ export default function ContactForm(): React.JSX.Element {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="How can our technical support and athletic team assist you today?"
-          className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-y"
+          className="w-full px-4 py-2.5 text-sm rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#25D366] resize-y"
         />
       </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full sm:w-auto px-6 py-3 rounded-xl bg-purple-400 hover:bg-purple-500 text-white font-bold text-sm shadow-md shadow-purple-500/20 transition-all disabled:opacity-50 cursor-pointer"
+        className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#25D366] text-white font-bold text-sm shadow-md shadow-[#25D366]/20 transition-all disabled:opacity-50 cursor-pointer"
       >
         {isSubmitting ? "Sending Message..." : "Send Message"}
       </button>

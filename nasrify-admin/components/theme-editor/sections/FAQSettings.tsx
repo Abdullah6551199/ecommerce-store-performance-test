@@ -50,7 +50,7 @@ export function FAQSettings({ settings, onChange }: FAQSettingsProps) {
           type="text"
           value={heading}
           onChange={(e) => onChange({ heading: e.target.value })}
-          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
         />
       </div>
 
@@ -59,7 +59,7 @@ export function FAQSettings({ settings, onChange }: FAQSettingsProps) {
         <select
           value={variant}
           onChange={(e) => onChange({ variant: e.target.value })}
-          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
         >
           <option value="accordion">Accordion</option>
           <option value="simple">Simple</option>
@@ -74,7 +74,7 @@ export function FAQSettings({ settings, onChange }: FAQSettingsProps) {
             type="button"
             onClick={addItem}
             disabled={items.length >= 20}
-            className="text-[11px] text-indigo-400 hover:text-indigo-300 disabled:opacity-50"
+            className="text-[11px] text-[#25D366] hover:text-emerald-300 disabled:opacity-50"
           >
             + Add FAQ
           </button>
@@ -99,7 +99,7 @@ export function FAQSettings({ settings, onChange }: FAQSettingsProps) {
                 placeholder="Question"
                 value={item.question}
                 onChange={(e) => updateItem(idx, { question: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-200 focus:outline-none focus:border-[#25D366]"
               />
 
               <textarea
@@ -107,7 +107,7 @@ export function FAQSettings({ settings, onChange }: FAQSettingsProps) {
                 placeholder="Answer"
                 value={item.answer}
                 onChange={(e) => updateItem(idx, { answer: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-200 focus:outline-none focus:border-[#25D366]"
               />
             </div>
           ))}

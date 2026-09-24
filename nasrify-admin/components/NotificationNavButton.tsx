@@ -53,7 +53,7 @@ function getNotificationIcon(type: string) {
       );
     case "coupon":
       return (
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-500">
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#25D366]/10 text-[#25D366]">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
           </svg>
@@ -61,7 +61,7 @@ function getNotificationIcon(type: string) {
       );
     default:
       return (
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-300">
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#25D366]/10 text-[#25D366] dark:text-zinc-400">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
@@ -182,7 +182,7 @@ export default function NotificationNavButton(): React.JSX.Element {
       <button
         type="button"
         onClick={handleToggle}
-        className="relative flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-purple-300/60 dark:border-white/10 bg-white/50 dark:bg-white/5 text-[#3C0561] dark:text-white/70 hover:text-[#960DF2] dark:hover:text-white hover:border-purple-400/60 hover:bg-white/80 dark:hover:bg-white/10 transition-all shadow-sm"
+        className="relative flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-xl border border-[#E4E4E7]/60 dark:border-white/10 bg-white/50 dark:bg-white/5 text-[#18181B] dark:text-white/70 hover:text-[#25D366] dark:hover:text-white hover:border-[#25D366]/60 hover:bg-white/80 dark:hover:bg-white/10 transition-all shadow-sm"
         title="Notifications"
         aria-label={`Notifications, ${unreadCount} unread`}
       >
@@ -203,7 +203,7 @@ export default function NotificationNavButton(): React.JSX.Element {
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-zinc-900 dark:text-white">Notifications</span>
               {unreadCount > 0 && (
-                <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold text-purple-600 dark:text-purple-300">
+                <span className="rounded-full bg-[#25D366]/20 px-2 py-0.5 text-[10px] font-bold text-[#25D366] dark:text-zinc-400">
                   {unreadCount} new
                 </span>
               )}
@@ -212,7 +212,7 @@ export default function NotificationNavButton(): React.JSX.Element {
               <button
                 type="button"
                 onClick={handleMarkAllRead}
-                className="text-[11px] font-semibold text-purple-600 dark:text-purple-400 hover:underline cursor-pointer"
+                className="text-[11px] font-semibold text-[#25D366] dark:text-zinc-400 hover:underline cursor-pointer"
               >
                 Mark all read
               </button>
@@ -222,7 +222,7 @@ export default function NotificationNavButton(): React.JSX.Element {
           <div className="max-h-80 overflow-y-auto divide-y divide-zinc-100 dark:divide-white/5">
             {loading ? (
               <div className="p-6 text-center text-xs text-zinc-500">
-                <svg className="w-5 h-5 mx-auto mb-2 animate-spin text-purple-500" fill="none" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 mx-auto mb-2 animate-spin text-[#25D366]" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                 </svg>
@@ -241,7 +241,7 @@ export default function NotificationNavButton(): React.JSX.Element {
                   key={notif.id}
                   onClick={() => handleNotificationClick(notif)}
                   className={`flex items-start gap-3 p-3 text-left transition-colors cursor-pointer hover:bg-zinc-50 dark:hover:bg-white/5 ${
-                    !notif.isRead ? "bg-purple-500/5 dark:bg-purple-500/10" : ""
+                    !notif.isRead ? "bg-[#25D366]/5 dark:bg-[#25D366]/10" : ""
                   }`}
                 >
                   <div className="shrink-0 mt-0.5">{getNotificationIcon(notif.type)}</div>
@@ -251,7 +251,7 @@ export default function NotificationNavButton(): React.JSX.Element {
                         {notif.title}
                       </p>
                       {!notif.isRead && (
-                        <span className="h-2 w-2 rounded-full bg-purple-500 shrink-0" />
+                        <span className="h-2 w-2 rounded-full bg-[#25D366] shrink-0" />
                       )}
                     </div>
                     <p className="text-[11px] text-zinc-600 dark:text-zinc-400 line-clamp-2">
@@ -270,7 +270,7 @@ export default function NotificationNavButton(): React.JSX.Element {
             <Link
               href="/account/notifications"
               onClick={() => setIsOpen(false)}
-              className="block w-full py-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline"
+              className="block w-full py-1.5 text-xs font-bold text-[#25D366] dark:text-zinc-400 hover:underline"
             >
               View All Notifications &rarr;
             </Link>

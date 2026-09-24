@@ -221,7 +221,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
       <div className="rounded-3xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-300 shrink-0">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-zinc-400 shrink-0">
               <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
@@ -265,7 +265,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
                 type="button"
                 onClick={() => handleInstallToggle(true)}
                 disabled={actionLoading}
-                className="rounded-xl bg-purple-600 hover:bg-purple-700 px-5 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-50 transition-all"
+                className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-5 py-2 text-xs font-bold text-white shadow-sm disabled:opacity-50 transition-all"
               >
                 {actionLoading ? "Installing..." : "Install App"}
               </button>
@@ -289,7 +289,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
             onClick={() => setActiveTab("settings")}
             className={`pb-3 text-xs font-bold transition-all border-b-2 ${
               activeTab === "settings"
-                ? "border-purple-600 text-purple-600 dark:text-purple-300"
+                ? "border-[#1EA855] text-[#25D366] dark:text-zinc-400"
                 : "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-white/60 dark:hover:text-white"
             }`}
           >
@@ -300,7 +300,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
             onClick={() => setActiveTab("overview")}
             className={`pb-3 text-xs font-bold transition-all border-b-2 ${
               activeTab === "overview"
-                ? "border-purple-600 text-purple-600 dark:text-purple-300"
+                ? "border-[#1EA855] text-[#25D366] dark:text-zinc-400"
                 : "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-white/60 dark:hover:text-white"
             }`}
           >
@@ -311,7 +311,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
             onClick={() => setActiveTab("logs")}
             className={`pb-3 text-xs font-bold transition-all border-b-2 ${
               activeTab === "logs"
-                ? "border-purple-600 text-purple-600 dark:text-purple-300"
+                ? "border-[#1EA855] text-[#25D366] dark:text-zinc-400"
                 : "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-white/60 dark:hover:text-white"
             }`}
           >
@@ -355,7 +355,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
                 type="button"
                 onClick={() => handleInstallToggle(true)}
                 disabled={actionLoading}
-                className="mt-2 rounded-xl bg-purple-600 hover:bg-purple-700 px-4 py-2 text-xs font-bold text-white shadow-sm transition-all"
+                className="mt-2 rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-4 py-2 text-xs font-bold text-white shadow-sm transition-all"
               >
                 Install Now
               </button>
@@ -400,7 +400,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
                             type="number"
                             value={value ?? ""}
                             onChange={(e) => handleFieldChange(key, parseFloat(e.target.value))}
-                            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
                           />
                         )}
 
@@ -410,7 +410,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
                             type="text"
                             value={value ?? ""}
                             onChange={(e) => handleFieldChange(key, e.target.value)}
-                            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
                           />
                         )}
 
@@ -419,7 +419,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
                           <select
                             value={value ?? ""}
                             onChange={(e) => handleFieldChange(key, e.target.value)}
-                            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-1.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
                           >
                             {(prop.options || []).map((opt: any) => {
                               const label = typeof opt === "string" ? opt : opt.label;
@@ -445,7 +445,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-xl bg-purple-600 hover:bg-purple-700 px-6 py-2.5 text-xs font-bold text-white shadow-sm disabled:opacity-50 transition-all cursor-pointer"
+                  className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-6 py-2.5 text-xs font-bold text-white shadow-sm disabled:opacity-50 transition-all cursor-pointer"
                 >
                   {saving ? "Saving Settings..." : "Save Settings"}
                 </button>
@@ -487,7 +487,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
                   {manifest.permissions.map((p) => (
                     <span
                       key={p}
-                      className="rounded-md bg-purple-50 dark:bg-purple-950/40 px-2 py-0.5 font-mono text-[10px] text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/40"
+                      className="rounded-md bg-[#F4F4F5] dark:bg-[#18181B]/40 px-2 py-0.5 font-mono text-[10px] text-[#1EA855] dark:text-zinc-400 border border-[#E4E4E7] dark:border-zinc-800/40"
                     >
                       {p}
                     </span>

@@ -77,7 +77,7 @@ export function TopBar({
             title="Desktop view (100%)"
             className={`p-1.5 rounded-md text-xs transition-colors ${
               device === "desktop"
-                ? "bg-slate-800 text-indigo-400 shadow-sm"
+                ? "bg-slate-800 text-[#25D366] shadow-sm"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
@@ -92,7 +92,7 @@ export function TopBar({
             title="Tablet view (768px)"
             className={`p-1.5 rounded-md text-xs transition-colors ${
               device === "tablet"
-                ? "bg-slate-800 text-indigo-400 shadow-sm"
+                ? "bg-slate-800 text-[#25D366] shadow-sm"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
@@ -107,7 +107,7 @@ export function TopBar({
             title="Mobile view (375px)"
             className={`p-1.5 rounded-md text-xs transition-colors ${
               device === "mobile"
-                ? "bg-slate-800 text-indigo-400 shadow-sm"
+                ? "bg-slate-800 text-[#25D366] shadow-sm"
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
@@ -150,7 +150,7 @@ export function TopBar({
         {/* Status indicator */}
         <div className="hidden sm:flex items-center text-[11px] text-slate-400 mr-1">
           {isSaving ? (
-            <span className="flex items-center gap-1.5 text-indigo-400">
+            <span className="flex items-center gap-1.5 text-[#25D366]">
               <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -198,7 +198,7 @@ export function TopBar({
           <button
             type="button"
             onClick={onOpenPublishModal}
-            className="px-3 py-1.5 rounded-l-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-colors flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-l-lg bg-[#25D366] hover:bg-[#25D366] text-white text-xs font-medium transition-colors flex items-center gap-1.5"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -209,7 +209,7 @@ export function TopBar({
           <button
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
-            className="px-1.5 py-1.5 rounded-r-lg bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-medium border-l border-indigo-500/40 transition-colors"
+            className="px-1.5 py-1.5 rounded-r-lg bg-[#1EA855] hover:bg-[#25D366] text-white text-xs font-medium border-l border-[#25D366]/40 transition-colors"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

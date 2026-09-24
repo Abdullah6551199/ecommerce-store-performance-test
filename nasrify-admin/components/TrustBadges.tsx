@@ -47,7 +47,7 @@ export default function TrustBadges({
         {Array.from({ length: limit || 4 }).map((_, i) => (
           <div
             key={i}
-            className="h-16 rounded-xl bg-purple-50/60 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-800/40"
+            className="h-16 rounded-xl bg-[#F4F4F5]/60 dark:bg-[#18181B]/40 border border-[#E4E4E7] dark:border-zinc-800/40"
           />
         ))}
       </div>
@@ -65,17 +65,17 @@ export default function TrustBadges({
         {displayBadges.map((badge) => (
           <div
             key={badge.id}
-            className="flex items-center gap-2 rounded-xl border border-purple-100 dark:border-purple-800/60 bg-purple-50/40 dark:bg-purple-950/30 p-2.5 transition-all hover:border-purple-300 dark:hover:border-purple-700"
+            className="flex items-center gap-2 rounded-xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-[#F4F4F5]/40 dark:bg-[#18181B]/30 p-2.5 transition-all hover:border-[#E4E4E7] dark:hover:border-zinc-700"
           >
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#960DF2]/10 dark:bg-[#960DF2]/20 text-[#960DF2] dark:text-[#EACFFC]">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20 text-[#25D366] dark:text-[#DCFCE7]">
               <LucideIcon name={badge.icon} className="h-4 w-4" />
             </div>
             <div className="min-w-0 flex-1">
-              <h4 className="text-[11px] font-bold text-[#3C0561] dark:text-white truncate">
+              <h4 className="text-[11px] font-bold text-[#18181B] dark:text-white truncate">
                 {badge.title}
               </h4>
               {badge.description && (
-                <p className="text-[9px] text-[#5A0891]/70 dark:text-[#EACFFC]/70 truncate">
+                <p className="text-[9px] text-[#15803D]/70 dark:text-[#DCFCE7]/70 truncate">
                   {badge.description}
                 </p>
               )}
@@ -95,18 +95,18 @@ export default function TrustBadges({
       {displayBadges.map((badge) => (
         <div
           key={badge.id}
-          className="group relative flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-2.5 rounded-xl border border-purple-100/80 dark:border-purple-800/60 bg-purple-50/50 dark:bg-[#3C0561]/20 p-2.5 sm:p-3 shadow-xs transition-all hover:border-[#960DF2]/40 hover:bg-purple-50/80 dark:hover:bg-[#3C0561]/40"
+          className="group relative flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-2.5 rounded-xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-[#F4F4F5]/50 dark:bg-[#18181B]/20 p-2.5 sm:p-3 shadow-xs transition-all hover:border-[#25D366]/40 hover:bg-[#F4F4F5]/80 dark:hover:bg-[#18181B]/40"
         >
-          <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] shadow-xs group-hover:scale-105 transition-transform">
+          <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7] shadow-xs group-hover:scale-105 transition-transform">
             <LucideIcon name={badge.icon} className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
           </div>
 
           <div className="min-w-0 flex-1">
-            <h4 className="text-xs font-bold text-[#3C0561] dark:text-white tracking-tight leading-tight">
+            <h4 className="text-xs font-bold text-[#18181B] dark:text-white tracking-tight leading-tight">
               {badge.title}
             </h4>
             {badge.description && (
-              <p className="mt-0.5 text-[10px] text-[#5A0891]/80 dark:text-[#EACFFC]/70 leading-snug">
+              <p className="mt-0.5 text-[10px] text-[#15803D]/80 dark:text-[#DCFCE7]/70 leading-snug">
                 {badge.description}
               </p>
             )}

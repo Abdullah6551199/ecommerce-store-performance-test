@@ -337,9 +337,9 @@ export async function updateThemeSettings(
 export function generateThemeCss(theme: ThemeSettings): string {
   const shadowMap = {
     none: "none",
-    soft: "0 10px 25px -5px rgba(150, 13, 242, 0.12), 0 8px 10px -6px rgba(150, 13, 242, 0.08)",
-    medium: "0 15px 30px -5px rgba(150, 13, 242, 0.18), 0 10px 15px -5px rgba(120, 10, 194, 0.12)",
-    intense: "0 20px 40px -6px rgba(150, 13, 242, 0.25), 0 0 25px 0px rgba(150, 13, 242, 0.15)",
+    soft: "0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)",
+    medium: "0 15px 30px -5px rgba(0, 0, 0, 0.12), 0 10px 15px -5px rgba(0, 0, 0, 0.06)",
+    intense: "0 20px 40px -6px rgba(0, 0, 0, 0.18), 0 0 25px 0px rgba(0, 0, 0, 0.08)",
   };
 
   return `

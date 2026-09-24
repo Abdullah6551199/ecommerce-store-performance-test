@@ -37,7 +37,7 @@ export default function ProductShowcase({
 
   return (
     <div
-      className="rounded-3xl bg-white dark:bg-[#3C0561] shadow-lg shadow-purple-100/50 dark:shadow-purple-900/30 p-6 md:p-8 border border-purple-100 dark:border-purple-700"
+      className="rounded-3xl bg-white dark:bg-[#18181B] shadow-lg shadow-[#25D366]/20 dark:shadow-[#25D366]/20 p-6 md:p-8 border border-[#E4E4E7] dark:border-zinc-700"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Left Column (7 cols on lg): Thumbnails & Main Image with Walmart Hover Zoom */}

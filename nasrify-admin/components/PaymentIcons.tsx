@@ -117,7 +117,7 @@ export function StandardPaymentSvg({ name }: { name: string }): React.JSX.Elemen
 
   // Generic fallback badge
   return (
-    <div className="flex h-6 min-w-[36px] items-center justify-center rounded px-2 text-[10px] font-bold bg-white dark:bg-[#3C0561] text-[#3C0561] dark:text-[#EACFFC] border border-purple-200 dark:border-purple-700/60 shadow-xs">
+    <div className="flex h-6 min-w-[36px] items-center justify-center rounded px-2 text-[10px] font-bold bg-white dark:bg-[#18181B] text-[#18181B] dark:text-[#DCFCE7] border border-[#E4E4E7] dark:border-zinc-700/60 shadow-xs">
       {name}
     </div>
   );

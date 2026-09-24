@@ -296,7 +296,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#960DF2] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#25D366] border-t-transparent" />
       </div>
     );
   }
@@ -307,7 +307,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-            <span className="text-[#960DF2]">🛡️</span> Trust Badges & Payment Icons
+            <span className="text-[#25D366]">🛡️</span> Trust Badges & Payment Icons
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Configure trust seals, security guarantees, and accepted payment icons.
@@ -316,7 +316,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
         <div className="flex items-center gap-2">
           <button
             onClick={openAddBadge}
-            className="flex items-center gap-1.5 rounded-xl bg-[#960DF2] px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-[#7907C7] transition-colors"
+            className="flex items-center gap-1.5 rounded-xl bg-[#25D366] px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-[#1EA855] transition-colors"
           >
             <LucideIcon name="plus" className="h-4 w-4" /> Add Trust Badge
           </button>
@@ -342,7 +342,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
           onClick={() => setActiveTab("badges")}
           className={`px-5 py-2.5 text-sm font-bold transition-colors border-b-2 ${
             activeTab === "badges"
-              ? "border-[#960DF2] text-[#960DF2]"
+              ? "border-[#25D366] text-[#25D366]"
               : "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white"
           }`}
         >
@@ -352,7 +352,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
           onClick={() => setActiveTab("payment")}
           className={`px-5 py-2.5 text-sm font-bold transition-colors border-b-2 ${
             activeTab === "payment"
-              ? "border-[#960DF2] text-[#960DF2]"
+              ? "border-[#25D366] text-[#25D366]"
               : "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white"
           }`}
         >
@@ -362,7 +362,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
           onClick={() => setActiveTab("settings")}
           className={`px-5 py-2.5 text-sm font-bold transition-colors border-b-2 ${
             activeTab === "settings"
-              ? "border-[#960DF2] text-[#960DF2]"
+              ? "border-[#25D366] text-[#25D366]"
               : "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white"
           }`}
         >
@@ -372,7 +372,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
           onClick={() => setActiveTab("preview")}
           className={`px-5 py-2.5 text-sm font-bold transition-colors border-b-2 ${
             activeTab === "preview"
-              ? "border-[#960DF2] text-[#960DF2]"
+              ? "border-[#25D366] text-[#25D366]"
               : "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white"
           }`}
         >
@@ -395,7 +395,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
                   className="flex items-center justify-between p-4 hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/40 text-[#960DF2]">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/40 text-[#25D366]">
                       <LucideIcon name={badge.icon} className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
@@ -403,7 +403,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
                         <h3 className="font-bold text-gray-900 dark:text-white truncate">
                           {badge.title}
                         </h3>
-                        <span className="rounded-full bg-purple-50 dark:bg-purple-950/40 px-2 py-0.5 text-[10px] font-bold text-[#960DF2] border border-purple-200 dark:border-purple-800">
+                        <span className="rounded-full bg-[#F4F4F5] dark:bg-[#18181B]/40 px-2 py-0.5 text-[10px] font-bold text-[#25D366] border border-[#E4E4E7] dark:border-zinc-800">
                           {badge.location}
                         </span>
                       </div>
@@ -555,7 +555,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
                   onChange={(e) =>
                     setSettings({ ...settings, showOnProductPage: e.target.checked })
                   }
-                  className="h-4 w-4 rounded text-[#960DF2]"
+                  className="h-4 w-4 rounded text-[#25D366]"
                 />
                 <span className="text-sm font-semibold">Show on Product Page</span>
               </label>
@@ -567,7 +567,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
                   onChange={(e) =>
                     setSettings({ ...settings, showOnCartPage: e.target.checked })
                   }
-                  className="h-4 w-4 rounded text-[#960DF2]"
+                  className="h-4 w-4 rounded text-[#25D366]"
                 />
                 <span className="text-sm font-semibold">Show on Shopping Cart Page</span>
               </label>
@@ -579,7 +579,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
                   onChange={(e) =>
                     setSettings({ ...settings, showOnCheckoutPage: e.target.checked })
                   }
-                  className="h-4 w-4 rounded text-[#960DF2]"
+                  className="h-4 w-4 rounded text-[#25D366]"
                 />
                 <span className="text-sm font-semibold">Show on Checkout Page</span>
               </label>
@@ -591,7 +591,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
                   onChange={(e) =>
                     setSettings({ ...settings, showPaymentIcons: e.target.checked })
                   }
-                  className="h-4 w-4 rounded text-[#960DF2]"
+                  className="h-4 w-4 rounded text-[#25D366]"
                 />
                 <span className="text-sm font-semibold">Show Payment Icons Row</span>
               </label>
@@ -643,7 +643,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-[#960DF2] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#7907C7] transition-colors"
+            className="rounded-xl bg-[#25D366] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#1EA855] transition-colors"
           >
             {saving ? "Saving Settings..." : "Save Settings"}
           </button>
@@ -654,9 +654,9 @@ export default function TrustBadgesManager(): React.JSX.Element {
       {activeTab === "preview" && (
         <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 space-y-6">
           <h3 className="font-bold text-gray-900 dark:text-white">Storefront Live Preview</h3>
-          <div className="rounded-xl border border-purple-100 dark:border-purple-900/30 p-6 bg-purple-50/20 dark:bg-purple-950/10 space-y-6">
+          <div className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800/30 p-6 bg-[#F4F4F5]/20 dark:bg-[#18181B]/10 space-y-6">
             <div>
-              <span className="text-xs font-bold text-purple-700 dark:text-purple-300 block mb-2">
+              <span className="text-xs font-bold text-[#1EA855] dark:text-zinc-400 block mb-2">
                 Standard Card Layout (Product / Cart):
               </span>
               <div
@@ -674,9 +674,9 @@ export default function TrustBadgesManager(): React.JSX.Element {
                   .map((badge) => (
                     <div
                       key={badge.id}
-                      className="flex items-center gap-3 rounded-2xl border border-purple-100/80 dark:border-purple-900/30 bg-white/80 dark:bg-gray-900/80 p-3 shadow-xs backdrop-blur-xs"
+                      className="flex items-center gap-3 rounded-2xl border border-[#E4E4E7]/80 dark:border-zinc-800/30 bg-white/80 dark:bg-gray-900/80 p-3 shadow-xs backdrop-blur-xs"
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-950/50 text-[#960DF2]">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F4F4F5] dark:bg-[#18181B]/50 text-[#25D366]">
                         <LucideIcon name={badge.icon} className="h-4.5 w-4.5" />
                       </div>
                       <div className="min-w-0">
@@ -692,7 +692,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
               </div>
             </div>
             <div>
-              <span className="text-xs font-bold text-purple-700 dark:text-purple-300 block mb-2">
+              <span className="text-xs font-bold text-[#1EA855] dark:text-zinc-400 block mb-2">
                 Compact Layout (Checkout):
               </span>
               <div className="flex flex-wrap items-center gap-3">
@@ -702,9 +702,9 @@ export default function TrustBadgesManager(): React.JSX.Element {
                   .map((badge) => (
                     <div
                       key={badge.id}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-purple-100 dark:border-purple-900/40 bg-purple-50/50 dark:bg-purple-950/30 px-3 py-1 text-xs font-semibold text-purple-900 dark:text-purple-200"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[#E4E4E7] dark:border-zinc-800/40 bg-[#F4F4F5]/50 dark:bg-[#18181B]/30 px-3 py-1 text-xs font-semibold text-[#18181B] dark:text-zinc-300"
                     >
-                      <LucideIcon name={badge.icon} className="h-3.5 w-3.5 text-[#960DF2]" />
+                      <LucideIcon name={badge.icon} className="h-3.5 w-3.5 text-[#25D366]" />
                       <span>{badge.title}</span>
                     </div>
                   ))}
@@ -786,7 +786,7 @@ export default function TrustBadgesManager(): React.JSX.Element {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-xl bg-[#960DF2] px-4 py-2 text-sm font-bold text-white hover:bg-[#7907C7]"
+                  className="rounded-xl bg-[#25D366] px-4 py-2 text-sm font-bold text-white hover:bg-[#1EA855]"
                 >
                   {saving ? "Saving..." : "Save Badge"}
                 </button>

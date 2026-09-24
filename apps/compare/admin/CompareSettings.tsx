@@ -111,7 +111,7 @@ export default function CompareSettingsComponent({ className = "" }: Props): Rea
               onChange={(e) =>
                 setSettings((s) => ({ ...s, maxProducts: parseInt(e.target.value, 10) || 4 }))
               }
-              className="w-full accent-purple-600"
+              className="w-full accent-[#25D366]"
             />
             <div className="flex justify-between text-[11px] text-zinc-500 dark:text-white/50">
               <span>2 products</span>
@@ -132,7 +132,7 @@ export default function CompareSettingsComponent({ className = "" }: Props): Rea
                   buttonStyle: e.target.value as "icon" | "icon-text",
                 }))
               }
-              className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
             >
               <option value="icon-text">Icon + Text ("Compare")</option>
               <option value="icon">Icon Only</option>
@@ -159,7 +159,7 @@ export default function CompareSettingsComponent({ className = "" }: Props): Rea
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-[#960DF2] hover:bg-[#820BD1] disabled:opacity-50 px-5 py-2 text-xs font-bold text-white shadow transition-all cursor-pointer"
+            className="rounded-xl bg-[#25D366] hover:bg-[#820BD1] disabled:opacity-50 px-5 py-2 text-xs font-bold text-white shadow transition-all cursor-pointer"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>

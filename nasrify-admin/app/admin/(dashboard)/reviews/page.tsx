@@ -59,8 +59,8 @@ export default function AdminReviewsPage(): React.JSX.Element {
           </p>
         </div>
 
-        <div className="rounded-3xl border border-dashed border-purple-200 dark:border-purple-800/60 bg-white dark:bg-[#0c140f] p-10 text-center shadow-sm">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300">
+        <div className="rounded-3xl border border-dashed border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#0c140f] p-10 text-center shadow-sm">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#DCFCE7] dark:bg-[#18181B]/40 text-[#25D366] dark:text-zinc-400">
             <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
@@ -78,7 +78,7 @@ export default function AdminReviewsPage(): React.JSX.Element {
           <div className="mt-6 flex justify-center">
             <Link
               href="/admin/apps"
-              className="inline-flex items-center gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition-all"
             >
               <span>Go to /admin/apps</span>
               <span>&rarr;</span>

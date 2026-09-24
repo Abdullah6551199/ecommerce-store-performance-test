@@ -88,7 +88,7 @@ export function AIGeneratorPanel({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-lg">
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-[#25D366] to-indigo-600 flex items-center justify-center text-white shadow-lg">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -96,12 +96,12 @@ export function AIGeneratorPanel({
           <div>
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               AI Review Generator
-              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-medium border border-purple-500/30">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-[#25D366]/20 text-zinc-400 font-medium border border-[#25D366]/30">
                 Cloudflare Workers AI
               </span>
             </h3>
             <p className="text-xs text-slate-400">
-              Generating customer reviews for: <span className="text-purple-300 font-medium">{productTitle}</span>
+              Generating customer reviews for: <span className="text-zinc-400 font-medium">{productTitle}</span>
             </p>
           </div>
         </div>
@@ -128,7 +128,7 @@ export function AIGeneratorPanel({
             max={200}
             value={count}
             onChange={(e) => setCount(Math.max(1, parseInt(e.target.value || "1", 10)))}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#25D366]"
           />
         </div>
 
@@ -142,7 +142,7 @@ export function AIGeneratorPanel({
               setRatingMin(val);
               if (ratingMax < val) setRatingMax(val);
             }}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#25D366]"
           >
             {[1, 2, 3, 4, 5].map((s) => (
               <option key={s} value={s}>{s} Star{s > 1 ? "s" : ""}</option>
@@ -156,7 +156,7 @@ export function AIGeneratorPanel({
           <select
             value={ratingMax}
             onChange={(e) => setRatingMax(parseInt(e.target.value, 10))}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#25D366]"
           >
             {[1, 2, 3, 4, 5].filter((s) => s >= ratingMin).map((s) => (
               <option key={s} value={s}>{s} Star{s > 1 ? "s" : ""}</option>
@@ -170,7 +170,7 @@ export function AIGeneratorPanel({
           <select
             value={tone}
             onChange={(e) => setTone(e.target.value as ReviewTone)}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#25D366]"
           >
             <option value="positive">Positive & Satisfied</option>
             <option value="casual">Casual & Conversational</option>
@@ -186,7 +186,7 @@ export function AIGeneratorPanel({
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value as ReviewLanguage)}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#25D366]"
           >
             <option value="english">English (Global)</option>
             <option value="urdu">Urdu (اردو)</option>
@@ -201,7 +201,7 @@ export function AIGeneratorPanel({
           <select
             value={reviewerStyle}
             onChange={(e) => setReviewerStyle(e.target.value as ReviewerStyle)}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#25D366]"
           >
             <option value="mix">Mix of Styles</option>
             <option value="pakistani">Pakistani Names</option>
@@ -218,7 +218,7 @@ export function AIGeneratorPanel({
             max={365}
             value={dateRangeDays}
             onChange={(e) => setDateRangeDays(Math.max(1, parseInt(e.target.value || "1", 10)))}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#25D366]"
           />
         </div>
 
@@ -233,7 +233,7 @@ export function AIGeneratorPanel({
                 value="pending"
                 checked={approvalMode === "pending"}
                 onChange={() => setApprovalMode("pending")}
-                className="text-purple-600 focus:ring-purple-500"
+                className="text-[#25D366] focus:ring-[#25D366]"
               />
               <span>Pending Review (Recommended)</span>
             </label>
@@ -244,7 +244,7 @@ export function AIGeneratorPanel({
                 value="auto"
                 checked={approvalMode === "auto"}
                 onChange={() => setApprovalMode("auto")}
-                className="text-purple-600 focus:ring-purple-500"
+                className="text-[#25D366] focus:ring-[#25D366]"
               />
               <span>Auto-Publish Immediately</span>
             </label>
@@ -267,7 +267,7 @@ export function AIGeneratorPanel({
           type="button"
           onClick={handleGenerate}
           disabled={loading}
-          className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-50 text-white text-sm font-semibold rounded-lg shadow-lg flex items-center gap-2 transition-all"
+          className="px-6 py-2.5 bg-gradient-to-r from-[#25D366] to-indigo-600 hover:from-[#1EA855] hover:to-indigo-500 disabled:opacity-50 text-white text-sm font-semibold rounded-lg shadow-lg flex items-center gap-2 transition-all"
         >
           {loading ? (
             <>
@@ -299,9 +299,9 @@ export function AIGeneratorPanel({
 
       {/* Result Preview Box */}
       {successResult && (
-        <div className="mt-4 p-4 bg-slate-950/70 border border-purple-500/20 rounded-xl space-y-3">
+        <div className="mt-4 p-4 bg-slate-950/70 border border-[#25D366]/20 rounded-xl space-y-3">
           <div className="flex items-center justify-between text-xs text-slate-400 border-b border-slate-800 pb-2">
-            <span className="font-semibold text-purple-300">Generated Samples Preview</span>
+            <span className="font-semibold text-zinc-400">Generated Samples Preview</span>
             <span>Status: <strong className="text-white">{successResult.approvalMode === "auto" ? "Published" : "Pending"}</strong></span>
           </div>
 
@@ -312,7 +312,7 @@ export function AIGeneratorPanel({
                   <span className="font-bold text-slate-200">{s.authorName}</span>
                   <span className="text-amber-400 font-semibold">{"★".repeat(s.rating)} ({s.rating}/5)</span>
                 </div>
-                <div className="font-medium text-purple-200">{s.title}</div>
+                <div className="font-medium text-zinc-300">{s.title}</div>
                 <p className="text-slate-400 leading-relaxed">{s.body}</p>
               </div>
             ))}

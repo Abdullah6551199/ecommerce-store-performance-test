@@ -86,12 +86,12 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white flex items-center justify-between hover:border-indigo-500/50 transition-colors"
+        className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white flex items-center justify-between hover:border-[#25D366]/50 transition-colors"
       >
         <span style={{ fontFamily: `"${currentDisplay}", sans-serif` }} className="font-semibold text-sm">
           {currentDisplay}
         </span>
-        <span className="text-[11px] text-indigo-500 font-medium">Browse Fonts →</span>
+        <span className="text-[11px] text-[#25D366] font-medium">Browse Fonts →</span>
       </button>
 
       {/* Font Picker Modal */}
@@ -132,7 +132,7 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
                     onClick={() => setSelectedCategory(cat)}
                     className={`px-2.5 py-1 rounded-md text-xs font-medium capitalize transition-colors ${
                       selectedCategory === cat
-                        ? "bg-indigo-600 text-white"
+                        ? "bg-[#25D366] text-white"
                         : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
                     }`}
                   >
@@ -147,7 +147,7 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
                   placeholder="Search fonts..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-md px-2.5 py-1 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-md px-2.5 py-1 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#25D366]"
                 />
               </div>
             </div>
@@ -165,7 +165,7 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
                     }}
                     className={`p-3.5 rounded-lg border cursor-pointer transition-all duration-150 flex flex-col justify-between ${
                       isSelected
-                        ? "bg-indigo-600/20 border-indigo-500 text-indigo-200 shadow-md"
+                        ? "bg-[#25D366]/20 border-[#25D366] text-indigo-200 shadow-md"
                         : "bg-slate-800/40 border-slate-800 hover:bg-slate-800 hover:border-slate-700 text-slate-300"
                     }`}
                   >
@@ -185,7 +185,7 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
 
                     <div className="flex items-center justify-between text-[10px] text-slate-500 mt-2 pt-2 border-t border-slate-800/60">
                       <span>R2 Local WebFont</span>
-                      {isSelected && <span className="text-indigo-400 font-bold">Selected ✓</span>}
+                      {isSelected && <span className="text-[#25D366] font-bold">Selected ✓</span>}
                     </div>
                   </div>
                 );

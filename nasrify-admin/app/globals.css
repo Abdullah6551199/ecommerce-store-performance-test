@@ -3,49 +3,40 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-purple-50: #EACFFC;
-  --color-purple-100: #D59EFA;
-  --color-purple-200: #C06EF7;
-  --color-purple-300: #AB3DF5;
-  --color-purple-400: #960DF2;
-  --color-purple-500: #780AC2;
-  --color-purple-600: #5A0891;
-  --color-purple-700: #3C0561;
-
-  --color-primary: #960DF2;
-  --color-primary-hover: #780AC2;
-  --color-secondary: #AB3DF5;
-  --color-accent: #C06EF7;
-  --color-brand-purple: #960DF2;
-  --color-brand-lavender: #EACFFC;
-  --color-brand-dark: #3C0561;
+  --color-primary: #25D366;
+  --color-primary-hover: #1EA855;
+  --color-secondary: #18181B;
+  --color-accent: #25D366;
+  --color-brand-green: #25D366;
+  --color-brand-dark: #18181B;
 }
 
 :root {
-  /* Purple Brand Palette (8 Shades) */
-  --purple-50: #EACFFC;
-  --purple-100: #D59EFA;
-  --purple-200: #C06EF7;
-  --purple-300: #AB3DF5;
-  --purple-400: #960DF2;
-  --purple-500: #780AC2;
-  --purple-600: #5A0891;
-  --purple-700: #3C0561;
+  /* Admin Design Tokens */
+  --admin-primary: #25D366;
+  --admin-primary-hover: #1EA855;
+  --admin-primary-light: #DCFCE7;
+  --admin-accent: #18181B;
+  --admin-bg: #FFFFFF;
+  --admin-surface: #F4F4F5;
+  --admin-text: #18181B;
+  --admin-text-muted: #71717A;
+  --admin-border: #E4E4E7;
 
   /* Light Mode (Default) */
   --bg-primary: #FFFFFF;
-  --bg-secondary: #EACFFC;
+  --bg-secondary: #F4F4F5;
   --surface: #FFFFFF;
-  --surface-hover: #EACFFC;
-  --primary: #960DF2;
-  --primary-hover: #780AC2;
-  --secondary: #AB3DF5;
-  --accent: #C06EF7;
-  --text-heading: #3C0561;
-  --text-body: #5A0891;
-  --text-muted: #780AC2;
-  --border: #D59EFA;
-  --border-subtle: #EACFFC;
+  --surface-hover: #F4F4F5;
+  --primary: #25D366;
+  --primary-hover: #1EA855;
+  --secondary: #18181B;
+  --accent: #25D366;
+  --text-heading: #18181B;
+  --text-body: #27272A;
+  --text-muted: #71717A;
+  --border: #E4E4E7;
+  --border-subtle: #F4F4F5;
 
   --background: var(--bg-primary);
   --foreground: var(--text-body);
@@ -53,19 +44,19 @@
 
 :root.dark, html.dark {
   /* Dark Mode (Toggle) */
-  --bg-primary: #3C0561;
-  --bg-secondary: #5A0891;
-  --surface: #5A0891;
-  --surface-hover: #780AC2;
-  --primary: #960DF2;
-  --primary-hover: #AB3DF5;
-  --secondary: #AB3DF5;
-  --accent: #C06EF7;
-  --text-heading: #EACFFC;
-  --text-body: #D59EFA;
-  --text-muted: #C06EF7;
-  --border: #780AC2;
-  --border-subtle: #5A0891;
+  --bg-primary: #09090B;
+  --bg-secondary: #18181B;
+  --surface: #18181B;
+  --surface-hover: #27272A;
+  --primary: #25D366;
+  --primary-hover: #1EA855;
+  --secondary: #E4E4E7;
+  --accent: #25D366;
+  --text-heading: #FAFAFA;
+  --text-body: #E4E4E7;
+  --text-muted: #A1A1AA;
+  --border: #27272A;
+  --border-subtle: #18181B;
 
   --background: var(--bg-primary);
   --foreground: var(--text-body);
@@ -77,58 +68,58 @@
 }
 
 .bg-brand-hero {
-  background: linear-gradient(135deg, var(--purple-100) 0%, var(--purple-50) 100%);
+  background: linear-gradient(135deg, #DCFCE7 0%, #F4F4F5 100%);
 }
 
 html.dark .bg-brand-hero {
-  background: linear-gradient(135deg, var(--purple-700) 0%, var(--purple-600) 100%);
+  background: linear-gradient(135deg, #18181B 0%, #09090B 100%);
 }
 
 /* Ambient overlay version */
 .bg-brand-ambient {
   background: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(150, 13, 242, 0.12), transparent),
-    radial-gradient(ellipse 80% 50% at 50% 120%, rgba(192, 110, 247, 0.10), transparent),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 211, 102, 0.08), transparent),
+    radial-gradient(ellipse 80% 50% at 50% 120%, rgba(24, 24, 27, 0.05), transparent),
     var(--background);
 }
 
-/* Soft Purple Shadows */
-.shadow-purple-soft {
-  box-shadow: 0 10px 25px -5px rgba(150, 13, 242, 0.12), 0 8px 10px -6px rgba(150, 13, 242, 0.08);
+/* Soft Shadows */
+.shadow-green-soft {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
 }
 
-.shadow-purple-card {
-  box-shadow: 0 4px 20px -2px rgba(150, 13, 242, 0.07);
+.shadow-green-card {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
 
-.shadow-purple-card:hover {
-  box-shadow: 0 20px 30px -10px rgba(150, 13, 242, 0.18), 0 10px 15px -5px rgba(120, 10, 194, 0.12);
+.shadow-green-card:hover {
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.08), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* Glassmorphic utility surfaces */
 .glass-panel {
-  background: rgba(60, 5, 97, 0.88);
+  background: rgba(24, 24, 27, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(213, 158, 250, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 html:not(.dark) .glass-panel {
   background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(213, 158, 250, 0.4);
+  border: 1px solid #E4E4E7;
 }
 
 .glass-card {
-  background: rgba(90, 8, 145, 0.65);
+  background: rgba(24, 24, 27, 0.65);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(213, 158, 250, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 html:not(.dark) .glass-card {
   background: #FFFFFF;
-  border: 1px solid #EACFFC;
-  box-shadow: 0 4px 20px -2px rgba(150, 13, 242, 0.06);
+  border: 1px solid #E4E4E7;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -143,7 +134,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Cart Drawer Panel: CSS-only isolated transform animation with layout containment (Stage 16) */
+/* Cart Drawer Panel */
 .cart-drawer-panel {
   position: fixed;
   top: 0;
@@ -164,4 +155,3 @@ body {
 .cart-drawer-panel.drawer-closed {
   transform: translateX(100%);
 }
-

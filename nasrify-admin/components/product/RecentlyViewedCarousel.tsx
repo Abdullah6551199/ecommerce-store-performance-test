@@ -73,13 +73,13 @@ export default function RecentlyViewedCarousel({
   }
 
   return (
-    <section className="space-y-6 pt-8 border-t border-purple-100 dark:border-purple-800/40 text-left">
+    <section className="space-y-6 pt-8 border-t border-[#E4E4E7] dark:border-zinc-800/40 text-left">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-[#3C0561] dark:text-[#EACFFC]">
+          <h2 className="text-2xl font-bold tracking-tight text-[#18181B] dark:text-[#DCFCE7]">
             Recently Viewed
           </h2>
-          <p className="text-xs text-purple-600 dark:text-purple-300">
+          <p className="text-xs text-[#25D366] dark:text-zinc-400">
             Items you browsed during your recent sessions.
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function RecentlyViewedCarousel({
             <button
               type="button"
               onClick={scrollLeft}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-[#3C0561] text-purple-700 dark:text-purple-200 hover:border-purple-400 hover:text-purple-900 dark:hover:text-white shadow-sm transition cursor-pointer"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B] text-[#1EA855] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#18181B] dark:hover:text-white shadow-sm transition cursor-pointer"
               aria-label="Scroll left"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -100,7 +100,7 @@ export default function RecentlyViewedCarousel({
             <button
               type="button"
               onClick={scrollRight}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-[#3C0561] text-purple-700 dark:text-purple-200 hover:border-purple-400 hover:text-purple-900 dark:hover:text-white shadow-sm transition cursor-pointer"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B] text-[#1EA855] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#18181B] dark:hover:text-white shadow-sm transition cursor-pointer"
               aria-label="Scroll right"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

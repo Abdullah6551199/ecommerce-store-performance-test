@@ -145,5 +145,11 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-42.8c-02 | Theme Style Ingestion | Legacy `apex-theme-vars` `<style>` tag in `app/layout.tsx` was reading pre-framework theme settings containing `#960DF2`. | Updated `DEFAULT_THEME_SETTINGS` and remote D1 `settings.theme_settings` to WhatsApp Green (`#25D366`) and neutral darks (`#18181B`). | Complete |
 | BUG-42.8c-03 | Apps Storefront Sync | Editing synced files directly inside `nasrify-store/apps/` is undone during prebuild by `sync-apps.ts`. | Edit source app files in root `apps/<app>/storefront/` prior to building storefront worker. | Complete |
 
+---
 
+## Stage 42.8d (Admin Panel Rebrand: Purple to Green/Black/White)
 
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-42.8d-01 | CSS / Tailwind Syntax | Regex replacement of `shadow-purple-500/20` resulted in `.shadow-[#25D366]/20` utility class in `globals.css`, causing CSS parser syntax warning. | Replaced arbitrary color utility class with dedicated CSS classes `.shadow-green-soft` and `.shadow-green-card`. | Complete |
+| BUG-42.8d-02 | App Admin Prebuild Sync | `sync-apps.ts --target=admin` copies `apps/<app>/admin/` to `nasrify-admin/apps/<app>/admin/` on prebuild, overwriting uncommitted target edits. | Rebranded root `apps/<app>/admin/` source files alongside `nasrify-admin/` components, then re-ran `sync-apps.ts`. | Complete |

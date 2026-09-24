@@ -26,7 +26,7 @@ export function DigitalProductBadge({ productId }: DigitalProductBadgeProps): Re
   if (!isDigital) return null;
 
   return (
-    <div className="rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-gradient-to-r from-purple-50/80 to-indigo-50/50 dark:from-purple-950/40 dark:to-zinc-900 p-4 my-4 flex items-center gap-3.5 shadow-sm">
+    <div className="rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-gradient-to-r from-purple-50/80 to-indigo-50/50 dark:from-zinc-900/40 dark:to-zinc-900 p-4 my-4 flex items-center gap-3.5 shadow-sm">
       <div className="h-10 w-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg shrink-0 shadow-md shadow-purple-500/20">
         ⚡
       </div>

@@ -33,11 +33,11 @@ export function HeroSection({ section }: { section: HomepageSectionRecord }): Re
       {/* Ambient ambient glow decorations */}
       <div
         className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full blur-3xl opacity-20"
-        style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
+        style={{ backgroundColor: "var(--color-primary, #25D366)" }}
       />
       <div
         className="pointer-events-none absolute -right-20 -bottom-20 h-72 w-72 rounded-full blur-3xl opacity-15"
-        style={{ backgroundColor: "var(--color-accent, #C06EF7)" }}
+        style={{ backgroundColor: "var(--color-accent, #1EA855)" }}
       />
 
       <div className={`relative grid grid-cols-1 ${imageUrl ? "lg:grid-cols-12 gap-10 items-center" : "max-w-4xl"}`}>
@@ -46,14 +46,14 @@ export function HeroSection({ section }: { section: HomepageSectionRecord }): Re
             <div
               className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-wider"
               style={{
-                borderColor: "color-mix(in srgb, var(--color-primary, #960DF2) 30%, transparent)",
-                backgroundColor: "color-mix(in srgb, var(--color-primary, #960DF2) 10%, transparent)",
-                color: "var(--color-primary, #960DF2)",
+                borderColor: "color-mix(in srgb, var(--color-primary, #25D366) 30%, transparent)",
+                backgroundColor: "color-mix(in srgb, var(--color-primary, #25D366) 10%, transparent)",
+                color: "var(--color-primary, #25D366)",
               }}
             >
               <span
                 className="h-2 w-2 rounded-full animate-pulse"
-                style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
+                style={{ backgroundColor: "var(--color-primary, #25D366)" }}
               />
               <span>{content.badgeText}</span>
             </div>
@@ -74,7 +74,7 @@ export function HeroSection({ section }: { section: HomepageSectionRecord }): Re
                 className="inline-flex items-center gap-2 px-6 py-3.5 text-xs sm:text-sm font-semibold text-white shadow-lg hover:brightness-110 active:scale-95 transition-all"
                 style={{
                   borderRadius: "var(--radius-btn, 0.75rem)",
-                  background: "linear-gradient(135deg, var(--color-primary, #960DF2), var(--color-secondary, #780AC2))",
+                  background: "linear-gradient(135deg, var(--color-primary, #25D366), var(--color-secondary, #1EA855))",
                 }}
               >
                 <span>{content.buttonText}</span>
@@ -139,11 +139,11 @@ export function CategoriesSection({
           {content?.badgeText && (
             <div
               className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"
-              style={{ color: "var(--color-accent, #C06EF7)" }}
+              style={{ color: "var(--color-accent, #1EA855)" }}
             >
               <span
                 className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: "var(--color-accent, #C06EF7)" }}
+                style={{ backgroundColor: "var(--color-accent, #1EA855)" }}
               />
               <span>{content.badgeText}</span>
             </div>
@@ -160,7 +160,7 @@ export function CategoriesSection({
           <Link
             href={content.viewAllUrl}
             className="text-xs font-semibold hover:underline flex items-center gap-1 shrink-0"
-            style={{ color: "var(--color-primary, #960DF2)" }}
+            style={{ color: "var(--color-primary, #25D366)" }}
           >
             <span>View All Categories &rarr;</span>
           </Link>
@@ -175,7 +175,7 @@ export function CategoriesSection({
               href="/admin/categories"
               className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white hover:brightness-110"
               style={{
-                backgroundColor: "var(--color-accent, #C06EF7)",
+                backgroundColor: "var(--color-accent, #1EA855)",
                 borderRadius: "var(--radius-btn, 0.75rem)",
               }}
             >
@@ -208,7 +208,7 @@ export function CategoriesSection({
                   <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-zinc-100 dark:from-white/5 to-zinc-50 dark:to-white/[0.02] p-4 text-center">
                     <span
                       className="text-xl font-bold uppercase"
-                      style={{ color: "var(--color-primary, #960DF2)" }}
+                      style={{ color: "var(--color-primary, #25D366)" }}
                     >
                       {category.name.substring(0, 2)}
                     </span>
@@ -224,7 +224,7 @@ export function CategoriesSection({
 
               <div className="mt-4 flex flex-1 flex-col justify-between space-y-2">
                 <div>
-                  <h3 className="text-base font-bold text-zinc-900 dark:text-white group-hover:text-[#960DF2] transition-colors">
+                  <h3 className="text-base font-bold text-zinc-900 dark:text-white group-hover:text-[#25D366] transition-colors">
                     {category.name}
                   </h3>
                   {category.description && (
@@ -236,7 +236,7 @@ export function CategoriesSection({
 
                 <div
                   className="flex items-center justify-between pt-3 border-t border-zinc-200 dark:border-white/10 text-xs font-semibold"
-                  style={{ color: "var(--color-primary, #960DF2)" }}
+                  style={{ color: "var(--color-primary, #25D366)" }}
                 >
                   <span className="group-hover:underline">Explore Collection</span>
                   <svg className="h-4 w-4 transform transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -273,11 +273,11 @@ export function FeaturedProductsSection({
           {content?.badgeText && (
             <div
               className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"
-              style={{ color: "var(--color-primary, #960DF2)" }}
+              style={{ color: "var(--color-primary, #25D366)" }}
             >
               <span
                 className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
+                style={{ backgroundColor: "var(--color-primary, #25D366)" }}
               />
               <span>{content.badgeText}</span>
             </div>
@@ -294,7 +294,7 @@ export function FeaturedProductsSection({
           <Link
             href={content.viewAllUrl}
             className="text-xs font-semibold hover:underline flex items-center gap-1 shrink-0"
-            style={{ color: "var(--color-primary, #960DF2)" }}
+            style={{ color: "var(--color-primary, #25D366)" }}
           >
             <span>View All Products &rarr;</span>
           </Link>
@@ -309,7 +309,7 @@ export function FeaturedProductsSection({
               href="/admin/products"
               className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white hover:brightness-110"
               style={{
-                backgroundColor: "var(--color-primary, #960DF2)",
+                backgroundColor: "var(--color-primary, #25D366)",
                 borderRadius: "var(--radius-btn, 0.75rem)",
               }}
             >
@@ -336,31 +336,31 @@ export function PromoBannerSection({ section }: { section: HomepageSectionRecord
 
   return (
     <section
-      className="relative overflow-hidden border border-purple-100 dark:border-purple-700 bg-gradient-to-r from-purple-50 via-purple-50 to-purple-100 dark:from-[#3C0561] dark:via-[#4c077b] dark:to-[#2b0346] p-8 sm:p-12 shadow-2xl rounded-3xl"
+      className="relative overflow-hidden border border-[#E4E4E7] dark:border-zinc-700 bg-gradient-to-r from-[#F4F4F5] via-[#1EA855] to-[#DCFCE7] dark:from-[#18181B] dark:via-[#18181B] dark:to-[#121214] p-8 sm:p-12 shadow-2xl rounded-3xl"
     >
       {/* Decorative Glow */}
       <div
-        className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full blur-3xl opacity-20 bg-purple-300 dark:bg-purple-600"
+        className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full blur-3xl opacity-20 bg-[#86EFAC] dark:bg-[#25D366]"
       />
       <div
-        className="pointer-events-none absolute left-0 bottom-0 h-64 w-64 rounded-full blur-3xl opacity-20 bg-purple-200 dark:bg-purple-700"
+        className="pointer-events-none absolute left-0 bottom-0 h-64 w-64 rounded-full blur-3xl opacity-20 bg-[#DCFCE7] dark:bg-[#1EA855]"
       />
 
       <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         <div className={`${imageUrl ? "lg:col-span-7" : "lg:col-span-12"} space-y-5`}>
           {content?.badgeText && (
             <span
-              className="inline-block rounded-full border border-purple-300 dark:border-purple-400/40 bg-purple-200/50 dark:bg-purple-400/20 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-purple-700 dark:text-[#EACFFC]"
+              className="inline-block rounded-full border border-[#E4E4E7] dark:border-[#25D366]/40 bg-[#DCFCE7]/50 dark:bg-[#25D366]/20 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#1EA855] dark:text-[#DCFCE7]"
             >
               {content.badgeText}
             </span>
           )}
 
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#3C0561] dark:text-[#EACFFC] leading-snug">
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#18181B] dark:text-[#DCFCE7] leading-snug">
             {content?.heading || section.title}
           </h2>
 
-          <p className="text-xs sm:text-sm text-[#5A0891] dark:text-[#EACFFC]/80 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#15803D] dark:text-[#DCFCE7]/80 max-w-xl leading-relaxed">
             {content?.subheading}
           </p>
 
@@ -368,7 +368,7 @@ export function PromoBannerSection({ section }: { section: HomepageSectionRecord
             <div className="pt-2">
               <a
                 href={content.buttonUrl}
-                className="inline-flex items-center gap-2 px-6 py-3.5 text-xs sm:text-sm font-bold text-white bg-[#960DF2] hover:bg-[#780AC2] shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 active:scale-95 transition-all rounded-xl cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 text-xs sm:text-sm font-bold text-white bg-[#25D366] hover:bg-[#1EA855] shadow-lg shadow-[#25D366]/20 hover:shadow-[#25D366]/20 active:scale-95 transition-all rounded-xl cursor-pointer"
               >
                 <span>{content.buttonText}</span>
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -381,7 +381,7 @@ export function PromoBannerSection({ section }: { section: HomepageSectionRecord
 
         {imageUrl && (
           <div className="lg:col-span-5 relative">
-            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-purple-200 dark:border-purple-700/60 bg-purple-100/50 dark:bg-black/40 shadow-xl">
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-[#E4E4E7] dark:border-zinc-700/60 bg-[#DCFCE7]/50 dark:bg-black/40 shadow-xl">
               <Image
                 src={normalizeImageUrl(imageUrl, { width: 1200, quality: 75 })}
                 alt={content?.heading || "Promotional Banner"}
@@ -409,27 +409,27 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
   return (
     <section
       id="brand-story"
-      className="relative space-y-10 border border-purple-100 dark:border-purple-800/60 bg-purple-50 dark:bg-[#4c077b] p-8 sm:p-14 backdrop-blur-lg shadow-xl dark:shadow-none transition-colors"
+      className="relative space-y-10 border border-[#E4E4E7] dark:border-zinc-800/60 bg-[#F4F4F5] dark:bg-[#4c077b] p-8 sm:p-14 backdrop-blur-lg shadow-xl dark:shadow-none transition-colors"
       style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         <div className={`${imageUrl ? "lg:col-span-7" : "lg:col-span-12"} space-y-6`}>
           {content?.subheading && (
             <div
-              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-purple-600 dark:text-purple-200"
+              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#25D366] dark:text-zinc-300"
             >
               <span
-                className="h-1.5 w-1.5 rounded-full bg-purple-500 dark:bg-purple-200"
+                className="h-1.5 w-1.5 rounded-full bg-[#25D366] dark:bg-[#DCFCE7]"
               />
               <span>{content.subheading}</span>
             </div>
           )}
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#3C0561] dark:text-white leading-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#18181B] dark:text-white leading-tight">
             {content?.heading || section.title}
           </h2>
 
-          <p className="text-xs sm:text-sm text-[#5A0891]/90 dark:text-purple-100/90 leading-relaxed max-w-2xl whitespace-pre-line">
+          <p className="text-xs sm:text-sm text-[#15803D]/90 dark:text-zinc-200/90 leading-relaxed max-w-2xl whitespace-pre-line">
             {content?.narrativeText}
           </p>
 
@@ -437,7 +437,7 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
             <div className="pt-2">
               <a
                 href={content.ctaUrl}
-                className="inline-flex items-center gap-2 border border-purple-300 dark:border-purple-600/40 bg-white/80 dark:bg-white/10 px-5 py-2.5 text-xs font-semibold text-[#3C0561] dark:text-white hover:bg-white dark:hover:bg-white/20 hover:border-purple-400 dark:hover:border-white/30 transition-all shadow-sm"
+                className="inline-flex items-center gap-2 border border-[#E4E4E7] dark:border-[#1EA855]/40 bg-white/80 dark:bg-white/10 px-5 py-2.5 text-xs font-semibold text-[#18181B] dark:text-white hover:bg-white dark:hover:bg-white/20 hover:border-[#25D366] dark:hover:border-white/30 transition-all shadow-sm"
                 style={{ borderRadius: "var(--radius-btn, 0.75rem)" }}
               >
                 <span>{content.ctaText}</span>
@@ -449,7 +449,7 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
 
         {imageUrl && (
           <div className="lg:col-span-5 relative">
-            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-purple-200 dark:border-purple-700/60 bg-white/40 dark:bg-black/40 shadow-xl">
+            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-[#E4E4E7] dark:border-zinc-700/60 bg-white/40 dark:bg-black/40 shadow-xl">
               <Image
                 src={normalizeImageUrl(imageUrl, { width: 1200, quality: 75 })}
                 alt={content?.heading || "Brand Story"}
@@ -466,16 +466,16 @@ export function BrandStorySection({ section }: { section: HomepageSectionRecord 
 
       {/* Dynamic Stats Grid */}
       {statItems.length > 0 && (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 border-t border-purple-200/80 dark:border-purple-700/60 pt-8">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 border-t border-[#E4E4E7]/80 dark:border-zinc-700/60 pt-8">
           {statItems.map((stat: { label: string; value: string; desc?: string }, idx: number) => (
-            <div key={`${stat.label}-${idx}`} className="rounded-2xl border border-purple-200/70 dark:border-purple-700/50 bg-white/90 dark:bg-[#3C0561]/60 p-4 text-center shadow-sm">
+            <div key={`${stat.label}-${idx}`} className="rounded-2xl border border-[#E4E4E7]/70 dark:border-zinc-700/50 bg-white/90 dark:bg-[#18181B]/60 p-4 text-center shadow-sm">
               <span
-                className="text-2xl sm:text-3xl font-extrabold text-purple-600 dark:text-purple-300"
+                className="text-2xl sm:text-3xl font-extrabold text-[#25D366] dark:text-zinc-400"
               >
                 {stat.value}
               </span>
-              <p className="mt-1 text-xs font-semibold text-[#3C0561] dark:text-white">{stat.label}</p>
-              {stat.desc && <p className="mt-0.5 text-[10px] text-[#5A0891]/70 dark:text-purple-200/60">{stat.desc}</p>}
+              <p className="mt-1 text-xs font-semibold text-[#18181B] dark:text-white">{stat.label}</p>
+              {stat.desc && <p className="mt-0.5 text-[10px] text-[#15803D]/70 dark:text-zinc-300/60">{stat.desc}</p>}
             </div>
           ))}
         </div>
@@ -501,11 +501,11 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
         {content?.badgeText && (
           <div
             className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"
-            style={{ color: "var(--color-accent, #C06EF7)" }}
+            style={{ color: "var(--color-accent, #1EA855)" }}
           >
             <span
               className="h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: "var(--color-accent, #C06EF7)" }}
+              style={{ backgroundColor: "var(--color-accent, #1EA855)" }}
             />
             <span>{content.badgeText}</span>
           </div>
@@ -552,7 +552,7 @@ export function TestimonialsSection({ section }: { section: HomepageSectionRecor
               ) : (
                 <div
                   className="flex h-10 w-10 items-center justify-center rounded-full font-bold text-white text-xs"
-                  style={{ backgroundColor: "var(--color-primary, #960DF2)" }}
+                  style={{ backgroundColor: "var(--color-primary, #25D366)" }}
                 >
                   {t.author?.substring(0, 2) || "AP"}
                 </div>
@@ -578,13 +578,13 @@ export function NewsletterSection({ section }: { section: HomepageSectionRecord 
   return (
     <section
       id="newsletter-section"
-      className="relative overflow-hidden rounded-3xl border border-purple-200/80 dark:border-purple-800/60 bg-gradient-to-br from-[#780AC2] via-[#5A0891] to-[#3C0561] p-8 sm:p-14 text-center shadow-xl shadow-purple-500/20 text-white"
+      className="relative overflow-hidden rounded-3xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-gradient-to-br from-[#1EA855] via-[#15803D] to-[#18181B] p-8 sm:p-14 text-center shadow-xl shadow-[#25D366]/20 text-white"
     >
-      <div className="pointer-events-none absolute left-1/2 -top-24 -translate-x-1/2 h-72 w-72 rounded-full bg-[#AB3DF5]/20 blur-3xl" />
+      <div className="pointer-events-none absolute left-1/2 -top-24 -translate-x-1/2 h-72 w-72 rounded-full bg-[#1EA855]/20 blur-3xl" />
 
       <div className="relative max-w-2xl mx-auto space-y-4">
         {content?.badgeText && (
-          <span className="inline-block rounded-full bg-[#EACFFC] text-[#3C0561] px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider shadow-sm">
+          <span className="inline-block rounded-full bg-[#DCFCE7] text-[#18181B] px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider shadow-sm">
             {content.badgeText}
           </span>
         )}
@@ -593,7 +593,7 @@ export function NewsletterSection({ section }: { section: HomepageSectionRecord 
           {content?.heading || "Subscribe to Our Newsletter"}
         </h2>
 
-        <p className="text-xs sm:text-sm text-purple-100/80 max-w-xl mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-zinc-200/80 max-w-xl mx-auto leading-relaxed">
           {content?.subheading || "Unlock private access codes, training insights, and limited-edition colorway launches directly to your inbox."}
         </p>
 
@@ -602,7 +602,7 @@ export function NewsletterSection({ section }: { section: HomepageSectionRecord 
           buttonText={content?.buttonText || "Subscribe"}
         />
 
-        <p className="text-[11px] text-purple-200/60 pt-2">
+        <p className="text-[11px] text-zinc-300/60 pt-2">
           {content?.disclaimer || "We respect your privacy. Unsubscribe at any time with one click."}
         </p>
       </div>
@@ -618,11 +618,11 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
 
   return (
     <section
-      className="border border-purple-200/80 dark:border-purple-800/60 bg-white/95 dark:bg-[#3C0561]/80 p-8 backdrop-blur-md space-y-4 shadow-xl dark:shadow-none"
+      className="border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-white/95 dark:bg-[#18181B]/80 p-8 backdrop-blur-md space-y-4 shadow-xl dark:shadow-none"
       style={{ borderRadius: "var(--radius-card, 1.5rem)" }}
     >
-      <h2 className="text-xl sm:text-2xl font-bold text-[#3C0561] dark:text-white">{content?.heading || title}</h2>
-      {content?.subheading && <p className="text-xs sm:text-sm text-[#5A0891]/80 dark:text-purple-200/70">{content.subheading}</p>}
+      <h2 className="text-xl sm:text-2xl font-bold text-[#18181B] dark:text-white">{content?.heading || title}</h2>
+      {content?.subheading && <p className="text-xs sm:text-sm text-[#15803D]/80 dark:text-zinc-300/70">{content.subheading}</p>}
 
       {imageUrl && (
         <div className="relative overflow-hidden rounded-xl h-64 sm:h-96 w-full">
@@ -639,7 +639,7 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
 
       {content?.html && (
         <div
-          className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-zinc-700 dark:text-purple-100/90"
+          className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-zinc-700 dark:text-zinc-200/90"
           dangerouslySetInnerHTML={{ __html: content.html }}
         />
       )}
@@ -648,7 +648,7 @@ export function CustomHtmlSection({ section }: { section: HomepageSectionRecord 
         <div className="pt-2">
           <a
             href={content.buttonUrl}
-            className="inline-block px-5 py-2.5 text-xs font-bold text-white rounded-lg bg-[#960DF2] hover:bg-[#780AC2] transition-colors"
+            className="inline-block px-5 py-2.5 text-xs font-bold text-white rounded-lg bg-[#25D366] hover:bg-[#1EA855] transition-colors"
           >
             {content.buttonText}
           </a>

@@ -33,12 +33,12 @@ export default function CouponsDashboardWidget(): React.JSX.Element {
   }, []);
 
   return (
-    <div className="rounded-3xl border border-purple-200/80 dark:border-purple-900/60 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl p-6 shadow-xl shadow-purple-500/5 relative overflow-hidden group">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#960DF2]/10 to-transparent rounded-bl-full pointer-events-none transition-transform group-hover:scale-110" />
+    <div className="rounded-3xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl p-6 shadow-xl shadow-[#25D366]/20 relative overflow-hidden group">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#25D366]/10 to-transparent rounded-bl-full pointer-events-none transition-transform group-hover:scale-110" />
 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-[#960DF2]/10 dark:bg-[#960DF2]/20 flex items-center justify-center text-[#960DF2]">
+          <div className="w-10 h-10 rounded-2xl bg-[#25D366]/10 dark:bg-[#25D366]/20 flex items-center justify-center text-[#25D366]">
             <svg
               className="w-5 h-5"
               fill="none"
@@ -65,7 +65,7 @@ export default function CouponsDashboardWidget(): React.JSX.Element {
 
         <Link
           href="/admin/coupons"
-          className="text-xs font-semibold text-[#960DF2] dark:text-purple-400 hover:text-purple-700 flex items-center gap-1 transition-colors"
+          className="text-xs font-semibold text-[#25D366] dark:text-zinc-400 hover:text-[#1EA855] flex items-center gap-1 transition-colors"
         >
           Manage &rarr;
         </Link>
@@ -78,7 +78,7 @@ export default function CouponsDashboardWidget(): React.JSX.Element {
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-3 pt-1">
-          <div className="p-3 rounded-2xl bg-purple-50/50 dark:bg-zinc-800/50 border border-purple-100/60 dark:border-purple-900/40">
+          <div className="p-3 rounded-2xl bg-[#F4F4F5]/50 dark:bg-zinc-800/50 border border-[#E4E4E7]/60 dark:border-zinc-800/40">
             <span className="text-[10px] uppercase font-bold text-zinc-400 dark:text-zinc-500 block mb-1">
               Active Codes
             </span>
@@ -87,16 +87,16 @@ export default function CouponsDashboardWidget(): React.JSX.Element {
             </span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-purple-50/50 dark:bg-zinc-800/50 border border-purple-100/60 dark:border-purple-900/40">
+          <div className="p-3 rounded-2xl bg-[#F4F4F5]/50 dark:bg-zinc-800/50 border border-[#E4E4E7]/60 dark:border-zinc-800/40">
             <span className="text-[10px] uppercase font-bold text-zinc-400 dark:text-zinc-500 block mb-1">
               Total Saved
             </span>
-            <span className="text-xl font-extrabold text-[#960DF2] dark:text-[#EACFFC] font-mono">
+            <span className="text-xl font-extrabold text-[#25D366] dark:text-[#DCFCE7] font-mono">
               ${stats?.totalDiscountsGiven?.toFixed(0) ?? "0"}
             </span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-purple-50/50 dark:bg-zinc-800/50 border border-purple-100/60 dark:border-purple-900/40">
+          <div className="p-3 rounded-2xl bg-[#F4F4F5]/50 dark:bg-zinc-800/50 border border-[#E4E4E7]/60 dark:border-zinc-800/40">
             <span className="text-[10px] uppercase font-bold text-zinc-400 dark:text-zinc-500 block mb-1">
               Top Coupon
             </span>

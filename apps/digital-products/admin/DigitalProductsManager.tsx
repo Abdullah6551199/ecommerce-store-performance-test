@@ -217,14 +217,14 @@ export function DigitalProductsManager({
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
               Digital Product Delivery
             </h3>
-            <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 border border-purple-500/20">
+            <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/20">
               App
             </span>
           </div>
           <button
             type="button"
             onClick={existing ? () => handleOpenEdit(existing) : handleOpenCreate}
-            className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 shadow-sm"
+            className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-[#25D366] hover:bg-[#1EA855] shadow-sm"
           >
             {existing ? "Edit Digital Files" : "+ Attach Digital Files"}
           </button>
@@ -278,7 +278,7 @@ export function DigitalProductsManager({
         <button
           type="button"
           onClick={handleOpenCreate}
-          className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 shadow-sm transition-colors cursor-pointer self-start sm:self-auto"
+          className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#25D366] hover:bg-[#1EA855] shadow-sm transition-colors cursor-pointer self-start sm:self-auto"
         >
           + Add Digital Product
         </button>
@@ -303,7 +303,7 @@ export function DigitalProductsManager({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Filter by product name or file name..."
-          className="w-full px-3.5 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-purple-500 shadow-sm"
+          className="w-full px-3.5 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#25D366] shadow-sm"
         />
       </div>
 
@@ -324,7 +324,7 @@ export function DigitalProductsManager({
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-700"
+            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#25D366] hover:bg-[#1EA855]"
           >
             Create Your First Digital Product
           </button>
@@ -338,7 +338,7 @@ export function DigitalProductsManager({
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#25D366]/10 text-[#25D366] dark:text-zinc-400 border border-[#25D366]/20">
                     Digital Asset
                   </span>
                   <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
@@ -439,7 +439,7 @@ export function DigitalProductsManager({
                   disabled={!!editingItem}
                   value={formProductId}
                   onChange={(e) => setFormProductId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#25D366]"
                 >
                   <option value="">-- Choose a store product --</option>
                   {catalogProducts.map((p) => (
@@ -551,7 +551,7 @@ export function DigitalProductsManager({
                 type="checkbox"
                 checked={formLicenseEnabled}
                 onChange={(e) => setFormLicenseEnabled(e.target.checked)}
-                className="h-4 w-4 rounded accent-purple-600"
+                className="h-4 w-4 rounded accent-[#25D366]"
               />
             </div>
 
@@ -567,7 +567,7 @@ export function DigitalProductsManager({
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2 rounded-xl font-bold text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-50 cursor-pointer shadow-sm"
+                className="px-5 py-2 rounded-xl font-bold text-white bg-[#25D366] hover:bg-[#1EA855] disabled:opacity-50 cursor-pointer shadow-sm"
               >
                 {saving ? "Saving..." : editingItem ? "Save Changes" : "Create Digital Product"}
               </button>

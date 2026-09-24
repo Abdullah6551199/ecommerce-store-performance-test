@@ -216,7 +216,7 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
             placeholder="Search questions, askers, emails..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-3.5 py-1.5 text-xs rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 w-64"
+            className="px-3.5 py-1.5 text-xs rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366] w-64"
           />
         </div>
       </div>
@@ -241,7 +241,7 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
               }}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === tab.id
-                  ? "bg-purple-600 text-white shadow-md shadow-purple-600/20"
+                  ? "bg-[#25D366] text-white shadow-md shadow-[#25D366]/20"
                   : "bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
@@ -285,7 +285,7 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
       <div className="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900 overflow-hidden shadow-sm">
         {loading ? (
           <div className="py-16 text-center">
-            <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-purple-600 border-t-transparent" />
+            <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-[#1EA855] border-t-transparent" />
             <p className="mt-2 text-xs text-zinc-500">Loading questions...</p>
           </div>
         ) : questions.length === 0 ? (
@@ -306,7 +306,7 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
                       type="checkbox"
                       checked={selectedIds.size === questions.length && questions.length > 0}
                       onChange={handleSelectAll}
-                      className="rounded border-zinc-300 text-purple-600 focus:ring-purple-500"
+                      className="rounded border-zinc-300 text-[#25D366] focus:ring-[#25D366]"
                     />
                   </th>
                   <th className="p-3">Question &amp; Asker</th>
@@ -327,7 +327,7 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
                     <tr
                       key={q.id}
                       className={`hover:bg-zinc-50/70 dark:hover:bg-white/5 transition-colors ${
-                        isSelected ? "bg-purple-50/40 dark:bg-purple-950/20" : ""
+                        isSelected ? "bg-[#F4F4F5]/40 dark:bg-[#18181B]/20" : ""
                       }`}
                     >
                       <td className="p-3 text-center">
@@ -335,14 +335,14 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
                           type="checkbox"
                           checked={isSelected}
                           onChange={() => handleSelectOne(q.id)}
-                          className="rounded border-zinc-300 text-purple-600 focus:ring-purple-500"
+                          className="rounded border-zinc-300 text-[#25D366] focus:ring-[#25D366]"
                         />
                       </td>
 
                       <td className="p-3 max-w-sm">
                         <div className="flex items-start gap-1.5">
                           {q.isPinned && (
-                            <span className="text-purple-600 shrink-0 text-sm" title="Pinned question">
+                            <span className="text-[#25D366] shrink-0 text-sm" title="Pinned question">
                               📌
                             </span>
                           )}
@@ -396,7 +396,7 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
                             setAdminAnswerText("");
                             setModalError(null);
                           }}
-                          className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-800/60 cursor-pointer"
+                          className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#DCFCE7] dark:bg-[#18181B]/40 text-[#1EA855] dark:text-zinc-400 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]/60 cursor-pointer"
                         >
                           💬 Answer
                         </button>
@@ -428,7 +428,7 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
                           title={q.isPinned ? "Unpin question" : "Pin question to top"}
                           className={`px-2 py-1 rounded-lg text-xs font-medium cursor-pointer ${
                             q.isPinned
-                              ? "bg-purple-500 text-white"
+                              ? "bg-[#25D366] text-white"
                               : "text-zinc-500 hover:bg-zinc-100 dark:hover:bg-white/5"
                           }`}
                         >
@@ -456,7 +456,7 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
       {/* Answer Modal */}
       {answeringQuestion && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="w-full max-w-lg p-6 bg-white dark:bg-[#110620] rounded-3xl border border-zinc-200 dark:border-purple-800/40 shadow-2xl space-y-4">
+          <div className="w-full max-w-lg p-6 bg-white dark:bg-[#110620] rounded-3xl border border-zinc-200 dark:border-zinc-800/40 shadow-2xl space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-white/10">
               <h3 className="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
                 <span>💬</span> Answer Customer Question
@@ -525,7 +525,7 @@ export default function ProductQAManager({ initialProductId }: Props): React.JSX
                 <button
                   type="submit"
                   disabled={submittingAnswer || !adminAnswerText.trim()}
-                  className="px-5 py-2 text-xs font-bold rounded-xl bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-600/20 disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 text-xs font-bold rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white shadow-md shadow-[#25D366]/20 disabled:opacity-50 cursor-pointer"
                 >
                   {submittingAnswer ? "Posting Answer..." : "Publish Answer"}
                 </button>

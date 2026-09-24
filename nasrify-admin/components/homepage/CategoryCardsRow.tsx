@@ -25,21 +25,21 @@ export default function CategoryCardsRow({
   return (
     <section id="category-cards" className="space-y-6">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-purple-200/60 dark:border-purple-800/40 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-[#E4E4E7]/60 dark:border-zinc-800/40 pb-3">
         <div>
           {badge && (
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EACFFC] dark:bg-[#5A0891]/60 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#960DF2] dark:text-[#EACFFC] mb-1">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#DCFCE7] dark:bg-[#15803D]/60 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#25D366] dark:text-[#DCFCE7] mb-1">
               <span>{badge}</span>
             </div>
           )}
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[#3C0561] dark:text-white">
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[#18181B] dark:text-white">
             {heading}
           </h2>
         </div>
 
         <Link
           href="/shop"
-          className="text-xs font-bold text-[#960DF2] dark:text-[#C06EF7] hover:underline flex items-center gap-1 shrink-0"
+          className="text-xs font-bold text-[#25D366] dark:text-[#1EA855] hover:underline flex items-center gap-1 shrink-0"
         >
           <span>All Categories &rarr;</span>
         </Link>
@@ -51,10 +51,10 @@ export default function CategoryCardsRow({
           <Link
             key={category.id}
             href={`/category/${category.slug}`}
-            className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-purple-200/70 dark:border-purple-800/50 bg-[#EACFFC]/30 dark:bg-[#5A0891]/40 p-3.5 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white dark:hover:bg-[#5A0891] hover:border-[#960DF2]/60 hover:shadow-xl hover:shadow-purple-500/20"
+            className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-[#E4E4E7]/70 dark:border-zinc-800/50 bg-[#DCFCE7]/30 dark:bg-[#15803D]/40 p-3.5 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white dark:hover:bg-[#15803D] hover:border-[#25D366]/60 hover:shadow-xl hover:shadow-[#25D366]/20"
           >
             {/* Category Image (4:5 / Square) */}
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-purple-100/50 dark:bg-purple-950/40">
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-[#DCFCE7]/50 dark:bg-[#18181B]/40">
               {category.imageUrl ? (
                 <Image
                   src={normalizeImageUrl(category.imageUrl, { width: 400, quality: 75 })}
@@ -65,8 +65,8 @@ export default function CategoryCardsRow({
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-[#EACFFC]/60 to-[#D59EFA]/40 dark:from-[#3C0561] dark:to-[#5A0891] p-4 text-center">
-                  <span className="text-2xl font-black text-[#960DF2] dark:text-[#EACFFC] uppercase">
+                <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-[#DCFCE7]/60 to-[#DCFCE7]/40 dark:from-[#18181B] dark:to-[#15803D] p-4 text-center">
+                  <span className="text-2xl font-black text-[#25D366] dark:text-[#DCFCE7] uppercase">
                     {category.name.substring(0, 2)}
                   </span>
                 </div>
@@ -77,10 +77,10 @@ export default function CategoryCardsRow({
 
             {/* Category Details */}
             <div className="mt-3 text-center space-y-1">
-              <h3 className="text-sm font-extrabold text-[#3C0561] dark:text-white group-hover:text-[#960DF2] dark:group-hover:text-[#C06EF7] transition-colors truncate">
+              <h3 className="text-sm font-extrabold text-[#18181B] dark:text-white group-hover:text-[#25D366] dark:group-hover:text-[#1EA855] transition-colors truncate">
                 {category.name}
               </h3>
-              <p className="text-xs font-bold text-[#960DF2] dark:text-[#C06EF7] group-hover:translate-x-0.5 inline-flex items-center gap-1 transition-transform">
+              <p className="text-xs font-bold text-[#25D366] dark:text-[#1EA855] group-hover:translate-x-0.5 inline-flex items-center gap-1 transition-transform">
                 <span>Shop Now</span>
                 <span aria-hidden="true">&rarr;</span>
               </p>

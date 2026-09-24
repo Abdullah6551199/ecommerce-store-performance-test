@@ -36,7 +36,7 @@ export function DigitalStatsWidget(): React.JSX.Element {
             Digital Delivery KPIs
           </h3>
         </div>
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#25D366]/10 text-[#25D366] dark:text-zinc-400 border border-[#25D366]/20">
           Live Stats
         </span>
       </div>
@@ -60,7 +60,7 @@ export function DigitalStatsWidget(): React.JSX.Element {
             <span className="text-[10px] text-zinc-400 font-semibold block uppercase">
               Downloads (Mo)
             </span>
-            <span className="text-lg font-black text-purple-600 dark:text-purple-400 mt-0.5 block">
+            <span className="text-lg font-black text-[#25D366] dark:text-zinc-400 mt-0.5 block">
               {stats?.downloadsThisMonth ?? 0}
             </span>
           </div>

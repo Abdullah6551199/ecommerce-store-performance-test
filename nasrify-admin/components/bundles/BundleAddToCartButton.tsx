@@ -37,7 +37,7 @@ export default function BundleAddToCartButton({
       type="button"
       disabled={isAdding}
       onClick={handleAdd}
-      className={`w-full inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#960DF2] hover:bg-[#780AC2] active:scale-[0.98] py-4 px-8 text-base font-bold text-white shadow-xl shadow-purple-500/25 transition-all cursor-pointer disabled:opacity-50 ${className}`}
+      className={`w-full inline-flex items-center justify-center gap-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] active:scale-[0.98] py-4 px-8 text-base font-bold text-white shadow-xl shadow-[#25D366]/20 transition-all cursor-pointer disabled:opacity-50 ${className}`}
     >
       {isAdding ? (
         <span>Adding Bundle to Cart...</span>

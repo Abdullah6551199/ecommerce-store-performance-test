@@ -86,7 +86,7 @@ export function MyDownloadsPage({ initialEmail = "" }: MyDownloadsPageProps): Re
               placeholder="Enter order email..."
               value={emailInput}
               onChange={(e) => setEmailInput(e.target.value)}
-              className="px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-purple-500"
+              className="px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#25D366]"
             />
             <button
               type="submit"

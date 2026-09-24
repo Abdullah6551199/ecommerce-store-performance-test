@@ -138,7 +138,7 @@ export default function AskQuestionForm({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Alex M."
-                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-all"
               />
             </div>
             <div>
@@ -150,7 +150,7 @@ export default function AskQuestionForm({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. alex@example.com"
-                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-all"
               />
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function AskQuestionForm({
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask anything about this product: sizing, materials, compatibility, usage..."
-              className="w-full px-3 py-2.5 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all resize-none"
+              className="w-full px-3 py-2.5 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-all resize-none"
             />
           </div>
 

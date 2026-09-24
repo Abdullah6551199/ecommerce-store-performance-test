@@ -588,7 +588,7 @@ export default function CouponsManager(): React.JSX.Element {
                             </span>
                           )}
                           {c.firstOrderOnly && (
-                            <span className="rounded bg-purple-500/15 text-purple-600 dark:text-purple-400 px-1.5 py-0.5 text-[9px] font-bold">
+                            <span className="rounded bg-[#25D366]/15 text-[#25D366] dark:text-zinc-400 px-1.5 py-0.5 text-[9px] font-bold">
                               1st Order
                             </span>
                           )}

@@ -145,7 +145,7 @@ export default function PagesManager(): React.JSX.Element {
               setSelectedPage(null);
               setIsEditorOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white text-sm font-bold shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white text-sm font-bold shadow-md shadow-[#25D366]/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -156,12 +156,12 @@ export default function PagesManager(): React.JSX.Element {
       </div>
 
       {/* Tab Switcher */}
-      <div className="flex items-center gap-2 border-b border-purple-200/50 dark:border-purple-900/40">
+      <div className="flex items-center gap-2 border-b border-[#E4E4E7]/50 dark:border-zinc-800/40">
         <button
           onClick={() => setActiveTab("pages")}
           className={`pb-3 px-1 text-sm font-bold border-b-2 transition ${
             activeTab === "pages"
-              ? "border-[#960DF2] text-[#960DF2] dark:text-[#EACFFC]"
+              ? "border-[#25D366] text-[#25D366] dark:text-[#DCFCE7]"
               : "border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
           }`}
         >
@@ -171,7 +171,7 @@ export default function PagesManager(): React.JSX.Element {
           onClick={() => setActiveTab("faqs")}
           className={`pb-3 px-1 text-sm font-bold border-b-2 transition ${
             activeTab === "faqs"
-              ? "border-[#960DF2] text-[#960DF2] dark:text-[#EACFFC]"
+              ? "border-[#25D366] text-[#25D366] dark:text-[#DCFCE7]"
               : "border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
           }`}
         >
@@ -184,7 +184,7 @@ export default function PagesManager(): React.JSX.Element {
         <div
           className={`p-4 rounded-2xl text-sm border flex items-center justify-between animate-in fade-in duration-150 ${
             feedback.type === "success"
-              ? "bg-purple-50 text-purple-900 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800"
+              ? "bg-[#F4F4F5] text-[#18181B] border-[#E4E4E7] dark:bg-[#18181B]/40 dark:text-zinc-400 dark:border-zinc-800"
               : "bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800"
           }`}
         >
@@ -201,35 +201,35 @@ export default function PagesManager(): React.JSX.Element {
       {activeTab === "pages" && (
         <div className="space-y-8">
           {/* Live Search Bar */}
-          <div className="bg-white dark:bg-[#1E0230] p-4 rounded-2xl border border-purple-100 dark:border-purple-900/40 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="bg-white dark:bg-[#09090B] p-4 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/40 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="relative w-full max-w-md">
               <input
                 type="text"
                 placeholder="Search pages by title or slug..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-purple-200/70 dark:border-purple-800/60 bg-purple-50/40 dark:bg-[#2A0344] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+                className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-[#E4E4E7]/70 dark:border-zinc-800/60 bg-[#F4F4F5]/40 dark:bg-[#18181B] text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#25D366]"
               />
-              <svg className="w-4 h-4 text-purple-400 absolute left-3.5 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 text-zinc-400 absolute left-3.5 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <div className="text-xs font-semibold text-slate-500 dark:text-purple-300">
+            <div className="text-xs font-semibold text-slate-500 dark:text-zinc-400">
               Showing {filteredPages.length} {filteredPages.length === 1 ? "page" : "pages"} ({corePages.length} core, {customPages.length} custom)
             </div>
           </div>
 
           {/* SECTION 1: CORE PAGES (cannot be deleted) */}
-          <div className="bg-white dark:bg-[#1E0230] rounded-3xl border border-purple-100 dark:border-purple-900/40 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-purple-100 dark:border-purple-900/40 bg-purple-50/50 dark:bg-[#2A0344]/50 flex items-center justify-between">
+          <div className="bg-white dark:bg-[#09090B] rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-[#E4E4E7] dark:border-zinc-800/40 bg-[#F4F4F5]/50 dark:bg-[#18181B]/50 flex items-center justify-between">
               <div>
-                <h2 className="text-base font-extrabold text-[#3C0561] dark:text-white flex items-center gap-2">
+                <h2 className="text-base font-extrabold text-[#18181B] dark:text-white flex items-center gap-2">
                   <span>CORE PAGES</span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC]">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7]">
                     Protected • Edit Only
                   </span>
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-purple-300/80 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-zinc-400/80 mt-0.5">
                   Core storefront pages cannot be deleted. You can customize their content or reset them to defaults.
                 </p>
               </div>
@@ -237,7 +237,7 @@ export default function PagesManager(): React.JSX.Element {
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                <thead className="bg-slate-50 dark:bg-[#25033d] text-xs uppercase font-bold text-slate-500 dark:text-purple-300 border-b border-purple-100 dark:border-purple-900/40">
+                <thead className="bg-slate-50 dark:bg-[#25033d] text-xs uppercase font-bold text-slate-500 dark:text-zinc-400 border-b border-[#E4E4E7] dark:border-zinc-800/40">
                   <tr>
                     <th className="px-6 py-3.5">Page Title</th>
                     <th className="px-6 py-3.5">Route URL</th>
@@ -246,24 +246,24 @@ export default function PagesManager(): React.JSX.Element {
                     <th className="px-6 py-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-purple-100/70 dark:divide-purple-900/40">
+                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 dark:divide-zinc-200 dark:divide-zinc-800">
                   {corePages.map((page) => {
                     const url = getPageUrl(page.slug);
                     const isResetting = resettingId === page.id;
                     return (
-                      <tr key={page.id} className="hover:bg-purple-50/40 dark:hover:bg-purple-950/30 transition-colors">
+                      <tr key={page.id} className="hover:bg-[#F4F4F5]/40 dark:hover:bg-[#18181B]/30 transition-colors">
                         <td className="px-6 py-4">
                           <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
                             <span className="text-base">📄</span>
                             <span>{page.title}</span>
                           </div>
                           {page.seoTitle && (
-                            <div className="text-xs text-slate-400 dark:text-purple-300/60 line-clamp-1 max-w-sm mt-0.5">
+                            <div className="text-xs text-slate-400 dark:text-zinc-400/60 line-clamp-1 max-w-sm mt-0.5">
                               {page.seoTitle}
                             </div>
                           )}
                         </td>
-                        <td className="px-6 py-4 font-mono text-xs text-[#960DF2] dark:text-[#C06EF7]">
+                        <td className="px-6 py-4 font-mono text-xs text-[#25D366] dark:text-[#1EA855]">
                           {url}
                         </td>
                         <td className="px-6 py-4">
@@ -271,7 +271,7 @@ export default function PagesManager(): React.JSX.Element {
                             <span
                               className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${
                                 page.showInHeader
-                                  ? "bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC]"
+                                  ? "bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7]"
                                   : "bg-slate-100 dark:bg-slate-800 text-slate-400"
                               }`}
                             >
@@ -280,7 +280,7 @@ export default function PagesManager(): React.JSX.Element {
                             <span
                               className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${
                                 page.showInFooter
-                                  ? "bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC]"
+                                  ? "bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7]"
                                   : "bg-slate-100 dark:bg-slate-800 text-slate-400"
                               }`}
                             >
@@ -292,7 +292,7 @@ export default function PagesManager(): React.JSX.Element {
                           <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
                               page.isPublished
-                                ? "bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300"
+                                ? "bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#1EA855] dark:text-zinc-400"
                                 : "bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300"
                             }`}
                           >
@@ -314,7 +314,7 @@ export default function PagesManager(): React.JSX.Element {
                               href={url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-3 py-1 text-xs font-bold rounded-lg border border-purple-200 dark:border-purple-800 text-[#960DF2] dark:text-[#C06EF7] hover:bg-purple-50 dark:hover:bg-purple-900/40 transition"
+                              className="px-3 py-1 text-xs font-bold rounded-lg border border-[#E4E4E7] dark:border-zinc-800 text-[#25D366] dark:text-[#1EA855] hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/40 transition"
                             >
                               View
                             </a>
@@ -324,7 +324,7 @@ export default function PagesManager(): React.JSX.Element {
                                 setSelectedPage(page);
                                 setIsEditorOpen(true);
                               }}
-                              className="px-3 py-1 text-xs font-bold rounded-lg bg-[#960DF2] hover:bg-[#850bd8] text-white shadow-sm transition"
+                              className="px-3 py-1 text-xs font-bold rounded-lg bg-[#25D366] hover:bg-[#1EA855] text-white shadow-sm transition"
                             >
                               Edit
                             </button>
@@ -339,16 +339,16 @@ export default function PagesManager(): React.JSX.Element {
           </div>
 
           {/* SECTION 2: CUSTOM PAGES (full CRUD) */}
-          <div className="bg-white dark:bg-[#1E0230] rounded-3xl border border-purple-100 dark:border-purple-900/40 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-purple-100 dark:border-purple-900/40 bg-purple-50/50 dark:bg-[#2A0344]/50 flex items-center justify-between">
+          <div className="bg-white dark:bg-[#09090B] rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-[#E4E4E7] dark:border-zinc-800/40 bg-[#F4F4F5]/50 dark:bg-[#18181B]/50 flex items-center justify-between">
               <div>
-                <h2 className="text-base font-extrabold text-[#3C0561] dark:text-white flex items-center gap-2">
+                <h2 className="text-base font-extrabold text-[#18181B] dark:text-white flex items-center gap-2">
                   <span>CUSTOM PAGES</span>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC]">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7]">
                     Full CRUD ({customPages.length})
                   </span>
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-purple-300/80 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-zinc-400/80 mt-0.5">
                   Create dedicated brand stories, sizing charts, sustainability announcements, and campaign landing pages.
                 </p>
               </div>
@@ -358,7 +358,7 @@ export default function PagesManager(): React.JSX.Element {
                   setSelectedPage(null);
                   setIsEditorOpen(true);
                 }}
-                className="text-xs font-bold text-[#960DF2] dark:text-[#C06EF7] hover:underline"
+                className="text-xs font-bold text-[#25D366] dark:text-[#1EA855] hover:underline"
               >
                 + New Page
               </button>
@@ -366,7 +366,7 @@ export default function PagesManager(): React.JSX.Element {
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                <thead className="bg-slate-50 dark:bg-[#25033d] text-xs uppercase font-bold text-slate-500 dark:text-purple-300 border-b border-purple-100 dark:border-purple-900/40">
+                <thead className="bg-slate-50 dark:bg-[#25033d] text-xs uppercase font-bold text-slate-500 dark:text-zinc-400 border-b border-[#E4E4E7] dark:border-zinc-800/40">
                   <tr>
                     <th className="px-6 py-3.5">Page Title</th>
                     <th className="px-6 py-3.5">Slug (Route)</th>
@@ -376,7 +376,7 @@ export default function PagesManager(): React.JSX.Element {
                     <th className="px-6 py-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-purple-100/70 dark:divide-purple-900/40">
+                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 dark:divide-zinc-200 dark:divide-zinc-800">
                   {isLoading ? (
                     <tr>
                       <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
@@ -396,19 +396,19 @@ export default function PagesManager(): React.JSX.Element {
                     customPages.map((page) => {
                       const url = getPageUrl(page.slug);
                       return (
-                        <tr key={page.id} className="hover:bg-purple-50/40 dark:hover:bg-purple-950/30 transition-colors">
+                        <tr key={page.id} className="hover:bg-[#F4F4F5]/40 dark:hover:bg-[#18181B]/30 transition-colors">
                           <td className="px-6 py-4">
                             <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
                               <span className="text-base">📄</span>
                               <span>{page.title}</span>
                             </div>
                             {page.seoTitle && (
-                              <div className="text-xs text-slate-400 dark:text-purple-300/60 line-clamp-1 max-w-sm mt-0.5">
+                              <div className="text-xs text-slate-400 dark:text-zinc-400/60 line-clamp-1 max-w-sm mt-0.5">
                                 {page.seoTitle}
                               </div>
                             )}
                           </td>
-                          <td className="px-6 py-4 font-mono text-xs text-[#960DF2] dark:text-[#C06EF7]">
+                          <td className="px-6 py-4 font-mono text-xs text-[#25D366] dark:text-[#1EA855]">
                             {url}
                           </td>
                           <td className="px-6 py-4">
@@ -421,7 +421,7 @@ export default function PagesManager(): React.JSX.Element {
                               <span
                                 className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${
                                   page.showInHeader
-                                    ? "bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC]"
+                                    ? "bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7]"
                                     : "bg-slate-100 dark:bg-slate-800 text-slate-400"
                                 }`}
                               >
@@ -430,7 +430,7 @@ export default function PagesManager(): React.JSX.Element {
                               <span
                                 className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${
                                   page.showInFooter
-                                    ? "bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC]"
+                                    ? "bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7]"
                                     : "bg-slate-100 dark:bg-slate-800 text-slate-400"
                                 }`}
                               >
@@ -442,7 +442,7 @@ export default function PagesManager(): React.JSX.Element {
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
                                 page.isPublished
-                                  ? "bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300"
+                                  ? "bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#1EA855] dark:text-zinc-400"
                                   : "bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300"
                               }`}
                             >
@@ -455,7 +455,7 @@ export default function PagesManager(): React.JSX.Element {
                                 href={url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-3 py-1 text-xs font-bold rounded-lg border border-purple-200 dark:border-purple-800 text-[#960DF2] dark:text-[#C06EF7] hover:bg-purple-50 dark:hover:bg-purple-900/40 transition"
+                                className="px-3 py-1 text-xs font-bold rounded-lg border border-[#E4E4E7] dark:border-zinc-800 text-[#25D366] dark:text-[#1EA855] hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/40 transition"
                               >
                                 View
                               </a>
@@ -465,7 +465,7 @@ export default function PagesManager(): React.JSX.Element {
                                   setSelectedPage(page);
                                   setIsEditorOpen(true);
                                 }}
-                                className="px-3 py-1 text-xs font-bold rounded-lg bg-[#960DF2] hover:bg-[#850bd8] text-white shadow-sm transition"
+                                className="px-3 py-1 text-xs font-bold rounded-lg bg-[#25D366] hover:bg-[#1EA855] text-white shadow-sm transition"
                               >
                                 Edit
                               </button>
@@ -516,7 +516,7 @@ export default function PagesManager(): React.JSX.Element {
       {/* Delete Confirmation Modal */}
       {pageToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-[#1E0230] border border-rose-200 dark:border-rose-900/50 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+          <div className="bg-white dark:bg-[#09090B] border border-rose-200 dark:border-rose-900/50 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
             <div className="flex items-center gap-3 text-rose-600">
               <div className="p-3 bg-rose-50 dark:bg-rose-950/40 rounded-2xl">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

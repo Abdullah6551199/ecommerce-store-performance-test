@@ -111,7 +111,7 @@ function SortableSectionItem({
       onClick={onSelect}
       className={`group relative flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium border transition-all duration-150 cursor-pointer ${
         isSelected
-          ? "bg-indigo-600/15 border-indigo-500/60 text-indigo-300"
+          ? "bg-[#25D366]/15 border-[#25D366]/60 text-emerald-300"
           : "bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-800/80 hover:border-slate-700"
       }`}
     >
@@ -218,7 +218,7 @@ export function SectionsList({
       {/* Sidebar Header */}
       <div className="h-12 px-4 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-900/90 backdrop-blur-sm">
         <div className="flex items-center gap-2">
-          <svg className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-4 h-4 text-[#25D366]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
           </svg>
           <h2 className="text-xs font-semibold text-slate-200">Page Sections</h2>
@@ -232,7 +232,7 @@ export function SectionsList({
           onClick={() => onSelectSection(null)}
           className={`text-[11px] px-2 py-1 rounded transition-colors ${
             selectedSectionId === null
-              ? "bg-indigo-600/30 text-indigo-300 font-medium"
+              ? "bg-[#25D366]/30 text-emerald-300 font-medium"
               : "text-slate-400 hover:text-slate-200"
           }`}
           title="Edit theme colors, fonts, logo"
@@ -280,7 +280,7 @@ export function SectionsList({
         <button
           type="button"
           onClick={onOpenSectionPicker}
-          className="w-full py-2 px-3 rounded-lg border border-dashed border-indigo-500/40 hover:border-indigo-500 bg-indigo-500/5 hover:bg-indigo-500/10 text-indigo-400 hover:text-indigo-300 text-xs font-medium flex items-center justify-center gap-1.5 transition-all duration-150"
+          className="w-full py-2 px-3 rounded-lg border border-dashed border-[#25D366]/40 hover:border-[#25D366] bg-[#25D366]/5 hover:bg-[#25D366]/10 text-[#25D366] hover:text-emerald-300 text-xs font-medium flex items-center justify-center gap-1.5 transition-all duration-150"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

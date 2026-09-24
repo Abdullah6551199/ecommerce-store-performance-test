@@ -84,33 +84,33 @@ export default function HeroCarousel({ slides = DEFAULT_SLIDES }: HeroCarouselPr
   return (
     <section
       id="hero-carousel"
-      className="group relative overflow-hidden rounded-3xl border border-purple-200/80 dark:border-purple-800/60 bg-gradient-to-br from-[#D59EFA]/35 via-[#EACFFC]/40 to-white dark:from-[#3C0561] dark:via-[#5A0891] dark:to-[#3C0561] shadow-xl shadow-purple-500/10 transition-colors duration-300"
+      className="group relative overflow-hidden rounded-3xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-gradient-to-br from-[#DCFCE7]/35 via-[#DCFCE7]/40 to-white dark:from-[#18181B] dark:via-[#15803D] dark:to-[#18181B] shadow-xl shadow-[#25D366]/20 transition-colors duration-300"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       aria-roledescription="carousel"
       aria-label="Hero Highlights"
     >
       {/* Decorative subtle ambient lights */}
-      <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-[#C06EF7]/25 blur-3xl" />
-      <div className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-[#960DF2]/20 blur-3xl" />
+      <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-[#1EA855]/25 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-[#25D366]/20 blur-3xl" />
 
       {/* Main Slide Content */}
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-12 p-6 sm:p-10 lg:p-16 min-h-[460px] lg:min-h-[520px]">
         {/* Left Side: Copy and CTAs */}
         <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-left">
           {currentSlide.badge && (
-            <div className="inline-flex items-center gap-2 rounded-full border border-purple-300/80 dark:border-purple-500/50 bg-[#EACFFC] dark:bg-[#780AC2]/50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#5A0891] dark:text-[#EACFFC] shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-[#960DF2] animate-pulse" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#E4E4E7]/80 dark:border-[#25D366]/50 bg-[#DCFCE7] dark:bg-[#1EA855]/50 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#15803D] dark:text-[#DCFCE7] shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-[#25D366] animate-pulse" />
               <span>{currentSlide.badge}</span>
             </div>
           )}
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#3C0561] dark:text-white leading-[1.15]">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#18181B] dark:text-white leading-[1.15]">
             {currentSlide.heading}
           </h1>
 
           {currentSlide.subheading && (
-            <p className="text-sm sm:text-base text-[#5A0891]/90 dark:text-purple-100/80 max-w-xl leading-relaxed font-normal">
+            <p className="text-sm sm:text-base text-[#15803D]/90 dark:text-zinc-200/80 max-w-xl leading-relaxed font-normal">
               {currentSlide.subheading}
             </p>
           )}
@@ -119,7 +119,7 @@ export default function HeroCarousel({ slides = DEFAULT_SLIDES }: HeroCarouselPr
             {currentSlide.primaryButtonText && currentSlide.primaryButtonUrl && (
               <Link
                 href={currentSlide.primaryButtonUrl}
-                className="inline-flex items-center gap-2 rounded-lg bg-[#960DF2] hover:bg-[#780AC2] text-white px-6 py-3.5 text-xs sm:text-sm font-bold shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 active:scale-95 transition-all"
+                className="inline-flex items-center gap-2 rounded-lg bg-[#25D366] hover:bg-[#1EA855] text-white px-6 py-3.5 text-xs sm:text-sm font-bold shadow-lg shadow-[#25D366]/20 hover:shadow-[#25D366]/20 active:scale-95 transition-all"
               >
                 <span>{currentSlide.primaryButtonText}</span>
                 <span aria-hidden="true">&rarr;</span>
@@ -129,7 +129,7 @@ export default function HeroCarousel({ slides = DEFAULT_SLIDES }: HeroCarouselPr
             {currentSlide.secondaryButtonText && currentSlide.secondaryButtonUrl && (
               <Link
                 href={currentSlide.secondaryButtonUrl}
-                className="inline-flex items-center gap-2 rounded-lg border-2 border-[#960DF2] dark:border-purple-400 bg-transparent text-[#5A0891] dark:text-purple-200 hover:bg-purple-100/50 dark:hover:bg-purple-900/40 px-5 py-3 text-xs sm:text-sm font-bold transition-all"
+                className="inline-flex items-center gap-2 rounded-lg border-2 border-[#25D366] dark:border-[#25D366] bg-transparent text-[#15803D] dark:text-zinc-300 hover:bg-[#DCFCE7]/50 dark:hover:bg-[#18181B]/40 px-5 py-3 text-xs sm:text-sm font-bold transition-all"
               >
                 <span>{currentSlide.secondaryButtonText}</span>
               </Link>
@@ -138,7 +138,7 @@ export default function HeroCarousel({ slides = DEFAULT_SLIDES }: HeroCarouselPr
         </div>
 
         {/* Right Side: Showcase Image */}
-        <div className="lg:col-span-5 relative w-full aspect-[4/3] lg:aspect-square overflow-hidden rounded-2xl border border-purple-200/80 dark:border-purple-700/50 shadow-2xl bg-purple-100/50 dark:bg-purple-950/50">
+        <div className="lg:col-span-5 relative w-full aspect-[4/3] lg:aspect-square overflow-hidden rounded-2xl border border-[#E4E4E7]/80 dark:border-zinc-700/50 shadow-2xl bg-[#DCFCE7]/50 dark:bg-[#18181B]/50">
           {currentSlide.imageUrl && (
             <Image
               src={normalizeImageUrl(currentSlide.imageUrl, { hero: true, width: 900, quality: 80 })}
@@ -161,7 +161,7 @@ export default function HeroCarousel({ slides = DEFAULT_SLIDES }: HeroCarouselPr
             type="button"
             onClick={prevSlide}
             aria-label="Previous Slide"
-            className="absolute left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 dark:bg-[#3C0561]/90 border border-purple-200 dark:border-purple-700 text-[#3C0561] dark:text-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 active:scale-95 cursor-pointer z-20"
+            className="absolute left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 dark:bg-[#18181B]/90 border border-[#E4E4E7] dark:border-zinc-700 text-[#18181B] dark:text-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 active:scale-95 cursor-pointer z-20"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -172,7 +172,7 @@ export default function HeroCarousel({ slides = DEFAULT_SLIDES }: HeroCarouselPr
             type="button"
             onClick={nextSlide}
             aria-label="Next Slide"
-            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 dark:bg-[#3C0561]/90 border border-purple-200 dark:border-purple-700 text-[#3C0561] dark:text-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 active:scale-95 cursor-pointer z-20"
+            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 dark:bg-[#18181B]/90 border border-[#E4E4E7] dark:border-zinc-700 text-[#18181B] dark:text-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110 active:scale-95 cursor-pointer z-20"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -193,8 +193,8 @@ export default function HeroCarousel({ slides = DEFAULT_SLIDES }: HeroCarouselPr
               aria-current={currentIndex === idx}
               className={`h-2.5 rounded-full transition-all cursor-pointer ${
                 currentIndex === idx
-                  ? "w-8 bg-[#960DF2] dark:bg-[#C06EF7]"
-                  : "w-2.5 bg-purple-300/80 dark:bg-purple-700 hover:bg-purple-400"
+                  ? "w-8 bg-[#25D366] dark:bg-[#1EA855]"
+                  : "w-2.5 bg-[#86EFAC]/80 dark:bg-[#1EA855] hover:bg-[#25D366]"
               }`}
             />
           ))}

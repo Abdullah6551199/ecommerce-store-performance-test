@@ -29,7 +29,7 @@ export default function AIReviewGeneratorManager() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <span className="p-2 rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/30">
+            <span className="p-2 rounded-xl bg-[#25D366]/20 text-zinc-400 border border-[#25D366]/30">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -46,7 +46,7 @@ export default function AIReviewGeneratorManager() {
             onClick={() => setActiveTab("history")}
             className={`px-4 py-2 text-xs font-semibold rounded-lg transition ${
               activeTab === "history"
-                ? "bg-purple-600 text-white shadow"
+                ? "bg-[#25D366] text-white shadow"
                 : "text-slate-400 hover:text-white"
             }`}
           >
@@ -56,7 +56,7 @@ export default function AIReviewGeneratorManager() {
             onClick={() => setActiveTab("generate")}
             className={`px-4 py-2 text-xs font-semibold rounded-lg transition ${
               activeTab === "generate"
-                ? "bg-purple-600 text-white shadow"
+                ? "bg-[#25D366] text-white shadow"
                 : "text-slate-400 hover:text-white"
             }`}
           >
@@ -81,7 +81,7 @@ export default function AIReviewGeneratorManager() {
                 const p = productsList.find((x) => x.id === id);
                 if (p) setSelectedProductTitle(p.name);
               }}
-              className="bg-slate-800 border border-slate-700 text-white text-sm rounded-lg px-3 py-2 w-full max-w-md focus:outline-none focus:border-purple-500"
+              className="bg-slate-800 border border-slate-700 text-white text-sm rounded-lg px-3 py-2 w-full max-w-md focus:outline-none focus:border-[#25D366]"
             >
               {productsList.map((p) => (
                 <option key={p.id} value={p.id}>

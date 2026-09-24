@@ -31,20 +31,20 @@ export default function BrandLogosRow({
   return (
     <section className="space-y-4 py-4">
       {heading && (
-        <p className="text-center text-xs font-bold uppercase tracking-widest text-[#780AC2] dark:text-purple-300/80">
+        <p className="text-center text-xs font-bold uppercase tracking-widest text-[#1EA855] dark:text-zinc-400/80">
           {heading}
         </p>
       )}
 
       {/* Horizontal Scroll / Marquee strip */}
-      <div className="relative overflow-hidden py-4 border-y border-purple-200/50 dark:border-purple-800/40">
+      <div className="relative overflow-hidden py-4 border-y border-[#E4E4E7]/50 dark:border-zinc-800/40">
         <div className="flex items-center justify-around gap-8 overflow-x-auto scrollbar-none opacity-60 dark:opacity-75 hover:opacity-100 transition-opacity">
           {logos.map((brand, idx) => (
             <div
               key={idx}
               className="flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 shrink-0 px-4"
             >
-              <span className="font-black text-base sm:text-lg tracking-widest text-[#3C0561] dark:text-purple-100 hover:text-[#960DF2] dark:hover:text-white transition-colors uppercase">
+              <span className="font-black text-base sm:text-lg tracking-widest text-[#18181B] dark:text-zinc-200 hover:text-[#25D366] dark:hover:text-white transition-colors uppercase">
                 {brand.logoText || brand.name}
               </span>
             </div>

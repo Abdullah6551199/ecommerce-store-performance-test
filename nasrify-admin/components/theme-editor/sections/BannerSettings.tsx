@@ -25,7 +25,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
           type="text"
           value={heading}
           onChange={(e) => onChange({ heading: e.target.value })}
-          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
         />
       </div>
 
@@ -35,7 +35,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
           rows={3}
           value={text}
           onChange={(e) => onChange({ text: e.target.value })}
-          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
         />
       </div>
 
@@ -46,7 +46,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
             type="text"
             value={cta_text}
             onChange={(e) => onChange({ cta_text: e.target.value })}
-            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
           />
         </div>
         <div>
@@ -55,7 +55,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
             type="text"
             value={cta_link}
             onChange={(e) => onChange({ cta_link: e.target.value })}
-            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
           />
         </div>
       </div>
@@ -75,7 +75,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
           <select
             value={height}
             onChange={(e) => onChange({ height: e.target.value })}
-            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
           >
             <option value="short">Short</option>
             <option value="medium">Medium</option>
@@ -88,7 +88,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
           <select
             value={variant}
             onChange={(e) => onChange({ variant: e.target.value })}
-            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
           >
             <option value="full_width">Full Width</option>
             <option value="boxed">Boxed</option>

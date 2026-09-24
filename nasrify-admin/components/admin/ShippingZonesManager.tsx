@@ -265,7 +265,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
         <div
           className={`fixed top-4 right-4 z-50 rounded-2xl border px-5 py-3 text-xs font-bold shadow-2xl backdrop-blur-md transition-all ${
             feedback.type === "success"
-              ? "border-purple-500/40 bg-purple-950/90 text-purple-100"
+              ? "border-[#25D366]/40 bg-[#18181B]/90 text-zinc-200"
               : "border-red-500/40 bg-red-950/90 text-red-100"
           }`}
         >
@@ -274,15 +274,15 @@ export default function ShippingZonesManager(): React.JSX.Element {
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 dark:border-purple-800/60 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E4E4E7] dark:border-zinc-800/60 pb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#3C0561] dark:text-[#EACFFC] flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#18181B] dark:text-[#DCFCE7] flex items-center gap-2.5">
             <span>Shipping Zones</span>
-            <span className="rounded-full bg-purple-100 dark:bg-purple-900/60 px-3 py-0.5 text-xs font-mono font-bold text-purple-700 dark:text-purple-300">
+            <span className="rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/60 px-3 py-0.5 text-xs font-mono font-bold text-[#1EA855] dark:text-zinc-400">
               {zones.length} Zones
             </span>
           </h1>
-          <p className="text-xs text-purple-700/80 dark:text-purple-300/80 mt-1">
+          <p className="text-xs text-[#1EA855]/80 dark:text-zinc-400/80 mt-1">
             Define store delivery regions, country targeting, shipping rates, and delivery time windows.
           </p>
         </div>
@@ -291,14 +291,14 @@ export default function ShippingZonesManager(): React.JSX.Element {
           <button
             type="button"
             onClick={handleLoadPresets}
-            className="rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/40 hover:bg-purple-100 dark:hover:bg-purple-800/60 px-4 py-2.5 text-xs font-bold text-purple-900 dark:text-purple-100 transition-colors cursor-pointer"
+            className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5] dark:bg-[#18181B]/40 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]/60 px-4 py-2.5 text-xs font-bold text-[#18181B] dark:text-zinc-200 transition-colors cursor-pointer"
           >
             ⚡ Load Preset Zones
           </button>
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 text-xs font-bold shadow-lg shadow-purple-600/25 transition-all cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-5 py-2.5 text-xs font-bold shadow-lg shadow-[#25D366]/20 transition-all cursor-pointer"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -311,20 +311,20 @@ export default function ShippingZonesManager(): React.JSX.Element {
       {/* Zones List */}
       <div className="space-y-3">
         {isLoading ? (
-          <div className="rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-12 text-center text-purple-600 dark:text-purple-300 text-xs">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-purple-500 border-t-transparent mx-auto mb-2" />
+          <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#18181B]/20 p-12 text-center text-[#25D366] dark:text-zinc-400 text-xs">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#25D366] border-t-transparent mx-auto mb-2" />
             Loading shipping zones...
           </div>
         ) : zones.length === 0 ? (
-          <div className="rounded-2xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 p-12 text-center space-y-4">
-            <p className="text-sm font-bold text-[#3C0561] dark:text-[#EACFFC]">No shipping zones configured yet</p>
-            <p className="text-xs text-purple-600/70 dark:text-purple-300/70 max-w-md mx-auto">
+          <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#18181B]/20 p-12 text-center space-y-4">
+            <p className="text-sm font-bold text-[#18181B] dark:text-[#DCFCE7]">No shipping zones configured yet</p>
+            <p className="text-xs text-[#25D366]/70 dark:text-zinc-400/70 max-w-md mx-auto">
               Shipping zones allow you to charge accurate rates per country and provide estimated delivery dates.
             </p>
             <button
               type="button"
               onClick={handleLoadPresets}
-              className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 text-xs font-bold shadow-md cursor-pointer"
+              className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-5 py-2 text-xs font-bold shadow-md cursor-pointer"
             >
               Load Standard Preset Zones
             </button>
@@ -335,7 +335,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
               key={zone.id}
               className={`rounded-2xl border transition-all p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 ${
                 zone.isActive
-                  ? "border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/20 hover:border-purple-300 dark:hover:border-purple-700"
+                  ? "border-[#E4E4E7] dark:border-zinc-800/60 bg-white dark:bg-[#18181B]/20 hover:border-[#E4E4E7] dark:hover:border-zinc-700"
                   : "border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/40 opacity-70"
               }`}
             >
@@ -347,7 +347,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
                     type="button"
                     disabled={index === 0}
                     onClick={() => handleMoveZone(index, "up")}
-                    className="p-1 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/50 disabled:opacity-20 text-purple-600 dark:text-purple-300 cursor-pointer disabled:cursor-not-allowed"
+                    className="p-1 rounded-lg hover:bg-[#DCFCE7] dark:hover:bg-[#18181B]/50 disabled:opacity-20 text-[#25D366] dark:text-zinc-400 cursor-pointer disabled:cursor-not-allowed"
                     title="Move priority up"
                   >
                     <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -358,7 +358,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
                     type="button"
                     disabled={index === zones.length - 1}
                     onClick={() => handleMoveZone(index, "down")}
-                    className="p-1 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/50 disabled:opacity-20 text-purple-600 dark:text-purple-300 cursor-pointer disabled:cursor-not-allowed"
+                    className="p-1 rounded-lg hover:bg-[#DCFCE7] dark:hover:bg-[#18181B]/50 disabled:opacity-20 text-[#25D366] dark:text-zinc-400 cursor-pointer disabled:cursor-not-allowed"
                     title="Move priority down"
                   >
                     <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -369,8 +369,8 @@ export default function ShippingZonesManager(): React.JSX.Element {
 
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-base font-bold text-[#3C0561] dark:text-[#EACFFC]">{zone.name}</h3>
-                    <span className="text-[10px] font-mono text-purple-500 bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 rounded-full font-bold">
+                    <h3 className="text-base font-bold text-[#18181B] dark:text-[#DCFCE7]">{zone.name}</h3>
+                    <span className="text-[10px] font-mono text-[#25D366] bg-[#DCFCE7] dark:bg-[#18181B]/60 px-2 py-0.5 rounded-full font-bold">
                       Priority #{index + 1}
                     </span>
                   </div>
@@ -380,13 +380,13 @@ export default function ShippingZonesManager(): React.JSX.Element {
                     {zone.countries.map((c) => (
                       <span
                         key={c}
-                        className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 text-purple-800 dark:text-purple-200"
+                        className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-[#F4F4F5] dark:bg-[#18181B]/60 border border-[#E4E4E7] dark:border-zinc-800 text-[#15803D] dark:text-zinc-300"
                       >
                         {c === "*" ? "Rest of World (*)" : c}
                       </span>
                     ))}
                     {zone.states && zone.states.length > 0 && (
-                      <span className="text-[10px] text-purple-600/70 dark:text-purple-300/70 font-medium">
+                      <span className="text-[10px] text-[#25D366]/70 dark:text-zinc-400/70 font-medium">
                         (States: {zone.states.join(", ")})
                       </span>
                     )}
@@ -398,10 +398,10 @@ export default function ShippingZonesManager(): React.JSX.Element {
               <div className="flex flex-wrap items-center gap-6 text-xs md:px-4">
                 {/* Rate */}
                 <div>
-                  <p className="text-[10px] font-semibold text-purple-600/70 dark:text-purple-300/70 uppercase tracking-wider">
+                  <p className="text-[10px] font-semibold text-[#25D366]/70 dark:text-zinc-400/70 uppercase tracking-wider">
                     Rate
                   </p>
-                  <p className="text-sm font-bold font-mono text-[#3C0561] dark:text-[#EACFFC] mt-0.5">
+                  <p className="text-sm font-bold font-mono text-[#18181B] dark:text-[#DCFCE7] mt-0.5">
                     {zone.rateType === "free" ? (
                       <span className="text-emerald-600 dark:text-emerald-400 font-black">FREE</span>
                     ) : zone.rateType === "percentage" ? (
@@ -415,10 +415,10 @@ export default function ShippingZonesManager(): React.JSX.Element {
                 {/* Free Shipping Threshold */}
                 {zone.freeShippingThreshold !== null && zone.freeShippingThreshold > 0 && (
                   <div>
-                    <p className="text-[10px] font-semibold text-purple-600/70 dark:text-purple-300/70 uppercase tracking-wider">
+                    <p className="text-[10px] font-semibold text-[#25D366]/70 dark:text-zinc-400/70 uppercase tracking-wider">
                       Free Threshold
                     </p>
-                    <p className="text-xs font-bold font-mono text-purple-700 dark:text-purple-300 mt-0.5">
+                    <p className="text-xs font-bold font-mono text-[#1EA855] dark:text-zinc-400 mt-0.5">
                       Orders ≥ ${Number(zone.freeShippingThreshold).toFixed(2)}
                     </p>
                   </div>
@@ -426,7 +426,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
 
                 {/* Delivery window */}
                 <div>
-                  <p className="text-[10px] font-semibold text-purple-600/70 dark:text-purple-300/70 uppercase tracking-wider">
+                  <p className="text-[10px] font-semibold text-[#25D366]/70 dark:text-zinc-400/70 uppercase tracking-wider">
                     Delivery Time
                   </p>
                   <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 mt-0.5">
@@ -442,13 +442,13 @@ export default function ShippingZonesManager(): React.JSX.Element {
                   onClick={() => handleToggleActive(zone)}
                   className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold cursor-pointer transition-colors ${
                     zone.isActive
-                      ? "bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-200"
+                      ? "bg-[#DCFCE7] text-[#15803D] dark:bg-[#18181B]/60 dark:text-zinc-300"
                       : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                   }`}
                 >
                   <span
                     className={`h-2 w-2 rounded-full ${
-                      zone.isActive ? "bg-purple-600 dark:bg-purple-400" : "bg-zinc-400"
+                      zone.isActive ? "bg-[#25D366] dark:bg-[#25D366]" : "bg-zinc-400"
                     }`}
                   />
                   <span>{zone.isActive ? "Active" : "Inactive"}</span>
@@ -457,7 +457,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
                 <button
                   type="button"
                   onClick={() => handleOpenEdit(zone)}
-                  className="rounded-xl border border-purple-200 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-900/40 p-2 text-purple-600 dark:text-purple-300 transition-colors cursor-pointer"
+                  className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/40 p-2 text-[#25D366] dark:text-zinc-400 transition-colors cursor-pointer"
                   title="Edit zone"
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -484,9 +484,9 @@ export default function ShippingZonesManager(): React.JSX.Element {
       {/* Add / Edit Zone Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-purple-100 dark:border-purple-800 bg-white dark:bg-[#200434] p-6 sm:p-8 shadow-2xl space-y-6">
-            <div className="flex items-center justify-between border-b border-purple-100 dark:border-purple-800/60 pb-4">
-              <h2 className="text-lg font-bold text-[#3C0561] dark:text-[#EACFFC]">
+          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#200434] p-6 sm:p-8 shadow-2xl space-y-6">
+            <div className="flex items-center justify-between border-b border-[#E4E4E7] dark:border-zinc-800/60 pb-4">
+              <h2 className="text-lg font-bold text-[#18181B] dark:text-[#DCFCE7]">
                 {editingZone ? `Edit Zone: ${editingZone.name}` : "Create Shipping Zone"}
               </h2>
               <button
@@ -503,7 +503,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
             <form onSubmit={handleSaveZone} className="space-y-4">
               {/* Zone Name */}
               <div>
-                <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+                <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
                   Zone Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -512,23 +512,23 @@ export default function ShippingZonesManager(): React.JSX.Element {
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="e.g. Pakistan Domestic, North America, UAE Local"
-                  className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                 />
               </div>
 
               {/* Countries Selector */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200">
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300">
                     Countries Targeted ({formCountries.length}) <span className="text-red-500">*</span>
                   </label>
-                  <span className="text-[10px] text-purple-600/70 dark:text-purple-300/70">
+                  <span className="text-[10px] text-[#25D366]/70 dark:text-zinc-400/70">
                     Click to toggle or type custom ISO code below
                   </span>
                 </div>
 
                 {/* Quick chip buttons */}
-                <div className="flex flex-wrap gap-1.5 p-3 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/40 dark:bg-purple-950/40">
+                <div className="flex flex-wrap gap-1.5 p-3 rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/40 dark:bg-[#18181B]/40">
                   {QUICK_COUNTRIES.map((c) => {
                     const isSelected = formCountries.includes(c.code);
                     return (
@@ -538,8 +538,8 @@ export default function ShippingZonesManager(): React.JSX.Element {
                         onClick={() => toggleCountry(c.code)}
                         className={`text-[11px] font-bold px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                           isSelected
-                            ? "bg-purple-600 text-white shadow-sm"
-                            : "bg-white dark:bg-purple-900/40 border border-purple-200 dark:border-purple-700 text-zinc-700 dark:text-zinc-300 hover:bg-purple-100"
+                            ? "bg-[#25D366] text-white shadow-sm"
+                            : "bg-white dark:bg-[#18181B]/40 border border-[#E4E4E7] dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-[#DCFCE7]"
                         }`}
                       >
                         {c.name} {isSelected && "✓"}
@@ -556,12 +556,12 @@ export default function ShippingZonesManager(): React.JSX.Element {
                     onChange={(e) => setCustomCountryInput(e.target.value)}
                     onKeyDown={handleAddCustomCountry}
                     placeholder="Add custom 2-letter ISO code (e.g. IT, ES, AU)..."
-                    className="flex-1 rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="flex-1 rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   />
                   <button
                     type="button"
                     onClick={handleAddCustomCountry}
-                    className="rounded-xl bg-purple-100 dark:bg-purple-900/60 hover:bg-purple-200 text-purple-800 dark:text-purple-200 px-4 py-2 text-xs font-bold cursor-pointer transition-colors"
+                    className="rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/60 hover:bg-[#DCFCE7] text-[#15803D] dark:text-zinc-300 px-4 py-2 text-xs font-bold cursor-pointer transition-colors"
                   >
                     + Add Country
                   </button>
@@ -570,28 +570,28 @@ export default function ShippingZonesManager(): React.JSX.Element {
 
               {/* Optional States / Provinces */}
               <div>
-                <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
-                  States / Provinces Filter <span className="text-purple-400 font-normal">(Optional, comma-separated codes, e.g. CA, NY, TX)</span>
+                <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
+                  States / Provinces Filter <span className="text-zinc-400 font-normal">(Optional, comma-separated codes, e.g. CA, NY, TX)</span>
                 </label>
                 <input
                   type="text"
                   value={formStates}
                   onChange={(e) => setFormStates(e.target.value)}
                   placeholder="Leave empty to apply to entire country, or specify CA, NY"
-                  className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                  className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                 />
               </div>
 
               {/* Rate Type & Rate */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
                     Rate Type <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formRateType}
                     onChange={(e) => setFormRateType(e.target.value as any)}
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   >
                     <option value="flat">Flat Rate ($)</option>
                     <option value="percentage">Percentage of Cart (%)</option>
@@ -600,7 +600,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
                     Rate Value {formRateType === "percentage" ? "(%)" : "($)"}
                   </label>
                   <input
@@ -610,7 +610,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
                     disabled={formRateType === "free"}
                     value={formRateType === "free" ? 0 : formRate}
                     onChange={(e) => setFormRate(parseFloat(e.target.value) || 0)}
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500 disabled:opacity-40"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366] disabled:opacity-40"
                   />
                 </div>
               </div>
@@ -618,8 +618,8 @@ export default function ShippingZonesManager(): React.JSX.Element {
               {/* Threshold & Min Order Value */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
-                    Free Shipping Threshold ($) <span className="text-purple-400 font-normal">(Optional)</span>
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
+                    Free Shipping Threshold ($) <span className="text-zinc-400 font-normal">(Optional)</span>
                   </label>
                   <input
                     type="number"
@@ -628,13 +628,13 @@ export default function ShippingZonesManager(): React.JSX.Element {
                     value={formFreeThreshold}
                     onChange={(e) => setFormFreeThreshold(e.target.value)}
                     placeholder="e.g. 100 for orders ≥ $100"
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
-                    Minimum Order Value ($) <span className="text-purple-400 font-normal">(Optional)</span>
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
+                    Minimum Order Value ($) <span className="text-zinc-400 font-normal">(Optional)</span>
                   </label>
                   <input
                     type="number"
@@ -643,7 +643,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
                     value={formMinOrder}
                     onChange={(e) => setFormMinOrder(e.target.value)}
                     placeholder="e.g. 20"
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2.5 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   />
                 </div>
               </div>
@@ -651,7 +651,7 @@ export default function ShippingZonesManager(): React.JSX.Element {
               {/* Delivery Window & Status */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
                 <div>
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
                     Min Delivery (Days)
                   </label>
                   <input
@@ -659,12 +659,12 @@ export default function ShippingZonesManager(): React.JSX.Element {
                     min="0"
                     value={formDeliveryMin}
                     onChange={(e) => setFormDeliveryMin(parseInt(e.target.value) || 0)}
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3C0561] dark:text-purple-200 mb-1">
+                  <label className="block text-xs font-semibold text-[#18181B] dark:text-zinc-300 mb-1">
                     Max Delivery (Days)
                   </label>
                   <input
@@ -672,11 +672,11 @@ export default function ShippingZonesManager(): React.JSX.Element {
                     min="0"
                     value={formDeliveryMax}
                     onChange={(e) => setFormDeliveryMax(parseInt(e.target.value) || 0)}
-                    className="w-full rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-purple-500"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-white focus:outline-none focus:border-[#25D366]"
                   />
                 </div>
 
-                <div className="p-3 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 self-end">
+                <div className="p-3 rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 self-end">
                   <Toggle
                     size="sm"
                     checked={formIsActive}
@@ -687,18 +687,18 @@ export default function ShippingZonesManager(): React.JSX.Element {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-purple-100 dark:border-purple-800/60">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E4E4E7] dark:border-zinc-800/60">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-xl border border-purple-200 dark:border-purple-700 px-4 py-2.5 text-xs font-bold text-zinc-700 dark:text-zinc-300 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors cursor-pointer"
+                  className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 px-4 py-2.5 text-xs font-bold text-zinc-700 dark:text-zinc-300 hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/40 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 text-xs font-bold shadow-lg shadow-purple-600/25 transition-all cursor-pointer disabled:opacity-50"
+                  className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-5 py-2.5 text-xs font-bold shadow-lg shadow-[#25D366]/20 transition-all cursor-pointer disabled:opacity-50"
                 >
                   {isSaving ? "Saving..." : editingZone ? "Update Zone" : "Create Zone"}
                 </button>

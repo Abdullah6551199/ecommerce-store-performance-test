@@ -23,7 +23,7 @@ export function AIDashboardWidget() {
     <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg space-y-4">
       <div className="flex items-center justify-between border-b border-slate-800 pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#25D366] to-indigo-600 flex items-center justify-center text-white shadow">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -35,7 +35,7 @@ export function AIDashboardWidget() {
         </div>
         <a
           href="/admin/ai-review-generator"
-          className="text-xs text-purple-400 hover:text-purple-300 font-medium transition"
+          className="text-xs text-zinc-400 hover:text-zinc-400 font-medium transition"
         >
           View Batches →
         </a>
@@ -51,7 +51,7 @@ export function AIDashboardWidget() {
           </div>
           <div className="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
             <span className="text-[11px] text-slate-400 block font-medium">This Month</span>
-            <span className="text-xl font-bold text-purple-400 mt-0.5 block">{stats?.totalThisMonth ?? 0}</span>
+            <span className="text-xl font-bold text-zinc-400 mt-0.5 block">{stats?.totalThisMonth ?? 0}</span>
           </div>
         </div>
       )}

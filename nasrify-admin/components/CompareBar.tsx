@@ -61,13 +61,13 @@ export default function CompareBar(): React.JSX.Element | null {
     <div
       role="region"
       aria-label="Product comparison bar"
-      className="fixed bottom-0 left-0 right-0 z-40 bg-[#3C0561]/95 dark:bg-[#200236]/95 border-t border-purple-500/40 shadow-2xl backdrop-blur-xl transition-all duration-300 animate-in slide-in-from-bottom-5 text-white"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-[#18181B]/95 dark:bg-[#200236]/95 border-t border-[#25D366]/40 shadow-2xl backdrop-blur-xl transition-all duration-300 animate-in slide-in-from-bottom-5 text-white"
     >
       <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
         {/* Left: Info & Thumbnails */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#960DF2] shadow-md shadow-purple-900/50">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#25D366] shadow-md shadow-[#25D366]/20">
               <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
@@ -76,20 +76,20 @@ export default function CompareBar(): React.JSX.Element | null {
               <p className="text-xs font-bold text-white tracking-wide">
                 Compare Products
               </p>
-              <p className="text-[11px] text-purple-200">
+              <p className="text-[11px] text-zinc-300">
                 {compareList.length} of {MAX_COMPARE_LIMIT} products selected
               </p>
             </div>
           </div>
 
           {/* Mini Thumbnails (hidden on very small screens, visible from sm) */}
-          <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-purple-400/30">
+          <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-[#25D366]/30">
             {products.map((p) => {
               const imgUrl = p.image ? normalizeImageUrl(p.image, { width: 96, quality: 75 }) : null;
               return (
                 <div
                   key={p.id}
-                  className="group relative h-10 w-10 overflow-hidden rounded-lg border border-purple-400/50 bg-purple-950/60 p-0.5"
+                  className="group relative h-10 w-10 overflow-hidden rounded-lg border border-[#25D366]/50 bg-[#18181B]/60 p-0.5"
                   title={p.name}
                 >
                   {imgUrl ? (
@@ -101,7 +101,7 @@ export default function CompareBar(): React.JSX.Element | null {
                       className="h-full w-full object-cover rounded"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-purple-900/50 text-[9px] text-purple-300">
+                    <div className="flex h-full w-full items-center justify-center bg-[#18181B]/50 text-[9px] text-zinc-400">
                       IMG
                     </div>
                   )}
@@ -124,7 +124,7 @@ export default function CompareBar(): React.JSX.Element | null {
             {Array.from({ length: Math.max(0, MAX_COMPARE_LIMIT - products.length) }).map((_, idx) => (
               <div
                 key={`empty-${idx}`}
-                className="hidden md:flex h-10 w-10 items-center justify-center rounded-lg border border-dashed border-purple-400/30 bg-purple-950/20 text-[10px] text-purple-400/60"
+                className="hidden md:flex h-10 w-10 items-center justify-center rounded-lg border border-dashed border-[#25D366]/30 bg-[#18181B]/20 text-[10px] text-zinc-400/60"
               >
                 +
               </div>
@@ -137,13 +137,13 @@ export default function CompareBar(): React.JSX.Element | null {
           <button
             type="button"
             onClick={clearCompare}
-            className="text-xs font-semibold text-purple-300 hover:text-white transition-colors cursor-pointer px-2.5 py-1.5"
+            className="text-xs font-semibold text-zinc-400 hover:text-white transition-colors cursor-pointer px-2.5 py-1.5"
           >
             Clear All
           </button>
           <Link
             href={compareUrl}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-[#960DF2] hover:bg-[#AB3DF5] px-4 py-2 text-xs font-bold text-white shadow-lg shadow-purple-950/50 transition-all hover:scale-105"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-4 py-2 text-xs font-bold text-white shadow-lg shadow-[#25D366]/20 transition-all hover:scale-105"
           >
             <span>Compare Now</span>
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

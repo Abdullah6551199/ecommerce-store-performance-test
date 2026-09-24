@@ -122,7 +122,7 @@ export default function BroadcastManager(): React.JSX.Element {
     <div data-app="broadcast" className="space-y-8">
       {/* Header */}
       <div>
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400">
           <span>Marketing & Announcements</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white tracking-tight mt-1">
@@ -141,7 +141,7 @@ export default function BroadcastManager(): React.JSX.Element {
         </div>
         <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <p className="text-xs font-semibold text-zinc-500 uppercase">Total Impressions</p>
-          <p className="text-2xl font-black text-purple-600 dark:text-purple-400 mt-1.5">{totalViews}</p>
+          <p className="text-2xl font-black text-[#25D366] dark:text-zinc-400 mt-1.5">{totalViews}</p>
         </div>
         <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <p className="text-xs font-semibold text-zinc-500 uppercase">Dismissed</p>
@@ -158,7 +158,7 @@ export default function BroadcastManager(): React.JSX.Element {
         {/* Left Column: Form */}
         <div className="lg:col-span-7 bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 shadow-sm">
           <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400">
+            <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#25D366]/10 text-[#25D366] dark:text-zinc-400">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
               </svg>
@@ -190,7 +190,7 @@ export default function BroadcastManager(): React.JSX.Element {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., ⚡ Flash Sale: 25% Off All Orders!"
                 required
-                className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
               />
             </div>
 
@@ -205,7 +205,7 @@ export default function BroadcastManager(): React.JSX.Element {
                 rows={4}
                 placeholder="Use coupon code FLASH25 at checkout to enjoy 25% off storewide. Valid through Sunday midnight!"
                 required
-                className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
               />
             </div>
 
@@ -218,7 +218,7 @@ export default function BroadcastManager(): React.JSX.Element {
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value as any)}
-                  className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
                 >
                   <option value="promotion">Promotion (Special Offer)</option>
                   <option value="announcement">Announcement (Store Update)</option>
@@ -234,7 +234,7 @@ export default function BroadcastManager(): React.JSX.Element {
                 <select
                   value={target}
                   onChange={(e) => setTarget(e.target.value as any)}
-                  className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
                 >
                   <option value="all">All Visitors (Guests & Members)</option>
                   <option value="registered">Registered Members Only</option>
@@ -253,7 +253,7 @@ export default function BroadcastManager(): React.JSX.Element {
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="https://images.unsplash.com/... or /images/..."
-                className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
               />
             </div>
 
@@ -268,7 +268,7 @@ export default function BroadcastManager(): React.JSX.Element {
                   value={buttonText}
                   onChange={(e) => setButtonText(e.target.value)}
                   placeholder="e.g., Shop Now, Claim 25% Off"
-                  className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
                 />
               </div>
 
@@ -281,7 +281,7 @@ export default function BroadcastManager(): React.JSX.Element {
                   value={linkUrl}
                   onChange={(e) => setLinkUrl(e.target.value)}
                   placeholder="e.g., /shop, /category/shoes"
-                  className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
                 />
               </div>
             </div>
@@ -296,7 +296,7 @@ export default function BroadcastManager(): React.JSX.Element {
                     value="now"
                     checked={scheduleMode === "now"}
                     onChange={() => setScheduleMode("now")}
-                    className="text-purple-600"
+                    className="text-[#25D366]"
                   />
                   <span>Send Immediately</span>
                 </label>
@@ -307,7 +307,7 @@ export default function BroadcastManager(): React.JSX.Element {
                     value="later"
                     checked={scheduleMode === "later"}
                     onChange={() => setScheduleMode("later")}
-                    className="text-purple-600"
+                    className="text-[#25D366]"
                   />
                   <span>Schedule For Later</span>
                 </label>
@@ -329,7 +329,7 @@ export default function BroadcastManager(): React.JSX.Element {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-sm shadow-xl shadow-purple-600/25 transition flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#25D366] via-[#1EA855] to-indigo-600 hover:from-[#1EA855] hover:to-indigo-500 text-white font-extrabold text-sm shadow-xl shadow-[#25D366]/20 transition flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
             >
               {isSubmitting ? (
                 <span>Dispatching Broadcast...</span>
@@ -349,14 +349,14 @@ export default function BroadcastManager(): React.JSX.Element {
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               Live Storefront Preview
             </span>
-            <span className="text-[11px] font-semibold text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2.5 py-0.5 rounded-full">
+            <span className="text-[11px] font-semibold text-[#25D366] dark:text-zinc-400 bg-[#25D366]/10 px-2.5 py-0.5 rounded-full">
               Audience: {target.toUpperCase()}
             </span>
           </div>
 
           {/* Rendered Mockup of Storefront Popup Modal */}
-          <div className="relative rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-purple-500/30 shadow-2xl shadow-purple-500/20">
-            <div className="h-1.5 w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-[#18C729]" />
+          <div className="relative rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-[#25D366]/30 shadow-2xl shadow-[#25D366]/20">
+            <div className="h-1.5 w-full bg-gradient-to-r from-[#25D366] via-indigo-500 to-[#18C729]" />
 
             {/* Header Image if available */}
             {imageUrl ? (
@@ -370,7 +370,7 @@ export default function BroadcastManager(): React.JSX.Element {
 
             <div className="p-6 space-y-3.5">
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#25D366]/10 text-[#25D366] dark:text-zinc-400 border border-[#25D366]/20">
                   {type.toUpperCase()}
                 </span>
               </div>
@@ -386,7 +386,7 @@ export default function BroadcastManager(): React.JSX.Element {
 
               {/* Action Button Preview */}
               {(buttonText || linkUrl) && (
-                <div className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-extrabold text-xs shadow-md shadow-purple-600/30 text-center flex items-center justify-center gap-1.5">
+                <div className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#25D366] to-indigo-600 text-white font-extrabold text-xs shadow-md shadow-[#25D366]/20 text-center flex items-center justify-center gap-1.5">
                   <span>{buttonText || "Learn More"}</span>
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -444,7 +444,7 @@ export default function BroadcastManager(): React.JSX.Element {
                       <p className="text-[11px] text-zinc-500 truncate mt-0.5">{b.message}</p>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[#25D366]/10 text-[#25D366] dark:text-zinc-400 border border-[#25D366]/20">
                         {b.type}
                       </span>
                     </td>
@@ -456,7 +456,7 @@ export default function BroadcastManager(): React.JSX.Element {
                     <td className="py-4 px-4 text-zinc-500 whitespace-nowrap">
                       {new Date(b.createdAt).toLocaleDateString()} {new Date(b.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </td>
-                    <td className="py-4 px-4 text-center font-bold text-purple-600 dark:text-purple-400">
+                    <td className="py-4 px-4 text-center font-bold text-[#25D366] dark:text-zinc-400">
                       {b.stats?.totalViews || 0}
                     </td>
                     <td className="py-4 px-4 text-center text-zinc-500">

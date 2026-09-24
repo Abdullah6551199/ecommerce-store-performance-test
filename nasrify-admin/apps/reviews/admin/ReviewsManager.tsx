@@ -482,7 +482,7 @@ export default function ReviewsManager(): React.JSX.Element {
                 onClick={() => setAiFilter(f.id as any)}
                 className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   aiFilter === f.id
-                    ? "bg-purple-600 text-white shadow-sm"
+                    ? "bg-[#25D366] text-white shadow-sm"
                     : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
                 }`}
               >
@@ -608,7 +608,7 @@ export default function ReviewsManager(): React.JSX.Element {
                           </span>
                         )}
                         {rev.isAiGenerated === 1 && (
-                          <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-300 border border-purple-500/30 flex items-center gap-1 font-mono">
+                          <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[#25D366]/15 text-[#25D366] dark:text-zinc-400 border border-[#25D366]/30 flex items-center gap-1 font-mono">
                             ✨ AI
                           </span>
                         )}

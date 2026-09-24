@@ -86,8 +86,8 @@ export function DigitalProductUploader({
         onClick={() => fileInputRef.current?.click()}
         className={`relative border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 ${
           isDragging
-            ? "border-purple-500 bg-purple-50/50 dark:bg-purple-950/20 scale-[1.01]"
-            : "border-zinc-300 dark:border-zinc-700 hover:border-purple-400 dark:hover:border-purple-600 bg-zinc-50/60 dark:bg-zinc-900/60"
+            ? "border-[#25D366] bg-[#F4F4F5]/50 dark:bg-[#18181B]/20 scale-[1.01]"
+            : "border-zinc-300 dark:border-zinc-700 hover:border-[#25D366] dark:hover:border-[#1EA855] bg-zinc-50/60 dark:bg-zinc-900/60"
         }`}
       >
         <input
@@ -103,7 +103,7 @@ export function DigitalProductUploader({
         />
 
         <div className="flex flex-col items-center justify-center space-y-2">
-          <div className="h-12 w-12 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl shadow-inner">
+          <div className="h-12 w-12 rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-zinc-400 flex items-center justify-center text-2xl shadow-inner">
             {isUploading ? "⏳" : "☁️"}
           </div>
           <div>

@@ -64,7 +64,7 @@ export default function OrderTrackingSettings(): React.JSX.Element {
   if (loading) {
     return (
       <div className="p-8 text-center text-zinc-400 dark:text-zinc-500">
-        <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-zinc-300 border-t-[#960DF2] mb-2" />
+        <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-zinc-300 border-t-[#25D366] mb-2" />
         <p className="text-xs font-mono">Loading settings...</p>
       </div>
     );
@@ -98,7 +98,7 @@ export default function OrderTrackingSettings(): React.JSX.Element {
           type="checkbox"
           checked={settings.enablePublicTracking}
           onChange={(e) => setSettings({ ...settings, enablePublicTracking: e.target.checked })}
-          className="h-5 w-5 rounded border-zinc-300 text-[#960DF2] focus:ring-[#960DF2] accent-[#960DF2] cursor-pointer"
+          className="h-5 w-5 rounded border-zinc-300 text-[#25D366] focus:ring-[#25D366] accent-[#25D366] cursor-pointer"
         />
       </div>
 
@@ -116,7 +116,7 @@ export default function OrderTrackingSettings(): React.JSX.Element {
           type="checkbox"
           checked={settings.enableAutoNotifications}
           onChange={(e) => setSettings({ ...settings, enableAutoNotifications: e.target.checked })}
-          className="h-5 w-5 rounded border-zinc-300 text-[#960DF2] focus:ring-[#960DF2] accent-[#960DF2] cursor-pointer"
+          className="h-5 w-5 rounded border-zinc-300 text-[#25D366] focus:ring-[#25D366] accent-[#25D366] cursor-pointer"
         />
       </div>
 
@@ -134,7 +134,7 @@ export default function OrderTrackingSettings(): React.JSX.Element {
           type="checkbox"
           checked={settings.showCourierField}
           onChange={(e) => setSettings({ ...settings, showCourierField: e.target.checked })}
-          className="h-5 w-5 rounded border-zinc-300 text-[#960DF2] focus:ring-[#960DF2] accent-[#960DF2] cursor-pointer"
+          className="h-5 w-5 rounded border-zinc-300 text-[#25D366] focus:ring-[#25D366] accent-[#25D366] cursor-pointer"
         />
       </div>
 
@@ -152,7 +152,7 @@ export default function OrderTrackingSettings(): React.JSX.Element {
           type="checkbox"
           checked={settings.showTimeline}
           onChange={(e) => setSettings({ ...settings, showTimeline: e.target.checked })}
-          className="h-5 w-5 rounded border-zinc-300 text-[#960DF2] focus:ring-[#960DF2] accent-[#960DF2] cursor-pointer"
+          className="h-5 w-5 rounded border-zinc-300 text-[#25D366] focus:ring-[#25D366] accent-[#25D366] cursor-pointer"
         />
       </div>
 
@@ -190,7 +190,7 @@ export default function OrderTrackingSettings(): React.JSX.Element {
       <button
         type="submit"
         disabled={saving}
-        className="px-6 py-3 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-purple-500/20 transition disabled:opacity-50 cursor-pointer"
+        className="px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#25D366]/20 transition disabled:opacity-50 cursor-pointer"
       >
         {saving ? "Saving Changes..." : "Save Configuration"}
       </button>

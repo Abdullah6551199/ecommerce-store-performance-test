@@ -56,10 +56,10 @@ function AdminLoginForm(): React.JSX.Element {
   };
 
   return (
-    <div className="relative w-full max-w-md space-y-8 rounded-3xl border border-purple-800/40 bg-[#2A0344]/80 p-8 sm:p-10 shadow-2xl backdrop-blur-2xl">
+    <div className="relative w-full max-w-md space-y-8 rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-[#121214]/95 p-8 sm:p-10 shadow-2xl backdrop-blur-2xl">
       {/* Brand Icon & Header */}
       <div className="flex flex-col items-center text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#960DF2] to-[#C06EF7] shadow-lg shadow-purple-900/40">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#25D366] shadow-lg shadow-[#25D366]/25">
           <svg
             className="h-8 w-8 text-white"
             fill="none"
@@ -74,17 +74,17 @@ function AdminLoginForm(): React.JSX.Element {
             />
           </svg>
         </div>
-        <h1 className="mt-4 text-2xl font-black tracking-tight text-white sm:text-3xl">
-          Admin Portal
+        <h1 className="mt-4 text-2xl font-black tracking-tight text-zinc-900 dark:text-white sm:text-3xl">
+          Nasrify Admin
         </h1>
-        <p className="mt-1 text-xs text-purple-200/70">
+        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
           Sign in with administrator credentials to manage your store
         </p>
       </div>
 
       {/* Redirect Notification Notice */}
       {fromParam && (
-        <div className="rounded-xl border border-purple-500/30 bg-purple-900/30 p-3 text-xs text-purple-200">
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 p-3 text-xs text-zinc-700 dark:text-zinc-300">
           <p className="font-semibold">Authentication Required</p>
           <p className="opacity-80 mt-0.5">Please sign in to access your requested administration page.</p>
         </div>
@@ -95,8 +95,8 @@ function AdminLoginForm(): React.JSX.Element {
         <div
           className={`rounded-xl border p-4 text-sm ${
             remainingSeconds
-              ? "border-amber-500/40 bg-amber-500/10 text-amber-300"
-              : "border-red-500/40 bg-red-500/10 text-red-300"
+              ? "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-300"
+              : "border-red-500/40 bg-red-500/10 text-red-600 dark:text-red-300"
           }`}
         >
           <div className="flex items-center gap-2 font-semibold">
@@ -117,7 +117,7 @@ function AdminLoginForm(): React.JSX.Element {
       {/* Login Form */}
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-purple-200/80">
+          <label className="block text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
             Email Address
           </label>
           <input
@@ -126,12 +126,12 @@ function AdminLoginForm(): React.JSX.Element {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="admin@example.com"
-            className="mt-2 block w-full rounded-xl border border-purple-700/50 bg-purple-950/40 px-4 py-3 text-sm text-white placeholder-purple-400/40 focus:border-[#960DF2] focus:outline-none focus:ring-1 focus:ring-[#960DF2] transition"
+            className="mt-2 block w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800/60 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-[#25D366] focus:outline-none focus:ring-1 focus:ring-[#25D366] transition"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-purple-200/80">
+          <label className="block text-xs font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
             Password
           </label>
           <input
@@ -140,21 +140,21 @@ function AdminLoginForm(): React.JSX.Element {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
-            className="mt-2 block w-full rounded-xl border border-purple-700/50 bg-purple-950/40 px-4 py-3 text-sm text-white placeholder-purple-400/40 focus:border-[#960DF2] focus:outline-none focus:ring-1 focus:ring-[#960DF2] transition"
+            className="mt-2 block w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800/60 px-4 py-3 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-[#25D366] focus:outline-none focus:ring-1 focus:ring-[#25D366] transition"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading || (remainingSeconds !== null && remainingSeconds > 0)}
-          className="w-full rounded-xl bg-[#960DF2] hover:bg-[#850bd8] px-4 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-purple-900/30 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-4 py-3.5 text-sm font-extrabold text-white shadow-md shadow-[#25D366]/20 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
         >
           {loading ? "Authenticating..." : "Sign In to Admin"}
         </button>
       </form>
 
       {/* Security note */}
-      <div className="border-t border-purple-800/40 pt-4 text-center text-xs text-purple-300/60">
+      <div className="border-t border-zinc-200 dark:border-zinc-800 pt-4 text-center text-xs text-zinc-500 dark:text-zinc-400">
         Protected by Cloudflare Workers &amp; D1 Rate Limiting (3 attempts / 5 min lockout)
       </div>
     </div>
@@ -163,11 +163,11 @@ function AdminLoginForm(): React.JSX.Element {
 
 export default function AdminLoginPage(): React.JSX.Element {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#1E0230] px-4 py-12 selection:bg-[#960DF2] selection:text-white">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-100 dark:bg-[#09090B] px-4 py-12 selection:bg-[#25D366] selection:text-white relative">
       {/* Ambient background glow */}
-      <div className="absolute inset-0 bg-gradient-radial from-purple-900/20 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-radial from-emerald-500/10 via-transparent to-transparent pointer-events-none" />
 
-      <Suspense fallback={<div className="h-96 w-96 rounded-3xl bg-purple-950/40 animate-pulse" />}>
+      <Suspense fallback={<div className="h-96 w-96 rounded-3xl bg-zinc-200 dark:bg-zinc-800 animate-pulse" />}>
         <AdminLoginForm />
       </Suspense>
     </div>

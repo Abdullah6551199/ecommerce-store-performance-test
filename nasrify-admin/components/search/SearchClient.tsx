@@ -212,15 +212,15 @@ export default function SearchClient({
   // Sidebar Filter Form Content
   const renderFilterSidebar = () => (
     <div className="space-y-6">
-      <div className="flex items-center justify-between border-b border-purple-100 dark:border-purple-900 pb-3">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-purple-950 dark:text-purple-100">
+      <div className="flex items-center justify-between border-b border-[#E4E4E7] dark:border-zinc-800 pb-3">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-[#18181B] dark:text-zinc-200">
           Filters
         </h2>
         {activeFiltersCount > 0 && (
           <button
             type="button"
             onClick={handleClearAll}
-            className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline"
+            className="text-xs font-semibold text-[#25D366] dark:text-zinc-400 hover:underline"
           >
             Reset All
           </button>
@@ -235,18 +235,18 @@ export default function SearchClient({
             id="in-stock-filter"
             checked={inStock}
             onChange={handleStockToggle}
-            className="h-4 w-4 rounded border-purple-300 dark:border-purple-700 text-purple-600 focus:ring-purple-500"
+            className="h-4 w-4 rounded border-[#E4E4E7] dark:border-zinc-700 text-[#25D366] focus:ring-[#25D366]"
           />
-          <span className="text-xs font-semibold text-zinc-800 dark:text-purple-200 group-hover:text-purple-600 transition-colors">
+          <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-300 group-hover:text-[#25D366] transition-colors">
             In Stock Only
           </span>
         </label>
       </div>
 
       {/* Price Range Filter */}
-      <div className="space-y-3 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+      <div className="space-y-3 pt-4 border-t border-[#E4E4E7] dark:border-zinc-800/60">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-200">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B] dark:text-zinc-300">
             Price Range
           </h3>
           {(minPrice || maxPrice) && (
@@ -257,7 +257,7 @@ export default function SearchClient({
                 setMaxPrice("");
                 applyFilters({ minPrice: "", maxPrice: "" });
               }}
-              className="text-[10px] text-zinc-400 hover:text-purple-600"
+              className="text-[10px] text-zinc-400 hover:text-[#25D366]"
             >
               Clear
             </button>
@@ -272,7 +272,7 @@ export default function SearchClient({
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handlePriceApply()}
-              className="w-full rounded-xl border border-zinc-200 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950/60 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-purple-100 placeholder-zinc-400 focus:border-purple-500 focus:outline-none"
+              className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B]/60 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-zinc-200 placeholder-zinc-400 focus:border-[#25D366] focus:outline-none"
             />
           </div>
           <span className="text-xs text-zinc-400">-</span>
@@ -284,13 +284,13 @@ export default function SearchClient({
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handlePriceApply()}
-              className="w-full rounded-xl border border-zinc-200 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950/60 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-purple-100 placeholder-zinc-400 focus:border-purple-500 focus:outline-none"
+              className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B]/60 pl-6 pr-2 py-1.5 text-xs text-zinc-900 dark:text-zinc-200 placeholder-zinc-400 focus:border-[#25D366] focus:outline-none"
             />
           </div>
           <button
             type="button"
             onClick={handlePriceApply}
-            className="rounded-xl bg-purple-600 hover:bg-purple-700 px-3 py-1.5 text-xs font-bold text-white transition-all shadow-sm shadow-purple-500/20"
+            className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-3 py-1.5 text-xs font-bold text-white transition-all shadow-sm shadow-[#25D366]/20"
           >
             Go
           </button>
@@ -299,16 +299,16 @@ export default function SearchClient({
 
       {/* Category Filter */}
       {facets.categories && facets.categories.length > 0 && (
-        <div className="space-y-3 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+        <div className="space-y-3 pt-4 border-t border-[#E4E4E7] dark:border-zinc-800/60">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-200">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B] dark:text-zinc-300">
               Categories
             </h3>
             {category && (
               <button
                 type="button"
                 onClick={() => handleCategorySelect("")}
-                className="text-[10px] text-zinc-400 hover:text-purple-600"
+                className="text-[10px] text-zinc-400 hover:text-[#25D366]"
               >
                 Clear
               </button>
@@ -324,12 +324,12 @@ export default function SearchClient({
                   onClick={() => handleCategorySelect(cat.slug)}
                   className={`flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-xs transition-colors ${
                     isSelected
-                      ? "bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-bold border border-purple-300 dark:border-purple-700"
-                      : "text-zinc-700 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-700"
+                      ? "bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#1EA855] dark:text-zinc-400 font-bold border border-[#E4E4E7] dark:border-zinc-700"
+                      : "text-zinc-700 dark:text-zinc-300 hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/30 hover:text-[#1EA855]"
                   }`}
                 >
                   <span className="truncate">{cat.name}</span>
-                  <span className="ml-2 rounded-full bg-purple-50 dark:bg-purple-900/40 px-2 py-0.5 text-[10px] text-purple-600 dark:text-purple-300 font-mono">
+                  <span className="ml-2 rounded-full bg-[#F4F4F5] dark:bg-[#18181B]/40 px-2 py-0.5 text-[10px] text-[#25D366] dark:text-zinc-400 font-mono">
                     {cat.count}
                   </span>
                 </button>
@@ -341,16 +341,16 @@ export default function SearchClient({
 
       {/* Brand Filter */}
       {facets.brands && facets.brands.length > 0 && (
-        <div className="space-y-3 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+        <div className="space-y-3 pt-4 border-t border-[#E4E4E7] dark:border-zinc-800/60">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-200">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B] dark:text-zinc-300">
               Brands
             </h3>
             {brand && (
               <button
                 type="button"
                 onClick={() => handleBrandSelect("")}
-                className="text-[10px] text-zinc-400 hover:text-purple-600"
+                className="text-[10px] text-zinc-400 hover:text-[#25D366]"
               >
                 Clear
               </button>
@@ -366,12 +366,12 @@ export default function SearchClient({
                   onClick={() => handleBrandSelect(isSelected ? "" : b.name)}
                   className={`flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-xs transition-colors ${
                     isSelected
-                      ? "bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 font-bold border border-purple-300 dark:border-purple-700"
-                      : "text-zinc-700 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-700"
+                      ? "bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#1EA855] dark:text-zinc-400 font-bold border border-[#E4E4E7] dark:border-zinc-700"
+                      : "text-zinc-700 dark:text-zinc-300 hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/30 hover:text-[#1EA855]"
                   }`}
                 >
                   <span className="truncate">{b.name}</span>
-                  <span className="ml-2 rounded-full bg-purple-50 dark:bg-purple-900/40 px-2 py-0.5 text-[10px] text-purple-600 dark:text-purple-300 font-mono">
+                  <span className="ml-2 rounded-full bg-[#F4F4F5] dark:bg-[#18181B]/40 px-2 py-0.5 text-[10px] text-[#25D366] dark:text-zinc-400 font-mono">
                     {b.count}
                   </span>
                 </button>
@@ -383,9 +383,9 @@ export default function SearchClient({
 
       {/* Tags Filter */}
       {facets.tags && facets.tags.length > 0 && (
-        <div className="space-y-3 pt-4 border-t border-purple-100 dark:border-purple-900/60">
+        <div className="space-y-3 pt-4 border-t border-[#E4E4E7] dark:border-zinc-800/60">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-purple-900 dark:text-purple-200">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B] dark:text-zinc-300">
               Tags
             </h3>
             {selectedTags.length > 0 && (
@@ -395,7 +395,7 @@ export default function SearchClient({
                   setSelectedTags([]);
                   applyFilters({ tags: [] });
                 }}
-                className="text-[10px] text-zinc-400 hover:text-purple-600"
+                className="text-[10px] text-zinc-400 hover:text-[#25D366]"
               >
                 Clear
               </button>
@@ -411,8 +411,8 @@ export default function SearchClient({
                   onClick={() => handleTagToggle(t.name)}
                   className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] transition-all ${
                     isSelected
-                      ? "bg-purple-600 text-white font-bold shadow-sm shadow-purple-500/25"
-                      : "border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/40 text-purple-800 dark:text-purple-200 hover:border-purple-400"
+                      ? "bg-[#25D366] text-white font-bold shadow-sm shadow-[#25D366]/20"
+                      : "border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 text-[#15803D] dark:text-zinc-300 hover:border-[#25D366]"
                   }`}
                 >
                   <span>{t.name}</span>
@@ -429,7 +429,7 @@ export default function SearchClient({
   return (
     <div className="space-y-6">
       {/* Top Search & Filter Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-2xl border border-purple-100 dark:border-purple-800/80 bg-white dark:bg-purple-950/40 p-3 sm:p-4 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-white dark:bg-[#18181B]/40 p-3 sm:p-4 shadow-sm">
         {/* Search Input Field */}
         <div className="relative flex-1 max-w-lg">
           <input
@@ -438,10 +438,10 @@ export default function SearchClient({
             value={query}
             onChange={(e) => handleQueryChange(e.target.value)}
             placeholder="Search by product name, category, or SKU..."
-            className="w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950/60 pl-10 pr-9 py-2.5 text-xs sm:text-sm text-zinc-900 dark:text-purple-100 placeholder-zinc-400 dark:placeholder-purple-400/40 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-all"
+            className="w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B]/60 pl-10 pr-9 py-2.5 text-xs sm:text-sm text-zinc-900 dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-400 focus:border-[#25D366] focus:outline-none focus:ring-1 focus:ring-[#25D366] transition-all"
           />
           <svg
-            className="absolute left-3.5 top-3 h-4 w-4 text-purple-400"
+            className="absolute left-3.5 top-3 h-4 w-4 text-zinc-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -455,7 +455,7 @@ export default function SearchClient({
                 setQuery("");
                 applyFilters({ query: "" });
               }}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-purple-600 p-1"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-[#25D366] p-1"
               aria-label="Clear search"
             >
               ✕
@@ -469,9 +469,9 @@ export default function SearchClient({
           <button
             type="button"
             onClick={() => setMobileFilterOpen(true)}
-            className="lg:hidden inline-flex items-center gap-1.5 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/40 px-3 py-2 text-xs font-semibold text-purple-800 dark:text-purple-200"
+            className="lg:hidden inline-flex items-center gap-1.5 rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/40 px-3 py-2 text-xs font-semibold text-[#15803D] dark:text-zinc-300"
           >
-            <svg className="h-4 w-4 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-4 w-4 text-[#25D366]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
             <span>Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}</span>
@@ -479,12 +479,12 @@ export default function SearchClient({
 
           {/* Sort Dropdown */}
           <div className="flex items-center gap-1.5 text-xs">
-            <span className="hidden sm:inline text-zinc-500 dark:text-purple-300/70">Sort:</span>
+            <span className="hidden sm:inline text-zinc-500 dark:text-zinc-400/70">Sort:</span>
             <select
               aria-label="Sort products by"
               value={sort}
               onChange={(e) => handleSortChange(e.target.value)}
-              className="rounded-xl border border-purple-200 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+              className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B]/60 px-3 py-2 text-xs font-semibold text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none"
             >
               <option value="newest">Newest Arrivals</option>
               <option value="price_asc">Price: Low to High</option>
@@ -494,14 +494,14 @@ export default function SearchClient({
           </div>
 
           {/* Grid / List View Toggle */}
-          <div className="flex rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-900/40 p-1">
+          <div className="flex rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 p-1">
             <button
               type="button"
               onClick={() => setViewMode("grid")}
               className={`p-1.5 rounded-lg transition-colors ${
                 viewMode === "grid"
-                  ? "bg-purple-600 text-white shadow-sm"
-                  : "text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800"
+                  ? "bg-[#25D366] text-white shadow-sm"
+                  : "text-[#1EA855] dark:text-zinc-400 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]"
               }`}
               title="Grid View"
               aria-label="Grid View"
@@ -515,8 +515,8 @@ export default function SearchClient({
               onClick={() => setViewMode("list")}
               className={`p-1.5 rounded-lg transition-colors ${
                 viewMode === "list"
-                  ? "bg-purple-600 text-white shadow-sm"
-                  : "text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-800"
+                  ? "bg-[#25D366] text-white shadow-sm"
+                  : "text-[#1EA855] dark:text-zinc-400 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]"
               }`}
               title="List View"
               aria-label="List View"
@@ -532,7 +532,7 @@ export default function SearchClient({
       {/* Active Filter Chips */}
       {activeFiltersCount > 0 && (
         <div className="flex flex-wrap items-center gap-2 pt-1">
-          <span className="text-xs text-zinc-500 dark:text-purple-300/70">Active filters:</span>
+          <span className="text-xs text-zinc-500 dark:text-zinc-400/70">Active filters:</span>
 
           {query && (
             <button
@@ -541,10 +541,10 @@ export default function SearchClient({
                 setQuery("");
                 applyFilters({ query: "" });
               }}
-              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/40 px-3 py-1 text-xs text-[#18181B] dark:text-zinc-300 hover:border-red-400 hover:text-red-500 transition-colors"
             >
               <span>Query: &quot;{query}&quot;</span>
-              <span className="text-purple-400 hover:text-red-500">&times;</span>
+              <span className="text-zinc-400 hover:text-red-500">&times;</span>
             </button>
           )}
 
@@ -555,13 +555,13 @@ export default function SearchClient({
                 setCategory("");
                 applyFilters({ category: "" });
               }}
-              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/40 px-3 py-1 text-xs text-[#18181B] dark:text-zinc-300 hover:border-red-400 hover:text-red-500 transition-colors"
             >
               <span>
                 Category:{" "}
                 {facets.categories?.find((c) => c.slug === category || c.id === category)?.name || category}
               </span>
-              <span className="text-purple-400 hover:text-red-500">&times;</span>
+              <span className="text-zinc-400 hover:text-red-500">&times;</span>
             </button>
           )}
 
@@ -572,10 +572,10 @@ export default function SearchClient({
                 setBrand("");
                 applyFilters({ brand: "" });
               }}
-              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/40 px-3 py-1 text-xs text-[#18181B] dark:text-zinc-300 hover:border-red-400 hover:text-red-500 transition-colors"
             >
               <span>Brand: {brand}</span>
-              <span className="text-purple-400 hover:text-red-500">&times;</span>
+              <span className="text-zinc-400 hover:text-red-500">&times;</span>
             </button>
           )}
 
@@ -587,12 +587,12 @@ export default function SearchClient({
                 setMaxPrice("");
                 applyFilters({ minPrice: "", maxPrice: "" });
               }}
-              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/40 px-3 py-1 text-xs text-[#18181B] dark:text-zinc-300 hover:border-red-400 hover:text-red-500 transition-colors"
             >
               <span>
                 Price: {minPrice ? `$${minPrice}` : "$0"} – {maxPrice ? `$${maxPrice}` : "Any"}
               </span>
-              <span className="text-purple-400 hover:text-red-500">&times;</span>
+              <span className="text-zinc-400 hover:text-red-500">&times;</span>
             </button>
           )}
 
@@ -601,10 +601,10 @@ export default function SearchClient({
               key={tag}
               type="button"
               onClick={() => handleTagToggle(tag)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/40 px-3 py-1 text-xs text-[#18181B] dark:text-zinc-300 hover:border-red-400 hover:text-red-500 transition-colors"
             >
               <span>Tag: {tag}</span>
-              <span className="text-purple-400 hover:text-red-500">&times;</span>
+              <span className="text-zinc-400 hover:text-red-500">&times;</span>
             </button>
           ))}
 
@@ -612,17 +612,17 @@ export default function SearchClient({
             <button
               type="button"
               onClick={handleStockToggle}
-              className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 px-3 py-1 text-xs text-purple-900 dark:text-purple-200 hover:border-red-400 hover:text-red-500 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/40 px-3 py-1 text-xs text-[#18181B] dark:text-zinc-300 hover:border-red-400 hover:text-red-500 transition-colors"
             >
               <span>In Stock Only</span>
-              <span className="text-purple-400 hover:text-red-500">&times;</span>
+              <span className="text-zinc-400 hover:text-red-500">&times;</span>
             </button>
           )}
 
           <button
             type="button"
             onClick={handleClearAll}
-            className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline ml-1"
+            className="text-xs font-semibold text-[#25D366] dark:text-zinc-400 hover:underline ml-1"
           >
             Clear All
           </button>
@@ -632,21 +632,21 @@ export default function SearchClient({
       {/* Main Grid Layout: Sidebar (Desktop) + Products Area */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
         {/* Left Sidebar (Desktop Only) */}
-        <aside className="hidden lg:block rounded-3xl border border-purple-100 dark:border-purple-800/80 bg-white dark:bg-purple-950/30 p-6 shadow-sm sticky top-28">
+        <aside className="hidden lg:block rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-white dark:bg-[#18181B]/30 p-6 shadow-sm sticky top-28">
           {renderFilterSidebar()}
         </aside>
 
         {/* Mobile Slide-in Drawer */}
         {mobileFilterOpen && (
           <div className="fixed inset-0 z-50 flex bg-black/60 backdrop-blur-sm lg:hidden">
-            <div className="relative ml-auto w-full max-w-xs h-full bg-white dark:bg-purple-950 p-6 overflow-y-auto shadow-2xl flex flex-col justify-between">
+            <div className="relative ml-auto w-full max-w-xs h-full bg-white dark:bg-[#18181B] p-6 overflow-y-auto shadow-2xl flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between pb-4 border-b border-purple-100 dark:border-purple-800">
-                  <h3 className="text-sm font-bold text-purple-950 dark:text-purple-100">Filter Catalog</h3>
+                <div className="flex items-center justify-between pb-4 border-b border-[#E4E4E7] dark:border-zinc-800">
+                  <h3 className="text-sm font-bold text-[#18181B] dark:text-zinc-200">Filter Catalog</h3>
                   <button
                     type="button"
                     onClick={() => setMobileFilterOpen(false)}
-                    className="p-1 text-zinc-400 hover:text-purple-600"
+                    className="p-1 text-zinc-400 hover:text-[#25D366]"
                   >
                     ✕
                   </button>
@@ -659,7 +659,7 @@ export default function SearchClient({
               <button
                 type="button"
                 onClick={() => setMobileFilterOpen(false)}
-                className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 py-3 text-xs font-bold text-white shadow-lg shadow-purple-500/25"
+                className="w-full rounded-xl bg-[#25D366] hover:bg-[#1EA855] py-3 text-xs font-bold text-white shadow-lg shadow-[#25D366]/20"
               >
                 Show {total} Results
               </button>
@@ -671,11 +671,11 @@ export default function SearchClient({
         <section className="lg:col-span-3 space-y-6">
           {/* Header Count & Loading Indicator */}
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-500 dark:text-purple-300/70">
+            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400/70">
               Showing {products.length} of {total} products
             </span>
             {isLoading && (
-              <span className="inline-flex items-center gap-1.5 text-xs text-purple-600 dark:text-purple-400 font-semibold animate-pulse">
+              <span className="inline-flex items-center gap-1.5 text-xs text-[#25D366] dark:text-zinc-400 font-semibold animate-pulse">
                 <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
@@ -687,23 +687,23 @@ export default function SearchClient({
 
           {/* Products View: Grid vs List */}
           {products.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-purple-200 dark:border-purple-800/80 bg-purple-50/30 dark:bg-purple-950/20 p-12 sm:p-16 text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-300">
+            <div className="rounded-3xl border border-dashed border-[#E4E4E7] dark:border-zinc-800/80 bg-[#F4F4F5]/30 dark:bg-[#18181B]/20 p-12 sm:p-16 text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-zinc-400">
                 <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <h3 className="mt-4 text-base font-bold text-purple-950 dark:text-purple-100">
+              <h3 className="mt-4 text-base font-bold text-[#18181B] dark:text-zinc-200">
                 No Matching Products Found
               </h3>
-              <p className="mt-1 text-xs text-zinc-500 dark:text-purple-300/70 max-w-sm mx-auto">
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400/70 max-w-sm mx-auto">
                 No items match your active filters or search terms. Try adjusting your parameters.
               </p>
               <div className="mt-6 flex justify-center gap-3">
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="rounded-xl bg-purple-600 hover:bg-purple-700 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-purple-500/25 transition-all"
+                  className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-[#25D366]/20 transition-all"
                 >
                   Reset All Filters
                 </button>
@@ -726,9 +726,9 @@ export default function SearchClient({
               {products.map((prod) => (
                 <div
                   key={prod.id}
-                  className="flex flex-col sm:flex-row items-center gap-4 rounded-2xl border border-purple-100 dark:border-purple-800/80 bg-white dark:bg-purple-950/30 p-4 hover:border-purple-300 transition-all shadow-sm"
+                  className="flex flex-col sm:flex-row items-center gap-4 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-white dark:bg-[#18181B]/30 p-4 hover:border-[#E4E4E7] transition-all shadow-sm"
                 >
-                  <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl border border-purple-100 dark:border-purple-800 bg-purple-50 dark:bg-purple-950">
+                  <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]">
                     <Image
                       src={normalizeImageUrl(prod.mainImage, { width: 220, quality: 75 })}
                       alt={prod.name}
@@ -739,25 +739,25 @@ export default function SearchClient({
                   </div>
 
                   <div className="flex-1 min-w-0 space-y-1 text-center sm:text-left">
-                    <span className="text-[10px] font-bold uppercase text-purple-600 dark:text-purple-400">
+                    <span className="text-[10px] font-bold uppercase text-[#25D366] dark:text-zinc-400">
                       {prod.categoryName || "Athletic Collection"}
                     </span>
                     <Link
                       href={`/product/${prod.slug}`}
-                      className="block text-sm sm:text-base font-bold text-zinc-900 dark:text-purple-100 hover:text-purple-600 transition-colors truncate"
+                      className="block text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-200 hover:text-[#25D366] transition-colors truncate"
                     >
                       {prod.name}
                     </Link>
                     {prod.shortDescription && (
-                      <p className="text-xs text-zinc-500 dark:text-purple-300/70 line-clamp-2">
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400/70 line-clamp-2">
                         {prod.shortDescription}
                       </p>
                     )}
                   </div>
 
-                  <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-purple-50 dark:border-purple-900">
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#E4E4E7] dark:border-zinc-800">
                     <div className="text-right">
-                      <span className="text-base font-black text-purple-900 dark:text-purple-100">
+                      <span className="text-base font-black text-[#18181B] dark:text-zinc-200">
                         ${Number(prod.price).toFixed(2)}
                       </span>
                     </div>
@@ -777,11 +777,11 @@ export default function SearchClient({
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-purple-100 dark:border-purple-900/60 mt-8">
-              <p className="text-xs text-zinc-500 dark:text-purple-300/70">
-                Showing <span className="text-purple-900 dark:text-purple-100 font-bold">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
-                <span className="text-purple-900 dark:text-purple-100 font-bold">{Math.min(currentPage * PAGE_SIZE, total)}</span> of{" "}
-                <span className="text-purple-900 dark:text-purple-100 font-bold">{total}</span> items
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-[#E4E4E7] dark:border-zinc-800/60 mt-8">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400/70">
+                Showing <span className="text-[#18181B] dark:text-zinc-200 font-bold">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
+                <span className="text-[#18181B] dark:text-zinc-200 font-bold">{Math.min(currentPage * PAGE_SIZE, total)}</span> of{" "}
+                <span className="text-[#18181B] dark:text-zinc-200 font-bold">{total}</span> items
               </p>
 
               <div className="flex items-center gap-2">
@@ -793,7 +793,7 @@ export default function SearchClient({
                     applyFilters({ page: prev });
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className="rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/60 px-3.5 py-2 text-xs font-semibold text-purple-800 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#18181B]/60 px-3.5 py-2 text-xs font-semibold text-[#15803D] dark:text-zinc-300 hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/40 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   ← Previous
                 </button>
@@ -810,8 +810,8 @@ export default function SearchClient({
                       }}
                       className={`h-8 w-8 rounded-xl flex items-center justify-center text-xs font-bold transition-all ${
                         pNum === currentPage
-                          ? "bg-purple-600 text-white shadow-md shadow-purple-500/25"
-                          : "border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/60 text-purple-800 dark:text-purple-200 hover:bg-purple-50"
+                          ? "bg-[#25D366] text-white shadow-md shadow-[#25D366]/20"
+                          : "border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#18181B]/60 text-[#15803D] dark:text-zinc-300 hover:bg-[#F4F4F5]"
                       }`}
                     >
                       {pNum}
@@ -827,7 +827,7 @@ export default function SearchClient({
                     applyFilters({ page: next });
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className="rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950/60 px-3.5 py-2 text-xs font-semibold text-purple-800 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#18181B]/60 px-3.5 py-2 text-xs font-semibold text-[#15803D] dark:text-zinc-300 hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/40 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   Next →
                 </button>

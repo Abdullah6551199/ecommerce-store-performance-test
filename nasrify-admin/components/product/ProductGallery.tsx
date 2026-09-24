@@ -182,10 +182,10 @@ export default function ProductGallery({
                   setActiveImage(url);
                   setZoomStyle({});
                 }}
-                className={`relative h-18 w-18 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-2xl border-2 transition-all cursor-pointer bg-purple-50/40 dark:bg-purple-950/30 ${
+                className={`relative h-18 w-18 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-2xl border-2 transition-all cursor-pointer bg-[#F4F4F5]/40 dark:bg-[#18181B]/30 ${
                   isCurrent
-                    ? "border-purple-400 ring-2 ring-purple-400/40 scale-105 shadow-md shadow-purple-500/20"
-                    : "border-purple-100 dark:border-purple-800/60 opacity-70 hover:opacity-100 hover:border-purple-300 dark:hover:border-purple-600"
+                    ? "border-[#25D366] ring-2 ring-[#25D366]/20 scale-105 shadow-md shadow-[#25D366]/20"
+                    : "border-[#E4E4E7] dark:border-zinc-800/60 opacity-70 hover:opacity-100 hover:border-[#E4E4E7] dark:hover:border-[#1EA855]"
                 }`}
                 aria-label={`Select product image ${idx + 1}`}
               >
@@ -207,7 +207,7 @@ export default function ProductGallery({
       <div className="relative flex-1 w-full">
         <div
           id="product-main-image-card"
-          className="relative aspect-square w-full overflow-hidden rounded-2xl border border-purple-100 dark:border-purple-700/60 bg-purple-50/30 dark:bg-[#2b0346]/40 cursor-crosshair group shadow-inner"
+          className="relative aspect-square w-full overflow-hidden rounded-2xl border border-[#E4E4E7] dark:border-zinc-700/60 bg-[#F4F4F5]/30 dark:bg-[#2b0346]/40 cursor-crosshair group shadow-inner"
           onMouseMove={handleMouseMove}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -230,7 +230,7 @@ export default function ProductGallery({
               />
             </div>
           ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center text-purple-300 dark:text-purple-600">
+            <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center text-zinc-400 dark:text-[#25D366]">
               <svg className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
@@ -239,14 +239,14 @@ export default function ProductGallery({
                   d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <span className="mt-3 text-xs font-mono text-purple-400">No Product Image</span>
+              <span className="mt-3 text-xs font-mono text-zinc-400">No Product Image</span>
             </div>
           )}
 
           {/* Discount Badge (Top-Left) */}
           {discountPercent > 0 && (
             <div className="absolute top-3.5 left-3.5 z-10 pointer-events-none">
-              <span className="inline-flex items-center rounded-full bg-purple-400 text-white px-3 py-1 text-xs font-extrabold shadow-lg shadow-purple-500/30 tracking-wider">
+              <span className="inline-flex items-center rounded-full bg-[#25D366] text-white px-3 py-1 text-xs font-extrabold shadow-lg shadow-[#25D366]/20 tracking-wider">
                 -{discountPercent}% OFF
               </span>
             </div>
@@ -254,7 +254,7 @@ export default function ProductGallery({
 
           {/* Zoom Indicator Icon (Top-Right) */}
           <div className="absolute top-3.5 right-3.5 z-10 opacity-70 group-hover:opacity-100 transition-opacity pointer-events-none">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 dark:bg-purple-900/90 backdrop-blur-md px-2.5 py-1 text-[11px] font-semibold text-[#3C0561] dark:text-[#EACFFC] shadow-md border border-purple-200/50 dark:border-purple-700/50">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 dark:bg-[#18181B]/90 backdrop-blur-md px-2.5 py-1 text-[11px] font-semibold text-[#18181B] dark:text-[#DCFCE7] shadow-md border border-[#E4E4E7]/50 dark:border-zinc-700/50">
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
               </svg>
@@ -270,9 +270,9 @@ export default function ProductGallery({
                 e.stopPropagation();
                 window.open(videoUrl, "_blank");
               }}
-              className="absolute bottom-3.5 left-3.5 z-10 inline-flex items-center gap-1.5 rounded-full bg-white/95 dark:bg-[#3C0561]/95 px-3 py-1.5 text-xs font-bold text-[#3C0561] dark:text-[#EACFFC] shadow-lg border border-purple-200 dark:border-purple-700 hover:scale-105 transition-all cursor-pointer"
+              className="absolute bottom-3.5 left-3.5 z-10 inline-flex items-center gap-1.5 rounded-full bg-white/95 dark:bg-[#18181B]/95 px-3 py-1.5 text-xs font-bold text-[#18181B] dark:text-[#DCFCE7] shadow-lg border border-[#E4E4E7] dark:border-zinc-700 hover:scale-105 transition-all cursor-pointer"
             >
-              <svg className="h-4 w-4 text-purple-500 fill-current" viewBox="0 0 24 24">
+              <svg className="h-4 w-4 text-[#25D366] fill-current" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
               <span>Watch Video</span>
@@ -352,7 +352,7 @@ export default function ProductGallery({
                   e.stopPropagation();
                   goToPrevImage();
                 }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 hover:bg-purple-600/80 text-white shadow-xl border border-white/15 transition-all cursor-pointer"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 hover:bg-[#25D366]/80 text-white shadow-xl border border-white/15 transition-all cursor-pointer"
                 title="Previous Image (Left Arrow)"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -365,7 +365,7 @@ export default function ProductGallery({
                   e.stopPropagation();
                   goToNextImage();
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 hover:bg-purple-600/80 text-white shadow-xl border border-white/15 transition-all cursor-pointer"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 hover:bg-[#25D366]/80 text-white shadow-xl border border-white/15 transition-all cursor-pointer"
                 title="Next Image (Right Arrow)"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

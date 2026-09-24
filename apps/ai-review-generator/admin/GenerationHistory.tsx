@@ -67,7 +67,7 @@ export function GenerationHistory() {
           </div>
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow">
             <div className="text-xs text-slate-400 font-medium">Generated This Month</div>
-            <div className="text-2xl font-bold text-purple-400 mt-1">{stats.totalThisMonth}</div>
+            <div className="text-2xl font-bold text-zinc-400 mt-1">{stats.totalThisMonth}</div>
           </div>
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow">
             <div className="text-xs text-slate-400 font-medium">Est. Cloudflare Neurons Used</div>
@@ -88,7 +88,7 @@ export function GenerationHistory() {
           <h3 className="font-semibold text-white text-sm">Generation Batches</h3>
           <button
             onClick={fetchHistory}
-            className="text-xs text-purple-400 hover:text-purple-300 font-medium transition"
+            className="text-xs text-zinc-400 hover:text-zinc-400 font-medium transition"
           >
             Refresh
           </button>
@@ -118,7 +118,7 @@ export function GenerationHistory() {
               <tbody className="divide-y divide-slate-800/60 font-medium">
                 {items.map((row) => (
                   <tr key={row.id} className="hover:bg-slate-800/40 transition">
-                    <td className="py-3 px-4 font-mono text-purple-300">{row.id}</td>
+                    <td className="py-3 px-4 font-mono text-zinc-400">{row.id}</td>
                     <td className="py-3 px-4 font-mono text-slate-300">{row.productId}</td>
                     <td className="py-3 px-4">
                       <span className="px-2 py-0.5 rounded-full bg-slate-800 text-white font-semibold">

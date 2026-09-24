@@ -97,29 +97,29 @@ export default function CouponsSection({
         key={c.id}
         className={`min-h-[80px] p-4 rounded-2xl border transition-all duration-150 flex flex-col justify-between gap-3 ${
           status === "applied"
-            ? "border-purple-500 bg-purple-50/70 dark:bg-purple-950/50 shadow-sm"
+            ? "border-[#25D366] bg-[#F4F4F5]/70 dark:bg-[#18181B]/50 shadow-sm"
             : status === "available"
-            ? "border-purple-100 dark:border-purple-800/80 bg-white dark:bg-purple-900/20 hover:border-purple-400 hover:bg-purple-50/40 dark:hover:bg-purple-900/40 shadow-sm"
-            : "border-zinc-200/80 dark:border-purple-900/30 bg-zinc-50/60 dark:bg-purple-950/10 opacity-70"
+            ? "border-[#E4E4E7] dark:border-zinc-800/80 bg-white dark:bg-[#18181B]/20 hover:border-[#25D366] hover:bg-[#F4F4F5]/40 dark:hover:bg-[#18181B]/40 shadow-sm"
+            : "border-zinc-200/80 dark:border-zinc-800/30 bg-zinc-50/60 dark:bg-[#18181B]/10 opacity-70"
         }`}
       >
         {/* Row 1: Code (bold, large) + Discount value badge + Apply/Status button */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 flex-wrap min-w-0">
-            <span className="font-mono font-black text-base sm:text-lg text-zinc-900 dark:text-purple-100 tracking-wider">
+            <span className="font-mono font-black text-base sm:text-lg text-zinc-900 dark:text-zinc-200 tracking-wider">
               {c.code}
             </span>
-            <span className="px-2.5 py-0.5 rounded-md bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-bold shrink-0">
+            <span className="px-2.5 py-0.5 rounded-md bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#1EA855] dark:text-zinc-400 text-xs font-bold shrink-0">
               {discountText}
             </span>
-            <span className="text-[11px] text-zinc-500 dark:text-purple-300/60 capitalize shrink-0 font-medium">
+            <span className="text-[11px] text-zinc-500 dark:text-zinc-400/60 capitalize shrink-0 font-medium">
               ({typeLabel})
             </span>
           </div>
 
           <div className="shrink-0">
             {status === "applied" ? (
-              <span className="inline-flex items-center px-3 py-1 rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-bold border border-purple-300 dark:border-purple-700">
+              <span className="inline-flex items-center px-3 py-1 rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#1EA855] dark:text-zinc-400 text-xs font-bold border border-[#E4E4E7] dark:border-zinc-700">
                 Applied ✓
               </span>
             ) : status === "available" ? (
@@ -127,7 +127,7 @@ export default function CouponsSection({
                 type="button"
                 onClick={() => handleApply(c.code)}
                 disabled={isApplying}
-                className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-4 py-1.5 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95 disabled:opacity-50"
+                className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-4 py-1.5 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95 disabled:opacity-50"
               >
                 Apply
               </button>
@@ -140,11 +140,11 @@ export default function CouponsSection({
         </div>
 
         {/* Row 2: Description + Details: Min order • Expiry date */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs text-zinc-600 dark:text-purple-300/80 pt-2 border-t border-purple-50 dark:border-purple-900/40">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs text-zinc-600 dark:text-zinc-400/80 pt-2 border-t border-[#E4E4E7] dark:border-zinc-800/40">
           <span className="font-medium truncate">
             {c.description || `${discountText} on all eligible orders`}
           </span>
-          <div className="flex items-center gap-2 text-[11px] text-zinc-500 dark:text-purple-300/60 shrink-0 font-mono">
+          <div className="flex items-center gap-2 text-[11px] text-zinc-500 dark:text-zinc-400/60 shrink-0 font-mono">
             <span>{c.minOrderValue && c.minOrderValue > 0 ? `Min $${Math.round(c.minOrderValue)}` : "No min"}</span>
             <span>•</span>
             <span>Expires {formatExpiry(c.endDate)}</span>
@@ -160,7 +160,7 @@ export default function CouponsSection({
       type="button"
       onClick={handleApplyBest}
       disabled={isApplying}
-      className="w-full min-h-[40px] inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-purple-500 to-purple-400 hover:from-purple-700 hover:to-purple-500 text-white font-extrabold text-xs shadow-md shadow-purple-500/25 hover:brightness-105 active:scale-[0.99] transition-all cursor-pointer disabled:opacity-50"
+      className="w-full min-h-[40px] inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#25D366] via-[#1EA855] to-[#25D366] hover:from-[#1EA855] hover:to-[#25D366] text-white font-extrabold text-xs shadow-md shadow-[#25D366]/20 hover:brightness-105 active:scale-[0.99] transition-all cursor-pointer disabled:opacity-50"
     >
       <span className="text-sm">✨</span>
       <span>Apply Best Coupon</span>
@@ -171,7 +171,7 @@ export default function CouponsSection({
   if (compact) {
     return (
       <div className="space-y-1.5 text-xs">
-        <div className="flex items-center justify-between text-[11px] font-bold text-zinc-500 dark:text-purple-300/70 uppercase tracking-wider">
+        <div className="flex items-center justify-between text-[11px] font-bold text-zinc-500 dark:text-zinc-400/70 uppercase tracking-wider">
           <span>🎟️ Coupons</span>
         </div>
 
@@ -180,16 +180,16 @@ export default function CouponsSection({
 
         {/* 2. Applied Coupon Badge (if applied) */}
         {appliedCoupon && (
-          <div className="flex items-center justify-between p-2 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/70 dark:bg-purple-950/60 text-zinc-900 dark:text-purple-100">
+          <div className="flex items-center justify-between p-2 rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/70 dark:bg-[#18181B]/60 text-zinc-900 dark:text-zinc-200">
             <div className="flex items-center gap-1.5 min-w-0">
-              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-md bg-purple-600 text-white text-[9px] font-bold">
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-md bg-[#25D366] text-white text-[9px] font-bold">
                 ✓
               </span>
               <div className="min-w-0">
                 <span className="font-mono font-bold text-xs">
                   {appliedCoupon.code} applied
                 </span>
-                <span className="text-[10px] text-purple-600 dark:text-purple-400 ml-1 font-semibold">
+                <span className="text-[10px] text-[#25D366] dark:text-zinc-400 ml-1 font-semibold">
                   ({freeShippingCoupon ? "Free Shipping" : `-$${discountAmount.toFixed(2)}`})
                 </span>
               </div>
@@ -197,7 +197,7 @@ export default function CouponsSection({
             <button
               type="button"
               onClick={removeCoupon}
-              className="text-zinc-400 dark:text-purple-300/50 hover:text-red-500 p-0.5 transition-colors"
+              className="text-zinc-400 dark:text-zinc-400/50 hover:text-red-500 p-0.5 transition-colors"
               title="Remove coupon"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -211,7 +211,7 @@ export default function CouponsSection({
         <div className="pt-0.5">
           <Link
             href="/cart"
-            className="text-[10px] text-zinc-500 dark:text-purple-300/70 hover:text-purple-600 dark:hover:text-purple-300 transition-colors flex items-center gap-1"
+            className="text-[10px] text-zinc-500 dark:text-zinc-400/70 hover:text-[#25D366] dark:hover:text-zinc-400 transition-colors flex items-center gap-1"
           >
             <span>💡</span>
             <span>For more options, visit cart →</span>
@@ -229,16 +229,16 @@ export default function CouponsSection({
 
       {/* 2. Smart Suggestion Banner (if available) */}
       {smartSuggestion && (
-        <div className="p-3 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/60 dark:bg-purple-950/40 flex items-center justify-between gap-3 text-xs">
+        <div className="p-3 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/60 dark:bg-[#18181B]/40 flex items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2">
             <span className="text-base">💡</span>
-            <p className="font-medium text-purple-900 dark:text-purple-200">
+            <p className="font-medium text-[#18181B] dark:text-zinc-300">
               {smartSuggestion}
             </p>
           </div>
           <Link
             href="/shop"
-            className="shrink-0 rounded-xl border border-purple-300 dark:border-purple-700 bg-white dark:bg-purple-900/60 px-3 py-1 text-[11px] font-bold text-purple-800 dark:text-purple-200 hover:bg-purple-50 transition-colors"
+            className="shrink-0 rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3 py-1 text-[11px] font-bold text-[#15803D] dark:text-zinc-300 hover:bg-[#F4F4F5] transition-colors"
           >
             Add Products
           </Link>
@@ -246,25 +246,25 @@ export default function CouponsSection({
       )}
 
       {/* 3. Applied Coupon or Manual Promo Input Card */}
-      <div className="rounded-2xl border border-purple-100 dark:border-purple-800/80 bg-purple-50/30 dark:bg-purple-950/30 p-3.5 space-y-2.5">
+      <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-[#F4F4F5]/30 dark:bg-[#18181B]/30 p-3.5 space-y-2.5">
         {appliedCoupon ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#1EA855] dark:text-zinc-400">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-black text-xs text-zinc-900 dark:text-purple-100">
+                  <span className="font-mono font-black text-xs text-zinc-900 dark:text-zinc-200">
                     {appliedCoupon.code}
                   </span>
-                  <span className="rounded-md bg-purple-100 dark:bg-purple-900/60 px-2 py-0.5 text-[9px] font-bold text-purple-700 dark:text-purple-300">
+                  <span className="rounded-md bg-[#DCFCE7] dark:bg-[#18181B]/60 px-2 py-0.5 text-[9px] font-bold text-[#1EA855] dark:text-zinc-400">
                     Applied
                   </span>
                 </div>
-                <p className="text-[11px] text-zinc-500 dark:text-purple-300/70 mt-0.5">
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400/70 mt-0.5">
                   {freeShippingCoupon
                     ? "Free standard delivery"
                     : `-$${discountAmount.toFixed(2)} discount applied`}
@@ -275,14 +275,14 @@ export default function CouponsSection({
             <button
               type="button"
               onClick={removeCoupon}
-              className="rounded-xl border border-purple-200 dark:border-purple-800 px-2.5 py-1 text-[11px] font-semibold text-purple-700 dark:text-purple-300 hover:text-red-500 hover:border-red-400 transition-colors cursor-pointer"
+              className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800 px-2.5 py-1 text-[11px] font-semibold text-[#1EA855] dark:text-zinc-400 hover:text-red-500 hover:border-red-400 transition-colors cursor-pointer"
             >
               Remove
             </button>
           </div>
         ) : (
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200 mb-1">
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
               Have a promo code?
             </label>
             <div className="flex gap-2">
@@ -297,13 +297,13 @@ export default function CouponsSection({
                     handleApply();
                   }
                 }}
-                className="flex-1 rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/60 px-3 py-2 text-xs font-mono font-bold uppercase text-zinc-900 dark:text-purple-100 placeholder-zinc-400 dark:placeholder-purple-400/40 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                className="flex-1 rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B]/60 px-3 py-2 text-xs font-mono font-bold uppercase text-zinc-900 dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-400 focus:outline-none focus:border-[#25D366] focus:ring-1 focus:ring-[#25D366]"
               />
               <button
                 type="button"
                 onClick={() => handleApply()}
                 disabled={isApplying || !inputCode.trim()}
-                className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 text-xs font-bold transition-all disabled:opacity-40 cursor-pointer shadow-sm"
+                className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-4 py-2 text-xs font-bold transition-all disabled:opacity-40 cursor-pointer shadow-sm"
               >
                 {isApplying ? "Applying..." : "Apply"}
               </button>
@@ -318,11 +318,11 @@ export default function CouponsSection({
 
       {/* 4. Available Coupons List */}
       {availableCoupons.length > 0 && (
-        <div className="rounded-2xl border border-purple-100 dark:border-purple-800/80 bg-purple-50/20 dark:bg-purple-950/20 p-3.5 space-y-2.5">
+        <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-[#F4F4F5]/20 dark:bg-[#18181B]/20 p-3.5 space-y-2.5">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-zinc-900 dark:text-purple-100 uppercase tracking-wider flex items-center gap-1.5">
+            <h3 className="text-xs font-bold text-zinc-900 dark:text-zinc-200 uppercase tracking-wider flex items-center gap-1.5">
               <span>Available Coupons</span>
-              <span className="rounded-full bg-purple-100 dark:bg-purple-900/60 px-2 py-0.2 text-[10px] font-mono text-purple-700 dark:text-purple-300">
+              <span className="rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/60 px-2 py-0.2 text-[10px] font-mono text-[#1EA855] dark:text-zinc-400">
                 {availableCoupons.length}
               </span>
             </h3>
@@ -330,7 +330,7 @@ export default function CouponsSection({
             <button
               type="button"
               onClick={() => setIsAvailableExpanded((prev) => !prev)}
-              className="text-[11px] text-purple-600 dark:text-purple-400 hover:underline font-semibold cursor-pointer"
+              className="text-[11px] text-[#25D366] dark:text-zinc-400 hover:underline font-semibold cursor-pointer"
             >
               {isAvailableExpanded ? "Hide" : "Show"}
             </button>

@@ -16,14 +16,14 @@ export default function ProductBundleCrossSell({
   return (
     <div
       aria-label="Also available in bundle"
-      className="rounded-2xl border border-purple-200/90 dark:border-purple-800/60 bg-gradient-to-br from-purple-50/70 to-white dark:from-[#3C0561]/90 dark:to-[#2A0344]/90 p-5 shadow-md space-y-3"
+      className="rounded-2xl border border-[#E4E4E7]/90 dark:border-zinc-800/60 bg-gradient-to-br from-[#F4F4F5]/70 to-white dark:from-[#18181B]/90 dark:to-[#18181B]/90 p-5 shadow-md space-y-3"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#960DF2] text-white text-xs">
+          <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#25D366] text-white text-xs">
             🎁
           </span>
-          <h3 className="text-xs font-bold uppercase tracking-wider text-[#3C0561] dark:text-purple-200">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#18181B] dark:text-zinc-300">
             Also Available in Bundle
           </h3>
         </div>
@@ -43,21 +43,21 @@ export default function ProductBundleCrossSell({
           return (
             <div
               key={b.id}
-              className="flex items-center justify-between gap-3 rounded-xl border border-purple-200/60 dark:border-purple-800/40 bg-white/90 dark:bg-[#3C0561]/90 p-3 hover:border-purple-400 transition"
+              className="flex items-center justify-between gap-3 rounded-xl border border-[#E4E4E7]/60 dark:border-zinc-800/40 bg-white/90 dark:bg-[#18181B]/90 p-3 hover:border-[#25D366] transition"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="relative h-12 w-12 shrink-0 rounded-lg overflow-hidden bg-purple-50 border border-purple-200/50">
+                <div className="relative h-12 w-12 shrink-0 rounded-lg overflow-hidden bg-[#F4F4F5] border border-[#E4E4E7]/50">
                   {img && (
                     <Image src={img} alt={b.name} fill className="object-cover" />
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-bold text-xs text-[#3C0561] dark:text-white truncate">
+                  <p className="font-bold text-xs text-[#18181B] dark:text-white truncate">
                     {b.name}
                   </p>
-                  <p className="text-[11px] text-purple-600 dark:text-purple-300 font-semibold">
+                  <p className="text-[11px] text-[#25D366] dark:text-zinc-400 font-semibold">
                     {b.items.length} items for{" "}
-                    <strong className="text-[#960DF2] dark:text-[#C06EF7]">
+                    <strong className="text-[#25D366] dark:text-[#1EA855]">
                       ${b.bundlePrice.toFixed(2)}
                     </strong>{" "}
                     <span className="text-zinc-400 line-through text-[10px]">
@@ -69,7 +69,7 @@ export default function ProductBundleCrossSell({
 
               <Link
                 href={`/bundles/${b.slug}`}
-                className="shrink-0 rounded-lg bg-[#960DF2] hover:bg-[#780AC2] text-white px-3 py-1.5 text-xs font-bold shadow-sm transition"
+                className="shrink-0 rounded-lg bg-[#25D366] hover:bg-[#1EA855] text-white px-3 py-1.5 text-xs font-bold shadow-sm transition"
               >
                 View Bundle
               </Link>

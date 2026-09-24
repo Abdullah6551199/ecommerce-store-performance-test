@@ -69,10 +69,10 @@ export default function QuickAddToCart({
       title={isOutOfStock ? "Out of Stock" : "Add to Cart"}
       className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
         isOutOfStock
-          ? "bg-zinc-100 dark:bg-purple-950/40 text-zinc-400 dark:text-purple-400 cursor-not-allowed border border-zinc-200 dark:border-purple-800/40"
+          ? "bg-zinc-100 dark:bg-[#18181B]/40 text-zinc-400 dark:text-zinc-400 cursor-not-allowed border border-zinc-200 dark:border-zinc-800/40"
           : addedNotice
-          ? "bg-[#780AC2] text-white shadow-md shadow-purple-500/30"
-          : "bg-[#960DF2] hover:bg-[#780AC2] text-white shadow-sm hover:shadow-md hover:shadow-purple-500/25 active:scale-95"
+          ? "bg-[#1EA855] text-white shadow-md shadow-[#25D366]/20"
+          : "bg-[#25D366] hover:bg-[#1EA855] text-white shadow-sm hover:shadow-md hover:shadow-[#25D366]/20 active:scale-95"
       } ${className}`}
     >
       {addedNotice ? (

@@ -188,4 +188,22 @@ Executed on both local and remote D1 databases:
   - Sub-10ms CPU render budget maintained across all theme sections.
   - 60s micro-cache on active theme configuration.
 
+---
+
+## 9. Stage 42.8d — Admin Panel Rebrand (Purple → Green / Neutral)
+- **Multi-Tenant Administration Visual Standard**:
+  - Rebranded the entire `nasrify-admin` portal from Chronicles Purple to the fixed, professional Nasrify Green (`#25D366`), Dark Neutral (`#18181B`), and Clean Light (`#FFFFFF`, `#F4F4F5`, `#DCFCE7`) design system.
+  - Ensured the admin panel remains fixed and consistent across stores, while customer storefronts adapt per theme.
+- **Components & Areas Rebranded**:
+  - `AdminShell.tsx`: Navigation sidebar with active green pill states, green pulse live connection badge, and `#25D366` brand badge.
+  - `admin/login/page.tsx`: Modernized login portal with neutral card, green button, and zero purple accents.
+  - All manager views (`ProductsManager`, `OrdersManager`, `CategoriesManager`, `TaxManager`, `ShippingZonesManager`, `PagesManager`, `AppsManager`, `DashboardOverviewManager`, `HomepageManager`).
+  - All admin apps (`apps/**/admin`).
+  - Visual Theme Editor UI: Controls, device switcher, and publish modals unified under `#25D366` while preserving store iframe isolation.
+  - `globals.css`, `tailwind.config.ts`, and `tokens.ts`: Standardized admin design tokens.
+- **Inventory & Zero Remnants**:
+  - Initial inventory: 91 files, 3,987 purple occurrences.
+  - Final inventory: 0 files, 0 occurrences. Zero purple remnants remain.
+
+
 

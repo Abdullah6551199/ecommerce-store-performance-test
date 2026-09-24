@@ -83,7 +83,7 @@ export function SettingsPanel({
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-[#25D366]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
             </svg>
             <h2 className="text-xs font-semibold text-slate-200">Global Theme Settings</h2>
@@ -104,7 +104,7 @@ export function SettingsPanel({
                   type: {selectedSection.type}
                 </span>
               </div>
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/20">
                 Basic Settings
               </span>
             </div>

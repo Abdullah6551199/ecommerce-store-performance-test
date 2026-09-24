@@ -13,10 +13,10 @@ export default function HeaderSearch(): React.JSX.Element {
         placeholder="Search products by name, SKU, brand..."
         autoComplete="off"
         aria-label="Search products by name, SKU, or brand"
-        className="w-full min-h-[44px] rounded-xl border border-purple-300/80 dark:border-white/15 bg-white/80 dark:bg-white/5 pl-10 pr-4 py-2.5 text-xs text-[#3C0561] dark:text-white placeholder:text-purple-700/60 dark:placeholder:text-zinc-500 focus:border-[#960DF2] focus:outline-none focus:ring-1 focus:ring-[#960DF2] transition-all shadow-sm"
+        className="w-full min-h-[44px] rounded-xl border border-[#E4E4E7]/80 dark:border-white/15 bg-white/80 dark:bg-white/5 pl-10 pr-4 py-2.5 text-xs text-[#18181B] dark:text-white placeholder:text-[#1EA855]/60 dark:placeholder:text-zinc-500 focus:border-[#25D366] focus:outline-none focus:ring-1 focus:ring-[#25D366] transition-all shadow-sm"
       />
       <svg
-        className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-purple-700/70 dark:text-white/40 pointer-events-none"
+        className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#1EA855]/70 dark:text-white/40 pointer-events-none"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"

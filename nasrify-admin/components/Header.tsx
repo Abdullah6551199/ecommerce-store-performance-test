@@ -103,7 +103,7 @@ export default async function Header({
       />
 
       {/* 2. Main Navigation Header (Sticky on scroll) */}
-      <header className="sticky top-0 z-40 w-full border-b border-purple-200/70 dark:border-purple-800/50 bg-[#EACFFC]/95 dark:bg-[#3C0561]/95 backdrop-blur-md shadow-sm transition-colors duration-300">
+      <header className="sticky top-0 z-40 w-full border-b border-[#E4E4E7]/70 dark:border-zinc-800/50 bg-[#DCFCE7]/95 dark:bg-[#18181B]/95 backdrop-blur-md shadow-sm transition-colors duration-300">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 gap-3 sm:gap-4">
           {/* Logo Area */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
@@ -118,7 +118,7 @@ export default async function Header({
               />
             ) : (
               <div
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#960DF2] to-[#AB3DF5] shadow-md shadow-purple-500/25 group-hover:scale-105 transition-transform"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#25D366] to-[#1EA855] shadow-md shadow-[#25D366]/20 group-hover:scale-105 transition-transform"
                 aria-label="Store Logo"
               >
                 <svg
@@ -133,33 +133,33 @@ export default async function Header({
               </div>
             )}
             <div className="hidden sm:block">
-              <span className="text-base font-black tracking-tight text-[#3C0561] dark:text-[#EACFFC] group-hover:text-[#960DF2] transition-colors">
+              <span className="text-base font-black tracking-tight text-[#18181B] dark:text-[#DCFCE7] group-hover:text-[#25D366] transition-colors">
                 {settings.storeName || "ApexStore"}
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold text-[#3C0561] dark:text-purple-100">
+          <nav className="hidden lg:flex items-center gap-5 text-xs font-semibold text-[#18181B] dark:text-zinc-200">
             {/* Home */}
-            <Link href="/" className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group">
+            <Link href="/" className="relative py-2 hover:text-[#25D366] dark:hover:text-[#1EA855] transition-colors group">
               <span>Home</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#25D366] group-hover:w-full transition-all duration-200" />
             </Link>
 
             {/* Shop */}
-            <Link href="/shop" className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group">
+            <Link href="/shop" className="relative py-2 hover:text-[#25D366] dark:hover:text-[#1EA855] transition-colors group">
               <span>Shop</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#25D366] group-hover:w-full transition-all duration-200" />
             </Link>
 
             {/* Bundles */}
-            <Link href="/bundles" className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group">
+            <Link href="/bundles" className="relative py-2 hover:text-[#25D366] dark:hover:text-[#1EA855] transition-colors group">
               <span className="flex items-center gap-1">
                 <span>Bundles</span>
-                <span className="rounded-full bg-[#960DF2] text-[9px] text-white px-1.5 py-0.2 font-bold">Save</span>
+                <span className="rounded-full bg-[#25D366] text-[9px] text-white px-1.5 py-0.2 font-bold">Save</span>
               </span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#25D366] group-hover:w-full transition-all duration-200" />
             </Link>
 
             {/* Categories Dropdown */}
@@ -194,9 +194,9 @@ export default async function Header({
             />
 
             {/* Accessories */}
-            <Link href="/search?q=accessories" className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group">
+            <Link href="/search?q=accessories" className="relative py-2 hover:text-[#25D366] dark:hover:text-[#1EA855] transition-colors group">
               <span>Accessories</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#25D366] group-hover:w-full transition-all duration-200" />
             </Link>
 
             {/* Dynamic Custom Header Pages */}
@@ -204,23 +204,23 @@ export default async function Header({
               <Link
                 key={hp.slug}
                 href={hp.href}
-                className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group"
+                className="relative py-2 hover:text-[#25D366] dark:hover:text-[#1EA855] transition-colors group"
               >
                 <span>{hp.title}</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#25D366] group-hover:w-full transition-all duration-200" />
               </Link>
             ))}
 
             {/* Blog / Story */}
-            <Link href="/about" className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group">
+            <Link href="/about" className="relative py-2 hover:text-[#25D366] dark:hover:text-[#1EA855] transition-colors group">
               <span>Blog</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#25D366] group-hover:w-full transition-all duration-200" />
             </Link>
 
             {/* Contact */}
-            <Link href="/contact" className="relative py-2 hover:text-[#960DF2] dark:hover:text-[#C06EF7] transition-colors group">
+            <Link href="/contact" className="relative py-2 hover:text-[#25D366] dark:hover:text-[#1EA855] transition-colors group">
               <span>Contact</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#960DF2] group-hover:w-full transition-all duration-200" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#25D366] group-hover:w-full transition-all duration-200" />
             </Link>
           </nav>
 

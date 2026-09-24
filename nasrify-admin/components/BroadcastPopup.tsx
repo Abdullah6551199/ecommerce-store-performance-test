@@ -111,7 +111,7 @@ export default function BroadcastPopup(): React.JSX.Element | null {
       case "promotion":
         return {
           label: "Special Offer",
-          bgColor: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+          bgColor: "bg-[#25D366]/10 text-[#25D366] dark:text-zinc-400 border-[#25D366]/20",
           icon: (
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -159,9 +159,9 @@ export default function BroadcastPopup(): React.JSX.Element | null {
       role="dialog"
       aria-modal="true"
     >
-      <div className="relative w-full max-w-md rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-purple-500/30 shadow-2xl shadow-purple-500/15 transform transition-all animate-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-[#25D366]/30 shadow-2xl shadow-[#25D366]/20 transform transition-all animate-in zoom-in-95 duration-200">
         {/* Purple gradient top highlight */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-purple-600 via-purple-400 to-purple-200" />
+        <div className="h-1.5 w-full bg-gradient-to-r from-[#25D366] via-[#1EA855] to-[#25D366]" />
 
         {/* Close "X" Button */}
         <button
@@ -216,7 +216,7 @@ export default function BroadcastPopup(): React.JSX.Element | null {
             <button
               type="button"
               onClick={handleActionClick}
-              className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-sm shadow-lg shadow-purple-600/30 transition duration-150 flex items-center justify-center gap-2 active:scale-[0.98]"
+              className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-[#25D366] via-[#1EA855] to-indigo-600 hover:from-[#1EA855] hover:to-indigo-500 text-white font-extrabold text-sm shadow-lg shadow-[#25D366]/20 transition duration-150 flex items-center justify-center gap-2 active:scale-[0.98]"
             >
               <span>{broadcast.buttonText || "Learn More"}</span>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -232,7 +232,7 @@ export default function BroadcastPopup(): React.JSX.Element | null {
                 type="checkbox"
                 checked={dontShowAgain}
                 onChange={(e) => setDontShowAgain(e.target.checked)}
-                className="w-4 h-4 rounded border-zinc-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
+                className="w-4 h-4 rounded border-zinc-300 text-[#25D366] focus:ring-[#25D366] cursor-pointer"
               />
               <span className="group-hover:text-zinc-700 dark:group-hover:text-zinc-200 transition">
                 Don&apos;t show again

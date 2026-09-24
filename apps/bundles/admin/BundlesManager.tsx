@@ -324,7 +324,7 @@ export default function BundlesManager(): React.JSX.Element {
         <div
           role="status"
           className={`fixed top-5 right-5 z-50 rounded-xl px-4 py-3 text-xs font-bold text-white shadow-2xl animate-in fade-in slide-in-from-top-4 ${
-            feedback.type === "success" ? "bg-[#960DF2]" : "bg-rose-600"
+            feedback.type === "success" ? "bg-[#25D366]" : "bg-rose-600"
           }`}
         >
           {feedback.message}
@@ -332,15 +332,15 @@ export default function BundlesManager(): React.JSX.Element {
       )}
 
       {/* Top Header & Create Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-purple-200 dark:border-purple-800/50 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[#E4E4E7] dark:border-zinc-800/50 pb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#3C0561] dark:text-white flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#18181B] dark:text-white flex items-center gap-3">
             <span>Product Bundles</span>
-            <span className="rounded-full bg-purple-100 dark:bg-purple-900/50 px-3 py-0.5 text-xs font-bold text-[#960DF2] dark:text-[#C06EF7]">
+            <span className="rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/50 px-3 py-0.5 text-xs font-bold text-[#25D366] dark:text-[#1EA855]">
               Stage 21
             </span>
           </h1>
-          <p className="text-xs text-purple-700/80 dark:text-purple-300 mt-1">
+          <p className="text-xs text-[#1EA855]/80 dark:text-zinc-400 mt-1">
             Create high-converting curated bundles with automatic discount calculations and cart breakdown.
           </p>
         </div>
@@ -348,7 +348,7 @@ export default function BundlesManager(): React.JSX.Element {
         <button
           type="button"
           onClick={openCreateModal}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#960DF2] hover:bg-[#780AC2] px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-purple-500/20 transition-all hover:scale-105 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-[#25D366]/20 transition-all hover:scale-105 cursor-pointer"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -359,55 +359,55 @@ export default function BundlesManager(): React.JSX.Element {
 
       {/* 4 Top Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-purple-200/80 dark:border-purple-800/60 bg-white/95 dark:bg-[#3C0561]/80 p-5 shadow-sm backdrop-blur-md">
-          <p className="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300">
+        <div className="rounded-2xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-white/95 dark:bg-[#18181B]/80 p-5 shadow-sm backdrop-blur-md">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400">
             Total Bundles
           </p>
-          <p className="text-2xl sm:text-3xl font-black text-[#3C0561] dark:text-white mt-1">
+          <p className="text-2xl sm:text-3xl font-black text-[#18181B] dark:text-white mt-1">
             {stats.totalBundles}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-purple-200/80 dark:border-purple-800/60 bg-white/95 dark:bg-[#3C0561]/80 p-5 shadow-sm backdrop-blur-md">
-          <p className="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300">
+        <div className="rounded-2xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-white/95 dark:bg-[#18181B]/80 p-5 shadow-sm backdrop-blur-md">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400">
             Active Bundles
           </p>
-          <p className="text-2xl sm:text-3xl font-black text-[#3C0561] dark:text-white mt-1">
+          <p className="text-2xl sm:text-3xl font-black text-[#18181B] dark:text-white mt-1">
             {stats.activeBundles}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-purple-200/80 dark:border-purple-800/60 bg-white/95 dark:bg-[#3C0561]/80 p-5 shadow-sm backdrop-blur-md">
-          <p className="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300">
+        <div className="rounded-2xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-white/95 dark:bg-[#18181B]/80 p-5 shadow-sm backdrop-blur-md">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400">
             Featured Bundles
           </p>
-          <p className="text-2xl sm:text-3xl font-black text-[#3C0561] dark:text-white mt-1">
+          <p className="text-2xl sm:text-3xl font-black text-[#18181B] dark:text-white mt-1">
             {stats.featuredBundles}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-purple-200/80 dark:border-purple-800/60 bg-white/95 dark:bg-[#3C0561]/80 p-5 shadow-sm backdrop-blur-md">
-          <p className="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300">
+        <div className="rounded-2xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-white/95 dark:bg-[#18181B]/80 p-5 shadow-sm backdrop-blur-md">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400">
             Avg. Discount
           </p>
-          <p className="text-2xl sm:text-3xl font-black text-[#960DF2] dark:text-[#C06EF7] mt-1">
+          <p className="text-2xl sm:text-3xl font-black text-[#25D366] dark:text-[#1EA855] mt-1">
             {stats.averageDiscountPercent}%
           </p>
         </div>
       </div>
 
       {/* Filters, Search & Sorting Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white/60 dark:bg-[#3C0561]/60 p-3 rounded-2xl border border-purple-200/70 dark:border-purple-800/50 backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white/60 dark:bg-[#18181B]/60 p-3 rounded-2xl border border-[#E4E4E7]/70 dark:border-zinc-800/50 backdrop-blur-sm">
         <div className="relative flex-1 max-w-md">
           <input
             type="text"
             placeholder="Search bundles by name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-purple-300 dark:border-purple-700 bg-white dark:bg-purple-950/40 px-3.5 py-2 pl-9 text-xs text-zinc-900 dark:text-white placeholder-purple-400 focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+            className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/40 px-3.5 py-2 pl-9 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#25D366]"
           />
           <svg
-            className="absolute left-3 top-2.5 h-4 w-4 text-purple-400"
+            className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -418,7 +418,7 @@ export default function BundlesManager(): React.JSX.Element {
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Status filter tabs */}
-          <div className="flex items-center rounded-xl bg-purple-100 dark:bg-purple-950/50 p-1">
+          <div className="flex items-center rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/50 p-1">
             {(["all", "active", "draft", "featured"] as const).map((st) => (
               <button
                 key={st}
@@ -426,8 +426,8 @@ export default function BundlesManager(): React.JSX.Element {
                 onClick={() => setStatusFilter(st)}
                 className={`px-3 py-1 text-xs font-bold rounded-lg capitalize transition ${
                   statusFilter === st
-                    ? "bg-white dark:bg-[#3C0561] text-[#960DF2] dark:text-[#EACFFC] shadow-sm"
-                    : "text-purple-700 dark:text-purple-300 hover:text-purple-950"
+                    ? "bg-white dark:bg-[#18181B] text-[#25D366] dark:text-[#DCFCE7] shadow-sm"
+                    : "text-[#1EA855] dark:text-zinc-400 hover:text-[#18181B]"
                 }`}
               >
                 {st}
@@ -439,7 +439,7 @@ export default function BundlesManager(): React.JSX.Element {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="rounded-xl border border-purple-300 dark:border-purple-700 bg-white dark:bg-purple-950/40 px-3 py-1.5 text-xs font-semibold text-purple-900 dark:text-purple-200 focus:outline-none focus:ring-2 focus:ring-[#960DF2]"
+            className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/40 px-3 py-1.5 text-xs font-semibold text-[#18181B] dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-[#25D366]"
           >
             <option value="sortOrder">Sort Order</option>
             <option value="name">Name</option>
@@ -451,11 +451,11 @@ export default function BundlesManager(): React.JSX.Element {
       </div>
 
       {/* Bundles List Table */}
-      <div className="overflow-hidden rounded-2xl border border-purple-200/80 dark:border-purple-800/60 bg-white dark:bg-[#3C0561]/90 shadow-xl">
+      <div className="overflow-hidden rounded-2xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 bg-white dark:bg-[#18181B]/90 shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse min-w-[700px]">
             <thead>
-              <tr className="border-b border-purple-200/60 dark:border-purple-800/40 bg-purple-50/50 dark:bg-purple-950/40 text-purple-900 dark:text-purple-200 font-bold uppercase tracking-wider">
+              <tr className="border-b border-[#E4E4E7]/60 dark:border-zinc-800/40 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 text-[#18181B] dark:text-zinc-300 font-bold uppercase tracking-wider">
                 <th className="p-4 w-16">Image</th>
                 <th className="p-4">Name & Slug</th>
                 <th className="p-4 text-center">Products</th>
@@ -466,17 +466,17 @@ export default function BundlesManager(): React.JSX.Element {
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-purple-100 dark:divide-purple-800/40 text-[#3C0561] dark:text-purple-100 font-medium">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 dark:divide-zinc-200 dark:divide-zinc-800 text-[#18181B] dark:text-zinc-200 font-medium">
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="p-12 text-center text-purple-400">
-                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-[#960DF2] border-r-transparent mb-2" />
+                  <td colSpan={8} className="p-12 text-center text-zinc-400">
+                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-[#25D366] border-r-transparent mb-2" />
                     <p>Loading bundles...</p>
                   </td>
                 </tr>
               ) : bundles.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="p-12 text-center text-purple-400">
+                  <td colSpan={8} className="p-12 text-center text-zinc-400">
                     No bundles found. Click &quot;Create Bundle&quot; to build your first bundle!
                   </td>
                 </tr>
@@ -487,14 +487,14 @@ export default function BundlesManager(): React.JSX.Element {
                     : null;
 
                   return (
-                    <tr key={b.id} className="hover:bg-purple-50/40 dark:hover:bg-purple-950/30 transition">
+                    <tr key={b.id} className="hover:bg-[#F4F4F5]/40 dark:hover:bg-[#18181B]/30 transition">
                       {/* Image */}
                       <td className="p-4">
-                        <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-purple-200 dark:border-purple-700 bg-purple-50 flex items-center justify-center">
+                        <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5] flex items-center justify-center">
                           {img ? (
                             <Image src={img} alt={b.name} fill className="object-cover" />
                           ) : (
-                            <span className="text-[10px] text-purple-400">PKG</span>
+                            <span className="text-[10px] text-zinc-400">PKG</span>
                           )}
                         </div>
                       </td>
@@ -502,14 +502,14 @@ export default function BundlesManager(): React.JSX.Element {
                       {/* Name & Slug */}
                       <td className="p-4">
                         <div className="space-y-0.5 max-w-xs">
-                          <p className="font-bold text-sm text-[#3C0561] dark:text-white line-clamp-1">
+                          <p className="font-bold text-sm text-[#18181B] dark:text-white line-clamp-1">
                             {b.name}
                           </p>
-                          <p className="text-[11px] text-purple-500/80 dark:text-purple-300 font-mono">
+                          <p className="text-[11px] text-[#25D366]/80 dark:text-zinc-400 font-mono">
                             /{b.slug}
                           </p>
                           {Boolean(b.isFeatured) && (
-                            <span className="inline-block rounded-full bg-purple-100 dark:bg-purple-900/40 text-[#960DF2] dark:text-[#EACFFC] text-[9px] font-bold px-1.5 py-0.2">
+                            <span className="inline-block rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/40 text-[#25D366] dark:text-[#DCFCE7] text-[9px] font-bold px-1.5 py-0.2">
                               ★ Featured
                             </span>
                           )}
@@ -518,13 +518,13 @@ export default function BundlesManager(): React.JSX.Element {
 
                       {/* Products Count */}
                       <td className="p-4 text-center">
-                        <span className="inline-flex items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/50 px-2.5 py-1 text-xs font-bold text-[#960DF2] dark:text-[#C06EF7]">
+                        <span className="inline-flex items-center justify-center rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/50 px-2.5 py-1 text-xs font-bold text-[#25D366] dark:text-[#1EA855]">
                           {b.items.length} items
                         </span>
                       </td>
 
                       {/* Bundle Price */}
-                      <td className="p-4 font-black text-sm text-[#960DF2] dark:text-[#C06EF7]">
+                      <td className="p-4 font-black text-sm text-[#25D366] dark:text-[#1EA855]">
                         ${b.bundlePrice.toFixed(2)}
                       </td>
 
@@ -535,7 +535,7 @@ export default function BundlesManager(): React.JSX.Element {
 
                       {/* Discount % */}
                       <td className="p-4 text-center">
-                        <span className="rounded-full bg-purple-500/15 dark:bg-purple-500/30 text-purple-700 dark:text-purple-200 px-2 py-0.5 text-xs font-extrabold">
+                        <span className="rounded-full bg-[#25D366]/15 dark:bg-[#25D366]/30 text-[#1EA855] dark:text-zinc-300 px-2 py-0.5 text-xs font-extrabold">
                           -{b.discountPercentage || 0}%
                         </span>
                       </td>
@@ -562,7 +562,7 @@ export default function BundlesManager(): React.JSX.Element {
                           <Link
                             href={`/bundles/${b.slug}`}
                             target="_blank"
-                            className="p-1.5 text-purple-600 dark:text-purple-300 hover:text-[#960DF2] transition"
+                            className="p-1.5 text-[#25D366] dark:text-zinc-400 hover:text-[#25D366] transition"
                             title="View on Storefront"
                           >
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -574,7 +574,7 @@ export default function BundlesManager(): React.JSX.Element {
                           <button
                             type="button"
                             onClick={() => openEditModal(b)}
-                            className="p-1.5 text-purple-600 dark:text-purple-300 hover:text-[#960DF2] transition"
+                            className="p-1.5 text-[#25D366] dark:text-zinc-400 hover:text-[#25D366] transition"
                             title="Edit Bundle"
                           >
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -586,7 +586,7 @@ export default function BundlesManager(): React.JSX.Element {
                           <button
                             type="button"
                             onClick={() => handleDuplicateBundle(b.id)}
-                            className="p-1.5 text-purple-600 dark:text-purple-300 hover:text-[#960DF2] transition"
+                            className="p-1.5 text-[#25D366] dark:text-zinc-400 hover:text-[#25D366] transition"
                             title="Duplicate Bundle"
                           >
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -619,18 +619,18 @@ export default function BundlesManager(): React.JSX.Element {
       {/* Delete Confirmation Modal */}
       {deletingId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#3C0561] border border-purple-200 dark:border-purple-800 p-6 shadow-2xl space-y-4 text-center">
-            <h3 className="text-base font-bold text-[#3C0561] dark:text-white">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-zinc-800 p-6 shadow-2xl space-y-4 text-center">
+            <h3 className="text-base font-bold text-[#18181B] dark:text-white">
               Delete this Bundle?
             </h3>
-            <p className="text-xs text-purple-700/80 dark:text-purple-300">
+            <p className="text-xs text-[#1EA855]/80 dark:text-zinc-400">
               This action will permanently delete the bundle and its item associations. Individual products in your catalog will not be deleted.
             </p>
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setDeletingId(null)}
-                className="rounded-xl border border-purple-300 px-4 py-2 text-xs font-bold text-purple-700 dark:text-purple-200 hover:bg-purple-50"
+                className="rounded-xl border border-[#E4E4E7] px-4 py-2 text-xs font-bold text-[#1EA855] dark:text-zinc-300 hover:bg-[#F4F4F5]"
               >
                 Cancel
               </button>
@@ -649,15 +649,15 @@ export default function BundlesManager(): React.JSX.Element {
       {/* Create / Edit Bundle Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-3xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-[#3C0561] p-6 sm:p-8 shadow-2xl space-y-6 my-8">
-            <div className="flex items-center justify-between border-b border-purple-200/60 dark:border-purple-800/40 pb-4">
-              <h2 className="text-lg font-black text-[#3C0561] dark:text-white">
+          <div className="relative w-full max-w-2xl rounded-3xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#18181B] p-6 sm:p-8 shadow-2xl space-y-6 my-8">
+            <div className="flex items-center justify-between border-b border-[#E4E4E7]/60 dark:border-zinc-800/40 pb-4">
+              <h2 className="text-lg font-black text-[#18181B] dark:text-white">
                 {editingBundle ? "Edit Bundle" : "Create New Bundle"}
               </h2>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="text-purple-400 hover:text-purple-600 text-xl font-bold"
+                className="text-zinc-400 hover:text-[#25D366] text-xl font-bold"
               >
                 ×
               </button>
@@ -667,7 +667,7 @@ export default function BundlesManager(): React.JSX.Element {
               {/* Name & Slug */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-purple-900 dark:text-purple-200 mb-1">
+                  <label className="block font-bold text-[#18181B] dark:text-zinc-300 mb-1">
                     Bundle Name *
                   </label>
                   <input
@@ -686,12 +686,12 @@ export default function BundlesManager(): React.JSX.Element {
                         );
                       }
                     }}
-                    className="w-full rounded-xl border border-purple-300 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 px-3.5 py-2.5 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#960DF2] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 px-3.5 py-2.5 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#25D366] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-purple-900 dark:text-purple-200 mb-1">
+                  <label className="block font-bold text-[#18181B] dark:text-zinc-300 mb-1">
                     Slug
                   </label>
                   <input
@@ -699,14 +699,14 @@ export default function BundlesManager(): React.JSX.Element {
                     placeholder="auto-generated-slug"
                     value={formSlug}
                     onChange={(e) => setFormSlug(e.target.value)}
-                    className="w-full rounded-xl border border-purple-300 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 px-3.5 py-2.5 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#960DF2] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 px-3.5 py-2.5 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#25D366] focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Description */}
               <div>
-                <label className="block font-bold text-purple-900 dark:text-purple-200 mb-1">
+                <label className="block font-bold text-[#18181B] dark:text-zinc-300 mb-1">
                   Description
                 </label>
                 <textarea
@@ -714,13 +714,13 @@ export default function BundlesManager(): React.JSX.Element {
                   placeholder="Describe what makes this bundle special and why customers should buy it together..."
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
-                  className="w-full rounded-xl border border-purple-300 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 px-3.5 py-2.5 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#960DF2] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 px-3.5 py-2.5 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#25D366] focus:outline-none"
                 />
               </div>
 
               {/* Image URL */}
               <div>
-                <label className="block font-bold text-purple-900 dark:text-purple-200 mb-1">
+                <label className="block font-bold text-[#18181B] dark:text-zinc-300 mb-1">
                   Bundle Image URL (Optional - defaults to first product image)
                 </label>
                 <input
@@ -728,14 +728,14 @@ export default function BundlesManager(): React.JSX.Element {
                   placeholder="https://..."
                   value={formImageUrl}
                   onChange={(e) => setFormImageUrl(e.target.value)}
-                  className="w-full rounded-xl border border-purple-300 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 px-3.5 py-2.5 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#960DF2] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 px-3.5 py-2.5 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#25D366] focus:outline-none"
                 />
               </div>
 
               {/* Products in Bundle Selector */}
-              <div className="space-y-3 border-t border-purple-200/60 dark:border-purple-800/40 pt-4">
+              <div className="space-y-3 border-t border-[#E4E4E7]/60 dark:border-zinc-800/40 pt-4">
                 <div className="flex items-center justify-between">
-                  <label className="font-bold text-purple-900 dark:text-purple-200">
+                  <label className="font-bold text-[#18181B] dark:text-zinc-300">
                     Products in this Bundle ({formItems.length})
                   </label>
                 </div>
@@ -747,10 +747,10 @@ export default function BundlesManager(): React.JSX.Element {
                     placeholder="Search product name or SKU to add..."
                     value={productSearch}
                     onChange={(e) => setProductSearch(e.target.value)}
-                    className="w-full rounded-xl border border-purple-300 dark:border-purple-700 bg-white dark:bg-purple-950/60 px-3.5 py-2 pl-9 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#960DF2] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B]/60 px-3.5 py-2 pl-9 text-xs text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#25D366] focus:outline-none"
                   />
                   <svg
-                    className="absolute left-3 top-2.5 h-4 w-4 text-purple-400"
+                    className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -758,19 +758,19 @@ export default function BundlesManager(): React.JSX.Element {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   {isSearchingProducts && (
-                    <div className="absolute right-3 top-2.5 h-4 w-4 animate-spin rounded-full border-2 border-[#960DF2] border-r-transparent" />
+                    <div className="absolute right-3 top-2.5 h-4 w-4 animate-spin rounded-full border-2 border-[#25D366] border-r-transparent" />
                   )}
 
                   {/* Dropdown Results */}
                   {catalogProducts.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 z-20 mt-1 max-h-48 overflow-y-auto rounded-xl border border-purple-200 dark:border-purple-700 bg-white dark:bg-[#3C0561] shadow-2xl divide-y divide-purple-100 dark:divide-purple-800/40">
+                    <div className="absolute top-full left-0 right-0 z-20 mt-1 max-h-48 overflow-y-auto rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B] shadow-2xl divide-y divide-zinc-200 dark:divide-zinc-800 dark:divide-zinc-200 dark:divide-zinc-800">
                       {catalogProducts.map((p) => (
                         <div
                           key={p.id}
-                          className="flex items-center justify-between p-2.5 hover:bg-purple-50 dark:hover:bg-purple-900/40 transition"
+                          className="flex items-center justify-between p-2.5 hover:bg-[#F4F4F5] dark:hover:bg-[#18181B]/40 transition"
                         >
                           <div className="flex items-center gap-2.5">
-                            <div className="relative h-8 w-8 rounded-lg overflow-hidden bg-purple-50">
+                            <div className="relative h-8 w-8 rounded-lg overflow-hidden bg-[#F4F4F5]">
                               {p.mainImage && (
                                 <Image
                                   src={normalizeImageUrl(p.mainImage, { width: 64, quality: 70 })}
@@ -781,10 +781,10 @@ export default function BundlesManager(): React.JSX.Element {
                               )}
                             </div>
                             <div>
-                              <p className="font-bold text-xs text-[#3C0561] dark:text-white line-clamp-1">
+                              <p className="font-bold text-xs text-[#18181B] dark:text-white line-clamp-1">
                                 {p.name}
                               </p>
-                              <p className="text-[11px] font-semibold text-[#960DF2]">
+                              <p className="text-[11px] font-semibold text-[#25D366]">
                                 ${Number(p.price).toFixed(2)}
                               </p>
                             </div>
@@ -792,7 +792,7 @@ export default function BundlesManager(): React.JSX.Element {
                           <button
                             type="button"
                             onClick={() => addProductToBundle(p)}
-                            className="rounded-lg bg-[#960DF2] text-white px-2.5 py-1 text-[10px] font-bold hover:bg-[#780AC2]"
+                            className="rounded-lg bg-[#25D366] text-white px-2.5 py-1 text-[10px] font-bold hover:bg-[#1EA855]"
                           >
                             + Add
                           </button>
@@ -803,19 +803,19 @@ export default function BundlesManager(): React.JSX.Element {
                 </div>
 
                 {/* Selected Products List */}
-                <div className="space-y-2 max-h-56 overflow-y-auto rounded-xl border border-purple-200/80 dark:border-purple-800/60 p-2 bg-purple-50/30 dark:bg-purple-950/20">
+                <div className="space-y-2 max-h-56 overflow-y-auto rounded-xl border border-[#E4E4E7]/80 dark:border-zinc-800/60 p-2 bg-[#F4F4F5]/30 dark:bg-[#18181B]/20">
                   {formItems.length === 0 ? (
-                    <p className="text-center text-xs text-purple-400 py-4">
+                    <p className="text-center text-xs text-zinc-400 py-4">
                       No products added to this bundle yet.
                     </p>
                   ) : (
                     formItems.map((item, idx) => (
                       <div
                         key={item.productId}
-                        className="flex items-center justify-between gap-3 rounded-xl border border-purple-200/60 dark:border-purple-800/40 bg-white dark:bg-[#3C0561] p-2.5 shadow-sm"
+                        className="flex items-center justify-between gap-3 rounded-xl border border-[#E4E4E7]/60 dark:border-zinc-800/40 bg-white dark:bg-[#18181B] p-2.5 shadow-sm"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="relative h-10 w-10 shrink-0 rounded-lg overflow-hidden bg-purple-50">
+                          <div className="relative h-10 w-10 shrink-0 rounded-lg overflow-hidden bg-[#F4F4F5]">
                             {item.product?.mainImage && (
                               <Image
                                 src={normalizeImageUrl(item.product.mainImage, { width: 80, quality: 70 })}
@@ -826,10 +826,10 @@ export default function BundlesManager(): React.JSX.Element {
                             )}
                           </div>
                           <div>
-                            <p className="font-bold text-xs text-[#3C0561] dark:text-white line-clamp-1">
+                            <p className="font-bold text-xs text-[#18181B] dark:text-white line-clamp-1">
                               {item.product?.name || item.productId}
                             </p>
-                            <p className="text-[11px] font-bold text-[#960DF2]">
+                            <p className="text-[11px] font-bold text-[#25D366]">
                               ${Number(item.product?.price || 0).toFixed(2)} each
                             </p>
                           </div>
@@ -838,7 +838,7 @@ export default function BundlesManager(): React.JSX.Element {
                         <div className="flex items-center gap-3">
                           {/* Quantity */}
                           <div className="flex items-center gap-1">
-                            <span className="text-[10px] text-purple-400 font-bold">Qty:</span>
+                            <span className="text-[10px] text-zinc-400 font-bold">Qty:</span>
                             <input
                               type="number"
                               min={1}
@@ -849,7 +849,7 @@ export default function BundlesManager(): React.JSX.Element {
                                   prev.map((it, i) => (i === idx ? { ...it, quantity: q } : it))
                                 );
                               }}
-                              className="w-14 rounded-lg border border-purple-300 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 px-2 py-1 text-center font-bold text-xs"
+                              className="w-14 rounded-lg border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 px-2 py-1 text-center font-bold text-xs"
                             />
                           </div>
 
@@ -859,7 +859,7 @@ export default function BundlesManager(): React.JSX.Element {
                               type="button"
                               disabled={idx === 0}
                               onClick={() => moveItem(idx, "up")}
-                              className="text-purple-400 hover:text-purple-700 disabled:opacity-20 text-[10px]"
+                              className="text-zinc-400 hover:text-[#1EA855] disabled:opacity-20 text-[10px]"
                             >
                               ▲
                             </button>
@@ -867,7 +867,7 @@ export default function BundlesManager(): React.JSX.Element {
                               type="button"
                               disabled={idx === formItems.length - 1}
                               onClick={() => moveItem(idx, "down")}
-                              className="text-purple-400 hover:text-purple-700 disabled:opacity-20 text-[10px]"
+                              className="text-zinc-400 hover:text-[#1EA855] disabled:opacity-20 text-[10px]"
                             >
                               ▼
                             </button>
@@ -889,19 +889,19 @@ export default function BundlesManager(): React.JSX.Element {
               </div>
 
               {/* Pricing Breakdown Card */}
-              <div className="rounded-2xl border border-purple-300/80 dark:border-purple-700 bg-purple-100/50 dark:bg-purple-950/60 p-4 space-y-3">
+              <div className="rounded-2xl border border-[#E4E4E7]/80 dark:border-zinc-700 bg-[#DCFCE7]/50 dark:bg-[#18181B]/60 p-4 space-y-3">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-[11px] font-bold text-purple-900 dark:text-purple-200">
+                    <label className="block text-[11px] font-bold text-[#18181B] dark:text-zinc-300">
                       Original Total Price
                     </label>
-                    <p className="text-base font-black text-zinc-600 dark:text-purple-300 mt-1">
+                    <p className="text-base font-black text-zinc-600 dark:text-zinc-400 mt-1">
                       ${calculatedOriginalPrice.toFixed(2)}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-purple-900 dark:text-purple-200">
+                    <label className="block text-[11px] font-bold text-[#18181B] dark:text-zinc-300">
                       Bundle Price *
                     </label>
                     <input
@@ -912,15 +912,15 @@ export default function BundlesManager(): React.JSX.Element {
                       value={formBundlePrice || ""}
                       onChange={(e) => setFormBundlePrice(parseFloat(e.target.value) || 0)}
                       placeholder="0.00"
-                      className="w-full rounded-xl border border-purple-300 dark:border-purple-700 bg-white dark:bg-[#3C0561] px-3 py-1.5 text-sm font-black text-[#960DF2] dark:text-[#EACFFC] focus:ring-2 focus:ring-[#960DF2] focus:outline-none mt-1"
+                      className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-white dark:bg-[#18181B] px-3 py-1.5 text-sm font-black text-[#25D366] dark:text-[#DCFCE7] focus:ring-2 focus:ring-[#25D366] focus:outline-none mt-1"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-purple-900 dark:text-purple-200">
+                    <label className="block text-[11px] font-bold text-[#18181B] dark:text-zinc-300">
                       Auto-Calculated Discount
                     </label>
-                    <p className="text-base font-black text-[#960DF2] dark:text-[#C06EF7] mt-1">
+                    <p className="text-base font-black text-[#25D366] dark:text-[#1EA855] mt-1">
                       {calculatedDiscountPercent}% OFF
                     </p>
                   </div>
@@ -934,15 +934,15 @@ export default function BundlesManager(): React.JSX.Element {
               </div>
 
               {/* Status, Featured & Sort Order */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-purple-200/60 dark:border-purple-800/40 pt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-[#E4E4E7]/60 dark:border-zinc-800/40 pt-4">
                 <div>
-                  <label className="block font-bold text-purple-900 dark:text-purple-200 mb-1">
+                  <label className="block font-bold text-[#18181B] dark:text-zinc-300 mb-1">
                     Status
                   </label>
                   <select
                     value={formStatus}
                     onChange={(e) => setFormStatus(e.target.value as any)}
-                    className="w-full rounded-xl border border-purple-300 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 px-3 py-2 text-xs font-semibold"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 px-3 py-2 text-xs font-semibold"
                   >
                     <option value="active">Active (Visible)</option>
                     <option value="draft">Draft (Hidden)</option>
@@ -950,7 +950,7 @@ export default function BundlesManager(): React.JSX.Element {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-purple-900 dark:text-purple-200 mb-1">
+                  <label className="block font-bold text-[#18181B] dark:text-zinc-300 mb-1">
                     Featured on Homepage?
                   </label>
                   <button
@@ -958,8 +958,8 @@ export default function BundlesManager(): React.JSX.Element {
                     onClick={() => setFormIsFeatured((prev) => !prev)}
                     className={`w-full rounded-xl border px-3 py-2 text-xs font-bold transition cursor-pointer ${
                       formIsFeatured
-                        ? "border-[#960DF2] bg-[#960DF2] text-white"
-                        : "border-purple-200 dark:border-purple-700 bg-purple-50/50 text-purple-700 dark:text-purple-300"
+                        ? "border-[#25D366] bg-[#25D366] text-white"
+                        : "border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 text-[#1EA855] dark:text-zinc-400"
                     }`}
                   >
                     {formIsFeatured ? "★ Featured on Homepage" : "Standard"}
@@ -967,31 +967,31 @@ export default function BundlesManager(): React.JSX.Element {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-purple-900 dark:text-purple-200 mb-1">
+                  <label className="block font-bold text-[#18181B] dark:text-zinc-300 mb-1">
                     Sort Order
                   </label>
                   <input
                     type="number"
                     value={formSortOrder}
                     onChange={(e) => setFormSortOrder(parseInt(e.target.value) || 0)}
-                    className="w-full rounded-xl border border-purple-300 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/40 px-3 py-2 text-xs font-semibold"
+                    className="w-full rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/40 px-3 py-2 text-xs font-semibold"
                   />
                 </div>
               </div>
 
               {/* Submit / Cancel Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-purple-200/60 dark:border-purple-800/40">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E4E4E7]/60 dark:border-zinc-800/40">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-xl border border-purple-300 dark:border-purple-700 px-4 py-2.5 text-xs font-bold text-purple-700 dark:text-purple-200 hover:bg-purple-50"
+                  className="rounded-xl border border-[#E4E4E7] dark:border-zinc-700 px-4 py-2.5 text-xs font-bold text-[#1EA855] dark:text-zinc-300 hover:bg-[#F4F4F5]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="rounded-xl bg-[#960DF2] hover:bg-[#780AC2] px-6 py-2.5 text-xs font-bold text-white shadow-lg shadow-purple-500/25 disabled:opacity-50 cursor-pointer"
+                  className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-6 py-2.5 text-xs font-bold text-white shadow-lg shadow-[#25D366]/20 disabled:opacity-50 cursor-pointer"
                 >
                   {isSaving ? "Saving Bundle..." : editingBundle ? "Update Bundle" : "Create Bundle"}
                 </button>

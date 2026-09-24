@@ -109,7 +109,7 @@ export default function WhatsAppSettings({ className = "" }: Props): React.JSX.E
             value={settings.phoneNumber}
             onChange={(e) => setSettings({ ...settings, phoneNumber: e.target.value })}
             placeholder="e.g. 15551234567 or 447123456789"
-            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366] font-mono"
           />
           <p className="mt-1 text-[11px] text-zinc-500 dark:text-white/50">
             Enter full phone number with country prefix. Do not add &quot;+&quot; or dashes (sanitized automatically:{" "}
@@ -183,7 +183,7 @@ export default function WhatsAppSettings({ className = "" }: Props): React.JSX.E
             rows={2}
             value={settings.floatingMessage}
             onChange={(e) => setSettings({ ...settings, floatingMessage: e.target.value })}
-            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
           />
         </div>
 
@@ -195,17 +195,17 @@ export default function WhatsAppSettings({ className = "" }: Props): React.JSX.E
             rows={2}
             value={settings.productMessage}
             onChange={(e) => setSettings({ ...settings, productMessage: e.target.value })}
-            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 p-3 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
           />
           <div className="mt-1 flex items-center gap-1.5 text-[11px] text-zinc-500">
             <span>Placeholders:</span>
-            <code className="bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-purple-600 dark:text-purple-300">
+            <code className="bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-[#25D366] dark:text-zinc-400">
               {"{product_name}"}
             </code>
-            <code className="bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-purple-600 dark:text-purple-300">
+            <code className="bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-[#25D366] dark:text-zinc-400">
               {"{product_price}"}
             </code>
-            <code className="bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-purple-600 dark:text-purple-300">
+            <code className="bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded text-[#25D366] dark:text-zinc-400">
               {"{product_url}"}
             </code>
           </div>
@@ -219,7 +219,7 @@ export default function WhatsAppSettings({ className = "" }: Props): React.JSX.E
             type="text"
             value={settings.buttonText}
             onChange={(e) => setSettings({ ...settings, buttonText: e.target.value })}
-            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 px-3 py-2 text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#25D366]"
           />
         </div>
       </div>
@@ -228,7 +228,7 @@ export default function WhatsAppSettings({ className = "" }: Props): React.JSX.E
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-purple-600 hover:bg-purple-700 px-6 py-2.5 text-xs font-bold text-white shadow-sm disabled:opacity-50 transition-all cursor-pointer"
+          className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-6 py-2.5 text-xs font-bold text-white shadow-sm disabled:opacity-50 transition-all cursor-pointer"
         >
           {saving ? "Saving Settings..." : "Save WhatsApp Settings"}
         </button>

@@ -195,13 +195,13 @@ export default function AppsManager(): React.JSX.Element {
               onClick={() => setActiveTab(tab.id)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === tab.id
-                  ? "bg-white dark:bg-purple-900/60 text-purple-900 dark:text-purple-100 shadow-sm"
+                  ? "bg-white dark:bg-[#18181B]/60 text-[#18181B] dark:text-zinc-200 shadow-sm"
                   : "text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               {tab.label}
               {tab.id === "installed" && (
-                <span className="ml-1.5 px-1.5 py-0.2 rounded-full bg-purple-100 dark:bg-purple-950 text-[10px] text-purple-700 dark:text-purple-300 font-mono">
+                <span className="ml-1.5 px-1.5 py-0.2 rounded-full bg-[#DCFCE7] dark:bg-[#18181B] text-[10px] text-[#1EA855] dark:text-zinc-400 font-mono">
                   {apps.filter((a) => a.installed).length}
                 </span>
               )}
@@ -216,7 +216,7 @@ export default function AppsManager(): React.JSX.Element {
             placeholder="Search apps..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] px-3.5 py-2 pl-9 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] px-3.5 py-2 pl-9 text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#25D366]"
           />
           <svg
             className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400"
@@ -246,7 +246,7 @@ export default function AppsManager(): React.JSX.Element {
         </div>
       ) : filteredApps.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-zinc-300 dark:border-white/10 p-12 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F4F4F5] dark:bg-[#18181B]/40 text-[#25D366] dark:text-zinc-400">
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.439 7.85c0-1.57.88-2.35 1.56-2.35 1.4 0 2 1.5 2 3s-.6 3-2 3c-.68 0-1.56-.78-1.56-2.35V7.85zM11 4a2 2 0 1 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a2 2 0 1 0 0 4h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-1a2 2 0 1 0-4 0v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H4a2 2 0 1 1 0-4h1a1 1 0 0 0 1-1V7a1 1 0 0 1 1-1h3a1 1 0 0 0 1-1V4z" />
             </svg>
@@ -266,13 +266,13 @@ export default function AppsManager(): React.JSX.Element {
             return (
               <div
                 key={app.id}
-                className="group relative flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-6 shadow-sm hover:border-purple-300 dark:hover:border-purple-800/80 transition-all"
+                className="group relative flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-[#0c140f] p-6 shadow-sm hover:border-[#E4E4E7] dark:hover:border-zinc-800/80 transition-all"
               >
                 <div>
                   {/* Header Row: Icon, Title, Status Badge */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#DCFCE7] dark:bg-[#18181B]/40 text-[#25D366] dark:text-zinc-400">
                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M11 4a2 2 0 1 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a2 2 0 1 0 0 4h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-1a2 2 0 1 0-4 0v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H4a2 2 0 1 1 0-4h1a1 1 0 0 0 1-1V7a1 1 0 0 1 1-1h3a1 1 0 0 0 1-1V4z" />
                         </svg>
@@ -321,7 +321,7 @@ export default function AppsManager(): React.JSX.Element {
 
                   {/* Badges: Pricing & Extension Points */}
                   <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                    <span className="rounded-md bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/40 px-2 py-0.5 text-[10px] font-medium text-purple-700 dark:text-purple-300">
+                    <span className="rounded-md bg-[#F4F4F5] dark:bg-[#18181B]/40 border border-[#E4E4E7] dark:border-zinc-800/40 px-2 py-0.5 text-[10px] font-medium text-[#1EA855] dark:text-zinc-400">
                       {app.pricing === "free" ? "Free" : `$${app.price}`}
                     </span>
                     {app.extensionPoints.map((ep) => (
@@ -339,7 +339,7 @@ export default function AppsManager(): React.JSX.Element {
                 <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-white/5 flex items-center justify-between gap-3">
                   <Link
                     href={`/admin/apps/${app.id}`}
-                    className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline"
+                    className="text-xs font-semibold text-[#25D366] dark:text-zinc-400 hover:underline"
                   >
                     {isInstalled ? "Configure & Settings \u2192" : "View Details \u2192"}
                   </Link>
@@ -349,7 +349,7 @@ export default function AppsManager(): React.JSX.Element {
                       <button
                         onClick={() => handleInstall(app.id)}
                         disabled={isProcessing}
-                        className="rounded-xl bg-purple-600 hover:bg-purple-700 px-4 py-1.5 text-xs font-bold text-white shadow-sm disabled:opacity-50 transition-all"
+                        className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-4 py-1.5 text-xs font-bold text-white shadow-sm disabled:opacity-50 transition-all"
                       >
                         {isProcessing ? "Installing..." : "Install"}
                       </button>
@@ -423,7 +423,7 @@ export default function AppsManager(): React.JSX.Element {
                     selectedApp.permissions.map((p) => (
                       <span
                         key={p}
-                        className="rounded-md bg-purple-50 dark:bg-purple-950/40 px-2 py-0.5 font-mono text-[10px] text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/40"
+                        className="rounded-md bg-[#F4F4F5] dark:bg-[#18181B]/40 px-2 py-0.5 font-mono text-[10px] text-[#1EA855] dark:text-zinc-400 border border-[#E4E4E7] dark:border-zinc-800/40"
                       >
                         {p}
                       </span>

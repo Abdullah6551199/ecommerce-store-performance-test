@@ -41,27 +41,27 @@ export default function TrendingProductsSection({
   return (
     <section id="trending-products" className="space-y-8">
       {/* Section Header with Tabs */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-purple-200/60 dark:border-purple-800/40 pb-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#E4E4E7]/60 dark:border-zinc-800/40 pb-4">
         <div>
           {badge && (
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#EACFFC] dark:bg-[#5A0891]/60 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#960DF2] dark:text-[#EACFFC] mb-1">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#DCFCE7] dark:bg-[#15803D]/60 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#25D366] dark:text-[#DCFCE7] mb-1">
               <span>{badge}</span>
             </div>
           )}
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[#3C0561] dark:text-white">
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[#18181B] dark:text-white">
             {heading}
           </h2>
         </div>
 
         {/* Dynamic Tabs */}
-        <div className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-purple-200 dark:border-purple-800/60 bg-purple-50/50 dark:bg-[#3C0561]/60 p-1.5">
+        <div className="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-[#F4F4F5]/50 dark:bg-[#18181B]/60 p-1.5">
           <button
             type="button"
             onClick={() => setActiveTab("best_sellers")}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeTab === "best_sellers"
-                ? "bg-[#960DF2] text-white shadow-sm"
-                : "text-zinc-600 dark:text-purple-200 hover:text-[#960DF2]"
+                ? "bg-[#25D366] text-white shadow-sm"
+                : "text-zinc-600 dark:text-zinc-300 hover:text-[#25D366]"
             }`}
           >
             Best Seller
@@ -72,8 +72,8 @@ export default function TrendingProductsSection({
             onClick={() => setActiveTab("new_arrivals")}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeTab === "new_arrivals"
-                ? "bg-[#960DF2] text-white shadow-sm"
-                : "text-zinc-600 dark:text-purple-200 hover:text-[#960DF2]"
+                ? "bg-[#25D366] text-white shadow-sm"
+                : "text-zinc-600 dark:text-zinc-300 hover:text-[#25D366]"
             }`}
           >
             New Arrivals
@@ -84,8 +84,8 @@ export default function TrendingProductsSection({
             onClick={() => setActiveTab("top_rated")}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeTab === "top_rated"
-                ? "bg-[#960DF2] text-white shadow-sm"
-                : "text-zinc-600 dark:text-purple-200 hover:text-[#960DF2]"
+                ? "bg-[#25D366] text-white shadow-sm"
+                : "text-zinc-600 dark:text-zinc-300 hover:text-[#25D366]"
             }`}
           >
             Top Rated
@@ -95,11 +95,11 @@ export default function TrendingProductsSection({
 
       {/* Product Grid (5 Columns on Desktop) */}
       {displayedProducts.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-purple-300 dark:border-purple-800/60 bg-purple-50/30 dark:bg-[#3C0561]/40 p-12 text-center">
-          <p className="text-sm font-semibold text-zinc-700 dark:text-purple-200">No products found for this filter.</p>
+        <div className="rounded-2xl border border-dashed border-[#E4E4E7] dark:border-zinc-800/60 bg-[#F4F4F5]/30 dark:bg-[#18181B]/40 p-12 text-center">
+          <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">No products found for this filter.</p>
           <Link
             href="/shop"
-            className="mt-4 inline-block rounded-lg bg-[#960DF2] px-4 py-2 text-xs font-bold text-white hover:bg-[#780AC2]"
+            className="mt-4 inline-block rounded-lg bg-[#25D366] px-4 py-2 text-xs font-bold text-white hover:bg-[#1EA855]"
           >
             Browse Store Catalog
           </Link>
@@ -115,14 +115,14 @@ export default function TrendingProductsSection({
       {/* Bottom Navigation Dots & Link */}
       <div className="flex items-center justify-between pt-2">
         <div className="flex items-center gap-1.5">
-          <span className="h-2 w-6 rounded-full bg-[#960DF2]" />
-          <span className="h-2 w-2 rounded-full bg-purple-200 dark:bg-purple-800" />
-          <span className="h-2 w-2 rounded-full bg-purple-200 dark:bg-purple-800" />
+          <span className="h-2 w-6 rounded-full bg-[#25D366]" />
+          <span className="h-2 w-2 rounded-full bg-[#DCFCE7] dark:bg-[#15803D]" />
+          <span className="h-2 w-2 rounded-full bg-[#DCFCE7] dark:bg-[#15803D]" />
         </div>
 
         <Link
           href="/shop"
-          className="text-xs font-bold text-[#960DF2] dark:text-[#C06EF7] hover:underline"
+          className="text-xs font-bold text-[#25D366] dark:text-[#1EA855] hover:underline"
         >
           View All Trending &rarr;
         </Link>

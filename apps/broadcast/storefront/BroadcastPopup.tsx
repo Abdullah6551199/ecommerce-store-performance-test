@@ -159,7 +159,7 @@ export default function BroadcastPopup(): React.JSX.Element | null {
       aria-modal="true"
     >
       <div className="relative w-full max-w-md rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-purple-500/30 shadow-2xl shadow-purple-500/15 transform transition-all animate-in zoom-in-95 duration-200">
-        <div className="h-1.5 w-full bg-gradient-to-r from-purple-600 via-purple-400 to-purple-200" />
+        <div className="h-1.5 w-full bg-gradient-to-r from-purple-600 via-[#1EA855] to-[#25D366]" />
 
         {/* Close Button */}
         <button
@@ -213,7 +213,7 @@ export default function BroadcastPopup(): React.JSX.Element | null {
             <button
               type="button"
               onClick={handleActionClick}
-              className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-sm shadow-lg shadow-purple-600/30 transition duration-150 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
+              className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-purple-600 via-[#1EA855] to-indigo-600 hover:from-[#1EA855] hover:to-indigo-500 text-white font-extrabold text-sm shadow-lg shadow-purple-600/30 transition duration-150 flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
             >
               <span>{broadcast.buttonText || "Learn More"}</span>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -229,7 +229,7 @@ export default function BroadcastPopup(): React.JSX.Element | null {
                 type="checkbox"
                 checked={dontShowAgain}
                 onChange={(e) => setDontShowAgain(e.target.checked)}
-                className="w-4 h-4 rounded border-zinc-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
+                className="w-4 h-4 rounded border-zinc-300 text-purple-600 focus:ring-[#25D366] cursor-pointer"
               />
               <span className="group-hover:text-zinc-700 dark:group-hover:text-zinc-200 transition">
                 Don&apos;t show again

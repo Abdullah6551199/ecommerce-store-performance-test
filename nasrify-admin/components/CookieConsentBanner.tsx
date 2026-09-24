@@ -100,8 +100,8 @@ export default function CookieConsentBanner(): React.JSX.Element | null {
           <div
             className={`rounded-2xl border p-5 sm:p-6 shadow-2xl transition-all ${
               isDarkTheme
-                ? "border-purple-800 bg-[#2D024A] text-white shadow-purple-950/50"
-                : "border-purple-200 bg-white/95 dark:bg-[#3C0561]/95 text-[#3C0561] dark:text-white backdrop-blur-md shadow-purple-900/15"
+                ? "border-zinc-800 bg-[#2D024A] text-white shadow-[#25D366]/20"
+                : "border-[#E4E4E7] bg-white/95 dark:bg-[#18181B]/95 text-[#18181B] dark:text-white backdrop-blur-md shadow-[#25D366]/20"
             }`}
           >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
@@ -113,21 +113,21 @@ export default function CookieConsentBanner(): React.JSX.Element | null {
                     {settings?.bannerTitle || "We use cookies"}
                   </h3>
                 </div>
-                <p className="text-xs text-[#5A0891]/80 dark:text-[#EACFFC]/80 leading-relaxed">
+                <p className="text-xs text-[#15803D]/80 dark:text-[#DCFCE7]/80 leading-relaxed">
                   {settings?.bannerMessage ||
                     "We use cookies to improve your experience, analyze traffic, and personalize content."}
                 </p>
-                <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] font-semibold text-[#960DF2] dark:text-[#EACFFC]">
+                <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] font-semibold text-[#25D366] dark:text-[#DCFCE7]">
                   <Link
                     href="/cookie-policy"
-                    className="underline hover:text-[#AB3DF5] transition-colors"
+                    className="underline hover:text-[#1EA855] transition-colors"
                   >
                     Read our Cookie Policy
                   </Link>
                   <span>•</span>
                   <Link
                     href="/privacy-policy"
-                    className="underline hover:text-[#AB3DF5] transition-colors"
+                    className="underline hover:text-[#1EA855] transition-colors"
                   >
                     Privacy Policy
                   </Link>
@@ -140,7 +140,7 @@ export default function CookieConsentBanner(): React.JSX.Element | null {
                   type="button"
                   id="cookie-btn-accept"
                   onClick={handleAcceptAll}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#AB3DF5] text-white text-xs font-bold shadow-md shadow-purple-500/20 transition-all cursor-pointer active:scale-95"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white text-xs font-bold shadow-md shadow-[#25D366]/20 transition-all cursor-pointer active:scale-95"
                 >
                   {settings?.acceptText || "Accept All"}
                 </button>
@@ -148,7 +148,7 @@ export default function CookieConsentBanner(): React.JSX.Element | null {
                   type="button"
                   id="cookie-btn-reject"
                   onClick={handleRejectAll}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-800/40 text-xs font-bold text-[#3C0561] dark:text-[#EACFFC] transition-all cursor-pointer active:scale-95"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#E4E4E7] dark:border-zinc-700 bg-[#F4F4F5]/50 dark:bg-[#18181B]/30 hover:bg-[#DCFCE7] dark:hover:bg-[#15803D]/40 text-xs font-bold text-[#18181B] dark:text-[#DCFCE7] transition-all cursor-pointer active:scale-95"
                 >
                   {settings?.rejectText || "Reject All"}
                 </button>
@@ -156,7 +156,7 @@ export default function CookieConsentBanner(): React.JSX.Element | null {
                   type="button"
                   id="cookie-btn-customize"
                   onClick={() => setCustomizeOpen(true)}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-dashed border-purple-300 dark:border-purple-600 hover:border-purple-500 text-xs font-bold text-[#960DF2] dark:text-[#EACFFC] transition-all cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-dashed border-[#E4E4E7] dark:border-[#1EA855] hover:border-[#25D366] text-xs font-bold text-[#25D366] dark:text-[#DCFCE7] transition-all cursor-pointer"
                 >
                   {settings?.customizeText || "Customize"}
                 </button>

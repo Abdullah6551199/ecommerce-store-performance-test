@@ -73,14 +73,14 @@ export default function OrderStatusTimeline({
   };
 
   return (
-    <div className="rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] p-6 sm:p-8 shadow-sm space-y-8">
+    <div className="rounded-3xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#09090B] p-6 sm:p-8 shadow-sm space-y-8">
       {/* Header bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-purple-100 dark:border-purple-900/40 pb-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E4E4E7] dark:border-zinc-800/40 pb-5">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300 block">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400 block">
             Live Shipment Tracker
           </span>
-          <h2 className="text-lg sm:text-xl font-black text-[#3C0561] dark:text-white tracking-tight mt-0.5">
+          <h2 className="text-lg sm:text-xl font-black text-[#18181B] dark:text-white tracking-tight mt-0.5">
             Order Status Progression
           </h2>
         </div>
@@ -95,8 +95,8 @@ export default function OrderStatusTimeline({
               Returned
             </span>
           ) : (
-            <span className="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] border border-purple-200 dark:border-purple-700 flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#960DF2] animate-pulse" />
+            <span className="px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#DCFCE7] dark:bg-[#18181B]/60 text-[#25D366] dark:text-[#DCFCE7] border border-[#E4E4E7] dark:border-zinc-700 flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#25D366] animate-pulse" />
               <span>{order.status.replace(/_/g, " ").toUpperCase()}</span>
             </span>
           )}
@@ -105,14 +105,14 @@ export default function OrderStatusTimeline({
 
       {/* Tracking Metadata Box (Courier, Tracking #, Est Delivery) */}
       {(order.courierName || order.trackingNumber || order.estimatedDelivery || order.statusNotes) && (
-        <div className="rounded-2xl border border-purple-200 dark:border-purple-800/60 bg-gradient-to-r from-purple-50/70 via-purple-50/40 to-transparent dark:from-purple-950/40 dark:via-purple-950/20 dark:to-transparent p-4 sm:p-5 space-y-3">
+        <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-gradient-to-r from-[#F4F4F5]/70 via-[#1EA855]/40 to-transparent dark:from-zinc-900/40 dark:via-[#1EA855]/20 dark:to-transparent p-4 sm:p-5 space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {order.courierName && (
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400 block">
                   Logistics Carrier
                 </span>
-                <p className="text-sm font-black text-[#3C0561] dark:text-white mt-0.5 flex items-center gap-1.5">
+                <p className="text-sm font-black text-[#18181B] dark:text-white mt-0.5 flex items-center gap-1.5">
                   <span>🚚</span>
                   <span>{order.courierName}</span>
                 </p>
@@ -121,21 +121,21 @@ export default function OrderStatusTimeline({
 
             {order.trackingNumber && (
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400 block">
                   Waybill / Tracking Number
                 </span>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="font-mono text-xs font-bold text-[#3C0561] dark:text-white bg-purple-100/60 dark:bg-purple-900/60 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-700">
+                  <span className="font-mono text-xs font-bold text-[#18181B] dark:text-white bg-[#DCFCE7]/60 dark:bg-[#18181B]/60 px-2.5 py-1 rounded-lg border border-[#E4E4E7] dark:border-zinc-700">
                     {order.trackingNumber}
                   </span>
                   <button
                     type="button"
                     onClick={() => handleCopyTracking(order.trackingNumber!)}
-                    className="p-1 rounded-md text-purple-600 hover:text-purple-800 dark:text-purple-300 dark:hover:text-white transition"
+                    className="p-1 rounded-md text-[#25D366] hover:text-[#15803D] dark:text-zinc-400 dark:hover:text-white transition"
                     title="Copy tracking code"
                   >
                     {copied ? (
-                      <span className="text-[11px] font-bold text-[#960DF2] dark:text-[#EACFFC]">Copied!</span>
+                      <span className="text-[11px] font-bold text-[#25D366] dark:text-[#DCFCE7]">Copied!</span>
                     ) : (
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -148,10 +148,10 @@ export default function OrderStatusTimeline({
 
             {order.estimatedDelivery && (
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-300 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400 block">
                   Estimated Delivery
                 </span>
-                <p className="text-sm font-black text-[#3C0561] dark:text-white mt-0.5 flex items-center gap-1.5">
+                <p className="text-sm font-black text-[#18181B] dark:text-white mt-0.5 flex items-center gap-1.5">
                   <span>📅</span>
                   <span>{order.estimatedDelivery}</span>
                 </p>
@@ -160,11 +160,11 @@ export default function OrderStatusTimeline({
           </div>
 
           {order.statusNotes && (
-            <div className="pt-3 border-t border-purple-200/60 dark:border-purple-800/40">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-500 dark:text-purple-300/80 block">
+            <div className="pt-3 border-t border-[#E4E4E7]/60 dark:border-zinc-800/40">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#25D366] dark:text-zinc-400/80 block">
                 Public Dispatch Update
               </span>
-              <p className="text-xs text-slate-700 dark:text-purple-200 mt-0.5 italic">
+              <p className="text-xs text-slate-700 dark:text-zinc-300 mt-0.5 italic">
                 &ldquo;{order.statusNotes}&rdquo;
               </p>
             </div>
@@ -175,7 +175,7 @@ export default function OrderStatusTimeline({
       {/* Vertical Status Timeline */}
       <div className="relative pl-6 sm:pl-8 space-y-8">
         {/* Continuous background vertical connector track */}
-        <div className="absolute left-[17px] sm:left-[21px] top-4 bottom-4 w-0.5 bg-purple-100 dark:bg-purple-900/40" />
+        <div className="absolute left-[17px] sm:left-[21px] top-4 bottom-4 w-0.5 bg-[#DCFCE7] dark:bg-[#18181B]/40" />
 
         {TIMELINE_STEPS.map((step, idx) => {
           let state: "completed" | "current" | "pending" = "pending";
@@ -220,10 +220,10 @@ export default function OrderStatusTimeline({
               <div
                 className={`absolute -left-[24px] sm:-left-[28px] flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full text-xs font-black transition-all ${
                   isCompleted
-                    ? "bg-[#960DF2] text-white ring-4 ring-purple-400/20 shadow-md shadow-purple-500/20"
+                    ? "bg-[#25D366] text-white ring-4 ring-[#25D366]/20 shadow-md shadow-[#25D366]/20"
                     : isCurrent
-                    ? "bg-white dark:bg-[#1E0230] text-[#960DF2] dark:text-[#EACFFC] border-2 border-[#960DF2] ring-4 ring-purple-500/30 animate-pulse shadow-md"
-                    : "bg-slate-100 dark:bg-purple-950/60 text-slate-400 dark:text-purple-400/40 border border-purple-200/50 dark:border-purple-800/40"
+                    ? "bg-white dark:bg-[#09090B] text-[#25D366] dark:text-[#DCFCE7] border-2 border-[#25D366] ring-4 ring-[#25D366]/30 animate-pulse shadow-md"
+                    : "bg-slate-100 dark:bg-[#18181B]/60 text-slate-400 dark:text-zinc-400/40 border border-[#E4E4E7]/50 dark:border-zinc-800/40"
                 }`}
               >
                 {isCompleted ? (
@@ -231,7 +231,7 @@ export default function OrderStatusTimeline({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 ) : isCurrent ? (
-                  <span className="h-3 w-3 rounded-full bg-[#960DF2]" />
+                  <span className="h-3 w-3 rounded-full bg-[#25D366]" />
                 ) : (
                   <span className="text-[11px] font-mono opacity-80">{idx + 1}</span>
                 )}
@@ -244,14 +244,14 @@ export default function OrderStatusTimeline({
                     <h3
                       className={`text-sm sm:text-base font-extrabold ${
                         isCompleted || isCurrent
-                          ? "text-[#3C0561] dark:text-white"
-                          : "text-slate-400 dark:text-purple-400/60"
+                          ? "text-[#18181B] dark:text-white"
+                          : "text-slate-400 dark:text-zinc-400/60"
                       }`}
                     >
                       {step.title}
                     </h3>
                     {isCurrent && (
-                      <span className="rounded-full bg-[#960DF2] text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 shadow-sm">
+                      <span className="rounded-full bg-[#25D366] text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 shadow-sm">
                         Current Status
                       </span>
                     )}
@@ -260,8 +260,8 @@ export default function OrderStatusTimeline({
                   <span
                     className={`text-xs font-mono ${
                       isCompleted || isCurrent
-                        ? "text-purple-700 dark:text-purple-300 font-semibold"
-                        : "text-slate-400 dark:text-purple-500/40"
+                        ? "text-[#1EA855] dark:text-zinc-400 font-semibold"
+                        : "text-slate-400 dark:text-[#25D366]/40"
                     }`}
                   >
                     {timeDisplay}
@@ -271,8 +271,8 @@ export default function OrderStatusTimeline({
                 <p
                   className={`text-xs mt-1 leading-relaxed ${
                     isCompleted || isCurrent
-                      ? "text-slate-600 dark:text-purple-200/80"
-                      : "text-slate-400 dark:text-purple-400/40"
+                      ? "text-slate-600 dark:text-zinc-300/80"
+                      : "text-slate-400 dark:text-zinc-400/40"
                   }`}
                 >
                   {step.description}

@@ -79,9 +79,9 @@ export default function Toggle({
         relative inline-flex shrink-0 cursor-pointer rounded-full
         transition-colors duration-200 ease-in-out
         motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2
         dark:focus-visible:ring-offset-zinc-950
-        ${checked ? "bg-[var(--primary,#9333ea)] bg-purple-600" : "bg-gray-300 dark:bg-zinc-700"}
+        ${checked ? "bg-[var(--primary,#9333ea)] bg-[#25D366]" : "bg-gray-300 dark:bg-zinc-700"}
         ${disabled ? "opacity-50 cursor-not-allowed" : ""}
         ${sizeStyles.track}
         ${className}

@@ -145,7 +145,7 @@ export default function CookieCustomizeModal({
         </div>
 
         {/* Categories */}
-        <div className="space-y-4 divide-y divide-purple-100 dark:divide-purple-900/40">
+        <div className="space-y-4 divide-y divide-zinc-200 dark:divide-zinc-800 dark:divide-zinc-200 dark:divide-zinc-800">
           {/* Necessary (Locked) */}
           <div className="pt-2 flex items-start justify-between gap-4">
             <div className="space-y-1">

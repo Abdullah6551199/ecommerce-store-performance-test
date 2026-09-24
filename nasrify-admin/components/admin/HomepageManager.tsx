@@ -486,7 +486,7 @@ export default function HomepageManager(): React.JSX.Element {
       case "custom_html":
         initialContent = {
           heading: "Custom Brand Banner",
-          html: "<div style='padding: 24px; background: rgba(150, 13, 242, 0.08); border-radius: 16px; border: 1px solid rgba(150, 13, 242, 0.2); text-align: center;'><h3 style='color: #960DF2; font-weight: 700;'>⚡ Custom Purple Chronicles Block</h3><p style='color: #5A0891; font-size: 14px; margin-top: 8px;'>Safely rendered from Cloudflare D1 database.</p></div>",
+          html: "<div style='padding: 24px; background: rgba(37, 211, 102, 0.08); border-radius: 16px; border: 1px solid rgba(37, 211, 102, 0.2); text-align: center;'><h3 style='color: #25D366; font-weight: 700;'>⚡ Custom Brand Section</h3><p style='color: #15803D; font-size: 14px; margin-top: 8px;'>Safely rendered from Cloudflare D1 database.</p></div>",
         };
         break;
 
@@ -518,10 +518,10 @@ export default function HomepageManager(): React.JSX.Element {
       {/* Top Header Controls */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-purple-100">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-200">
             Homepage Layout Manager
           </h1>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-purple-300/70">
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400/70">
             Control Chronicles purple storefront sections, hero carousel slides, products, and order in real time.
           </p>
         </div>
@@ -530,7 +530,7 @@ export default function HomepageManager(): React.JSX.Element {
           <button
             type="button"
             onClick={handleResetDefaults}
-            className="rounded-xl border border-purple-200 dark:border-purple-800/60 bg-purple-50 dark:bg-purple-950/40 px-3 py-2 text-xs font-medium text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/60 transition-all"
+            className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800/60 bg-[#F4F4F5] dark:bg-[#18181B]/40 px-3 py-2 text-xs font-medium text-[#1EA855] dark:text-zinc-400 hover:bg-[#DCFCE7] dark:hover:bg-[#18181B]/60 transition-all"
           >
             Restore Chronicles Layout
           </button>
@@ -538,7 +538,7 @@ export default function HomepageManager(): React.JSX.Element {
           <button
             type="button"
             onClick={() => handleOpenAddModal("hero")}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 text-xs font-semibold shadow-lg shadow-purple-500/25 active:scale-95 transition-all"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-4 py-2 text-xs font-semibold shadow-lg shadow-[#25D366]/20 active:scale-95 transition-all"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -549,63 +549,63 @@ export default function HomepageManager(): React.JSX.Element {
       </div>
 
       {/* Quick Add Presets Strip */}
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-purple-100 dark:border-purple-900/40 bg-purple-50/50 dark:bg-purple-950/20 p-3">
-        <span className="text-xs font-semibold text-purple-900 dark:text-purple-200 mr-1">
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-[#F4F4F5]/50 dark:bg-[#18181B]/20 p-3">
+        <span className="text-xs font-semibold text-[#18181B] dark:text-zinc-300 mr-1">
           Quick Add:
         </span>
         <button
           type="button"
           onClick={() => handleOpenAddModal("hero")}
-          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+          className="rounded-lg border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#18181B]/60 px-2.5 py-1 text-xs text-[#15803D] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
         >
           + Hero Carousel
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("categories")}
-          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+          className="rounded-lg border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#18181B]/60 px-2.5 py-1 text-xs text-[#15803D] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
         >
           + Categories Row
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("trending_products")}
-          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+          className="rounded-lg border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#18181B]/60 px-2.5 py-1 text-xs text-[#15803D] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
         >
           + Trending Products
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("trust_bar")}
-          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+          className="rounded-lg border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#18181B]/60 px-2.5 py-1 text-xs text-[#15803D] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
         >
           + Trust Bar
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("new_arrivals")}
-          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+          className="rounded-lg border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#18181B]/60 px-2.5 py-1 text-xs text-[#15803D] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
         >
           + New Arrivals
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("brand_logos")}
-          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+          className="rounded-lg border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#18181B]/60 px-2.5 py-1 text-xs text-[#15803D] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
         >
           + Brand Logos
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("newsletter")}
-          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+          className="rounded-lg border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#18181B]/60 px-2.5 py-1 text-xs text-[#15803D] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
         >
           + Newsletter
         </button>
         <button
           type="button"
           onClick={() => handleOpenAddModal("custom_html")}
-          className="rounded-lg border border-purple-200 dark:border-purple-800/50 bg-white dark:bg-purple-950/60 px-2.5 py-1 text-xs text-purple-800 dark:text-purple-200 hover:border-purple-500 hover:text-purple-600 transition-colors"
+          className="rounded-lg border border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#18181B]/60 px-2.5 py-1 text-xs text-[#15803D] dark:text-zinc-300 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
         >
           + Custom HTML
         </button>
@@ -613,8 +613,8 @@ export default function HomepageManager(): React.JSX.Element {
 
       {/* Success Notification */}
       {successMessage && (
-        <div className="rounded-xl border border-purple-400/40 bg-purple-50 dark:bg-purple-950/60 p-3 text-xs font-medium text-purple-700 dark:text-purple-300 flex items-center gap-2">
-          <svg className="h-4 w-4 shrink-0 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="rounded-xl border border-[#25D366]/40 bg-[#F4F4F5] dark:bg-[#18181B]/60 p-3 text-xs font-medium text-[#1EA855] dark:text-zinc-400 flex items-center gap-2">
+          <svg className="h-4 w-4 shrink-0 text-[#25D366]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           <span>{successMessage}</span>
@@ -637,18 +637,18 @@ export default function HomepageManager(): React.JSX.Element {
 
       {/* Sections List */}
       {loading ? (
-        <div className="rounded-2xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-purple-950/30 p-12 text-center text-xs text-purple-700/60 dark:text-purple-300/50 animate-pulse">
+        <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/40 bg-white dark:bg-[#18181B]/30 p-12 text-center text-xs text-[#1EA855]/60 dark:text-zinc-400/50 animate-pulse">
           Loading Chronicles homepage sections from Cloudflare D1...
         </div>
       ) : sections.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-purple-300 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/20 p-12 text-center">
-          <p className="text-sm font-semibold text-purple-900 dark:text-purple-100">
+        <div className="rounded-2xl border border-dashed border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/40 dark:bg-[#18181B]/20 p-12 text-center">
+          <p className="text-sm font-semibold text-[#18181B] dark:text-zinc-200">
             No sections currently configured in Cloudflare D1.
           </p>
           <button
             type="button"
             onClick={handleResetDefaults}
-            className="mt-4 rounded-xl bg-purple-600 hover:bg-purple-700 px-4 py-2 text-xs font-semibold text-white transition-all shadow-md shadow-purple-500/20"
+            className="mt-4 rounded-xl bg-[#25D366] hover:bg-[#1EA855] px-4 py-2 text-xs font-semibold text-white transition-all shadow-md shadow-[#25D366]/20"
           >
             Populate Default Chronicles Sections
           </button>
@@ -660,8 +660,8 @@ export default function HomepageManager(): React.JSX.Element {
               key={sec.id}
               className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border transition-all p-4 ${
                 sec.isActive
-                  ? "border-purple-100 dark:border-purple-900/50 bg-white dark:bg-purple-950/30 hover:border-purple-400 shadow-sm"
-                  : "border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-purple-950/10 opacity-60"
+                  ? "border-[#E4E4E7] dark:border-zinc-800/50 bg-white dark:bg-[#18181B]/30 hover:border-[#25D366] shadow-sm"
+                  : "border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-[#18181B]/10 opacity-60"
               }`}
             >
               {/* Left Column: Sort controls + Index + Badge + Title */}
@@ -672,7 +672,7 @@ export default function HomepageManager(): React.JSX.Element {
                     type="button"
                     disabled={idx === 0}
                     onClick={() => handleMove(idx, "up")}
-                    className="h-6 w-6 rounded bg-purple-50 dark:bg-purple-900/40 flex items-center justify-center text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900 disabled:opacity-20"
+                    className="h-6 w-6 rounded bg-[#F4F4F5] dark:bg-[#18181B]/40 flex items-center justify-center text-[#1EA855] dark:text-zinc-400 hover:bg-[#DCFCE7] dark:hover:bg-[#18181B] disabled:opacity-20"
                     title="Move Up"
                   >
                     ▲
@@ -681,7 +681,7 @@ export default function HomepageManager(): React.JSX.Element {
                     type="button"
                     disabled={idx === sections.length - 1}
                     onClick={() => handleMove(idx, "down")}
-                    className="h-6 w-6 rounded bg-purple-50 dark:bg-purple-900/40 flex items-center justify-center text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900 disabled:opacity-20"
+                    className="h-6 w-6 rounded bg-[#F4F4F5] dark:bg-[#18181B]/40 flex items-center justify-center text-[#1EA855] dark:text-zinc-400 hover:bg-[#DCFCE7] dark:hover:bg-[#18181B] disabled:opacity-20"
                     title="Move Down"
                   >
                     ▼
@@ -689,32 +689,32 @@ export default function HomepageManager(): React.JSX.Element {
                 </div>
 
                 {/* Section Index */}
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/60 text-xs font-mono font-bold text-purple-700 dark:text-purple-200">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#DCFCE7] dark:bg-[#18181B]/60 text-xs font-mono font-bold text-[#1EA855] dark:text-zinc-300">
                   {idx + 1}
                 </div>
 
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="rounded-md border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/30 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-purple-700 dark:text-purple-300">
+                    <span className="rounded-md border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/30 px-2 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-[#1EA855] dark:text-zinc-400">
                       {sec.type}
                     </span>
                     <span
                       className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
                         sec.isActive
-                          ? "bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300"
+                          ? "bg-[#DCFCE7] text-[#1EA855] dark:bg-[#18181B]/50 dark:text-zinc-400"
                           : "bg-zinc-200 dark:bg-white/10 text-zinc-500 dark:text-white/40"
                       }`}
                     >
                       {sec.isActive ? "Visible" : "Hidden"}
                     </span>
                     {sec.type === "hero" && Array.isArray(sec.content?.slides) && (
-                      <span className="text-[10px] text-purple-600 dark:text-purple-400 font-medium">
+                      <span className="text-[10px] text-[#25D366] dark:text-zinc-400 font-medium">
                         ({sec.content.slides.length} slides)
                       </span>
                     )}
                   </div>
-                  <h3 className="mt-1 text-sm font-semibold text-zinc-900 dark:text-purple-100">{sec.title}</h3>
-                  <p className="text-xs text-zinc-500 dark:text-purple-300/70 truncate max-w-md">
+                  <h3 className="mt-1 text-sm font-semibold text-zinc-900 dark:text-zinc-200">{sec.title}</h3>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400/70 truncate max-w-md">
                     {sec.content?.heading || sec.content?.subheading || "Custom dynamic content"}
                   </p>
                 </div>
@@ -727,7 +727,7 @@ export default function HomepageManager(): React.JSX.Element {
                   onClick={() => handleToggleActive(sec)}
                   className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition-colors ${
                     sec.isActive
-                      ? "border-purple-300 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-900/40 dark:text-purple-300 hover:bg-purple-100"
+                      ? "border-[#E4E4E7] bg-[#F4F4F5] text-[#1EA855] dark:border-zinc-800 dark:bg-[#18181B]/40 dark:text-zinc-400 hover:bg-[#DCFCE7]"
                       : "border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-white/50 hover:bg-zinc-200"
                   }`}
                 >
@@ -740,7 +740,7 @@ export default function HomepageManager(): React.JSX.Element {
                     setEditingSection(JSON.parse(JSON.stringify(sec)));
                     setActiveTab("edit");
                   }}
-                  className="rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-900/30 px-3 py-1.5 text-xs font-medium text-purple-800 dark:text-purple-200 hover:bg-purple-100 dark:hover:bg-purple-900/60 hover:border-purple-400 transition-all flex items-center gap-1.5"
+                  className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/50 dark:bg-[#18181B]/30 px-3 py-1.5 text-xs font-medium text-[#15803D] dark:text-zinc-300 hover:bg-[#DCFCE7] dark:hover:bg-[#18181B]/60 hover:border-[#25D366] transition-all flex items-center gap-1.5"
                 >
                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -767,27 +767,27 @@ export default function HomepageManager(): React.JSX.Element {
       {/* Edit Section Modal with Live Preview */}
       {editingSection && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-5xl rounded-3xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950 p-6 sm:p-8 shadow-2xl my-8 flex flex-col max-h-[90vh]">
+          <div className="relative w-full max-w-5xl rounded-3xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#18181B] p-6 sm:p-8 shadow-2xl my-8 flex flex-col max-h-[90vh]">
             {/* Modal Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-purple-100 dark:border-purple-900 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E4E4E7] dark:border-zinc-800 pb-4">
               <div>
-                <h2 className="text-lg font-bold text-zinc-900 dark:text-purple-100">
+                <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-200">
                   {editingSection.id.startsWith("new-") ? "Create New Section" : "Edit Section"}
                 </h2>
-                <p className="text-xs text-purple-700 dark:text-purple-300">
+                <p className="text-xs text-[#1EA855] dark:text-zinc-400">
                   Type: <span className="font-mono font-semibold uppercase">{editingSection.type}</span>
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/40 p-1">
+                <div className="flex rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/40 p-1">
                   <button
                     type="button"
                     onClick={() => setActiveTab("edit")}
                     className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
                       activeTab === "edit"
-                        ? "bg-purple-600 text-white shadow-sm"
-                        : "text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-white"
+                        ? "bg-[#25D366] text-white shadow-sm"
+                        : "text-[#1EA855] dark:text-zinc-400 hover:text-[#18181B] dark:hover:text-white"
                     }`}
                   >
                     Form Editor
@@ -797,8 +797,8 @@ export default function HomepageManager(): React.JSX.Element {
                     onClick={() => setActiveTab("preview")}
                     className={`rounded-lg px-3 py-1 text-xs font-semibold transition-colors ${
                       activeTab === "preview"
-                        ? "bg-purple-600 text-white shadow-sm"
-                        : "text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-white"
+                        ? "bg-[#25D366] text-white shadow-sm"
+                        : "text-[#1EA855] dark:text-zinc-400 hover:text-[#18181B] dark:hover:text-white"
                     }`}
                   >
                     Live Preview
@@ -808,7 +808,7 @@ export default function HomepageManager(): React.JSX.Element {
                 <button
                   type="button"
                   onClick={() => setEditingSection(null)}
-                  className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-purple-900/40 hover:text-zinc-700 dark:hover:text-white"
+                  className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-[#18181B]/40 hover:text-zinc-700 dark:hover:text-white"
                 >
                   ✕
                 </button>
@@ -819,13 +819,13 @@ export default function HomepageManager(): React.JSX.Element {
             <div className="flex-1 overflow-y-auto py-4 pr-1">
               {activeTab === "preview" ? (
                 <div className="space-y-4">
-                  <div className="rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/60 p-4 text-xs text-purple-900 dark:text-purple-200 flex items-center justify-between">
+                  <div className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5] dark:bg-[#18181B]/60 p-4 text-xs text-[#18181B] dark:text-zinc-300 flex items-center justify-between">
                     <span>⚡ Live rendering of this section as it appears on the storefront:</span>
-                    <span className="font-mono text-purple-600 dark:text-purple-400 uppercase font-bold">
+                    <span className="font-mono text-[#25D366] dark:text-zinc-400 uppercase font-bold">
                       {editingSection.type}
                     </span>
                   </div>
-                  <div className="rounded-2xl border border-purple-100 dark:border-purple-900 bg-white dark:bg-[#3C0561] p-4 sm:p-6 overflow-hidden">
+                  <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#18181B] p-4 sm:p-6 overflow-hidden">
                     {renderHomepageSection(editingSection)}
                   </div>
                 </div>
@@ -834,7 +834,7 @@ export default function HomepageManager(): React.JSX.Element {
                   {/* Basic Metadata */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                         Section Title (Admin Reference)
                       </label>
                       <input
@@ -842,12 +842,12 @@ export default function HomepageManager(): React.JSX.Element {
                         required
                         value={editingSection.title}
                         onChange={(e) => setEditingSection({ ...editingSection, title: e.target.value })}
-                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B]/50 px-3 py-2 text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none focus:ring-1 focus:ring-[#25D366]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                         Section Type
                       </label>
                       <select
@@ -855,7 +855,7 @@ export default function HomepageManager(): React.JSX.Element {
                         onChange={(e) =>
                           setEditingSection({ ...editingSection, type: e.target.value as HomepageSectionType })
                         }
-                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                        className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B]/50 px-3 py-2 text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none focus:ring-1 focus:ring-[#25D366]"
                       >
                         <option value="hero">Hero Carousel</option>
                         <option value="categories">Category Cards Row</option>
@@ -886,20 +886,20 @@ export default function HomepageManager(): React.JSX.Element {
                       HERO CAROUSEL: Multi-Slide Management
                      ========================================================================= */}
                   {(editingSection.type === "hero" || editingSection.type === "hero_carousel") && (
-                    <div className="space-y-4 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4 sm:p-5">
+                    <div className="space-y-4 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/40 dark:bg-[#18181B]/30 p-4 sm:p-5">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-sm font-bold text-purple-950 dark:text-purple-100">
+                          <h4 className="text-sm font-bold text-[#18181B] dark:text-zinc-200">
                             Hero Carousel Slides
                           </h4>
-                          <p className="text-xs text-purple-700 dark:text-purple-300/80">
+                          <p className="text-xs text-[#1EA855] dark:text-zinc-400/80">
                             Manage each slide with heading, badge, CTA buttons, and high-res image.
                           </p>
                         </div>
                         <button
                           type="button"
                           onClick={handleAddSlide}
-                          className="rounded-lg bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-all"
+                          className="rounded-lg bg-[#25D366] hover:bg-[#1EA855] text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-all"
                         >
                           + Add Slide
                         </button>
@@ -909,10 +909,10 @@ export default function HomepageManager(): React.JSX.Element {
                         editingSection.content.slides.map((slide: any, sIdx: number) => (
                           <div
                             key={sIdx}
-                            className="space-y-3 rounded-xl border border-purple-200 dark:border-purple-800/80 bg-white dark:bg-purple-950/60 p-4 text-xs"
+                            className="space-y-3 rounded-xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-white dark:bg-[#18181B]/60 p-4 text-xs"
                           >
-                            <div className="flex items-center justify-between border-b border-purple-100 dark:border-purple-900 pb-2">
-                              <span className="font-bold text-purple-900 dark:text-purple-200">
+                            <div className="flex items-center justify-between border-b border-[#E4E4E7] dark:border-zinc-800 pb-2">
+                              <span className="font-bold text-[#18181B] dark:text-zinc-300">
                                 Slide #{sIdx + 1}
                               </span>
                               <button
@@ -926,70 +926,70 @@ export default function HomepageManager(): React.JSX.Element {
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                               <div>
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Badge Text</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Badge Text</label>
                                 <input
                                   type="text"
                                   value={slide.badge || ""}
                                   onChange={(e) => handleUpdateSlide(sIdx, "badge", e.target.value)}
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none"
                                 />
                               </div>
                               <div>
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Slide Heading</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Slide Heading</label>
                                 <input
                                   type="text"
                                   value={slide.heading || ""}
                                   onChange={(e) => handleUpdateSlide(sIdx, "heading", e.target.value)}
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none"
                                 />
                               </div>
                             </div>
 
                             <div>
-                              <label className="block font-medium text-zinc-700 dark:text-purple-200">Subheading / Description</label>
+                              <label className="block font-medium text-zinc-700 dark:text-zinc-300">Subheading / Description</label>
                               <textarea
                                 rows={2}
                                 value={slide.subheading || ""}
                                 onChange={(e) => handleUpdateSlide(sIdx, "subheading", e.target.value)}
-                                className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                                className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none"
                               />
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
                               <div>
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Primary CTA Text</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Primary CTA Text</label>
                                 <input
                                   type="text"
                                   value={slide.primaryButtonText || ""}
                                   onChange={(e) => handleUpdateSlide(sIdx, "primaryButtonText", e.target.value)}
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200"
                                 />
                               </div>
                               <div>
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Primary CTA URL</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Primary CTA URL</label>
                                 <input
                                   type="text"
                                   value={slide.primaryButtonUrl || ""}
                                   onChange={(e) => handleUpdateSlide(sIdx, "primaryButtonUrl", e.target.value)}
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200"
                                 />
                               </div>
                               <div>
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Secondary CTA Text</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Secondary CTA Text</label>
                                 <input
                                   type="text"
                                   value={slide.secondaryButtonText || ""}
                                   onChange={(e) => handleUpdateSlide(sIdx, "secondaryButtonText", e.target.value)}
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200"
                                 />
                               </div>
                               <div>
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Secondary CTA URL</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Secondary CTA URL</label>
                                 <input
                                   type="text"
                                   value={slide.secondaryButtonUrl || ""}
                                   onChange={(e) => handleUpdateSlide(sIdx, "secondaryButtonUrl", e.target.value)}
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200"
                                 />
                               </div>
                             </div>
@@ -997,16 +997,16 @@ export default function HomepageManager(): React.JSX.Element {
                             {/* Slide Image + R2 Upload */}
                             <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
                               <div className="flex-1">
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Slide Image URL</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Slide Image URL</label>
                                 <input
                                   type="text"
                                   value={slide.imageUrl || ""}
                                   onChange={(e) => handleUpdateSlide(sIdx, "imageUrl", e.target.value)}
                                   placeholder="https://images.unsplash.com/..."
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200"
                                 />
                               </div>
-                              <label className="cursor-pointer self-start sm:self-end rounded-lg bg-purple-100 dark:bg-purple-900 px-3 py-1.5 text-xs font-semibold text-purple-700 dark:text-purple-200 hover:bg-purple-200 transition-colors">
+                              <label className="cursor-pointer self-start sm:self-end rounded-lg bg-[#DCFCE7] dark:bg-[#18181B] px-3 py-1.5 text-xs font-semibold text-[#1EA855] dark:text-zinc-300 hover:bg-[#DCFCE7] transition-colors">
                                 {uploadingSlideIndex === sIdx ? "Uploading..." : "Upload R2"}
                                 <input
                                   type="file"
@@ -1020,7 +1020,7 @@ export default function HomepageManager(): React.JSX.Element {
                           </div>
                         ))
                       ) : (
-                        <p className="text-xs text-purple-600 dark:text-purple-400">
+                        <p className="text-xs text-[#25D366] dark:text-zinc-400">
                           No slides added yet. Click &quot;+ Add Slide&quot; above.
                         </p>
                       )}
@@ -1031,20 +1031,20 @@ export default function HomepageManager(): React.JSX.Element {
                       TRUST BAR: 4 Columns
                      ========================================================================= */}
                   {editingSection.type === "trust_bar" && (
-                    <div className="space-y-4 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4 sm:p-5">
+                    <div className="space-y-4 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/40 dark:bg-[#18181B]/30 p-4 sm:p-5">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-sm font-bold text-purple-950 dark:text-purple-100">
+                          <h4 className="text-sm font-bold text-[#18181B] dark:text-zinc-200">
                             Trust Bar Items (4 Columns)
                           </h4>
-                          <p className="text-xs text-purple-700 dark:text-purple-300/80">
+                          <p className="text-xs text-[#1EA855] dark:text-zinc-400/80">
                             Configure trust assurances (shipping, returns, security, 24/7 support).
                           </p>
                         </div>
                         <button
                           type="button"
                           onClick={handleAddTrustItem}
-                          className="rounded-lg bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-all"
+                          className="rounded-lg bg-[#25D366] hover:bg-[#1EA855] text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-all"
                         >
                           + Add Benefit
                         </button>
@@ -1054,10 +1054,10 @@ export default function HomepageManager(): React.JSX.Element {
                         editingSection.content.items.map((item: any, tIdx: number) => (
                           <div
                             key={tIdx}
-                            className="space-y-2 rounded-xl border border-purple-200 dark:border-purple-800/80 bg-white dark:bg-purple-950/60 p-3 text-xs"
+                            className="space-y-2 rounded-xl border border-[#E4E4E7] dark:border-zinc-800/80 bg-white dark:bg-[#18181B]/60 p-3 text-xs"
                           >
                             <div className="flex items-center justify-between">
-                              <span className="font-bold text-purple-900 dark:text-purple-200">
+                              <span className="font-bold text-[#18181B] dark:text-zinc-300">
                                 Column #{tIdx + 1}
                               </span>
                               <button
@@ -1070,11 +1070,11 @@ export default function HomepageManager(): React.JSX.Element {
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                               <div>
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Icon Type</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Icon Type</label>
                                 <select
                                   value={item.icon || "shipping"}
                                   onChange={(e) => handleUpdateTrustItem(tIdx, "icon", e.target.value)}
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200"
                                 >
                                   <option value="shipping">Shipping (Truck)</option>
                                   <option value="return">Return (30-Day Badge)</option>
@@ -1083,21 +1083,21 @@ export default function HomepageManager(): React.JSX.Element {
                                 </select>
                               </div>
                               <div>
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Title</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Title</label>
                                 <input
                                   type="text"
                                   value={item.title || ""}
                                   onChange={(e) => handleUpdateTrustItem(tIdx, "title", e.target.value)}
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200"
                                 />
                               </div>
                               <div>
-                                <label className="block font-medium text-zinc-700 dark:text-purple-200">Description</label>
+                                <label className="block font-medium text-zinc-700 dark:text-zinc-300">Description</label>
                                 <input
                                   type="text"
                                   value={item.description || ""}
                                   onChange={(e) => handleUpdateTrustItem(tIdx, "description", e.target.value)}
-                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-zinc-50 dark:bg-purple-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-purple-100"
+                                  className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#18181B] px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-200"
                                 />
                               </div>
                             </div>
@@ -1110,13 +1110,13 @@ export default function HomepageManager(): React.JSX.Element {
                       NEW ARRIVALS SECTION
                      ========================================================================= */}
                   {editingSection.type === "new_arrivals" && (
-                    <div className="space-y-4 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4 sm:p-5">
-                      <h4 className="text-sm font-bold text-purple-950 dark:text-purple-100">
+                    <div className="space-y-4 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/40 dark:bg-[#18181B]/30 p-4 sm:p-5">
+                      <h4 className="text-sm font-bold text-[#18181B] dark:text-zinc-200">
                         New Arrivals Showcase Settings
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block font-medium text-zinc-700 dark:text-purple-200">Badge Text</label>
+                          <label className="block font-medium text-zinc-700 dark:text-zinc-300">Badge Text</label>
                           <input
                             type="text"
                             value={editingSection.content?.badge || ""}
@@ -1126,11 +1126,11 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, badge: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-2.5 py-1.5 text-xs"
+                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B] px-2.5 py-1.5 text-xs"
                           />
                         </div>
                         <div>
-                          <label className="block font-medium text-zinc-700 dark:text-purple-200">Discount Pill</label>
+                          <label className="block font-medium text-zinc-700 dark:text-zinc-300">Discount Pill</label>
                           <input
                             type="text"
                             value={editingSection.content?.discountText || ""}
@@ -1140,13 +1140,13 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, discountText: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-2.5 py-1.5 text-xs"
+                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B] px-2.5 py-1.5 text-xs"
                           />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block font-medium text-zinc-700 dark:text-purple-200">Heading</label>
+                          <label className="block font-medium text-zinc-700 dark:text-zinc-300">Heading</label>
                           <input
                             type="text"
                             value={editingSection.content?.heading || ""}
@@ -1156,11 +1156,11 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, heading: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-2.5 py-1.5 text-xs"
+                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B] px-2.5 py-1.5 text-xs"
                           />
                         </div>
                         <div>
-                          <label className="block font-medium text-zinc-700 dark:text-purple-200">Button Text</label>
+                          <label className="block font-medium text-zinc-700 dark:text-zinc-300">Button Text</label>
                           <input
                             type="text"
                             value={editingSection.content?.buttonText || ""}
@@ -1170,7 +1170,7 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, buttonText: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-2.5 py-1.5 text-xs"
+                            className="mt-1 w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B] px-2.5 py-1.5 text-xs"
                           />
                         </div>
                       </div>
@@ -1181,20 +1181,20 @@ export default function HomepageManager(): React.JSX.Element {
                       BRAND LOGOS ROW
                      ========================================================================= */}
                   {editingSection.type === "brand_logos" && (
-                    <div className="space-y-4 rounded-2xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4 sm:p-5">
+                    <div className="space-y-4 rounded-2xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/40 dark:bg-[#18181B]/30 p-4 sm:p-5">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-sm font-bold text-purple-950 dark:text-purple-100">
+                          <h4 className="text-sm font-bold text-[#18181B] dark:text-zinc-200">
                             Partner / Brand Logos
                           </h4>
-                          <p className="text-xs text-purple-700 dark:text-purple-300/80">
+                          <p className="text-xs text-[#1EA855] dark:text-zinc-400/80">
                             Displays marquee row of partner brands in grayscale.
                           </p>
                         </div>
                         <button
                           type="button"
                           onClick={handleAddLogo}
-                          className="rounded-lg bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-all"
+                          className="rounded-lg bg-[#25D366] hover:bg-[#1EA855] text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-all"
                         >
                           + Add Brand
                         </button>
@@ -1205,14 +1205,14 @@ export default function HomepageManager(): React.JSX.Element {
                           editingSection.content.logos.map((logo: any, lIdx: number) => (
                             <div
                               key={lIdx}
-                              className="flex items-center gap-2 rounded-xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-950 p-2.5 text-xs"
+                              className="flex items-center gap-2 rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#18181B] p-2.5 text-xs"
                             >
                               <input
                                 type="text"
                                 value={logo.logoText || ""}
                                 placeholder="Logo Monogram / Name"
                                 onChange={(e) => handleUpdateLogo(lIdx, "logoText", e.target.value)}
-                                className="flex-1 rounded-lg border border-zinc-300 dark:border-purple-850 bg-zinc-50 dark:bg-purple-950 px-2 py-1 text-xs"
+                                className="flex-1 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-[#18181B] px-2 py-1 text-xs"
                               />
                               <button
                                 type="button"
@@ -1231,12 +1231,12 @@ export default function HomepageManager(): React.JSX.Element {
                       GENERIC / SHARED IMAGE & R2 UPLOAD (for sections with main image)
                      ========================================================================= */}
                   {editingSection.type !== "hero" && editingSection.type !== "hero_carousel" && (
-                    <div className="rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/20 p-4 space-y-3">
+                    <div className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/40 dark:bg-[#18181B]/20 p-4 space-y-3">
                       <div className="flex items-center justify-between">
-                        <label className="text-xs font-semibold text-zinc-800 dark:text-purple-200">
+                        <label className="text-xs font-semibold text-zinc-800 dark:text-zinc-300">
                           Section Image (Cloudflare R2)
                         </label>
-                        <label className="cursor-pointer rounded-lg bg-purple-100 dark:bg-purple-900 px-2.5 py-1 text-[11px] font-semibold text-purple-700 dark:text-purple-200 hover:bg-purple-200 transition-colors">
+                        <label className="cursor-pointer rounded-lg bg-[#DCFCE7] dark:bg-[#18181B] px-2.5 py-1 text-[11px] font-semibold text-[#1EA855] dark:text-zinc-300 hover:bg-[#DCFCE7] transition-colors">
                           {uploadingImage ? "Uploading to R2..." : "Upload Image to R2"}
                           <input
                             type="file"
@@ -1252,14 +1252,14 @@ export default function HomepageManager(): React.JSX.Element {
                         placeholder="https://... or upload image directly"
                         value={editingSection.imageUrl || ""}
                         onChange={(e) => setEditingSection({ ...editingSection, imageUrl: e.target.value })}
-                        className="w-full rounded-lg border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-1.5 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                        className="w-full rounded-lg border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B]/50 px-3 py-1.5 text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none"
                       />
                       {editingSection.imageUrl && (
                         <div className="mt-2 flex items-center gap-3">
                           <img
                             src={editingSection.imageUrl}
                             alt="Preview"
-                            className="h-14 w-24 rounded-lg object-cover border border-purple-200 dark:border-purple-800"
+                            className="h-14 w-24 rounded-lg object-cover border border-[#E4E4E7] dark:border-zinc-800"
                           />
                           <button
                             type="button"
@@ -1278,13 +1278,13 @@ export default function HomepageManager(): React.JSX.Element {
                      ========================================================================= */}
                   {editingSection.type !== "hero" && editingSection.type !== "hero_carousel" && (
                     <div className="space-y-4 pt-2">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-purple-800 dark:text-purple-300">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-[#15803D] dark:text-zinc-400">
                         Content & Text Fields
                       </h4>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                          <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                             Main Heading
                           </label>
                           <input
@@ -1296,11 +1296,11 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, heading: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B]/50 px-3 py-2 text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                          <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                             Badge Text (Pill)
                           </label>
                           <input
@@ -1312,13 +1312,13 @@ export default function HomepageManager(): React.JSX.Element {
                                 content: { ...editingSection.content, badgeText: e.target.value },
                               })
                             }
-                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                            className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B]/50 px-3 py-2 text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                           Subheading / Description
                         </label>
                         <textarea
@@ -1330,7 +1330,7 @@ export default function HomepageManager(): React.JSX.Element {
                               content: { ...editingSection.content, subheading: e.target.value },
                             })
                           }
-                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950/50 px-3 py-2 text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B]/50 px-3 py-2 text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none"
                         />
                       </div>
                     </div>
@@ -1340,9 +1340,9 @@ export default function HomepageManager(): React.JSX.Element {
                       NEWSLETTER SPECIFIC FIELDS
                      ========================================================================= */}
                   {editingSection.type === "newsletter" && (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/40 dark:bg-[#18181B]/30 p-4">
                       <div>
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                           Button Text
                         </label>
                         <input
@@ -1354,11 +1354,11 @@ export default function HomepageManager(): React.JSX.Element {
                               content: { ...editingSection.content, buttonText: e.target.value },
                             })
                           }
-                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-3 py-2 text-xs"
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B] px-3 py-2 text-xs"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                           Placeholder Text
                         </label>
                         <input
@@ -1370,11 +1370,11 @@ export default function HomepageManager(): React.JSX.Element {
                               content: { ...editingSection.content, placeholderText: e.target.value },
                             })
                           }
-                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-3 py-2 text-xs"
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B] px-3 py-2 text-xs"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                        <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                           Privacy Disclaimer
                         </label>
                         <input
@@ -1386,7 +1386,7 @@ export default function HomepageManager(): React.JSX.Element {
                               content: { ...editingSection.content, disclaimer: e.target.value },
                             })
                           }
-                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 px-3 py-2 text-xs"
+                          className="mt-1 w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B] px-3 py-2 text-xs"
                         />
                       </div>
                     </div>
@@ -1396,8 +1396,8 @@ export default function HomepageManager(): React.JSX.Element {
                       CUSTOM HTML SPECIFIC FIELDS
                      ========================================================================= */}
                   {editingSection.type === "custom_html" && (
-                    <div className="space-y-3 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/40 dark:bg-purple-950/30 p-4">
-                      <label className="block text-xs font-semibold text-zinc-700 dark:text-purple-200">
+                    <div className="space-y-3 rounded-xl border border-[#E4E4E7] dark:border-zinc-800 bg-[#F4F4F5]/40 dark:bg-[#18181B]/30 p-4">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                         HTML Content
                       </label>
                       <textarea
@@ -1409,7 +1409,7 @@ export default function HomepageManager(): React.JSX.Element {
                             content: { ...editingSection.content, html: e.target.value },
                           })
                         }
-                        className="w-full rounded-xl border border-zinc-300 dark:border-purple-800 bg-white dark:bg-purple-950 p-3 font-mono text-xs text-zinc-900 dark:text-purple-100 focus:border-purple-500 focus:outline-none"
+                        className="w-full rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-[#18181B] p-3 font-mono text-xs text-zinc-900 dark:text-zinc-200 focus:border-[#25D366] focus:outline-none"
                       />
                     </div>
                   )}
@@ -1418,8 +1418,8 @@ export default function HomepageManager(): React.JSX.Element {
             </div>
 
             {/* Modal Footer Buttons */}
-            <div className="mt-4 flex justify-between items-center border-t border-purple-100 dark:border-purple-900 pt-4">
-              <div className="text-xs text-purple-700 dark:text-purple-300">
+            <div className="mt-4 flex justify-between items-center border-t border-[#E4E4E7] dark:border-zinc-800 pt-4">
+              <div className="text-xs text-[#1EA855] dark:text-zinc-400">
                 {editingSection.isActive ? "🟣 Visible on storefront" : "⚪ Hidden from storefront"}
               </div>
 
@@ -1427,7 +1427,7 @@ export default function HomepageManager(): React.JSX.Element {
                 <button
                   type="button"
                   onClick={() => setEditingSection(null)}
-                  className="rounded-xl border border-zinc-300 dark:border-purple-800 bg-zinc-100 dark:bg-purple-950/60 px-4 py-2 text-xs font-medium text-zinc-700 dark:text-purple-200 hover:bg-zinc-200 transition-colors"
+                  className="rounded-xl border border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-[#18181B]/60 px-4 py-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 transition-colors"
                 >
                   Cancel
                 </button>
@@ -1435,7 +1435,7 @@ export default function HomepageManager(): React.JSX.Element {
                   type="button"
                   onClick={handleSaveSection}
                   disabled={saving}
-                  className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 text-xs font-semibold shadow-lg shadow-purple-500/25 active:scale-95 disabled:opacity-50 transition-all"
+                  className="rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-5 py-2 text-xs font-semibold shadow-lg shadow-[#25D366]/20 active:scale-95 disabled:opacity-50 transition-all"
                 >
                   {saving ? "Saving to D1..." : "Save Section"}
                 </button>

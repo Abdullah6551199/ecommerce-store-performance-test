@@ -103,7 +103,7 @@ export default function CookieConsentManager(): React.JSX.Element {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#960DF2] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#25D366] border-t-transparent" />
       </div>
     );
   }
@@ -114,7 +114,7 @@ export default function CookieConsentManager(): React.JSX.Element {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-            <span className="text-[#960DF2]">🍪</span> Cookie Consent & GDPR Compliance
+            <span className="text-[#25D366]">🍪</span> Cookie Consent & GDPR Compliance
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Manage cookie consent banner, privacy policy, and script blocking rules.
@@ -124,7 +124,7 @@ export default function CookieConsentManager(): React.JSX.Element {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="rounded-xl bg-[#960DF2] px-5 py-2 text-sm font-bold text-white shadow-sm hover:bg-[#7907C7] transition-colors"
+            className="rounded-xl bg-[#25D366] px-5 py-2 text-sm font-bold text-white shadow-sm hover:bg-[#1EA855] transition-colors"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>
@@ -150,7 +150,7 @@ export default function CookieConsentManager(): React.JSX.Element {
           onClick={() => setActiveTab("banner")}
           className={`px-5 py-2.5 text-sm font-bold transition-colors border-b-2 ${
             activeTab === "banner"
-              ? "border-[#960DF2] text-[#960DF2]"
+              ? "border-[#25D366] text-[#25D366]"
               : "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white"
           }`}
         >
@@ -160,7 +160,7 @@ export default function CookieConsentManager(): React.JSX.Element {
           onClick={() => setActiveTab("categories")}
           className={`px-5 py-2.5 text-sm font-bold transition-colors border-b-2 ${
             activeTab === "categories"
-              ? "border-[#960DF2] text-[#960DF2]"
+              ? "border-[#25D366] text-[#25D366]"
               : "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white"
           }`}
         >
@@ -170,7 +170,7 @@ export default function CookieConsentManager(): React.JSX.Element {
           onClick={() => setActiveTab("stats")}
           className={`px-5 py-2.5 text-sm font-bold transition-colors border-b-2 ${
             activeTab === "stats"
-              ? "border-[#960DF2] text-[#960DF2]"
+              ? "border-[#25D366] text-[#25D366]"
               : "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white"
           }`}
         >
@@ -180,7 +180,7 @@ export default function CookieConsentManager(): React.JSX.Element {
           onClick={() => setActiveTab("preview")}
           className={`px-5 py-2.5 text-sm font-bold transition-colors border-b-2 ${
             activeTab === "preview"
-              ? "border-[#960DF2] text-[#960DF2]"
+              ? "border-[#25D366] text-[#25D366]"
               : "border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-white"
           }`}
         >
@@ -360,7 +360,7 @@ export default function CookieConsentManager(): React.JSX.Element {
                   Cart session, CSRF safety, and customer authentication.
                 </span>
               </div>
-              <span className="rounded-full bg-purple-100 dark:bg-purple-900/50 px-2.5 py-1 text-[10px] font-bold text-[#960DF2]">
+              <span className="rounded-full bg-[#DCFCE7] dark:bg-[#18181B]/50 px-2.5 py-1 text-[10px] font-bold text-[#25D366]">
                 Always Active
               </span>
             </div>
@@ -412,27 +412,27 @@ export default function CookieConsentManager(): React.JSX.Element {
         <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 space-y-6">
           <h3 className="font-bold text-gray-900 dark:text-white">Consent Telemetry Summary</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="rounded-xl border border-purple-100 dark:border-purple-800/40 p-4 bg-purple-50/30 dark:bg-purple-950/20">
+            <div className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800/40 p-4 bg-[#F4F4F5]/30 dark:bg-[#18181B]/20">
               <span className="text-xs text-gray-500 block">Total Consents</span>
-              <span className="text-2xl font-black text-[#960DF2]">
+              <span className="text-2xl font-black text-[#25D366]">
                 {stats?.totalLogged ?? 0}
               </span>
             </div>
-            <div className="rounded-xl border border-purple-100 dark:border-purple-800/40 p-4 bg-purple-50/30 dark:bg-purple-950/20">
+            <div className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800/40 p-4 bg-[#F4F4F5]/30 dark:bg-[#18181B]/20">
               <span className="text-xs text-gray-500 block">Analytics Accepted</span>
               <span className="text-2xl font-black text-emerald-600">
                 {stats?.analyticsAccepted ?? 0}
               </span>
             </div>
-            <div className="rounded-xl border border-purple-100 dark:border-purple-800/40 p-4 bg-purple-50/30 dark:bg-purple-950/20">
+            <div className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800/40 p-4 bg-[#F4F4F5]/30 dark:bg-[#18181B]/20">
               <span className="text-xs text-gray-500 block">Marketing Accepted</span>
               <span className="text-2xl font-black text-indigo-600">
                 {stats?.marketingAccepted ?? 0}
               </span>
             </div>
-            <div className="rounded-xl border border-purple-100 dark:border-purple-800/40 p-4 bg-purple-50/30 dark:bg-purple-950/20">
+            <div className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800/40 p-4 bg-[#F4F4F5]/30 dark:bg-[#18181B]/20">
               <span className="text-xs text-gray-500 block">Functional Accepted</span>
-              <span className="text-2xl font-black text-violet-600">
+              <span className="text-2xl font-black text-[#25D366]">
                 {stats?.functionalAccepted ?? 0}
               </span>
             </div>
@@ -444,12 +444,12 @@ export default function CookieConsentManager(): React.JSX.Element {
       {activeTab === "preview" && (
         <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 space-y-4">
           <h3 className="font-bold text-gray-900 dark:text-white">Banner Mockup Preview</h3>
-          <div className="rounded-2xl border border-purple-100 dark:border-purple-900/40 p-6 bg-purple-50/20 dark:bg-purple-950/20">
-            <div className="rounded-2xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-[#1a052e] p-5 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800/40 p-6 bg-[#F4F4F5]/20 dark:bg-[#18181B]/20">
+            <div className="rounded-2xl border border-[#E4E4E7] dark:border-zinc-800 bg-white dark:bg-[#1a052e] p-5 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span>🍪</span>
-                  <h4 className="font-bold text-sm text-[#3C0561] dark:text-white">
+                  <h4 className="font-bold text-sm text-[#18181B] dark:text-white">
                     {content.bannerTitle || "We use cookies"}
                   </h4>
                 </div>
@@ -460,19 +460,19 @@ export default function CookieConsentManager(): React.JSX.Element {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="rounded-xl border border-purple-200 dark:border-purple-800 px-3 py-1.5 text-xs font-bold text-[#5A0891] dark:text-[#EACFFC]"
+                  className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800 px-3 py-1.5 text-xs font-bold text-[#15803D] dark:text-[#DCFCE7]"
                 >
                   {content.customizeText || "Customize"}
                 </button>
                 <button
                   type="button"
-                  className="rounded-xl border border-purple-200 dark:border-purple-800 px-3 py-1.5 text-xs font-bold text-[#5A0891] dark:text-[#EACFFC]"
+                  className="rounded-xl border border-[#E4E4E7] dark:border-zinc-800 px-3 py-1.5 text-xs font-bold text-[#15803D] dark:text-[#DCFCE7]"
                 >
                   {content.rejectText || "Reject All"}
                 </button>
                 <button
                   type="button"
-                  className="rounded-xl bg-[#960DF2] px-4 py-1.5 text-xs font-bold text-white shadow-sm"
+                  className="rounded-xl bg-[#25D366] px-4 py-1.5 text-xs font-bold text-white shadow-sm"
                 >
                   {content.acceptText || "Accept All"}
                 </button>

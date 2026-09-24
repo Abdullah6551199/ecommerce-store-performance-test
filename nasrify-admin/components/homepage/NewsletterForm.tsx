@@ -22,7 +22,7 @@ export default function NewsletterForm({
 
   if (subscribed) {
     return (
-      <div className="mt-4 p-3.5 rounded-xl bg-white/95 dark:bg-[#3C0561] border border-purple-300 dark:border-purple-700 text-xs font-bold text-[#780AC2] dark:text-[#EACFFC] max-w-md mx-auto text-center shadow-lg">
+      <div className="mt-4 p-3.5 rounded-xl bg-white/95 dark:bg-[#18181B] border border-[#E4E4E7] dark:border-zinc-700 text-xs font-bold text-[#1EA855] dark:text-[#DCFCE7] max-w-md mx-auto text-center shadow-lg">
         ✓ Thank you! You are now subscribed to our VIP newsletter &amp; private launches.
       </div>
     );
@@ -39,11 +39,11 @@ export default function NewsletterForm({
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder={placeholderText}
-        className="w-full rounded-lg border border-purple-200 dark:border-purple-700 bg-white px-4 py-3 text-xs text-zinc-900 placeholder-zinc-400 focus:border-[#960DF2] focus:outline-none focus:ring-2 focus:ring-[#960DF2]/30 shadow-sm"
+        className="w-full rounded-lg border border-[#E4E4E7] dark:border-zinc-700 bg-white px-4 py-3 text-xs text-zinc-900 placeholder-zinc-400 focus:border-[#25D366] focus:outline-none focus:ring-2 focus:ring-[#25D366]/30 shadow-sm"
       />
       <button
         type="submit"
-        className="w-full sm:w-auto shrink-0 rounded-lg bg-[#960DF2] hover:bg-[#780AC2] text-white px-6 py-3 text-xs font-bold shadow-md shadow-purple-500/30 hover:shadow-purple-500/50 active:scale-95 transition-all cursor-pointer"
+        className="w-full sm:w-auto shrink-0 rounded-lg bg-[#25D366] hover:bg-[#1EA855] text-white px-6 py-3 text-xs font-bold shadow-md shadow-[#25D366]/20 hover:shadow-[#25D366]/20 active:scale-95 transition-all cursor-pointer"
       >
         {buttonText}
       </button>

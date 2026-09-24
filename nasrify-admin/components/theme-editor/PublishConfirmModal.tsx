@@ -36,7 +36,7 @@ export function PublishConfirmModal({
         </h3>
 
         <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-          You are about to publish the current draft with <strong className="text-indigo-400">{sectionsCount} sections</strong> to your live storefront.
+          You are about to publish the current draft with <strong className="text-[#25D366]">{sectionsCount} sections</strong> to your live storefront.
         </p>
 
         <div className="mt-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs flex items-start gap-2.5">

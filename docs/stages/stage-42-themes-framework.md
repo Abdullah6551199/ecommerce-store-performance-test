@@ -111,3 +111,19 @@ Executed on both local and remote D1 databases:
   - Discard draft restoring live active theme.
 - **Live Preview Frame**: Iframe communication via `postMessage` (`UPDATE_THEME`), hot-swapping CSS variables and section tree with 0ms server latency and zero D1 writes.
 - **Responsive Device Switcher**: Desktop (100%), Tablet (768px), and Mobile (375px).
+
+---
+
+## 6. Stage 42.7 — Font System & Self-Hosted Typography
+- **Self-Hosted R2 Storage**: Fonts hosted in Cloudflare R2 bucket `ecommerce-perf-assets/fonts/` with 0 external CDN requests.
+- **Curated 21 Fonts**: Sans (11), Serif (5), Display (2), Handwriting (2), Mono (1).
+- **Subsets & Weights**: latin & latin-ext (arabic uploaded for future Urdu RTL support); 400 & 700 weights.
+- **Storefront Optimization**:
+  - Critical weights preloaded via `<link rel="preload" as="font" type="font/woff2" crossOrigin="anonymous">`.
+  - `@font-face` rules injected with `font-display: swap` to prevent FOIT.
+  - Tailored fallback chains per category to eliminate CLS.
+  - Total font payload < 100 KB per theme.
+- **Admin Font Manager (`/admin/settings/fonts`)**: Font catalog with live preview, category filtering, and curated toggling.
+- **Theme Editor FontPicker (`FontPicker.tsx`)**: Modal picker in Global Settings syncing in real-time to preview iframe via postMessage.
+- **D1 Migration 0029**: `fonts` and `font_settings` tables with indexes.
+

@@ -53,7 +53,10 @@ The editor renders in a dedicated full-screen workspace bypassing standard admin
 
 4. **Right Sidebar — Settings Panel (`SettingsPanel.tsx`)**:
    - If a section is selected: loads section-specific preset controls (`SectionSettings.tsx`)
-   - If no section is selected: loads Global Theme Settings (Colors, Fonts, Spacing, Store Logo)
+   - If no section is selected: loads Global Theme Settings (`GlobalSettings.tsx`):
+     - **Typography / FontPicker (`FontPicker.tsx`)**: Visual font selector for Heading and Body fonts with category tabs (Sans, Serif, Display, Handwriting, Mono), live preview samples, and R2-backed font loading.
+     - **Colors**: Primary, secondary, background, and surface color palettes.
+     - **Store Identity**: Logo upload, favicon, and brand spacing.
 
 ---
 

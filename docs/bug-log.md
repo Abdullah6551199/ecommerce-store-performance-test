@@ -117,4 +117,13 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-42.5-02 | Module Resolution | Section setting components (`ProductGridSettings`, `TestimonialsSettings`, etc.) were exported as default while imported as named imports in `SectionSettings.tsx`. | Unified imports and added both default and named exports across section setting modules. | Complete |
 | BUG-42.5-03 | Missing Module | `nasrify-admin/lib/themes/theme-editor-service.ts` imported `DEFAULT_THEME` from `./default-theme`, which only existed in `nasrify-store`. | Replicated `default-theme.ts` in `nasrify-admin/lib/themes/` so both workers share standard fallback schema. | Complete |
 
+---
+
+## Stage 42.7 (Font System & Typography)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-42.7-01 | React / TSX | `layout.tsx` `<link crossOrigin={p.crossOrigin} />` triggered TypeScript TS2322: `Type 'string' is not assignable to type 'CrossOrigin'`. | Fixed by typing `crossOrigin: "anonymous" as const` in `fonts.ts` and literal `crossOrigin="anonymous"` in `layout.tsx`. | Complete |
+| BUG-42.7-02 | Zod Schema | `CurateSchema` in `/api/admin/fonts/curate` strictly validated `isCurated: z.boolean()`, rejecting numeric `1` / `0` payloads. | Updated to `z.union([z.boolean(), z.number()]).transform(val => Boolean(val))` for resilient compatibility. | Complete |
+
 

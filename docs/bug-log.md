@@ -107,4 +107,14 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-41-02 | TypeScript / Turbopack | `ReviewsManager.tsx` and `ProductModal.tsx` had union type checking mismatch with new `"ai_reviews"` tab. | Extended `activeTab` type union with `\| "ai_reviews"` and cleaned JSX hierarchy. | Complete |
 | BUG-41-03 | Review Schema Expansion | Adding `isAiGenerated` and `aiGenerationId` columns to Drizzle schema required updating mock memory arrays and createReview payload in `apps/reviews/lib/reviews.ts`. | Added default values `isAiGenerated: 0, aiGenerationId: null` across all ReviewRecord constructions. | Complete |
 
+---
+
+## Stage 42.5 (Basic Visual Theme Editor)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-42.5-01 | TypeScript / Turbopack | Strict Turbopack build caught `rawBody` and `res.json()` responses typed as `unknown` in `draft/route.ts`, `publish/route.ts`, and `ThemeEditorShell.tsx`. | Added explicit type casts `(await req.json()) as any` across theme editor routes and client fetchers. | Complete |
+| BUG-42.5-02 | Module Resolution | Section setting components (`ProductGridSettings`, `TestimonialsSettings`, etc.) were exported as default while imported as named imports in `SectionSettings.tsx`. | Unified imports and added both default and named exports across section setting modules. | Complete |
+| BUG-42.5-03 | Missing Module | `nasrify-admin/lib/themes/theme-editor-service.ts` imported `DEFAULT_THEME` from `./default-theme`, which only existed in `nasrify-store`. | Replicated `default-theme.ts` in `nasrify-admin/lib/themes/` so both workers share standard fallback schema. | Complete |
+
 

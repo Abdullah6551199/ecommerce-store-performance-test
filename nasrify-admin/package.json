@@ -19,6 +19,9 @@
     "db:seed:remote": "wrangler d1 execute ecommerce-db --remote --file=scripts/seed-admin.sql"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",

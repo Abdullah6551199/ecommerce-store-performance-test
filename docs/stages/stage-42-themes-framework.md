@@ -96,3 +96,18 @@ Executed on both local and remote D1 databases:
 - [x] Theme activation updates D1 and triggers cross-worker cache invalidation
 - [x] Built-in themes protected against deletion
 - [x] Custom themes deletable
+
+---
+
+## 5. Stage 42.5 — Basic Visual Theme Editor (`/admin/theme-editor`)
+- **Full-Screen Workspace**: Dedicated editor layout bypassing AdminShell.
+- **Drag-and-Drop Sections**: `@dnd-kit/core` & `@dnd-kit/sortable` vertical reordering with accessibility and touch support.
+- **Section Controls**: Presets for all 12 section components with visibility toggle, delete, and add.
+- **Global Theme Tokens**: Theme-wide color pickers, typography fonts, container max width, section spacing, and logo management.
+- **Draft vs. Publish**:
+  - `theme_drafts` D1 table for staging changes.
+  - Auto-saved debounced 2 seconds.
+  - One-click publish with confirmation modal flushing storefront edge cache.
+  - Discard draft restoring live active theme.
+- **Live Preview Frame**: Iframe communication via `postMessage` (`UPDATE_THEME`), hot-swapping CSS variables and section tree with 0ms server latency and zero D1 writes.
+- **Responsive Device Switcher**: Desktop (100%), Tablet (768px), and Mobile (375px).

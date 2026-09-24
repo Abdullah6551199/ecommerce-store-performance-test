@@ -6,6 +6,7 @@ import { getActiveTheme } from "@/lib/themes/loader";
 import { renderTheme } from "@/lib/themes/engine";
 import { fetchProducts, fetchCategories } from "@/lib/themes/data";
 import { normalizeImageUrl } from "@/lib/utils";
+import ThemePreviewWrapper from "@/components/themes/ThemePreviewWrapper";
 
 export const revalidate = 60; // 60 seconds ISR cache
 
@@ -81,7 +82,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
         />
       )}
       <div className="w-full min-h-screen">
-        {renderTheme(activeTheme, storeData)}
+        <ThemePreviewWrapper initialTheme={activeTheme} storeData={storeData} />
       </div>
     </>
   );

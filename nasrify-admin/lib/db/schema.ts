@@ -1459,5 +1459,30 @@ export const themeAuditLog = sqliteTable("theme_audit_log", {
 export type ThemeAuditLogRecord = typeof themeAuditLog.$inferSelect;
 export type NewThemeAuditLogRecord = typeof themeAuditLog.$inferInsert;
 
+// 61. Theme Drafts Table (Stage 42.5)
+export const themeDrafts = sqliteTable("theme_drafts", {
+  id: text("id").primaryKey().default("active-draft"),
+  themeId: text("theme_id").notNull(),
+  draftJson: text("draft_json").notNull(),
+  updatedBy: text("updated_by"),
+  updatedAt: integer("updated_at"),
+});
+
+export type ThemeDraftRecord = typeof themeDrafts.$inferSelect;
+export type NewThemeDraftRecord = typeof themeDrafts.$inferInsert;
+
+// 62. Theme Editor History Table (Stage 42.5)
+export const themeEditorHistory = sqliteTable("theme_editor_history", {
+  id: text("id").primaryKey(),
+  themeId: text("theme_id").notNull(),
+  action: text("action").notNull(), // save_draft | publish | undo | redo
+  snapshotJson: text("snapshot_json"),
+  performedBy: text("performed_by"),
+  createdAt: integer("created_at"),
+});
+
+export type ThemeEditorHistoryRecord = typeof themeEditorHistory.$inferSelect;
+export type NewThemeEditorHistoryRecord = typeof themeEditorHistory.$inferInsert;
+
 
 

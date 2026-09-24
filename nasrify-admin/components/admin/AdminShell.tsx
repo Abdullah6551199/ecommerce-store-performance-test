@@ -95,6 +95,11 @@ const navigationItems: NavItem[] = [
     icon: "M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z",
   },
   {
+    name: "Theme Editor",
+    href: "/admin/theme-editor",
+    icon: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z",
+  },
+  {
     name: "Appearance",
     href: "/admin/appearance",
     icon: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01",
@@ -159,6 +164,10 @@ export default function AdminShell({
       })
       .catch(() => {});
   }, [pathname]);
+
+  if (pathname.startsWith("/admin/theme-editor")) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="flex min-h-screen bg-zinc-50 dark:bg-[#080e0a] text-zinc-900 dark:text-white selection:bg-[#FEF500] selection:text-black transition-colors duration-200">

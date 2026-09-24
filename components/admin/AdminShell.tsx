@@ -34,16 +34,6 @@ const navigationItems: NavItem[] = [
     icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
   },
   {
-    name: "Bundles",
-    href: "/admin/bundles",
-    icon: "M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10",
-  },
-  {
-    name: "Digital Products",
-    href: "/admin/digital-products",
-    icon: "M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10",
-  },
-  {
     name: "Categories",
     href: "/admin/categories",
     icon: "M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z",
@@ -54,19 +44,9 @@ const navigationItems: NavItem[] = [
     icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01",
   },
   {
-    name: "Coupons",
-    href: "/admin/coupons",
-    icon: "M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z",
-  },
-  {
     name: "Customers",
     href: "/admin/customers",
     icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z",
-  },
-  {
-    name: "Broadcasts",
-    href: "/admin/broadcasts",
-    icon: "M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z",
   },
   {
     name: "Media",
@@ -102,16 +82,6 @@ const navigationItems: NavItem[] = [
     name: "Shipping Zones",
     href: "/admin/settings/shipping-zones",
     icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
-  },
-  {
-    name: "Trust Badges",
-    href: "/admin/settings/trust-badges",
-    icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
-  },
-  {
-    name: "Cookie Consent",
-    href: "/admin/settings/cookie-consent",
-    icon: "M12 2a10 10 0 1010 10A10 10 0 0012 2zm-1 5a1.5 1.5 0 11-1.5 1.5A1.5 1.5 0 0111 7zm-3 4a1.5 1.5 0 11-1.5 1.5A1.5 1.5 0 018 11zm6 4a1.5 1.5 0 11-1.5 1.5A1.5 1.5 0 0114 15zm2-6a1.5 1.5 0 11-1.5 1.5A1.5 1.5 0 0116 9z",
   },
   {
     name: "Settings",

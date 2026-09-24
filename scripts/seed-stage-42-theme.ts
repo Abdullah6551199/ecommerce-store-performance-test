@@ -20,7 +20,7 @@ INSERT INTO themes (
   status, created_at, updated_at
 ) VALUES (
   'theme-default',
-  'default',
+  'nasrify-default',
   'Nasrify Default',
   '1.0.0',
   'Clean and simple — perfect starting point',

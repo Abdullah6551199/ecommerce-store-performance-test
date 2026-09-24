@@ -39,8 +39,9 @@ export async function listThemes(filter?: "all" | "builtin" | "custom"): Promise
     filtered = allThemes.filter((t) => t.isBuiltIn === 0);
   }
 
-  const result: ThemeListItem[] = filtered.map((t) => ({
+  const result: any[] = filtered.map((t) => ({
     ...t,
+    is_built_in: t.isBuiltIn,
     isActive: t.id === activeThemeId,
   }));
 
@@ -79,6 +80,7 @@ export async function getThemeById(id: string) {
 
   return {
     ...theme,
+    is_built_in: theme.isBuiltIn,
     isActive,
     auditLogs,
   };
@@ -187,7 +189,7 @@ export async function duplicateTheme(themeId: string, performedBy: string = "adm
     category: source.category,
     themeJson: newThemeJson,
     isBuiltIn: 0, // Custom duplicated theme
-    status: "published",
+    status: "draft",
     createdAt: now,
     updatedAt: now,
   });
@@ -204,6 +206,9 @@ export async function duplicateTheme(themeId: string, performedBy: string = "adm
     id: newId,
     slug: newSlug,
     name: newName,
+    is_built_in: 0,
+    isBuiltIn: 0,
+    status: "draft",
   };
 }
 

@@ -160,7 +160,8 @@ export default function Header({
               <Link
                 href="/cart"
                 className="relative p-2 text-[var(--theme-text,#18181B)] hover:text-[var(--theme-accent,#2563EB)] hover:bg-[var(--theme-surface,#F4F4F5)] rounded-full transition-colors"
-                aria-label={`Shopping Cart with ${itemCount} items`}
+                aria-label="Cart"
+                title={`Shopping Cart (${itemCount} items)`}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

@@ -15,7 +15,6 @@ import CartNavButton from "@/components/CartNavButton";
 import WishlistNavButton from "@/components/WishlistNavButton";
 import AccountNavButton from "@/components/AccountNavButton";
 import NotificationNavButton from "@/components/NotificationNavButton";
-import ThemeToggle from "@/components/ThemeToggle";
 import { getInstalledApps } from "@/lib/apps/installed";
 
 const MobileNav = dynamic(() => import("@/components/MobileNav"));
@@ -245,9 +244,6 @@ export default async function Header({
 
             {/* Account Profile / Dropdown */}
             <AccountNavButton />
-
-            {/* Dark / Light Theme Toggle Switch */}
-            <ThemeToggle storageKey="apex_theme" />
 
             {/* Mobile menu toggle & drawer */}
             <MobileNav categories={activeCategories} />

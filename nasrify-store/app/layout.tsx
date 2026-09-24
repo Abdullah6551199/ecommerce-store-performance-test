@@ -110,11 +110,16 @@ export default async function RootLayout({
   const preloadLinks = getFontPreloadLinks(fontsInUse);
 
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`light ${inter.variable}`}
+      style={{ colorScheme: "light" }}
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("apex_theme");if(t==="dark"){document.documentElement.classList.add("dark");}else if(t==="light"){document.documentElement.classList.remove("dark");}else if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){}})();`,
+            __html: `(function(){try{localStorage.removeItem("apex_theme");document.documentElement.classList.remove("dark");document.documentElement.classList.add("light");}catch(e){}})();`,
           }}
         />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />

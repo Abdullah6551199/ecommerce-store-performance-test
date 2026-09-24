@@ -3,11 +3,15 @@ export interface ThemeConfig {
   name: string;
   version: string;
   description?: string;
+  category?: string;
+  is_built_in?: number | boolean;
 
   settings: {
     colors: {
       primary: string;
-      secondary: string;
+      primary_dark?: string;
+      primary_light?: string;
+      secondary?: string;
       accent: string;
       background: string;
       surface: string;
@@ -23,10 +27,20 @@ export interface ThemeConfig {
       container_width: string; // "1280px"
       section_spacing: string; // "64px"
       border_radius: string; // "8px"
+      button_radius?: string; // "8px"
     };
+    logo?: {
+      type?: "text" | "image";
+      text?: string;
+      color?: string;
+      gradient?: string;
+    };
+    logo_url?: string;
+    logo_text?: string;
   };
 
   sections: ThemeSection[];
+  page_defaults?: Record<string, ThemeSection[]>;
 }
 
 export interface ThemeSection {
@@ -49,11 +63,30 @@ export type SectionType =
   | 'banner'
   | 'image_text'
   | 'faq'
-  | 'footer';
+  | 'footer'
+  | 'product_gallery'
+  | 'product_info'
+  | 'product_tabs'
+  | 'product_reviews_section'
+  | 'product_related'
+  | 'category_header'
+  | 'category_filters'
+  | 'category_grid'
+  | 'cart_page_layout'
+  | 'checkout_page_layout'
+  | 'account_dashboard'
+  | 'page_header'
+  | 'page_content';
 
 export interface StoreData {
   products?: any[];
   categories?: any[];
+  product?: any;
+  category?: any;
+  cart?: any;
+  checkout?: any;
+  account?: any;
+  page?: any;
   settings?: Record<string, any>;
   [key: string]: any;
 }

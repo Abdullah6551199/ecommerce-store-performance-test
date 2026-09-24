@@ -126,4 +126,13 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-42.7-01 | React / TSX | `layout.tsx` `<link crossOrigin={p.crossOrigin} />` triggered TypeScript TS2322: `Type 'string' is not assignable to type 'CrossOrigin'`. | Fixed by typing `crossOrigin: "anonymous" as const` in `fonts.ts` and literal `crossOrigin="anonymous"` in `layout.tsx`. | Complete |
 | BUG-42.7-02 | Zod Schema | `CurateSchema` in `/api/admin/fonts/curate` strictly validated `isCurated: z.boolean()`, rejecting numeric `1` / `0` payloads. | Updated to `z.union([z.boolean(), z.number()]).transform(val => Boolean(val))` for resilient compatibility. | Complete |
 
+---
+
+## Stage 42.8b (Default Theme Design & 13 New Page Sections)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-42.8b-01 | Database / D1 File Upload | Wrangler D1 cached file uploads with the same filename even if the file content was modified on disk (`File already uploaded. Processing.`), preventing execution of the revised SQL statement. | Fixed by generating uniquely named SQL migration scripts (`update_theme_42_8b_v2.sql`) when uploading. | Complete |
+| BUG-42.8b-02 | D1 Table Schema | Schema in `themes` table uses column name `theme_json` rather than `config`. | Corrected SQL column name to `theme_json` across theme updater scripts. | Complete |
+
 

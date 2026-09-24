@@ -14,6 +14,21 @@ import ImageText from "@/components/themes/sections/ImageText";
 import FAQ from "@/components/themes/sections/FAQ";
 import Footer from "@/components/themes/sections/Footer";
 
+// 13 New Page Sections
+import ProductGallery from "@/components/themes/sections/ProductGallery";
+import ProductInfo from "@/components/themes/sections/ProductInfo";
+import ProductTabs from "@/components/themes/sections/ProductTabs";
+import ProductReviewsSection from "@/components/themes/sections/ProductReviewsSection";
+import ProductRelated from "@/components/themes/sections/ProductRelated";
+import CategoryHeader from "@/components/themes/sections/CategoryHeader";
+import CategoryFilters from "@/components/themes/sections/CategoryFilters";
+import CategoryGrid from "@/components/themes/sections/CategoryGrid";
+import CartPageLayout from "@/components/themes/sections/CartPageLayout";
+import CheckoutPageLayout from "@/components/themes/sections/CheckoutPageLayout";
+import AccountDashboard from "@/components/themes/sections/AccountDashboard";
+import PageHeader from "@/components/themes/sections/PageHeader";
+import PageContent from "@/components/themes/sections/PageContent";
+
 /**
  * High-performance Theme Rendering Engine (<10ms CPU target)
  * Iterates through enabled sections and dynamically mounts React section components.
@@ -33,7 +48,32 @@ export function renderTheme(theme: ThemeConfig, storeData: StoreData): React.Rea
   );
 }
 
-function renderSection(
+/**
+ * Render a page-specific theme layout defined in theme.page_defaults[pageType].
+ * Used by product, category, cart, checkout, account, and cms pages.
+ */
+export function renderPageTheme(
+  theme: ThemeConfig,
+  pageType: string,
+  storeData: StoreData
+): React.ReactNode {
+  if (!theme) return null;
+
+  const pageSections = theme.page_defaults?.[pageType];
+  if (!pageSections || !Array.isArray(pageSections)) {
+    return null;
+  }
+
+  return (
+    <>
+      {pageSections
+        .filter((s) => s.enabled !== false)
+        .map((section) => renderSection(section, theme.settings, storeData))}
+    </>
+  );
+}
+
+export function renderSection(
   section: ThemeSection,
   themeSettings: ThemeConfig["settings"],
   storeData: StoreData
@@ -48,7 +88,9 @@ function renderSection(
     };
 
     switch (section.type) {
+      // 12 Original Sections
       case "announcement":
+      case "announcement_bar":
         return <AnnouncementBar key={section.id} {...props} />;
       case "header":
         return <Header key={section.id} {...props} />;
@@ -72,6 +114,35 @@ function renderSection(
         return <FAQ key={section.id} {...props} />;
       case "footer":
         return <Footer key={section.id} {...props} />;
+
+      // 13 New Page Sections
+      case "product_gallery":
+        return <ProductGallery key={section.id} {...props} />;
+      case "product_info":
+        return <ProductInfo key={section.id} {...props} />;
+      case "product_tabs":
+        return <ProductTabs key={section.id} {...props} />;
+      case "product_reviews_section":
+        return <ProductReviewsSection key={section.id} {...props} />;
+      case "product_related":
+        return <ProductRelated key={section.id} {...props} />;
+      case "category_header":
+        return <CategoryHeader key={section.id} {...props} />;
+      case "category_filters":
+        return <CategoryFilters key={section.id} {...props} />;
+      case "category_grid":
+        return <CategoryGrid key={section.id} {...props} />;
+      case "cart_page_layout":
+        return <CartPageLayout key={section.id} {...props} />;
+      case "checkout_page_layout":
+        return <CheckoutPageLayout key={section.id} {...props} />;
+      case "account_dashboard":
+        return <AccountDashboard key={section.id} {...props} />;
+      case "page_header":
+        return <PageHeader key={section.id} {...props} />;
+      case "page_content":
+        return <PageContent key={section.id} {...props} />;
+
       default:
         console.warn(`[Themes Engine] Unknown section type skipped: ${section.type}`);
         return null;

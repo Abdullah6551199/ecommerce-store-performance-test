@@ -4,11 +4,16 @@ export const DEFAULT_THEME: ThemeConfig = {
   schema_version: "1.0",
   name: "Nasrify Default",
   version: "1.0.0",
+  description: "Clean and simple — perfect starting point",
+  category: "minimal",
+  is_built_in: 1,
   settings: {
     colors: {
-      primary: "#18181B",
+      primary: "#25D366",
+      primary_dark: "#1EA855",
+      primary_light: "#DCFCE7",
       secondary: "#52525B",
-      accent: "#2563EB",
+      accent: "#18181B",
       background: "#FFFFFF",
       surface: "#F4F4F5",
       text: "#18181B",
@@ -23,6 +28,13 @@ export const DEFAULT_THEME: ThemeConfig = {
       container_width: "1280px",
       section_spacing: "64px",
       border_radius: "8px",
+      button_radius: "8px",
+    },
+    logo: {
+      type: "text",
+      text: "Nasrify",
+      color: "#25D366",
+      gradient: "linear-gradient(to bottom, #25D366, #1EA855)",
     },
   },
   sections: [
@@ -171,7 +183,8 @@ export const DEFAULT_THEME: ThemeConfig = {
       enabled: true,
       settings: {
         heading: "Subscribe for updates",
-        subheading: "Get exclusive early access to drops, member discounts, and design insights.",
+        subheading:
+          "Get exclusive early access to drops, member discounts, and design insights.",
         placeholder: "Enter your email address...",
         button_text: "Subscribe",
         bg_color: "#F4F4F5",
@@ -230,4 +243,165 @@ export const DEFAULT_THEME: ThemeConfig = {
       },
     },
   ],
+  page_defaults: {
+    product: [
+      {
+        id: "pd-product-gallery",
+        type: "product_gallery",
+        variant: "classic",
+        enabled: true,
+        settings: {
+          layout: "carousel",
+          thumbnails_position: "bottom",
+          zoom: "on",
+        },
+      },
+      {
+        id: "pd-product-info",
+        type: "product_info",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          show_sku: true,
+          show_brand: true,
+          show_rating: true,
+          show_compare: true,
+          show_wishlist: true,
+          button_text: "Add to Cart",
+          button_style: "primary",
+        },
+      },
+      {
+        id: "pd-product-tabs",
+        type: "product_tabs",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          default_tab: "description",
+        },
+      },
+      {
+        id: "pd-product-reviews",
+        type: "product_reviews_section",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          heading: "Customer Reviews",
+          reviews_app_id: "auto",
+          show_summary: true,
+          show_form: true,
+        },
+      },
+      {
+        id: "pd-product-related",
+        type: "product_related",
+        variant: "grid",
+        enabled: true,
+        settings: {
+          heading: "You May Also Like",
+          max_products: 4,
+          columns: 4,
+        },
+      },
+    ],
+    category: [
+      {
+        id: "pd-category-header",
+        type: "category_header",
+        variant: "simple",
+        enabled: true,
+        settings: {
+          show_breadcrumb: true,
+          show_description: true,
+          layout: "simple",
+        },
+      },
+      {
+        id: "pd-category-filters",
+        type: "category_filters",
+        variant: "sidebar",
+        enabled: true,
+        settings: {
+          position: "sidebar",
+          sticky: true,
+          show_price: true,
+          show_categories: true,
+          show_attributes: true,
+        },
+      },
+      {
+        id: "pd-category-grid",
+        type: "category_grid",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          columns: 3,
+          per_page: 9,
+          show_pagination: true,
+          card_variant: "standard",
+        },
+      },
+    ],
+    cart: [
+      {
+        id: "pd-cart-layout",
+        type: "cart_page_layout",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          show_coupon: true,
+          show_estimated_shipping: true,
+          layout: "standard",
+        },
+      },
+    ],
+    checkout: [
+      {
+        id: "pd-checkout-layout",
+        type: "checkout_page_layout",
+        variant: "single_page",
+        enabled: true,
+        settings: {
+          show_order_notes: true,
+          layout: "single_page",
+        },
+      },
+    ],
+    account: [
+      {
+        id: "pd-account-dashboard",
+        type: "account_dashboard",
+        variant: "sidebar",
+        enabled: true,
+        settings: {
+          show_orders: true,
+          show_addresses: true,
+          show_profile: true,
+          layout: "sidebar",
+        },
+      },
+    ],
+    page: [
+      {
+        id: "pd-page-header",
+        type: "page_header",
+        variant: "simple",
+        enabled: true,
+        settings: {
+          show_breadcrumb: true,
+          alignment: "center",
+        },
+      },
+      {
+        id: "pd-page-content",
+        type: "page_content",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          max_width: "max-w-4xl",
+          padding_y: "py-8",
+        },
+      },
+    ],
+  },
 };

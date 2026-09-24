@@ -170,7 +170,64 @@ The rendering engine mounts components matching `section.type`:
 
 ---
 
-## 6. Cache Invalidation Flow
+## 6. Page-Specific Layouts: `page_defaults` System
+
+Beginning in Stage 42.8b, the Themes Framework supports defining page-specific layouts directly within `theme.json` via the `page_defaults` dictionary:
+
+```json
+{
+  "page_defaults": {
+    "product": [
+      { "id": "pd-gallery", "type": "product_gallery", "variant": "classic", "enabled": true, "settings": { ... } },
+      { "id": "pd-info", "type": "product_info", "variant": "standard", "enabled": true, "settings": { ... } },
+      { "id": "pd-tabs", "type": "product_tabs", "variant": "standard", "enabled": true, "settings": { ... } },
+      { "id": "pd-reviews", "type": "product_reviews_section", "enabled": true, "settings": { ... } },
+      { "id": "pd-related", "type": "product_related", "variant": "grid", "enabled": true, "settings": { ... } }
+    ],
+    "category": [
+      { "id": "pd-cat-hdr", "type": "category_header", "variant": "simple", "enabled": true, "settings": { ... } },
+      { "id": "pd-cat-flt", "type": "category_filters", "variant": "sidebar", "enabled": true, "settings": { ... } },
+      { "id": "pd-cat-grd", "type": "category_grid", "variant": "standard", "enabled": true, "settings": { ... } }
+    ],
+    "cart": [
+      { "id": "pd-cart", "type": "cart_page_layout", "variant": "standard", "enabled": true, "settings": { ... } }
+    ],
+    "checkout": [
+      { "id": "pd-checkout", "type": "checkout_page_layout", "variant": "single_page", "enabled": true, "settings": { ... } }
+    ],
+    "account": [
+      { "id": "pd-account", "type": "account_dashboard", "variant": "sidebar", "enabled": true, "settings": { ... } }
+    ],
+    "page": [
+      { "id": "pd-page-hdr", "type": "page_header", "variant": "simple", "enabled": true, "settings": { ... } },
+      { "id": "pd-page-cnt", "type": "page_content", "variant": "standard", "enabled": true, "settings": { ... } }
+    ]
+  }
+}
+```
+
+### Rendering Page Themes (`renderPageTheme`)
+Pages invoke `renderPageTheme(theme, pageType, storeData)` in `nasrify-store/lib/themes/engine.tsx`:
+
+```tsx
+import { renderPageTheme } from "@/lib/themes/engine";
+import { getActiveTheme } from "@/lib/themes/loader";
+
+export default async function ProductPage({ params }) {
+  const theme = await getActiveTheme();
+  const storeData = await getProductStoreData(params.slug);
+
+  return (
+    <div className="theme-page theme-page-product">
+      {renderPageTheme(theme, "product", storeData)}
+    </div>
+  );
+}
+```
+
+---
+
+## 7. Cache Invalidation Flow
 
 When an administrator activates a theme via `/admin/themes`:
 1. `nasrify-admin` updates `active_theme` in D1 and writes an entry in `theme_audit_log`.

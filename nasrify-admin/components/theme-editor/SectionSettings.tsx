@@ -25,6 +25,97 @@ interface SectionSettingsProps {
   onChange: (patch: Record<string, any>) => void;
 }
 
+function GenericSectionSettings({
+  section,
+  onChange,
+}: {
+  section: SectionSettingsProps["section"];
+  onChange: (patch: Record<string, any>) => void;
+}) {
+  const settings = section.settings || {};
+
+  const handleFieldChange = (key: string, value: any) => {
+    onChange({
+      settings: {
+        ...settings,
+        [key]: value,
+      },
+    });
+  };
+
+  const keys = Object.keys(settings);
+
+  return (
+    <div className="space-y-4 text-xs">
+      <div>
+        <h4 className="font-semibold text-slate-200 capitalize">
+          {section.type.replace(/_/g, " ")} Settings
+        </h4>
+        <p className="text-[11px] text-slate-400 mt-0.5">
+          Configure section properties and display options.
+        </p>
+      </div>
+
+      {keys.length === 0 ? (
+        <div className="p-3 rounded-lg border border-slate-800 bg-slate-800/40 text-slate-400 text-xs">
+          This section uses default page presets. Additional customizable properties will appear here.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {keys.map((key) => {
+            const val = settings[key];
+            const label = key.replace(/_/g, " ");
+
+            if (typeof val === "boolean") {
+              return (
+                <label key={key} className="flex items-center gap-2 cursor-pointer text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={val}
+                    onChange={(e) => handleFieldChange(key, e.target.checked)}
+                    className="rounded border-slate-700 bg-slate-800 text-emerald-500 focus:ring-0"
+                  />
+                  <span className="capitalize">{label}</span>
+                </label>
+              );
+            }
+
+            if (typeof val === "number") {
+              return (
+                <div key={key} className="space-y-1">
+                  <label className="text-slate-400 capitalize">{label}</label>
+                  <input
+                    type="number"
+                    value={val}
+                    onChange={(e) => handleFieldChange(key, Number(e.target.value))}
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-100 text-xs"
+                  />
+                </div>
+              );
+            }
+
+            if (typeof val === "string") {
+              return (
+                <div key={key} className="space-y-1">
+                  <label className="text-slate-400 capitalize">{label}</label>
+                  <input
+                    type="text"
+                    value={val}
+                    onChange={(e) => handleFieldChange(key, e.target.value)}
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-100 text-xs"
+                  />
+                </div>
+              );
+            }
+
+            return null;
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SectionSettings({ section, onChange }: SectionSettingsProps) {
   const settings = section.settings || {};
   const handleVariantChange = (variant: string) => {
@@ -107,10 +198,6 @@ export function SectionSettings({ section, onChange }: SectionSettingsProps) {
     case "footer":
       return <FooterSettings settings={settings} onChange={onChange} />;
     default:
-      return (
-        <div className="p-4 rounded border border-amber-800/50 bg-amber-950/20 text-amber-300 text-xs">
-          Settings for section type <code>{section.type}</code> are not available in Basic mode.
-        </div>
-      );
+      return <GenericSectionSettings section={section} onChange={onChange} />;
   }
 }

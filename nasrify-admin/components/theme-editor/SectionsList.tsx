@@ -38,6 +38,7 @@ interface SectionsListProps {
 }
 
 const SECTION_ICONS: Record<string, string> = {
+  announcement: "📢",
   announcement_bar: "📢",
   header: "🧭",
   hero: "🌟",
@@ -50,6 +51,19 @@ const SECTION_ICONS: Record<string, string> = {
   image_text: "🖼️",
   faq: "❓",
   footer: "⚓",
+  product_gallery: "🖼️",
+  product_info: "🏷️",
+  product_tabs: "📑",
+  product_reviews_section: "⭐",
+  product_related: "🔄",
+  category_header: "🗂️",
+  category_filters: "🎛️",
+  category_grid: "📦",
+  cart_page_layout: "🛒",
+  checkout_page_layout: "💳",
+  account_dashboard: "👤",
+  page_header: "📄",
+  page_content: "📝",
 };
 
 function SortableSectionItem({

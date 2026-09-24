@@ -127,3 +127,40 @@ Executed on both local and remote D1 databases:
 - **Theme Editor FontPicker (`FontPicker.tsx`)**: Modal picker in Global Settings syncing in real-time to preview iframe via postMessage.
 - **D1 Migration 0029**: `fonts` and `font_settings` tables with indexes.
 
+---
+
+## 7. Stage 42.8b — Default Theme Design & 13 New Page Sections
+- **Brand Color Palette Finalized**:
+  - Primary: `#25D366` (WhatsApp Green)
+  - Primary Dark: `#1EA855` (Hover)
+  - Primary Light: `#DCFCE7` (Light backgrounds / badges)
+  - Secondary: `#52525B`
+  - Accent: `#18181B` (Headings & buttons)
+  - Background: `#FFFFFF`
+  - Surface: `#F4F4F5`
+  - Text: `#18181B`
+  - Text Muted: `#71717A`
+  - Border: `#E4E4E7`
+- **13 New Page Sections Created**:
+  1. `ProductGallery.tsx`
+  2. `ProductInfo.tsx`
+  3. `ProductTabs.tsx`
+  4. `ProductReviewsSection.tsx`
+  5. `ProductRelated.tsx`
+  6. `CategoryHeader.tsx`
+  7. `CategoryFilters.tsx`
+  8. `CategoryGrid.tsx`
+  9. `CartPageLayout.tsx`
+  10. `CheckoutPageLayout.tsx`
+  11. `AccountDashboard.tsx`
+  12. `PageHeader.tsx`
+  13. `PageContent.tsx`
+- **5 Shared UI Blocks**: `ProductCard`, `PriceTag`, `RatingStars`, `Button`, `Badge` in `nasrify-store/components/themes/blocks/`.
+- **`page_defaults` System**: Added default page presets to `theme.json` for `product`, `category`, `cart`, `checkout`, `account`, and `page`.
+- **Theme Engine (`renderPageTheme`)**: Extended `engine.tsx` to mount all 24 section types and render page presets cleanly.
+- **Admin Section Picker**: Categorized into 4 clear groups: Content (9), Products (10), Marketing (2), Commerce (3).
+- **CSS Variables Injected**: `--theme-primary-dark`, `--theme-primary-light`, `--theme-button-radius` alongside core theme tokens.
+- **Deployment Status**:
+  - `nasrify-store`: `c9a95506-a95a-4535-8fa1-ec4372fa5b52`
+  - `nasrify-admin`: `d64e1c5b-7eee-47c2-80cc-0fe21e5e9758`
+

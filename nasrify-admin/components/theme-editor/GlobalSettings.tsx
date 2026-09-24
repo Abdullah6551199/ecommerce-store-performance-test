@@ -8,7 +8,9 @@ interface GlobalSettingsProps {
   settings: {
     colors: {
       primary: string;
-      secondary: string;
+      primary_dark?: string;
+      primary_light?: string;
+      secondary?: string;
       accent: string;
       background: string;
       surface: string;
@@ -24,6 +26,7 @@ interface GlobalSettingsProps {
       container_width: string;
       section_spacing: string;
       border_radius: string;
+      button_radius?: string;
     };
     logo_url?: string;
     logo_text?: string;
@@ -31,25 +34,15 @@ interface GlobalSettingsProps {
   onChange: (patch: Record<string, any>) => void;
 }
 
-const FONT_OPTIONS = [
-  "Inter",
-  "Roboto",
-  "Playfair Display",
-  "Outfit",
-  "Montserrat",
-  "Merriweather",
-  "Plus Jakarta Sans",
-  "Geist",
-];
-
 const CONTAINER_WIDTHS = ["1200px", "1280px", "1440px", "1600px"];
 const SECTION_SPACINGS = ["32px", "48px", "64px", "80px", "96px"];
 const BORDER_RADII = ["0px", "4px", "8px", "12px", "16px", "24px"];
+const BUTTON_RADII = ["0px", "4px", "8px", "12px", "16px", "24px", "9999px"];
 
 export function GlobalSettings({ settings, onChange }: GlobalSettingsProps) {
-  const colors = settings.colors || {};
-  const fonts = settings.fonts || {};
-  const layout = settings.layout || {};
+  const colors = settings.colors || ({} as any);
+  const fonts = settings.fonts || ({} as any);
+  const layout = settings.layout || ({} as any);
 
   const handleColorChange = (key: string, val: string) => {
     onChange({
@@ -79,12 +72,14 @@ export function GlobalSettings({ settings, onChange }: GlobalSettingsProps) {
   };
 
   const COLOR_FIELDS: Array<{ key: string; label: string; def: string }> = [
-    { key: "primary", label: "Primary Brand", def: "#18181B" },
+    { key: "primary", label: "Primary Brand", def: "#25D366" },
+    { key: "primary_dark", label: "Primary Dark (Hover)", def: "#1EA855" },
+    { key: "primary_light", label: "Primary Light (Bg)", def: "#DCFCE7" },
     { key: "secondary", label: "Secondary", def: "#52525B" },
-    { key: "accent", label: "Accent / Buttons", def: "#2563EB" },
+    { key: "accent", label: "Accent / Headings", def: "#18181B" },
     { key: "background", label: "Page Background", def: "#FFFFFF" },
     { key: "surface", label: "Cards / Surface", def: "#F4F4F5" },
-    { key: "text", label: "Heading & Body Text", def: "#18181B" },
+    { key: "text", label: "Body Text", def: "#18181B" },
     { key: "text_muted", label: "Muted Text", def: "#71717A" },
     { key: "border", label: "Dividers & Borders", def: "#E4E4E7" },
   ];
@@ -235,6 +230,23 @@ export function GlobalSettings({ settings, onChange }: GlobalSettingsProps) {
               className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
             >
               {BORDER_RADII.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-gray-600 dark:text-gray-400 font-medium">
+              Button Border Radius
+            </label>
+            <select
+              value={layout.button_radius || layout.border_radius || "8px"}
+              onChange={(e) => handleLayoutChange("button_radius", e.target.value)}
+              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+            >
+              {BUTTON_RADII.map((r) => (
                 <option key={r} value={r}>
                   {r}
                 </option>

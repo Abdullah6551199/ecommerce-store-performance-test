@@ -5,23 +5,24 @@ import React, { useState } from "react";
 export interface SectionPickerOption {
   type: string;
   name: string;
-  category: "Content" | "Products" | "Marketing" | "Utility";
+  category: "Content" | "Products" | "Marketing" | "Commerce";
   description: string;
   icon: string;
 }
 
-const SECTION_OPTIONS: SectionPickerOption[] = [
+export const SECTION_OPTIONS: SectionPickerOption[] = [
+  // Content
   {
-    type: "announcement_bar",
+    type: "announcement",
     name: "Announcement Bar",
-    category: "Utility",
+    category: "Content",
     description: "Top promotional banner with link, custom colors, and dismiss toggle.",
     icon: "📢",
   },
   {
     type: "header",
     name: "Header Navigation",
-    category: "Utility",
+    category: "Content",
     description: "Store navigation bar with logo, menu links, and sticky support.",
     icon: "🧭",
   },
@@ -32,6 +33,50 @@ const SECTION_OPTIONS: SectionPickerOption[] = [
     description: "High-impact visual banner with headline, call to action, and image.",
     icon: "🌟",
   },
+  {
+    type: "image_text",
+    name: "Image with Text",
+    category: "Content",
+    description: "Editorial split layout pairing narrative brand copy with imagery.",
+    icon: "🖼️",
+  },
+  {
+    type: "banner",
+    name: "Promotional Banner",
+    category: "Content",
+    description: "Full-width or boxed promo callout with background imagery and button.",
+    icon: "🎯",
+  },
+  {
+    type: "faq",
+    name: "FAQ Accordion",
+    category: "Content",
+    description: "Interactive accordion answering frequently asked shopper questions.",
+    icon: "❓",
+  },
+  {
+    type: "footer",
+    name: "Store Footer",
+    category: "Content",
+    description: "Site-wide footer containing column links, social profiles, and copyright.",
+    icon: "⚓",
+  },
+  {
+    type: "page_header",
+    name: "Page Header",
+    category: "Content",
+    description: "Title banner with breadcrumb navigation for generic and CMS pages.",
+    icon: "📄",
+  },
+  {
+    type: "page_content",
+    name: "Page Content",
+    category: "Content",
+    description: "Rich text and HTML content block rendering CMS page body.",
+    icon: "📝",
+  },
+
+  // Products
   {
     type: "product_grid",
     name: "Product Grid",
@@ -54,6 +99,64 @@ const SECTION_OPTIONS: SectionPickerOption[] = [
     icon: "🏷️",
   },
   {
+    type: "product_gallery",
+    name: "Product Gallery",
+    category: "Products",
+    description: "Image gallery with thumbnails, multiple view layouts, and zoom.",
+    icon: "🖼️",
+  },
+  {
+    type: "product_info",
+    name: "Product Info",
+    category: "Products",
+    description: "Title, price, SKU, variant selector, quantity, and add to cart CTA.",
+    icon: "🏷️",
+  },
+  {
+    type: "product_tabs",
+    name: "Product Tabs",
+    category: "Products",
+    description: "Multi-tab interface or accordion for specs, description, and shipping.",
+    icon: "📑",
+  },
+  {
+    type: "product_reviews_section",
+    name: "Product Reviews",
+    category: "Products",
+    description: "Ratings summary, customer reviews showcase, and feedback submission.",
+    icon: "⭐",
+  },
+  {
+    type: "product_related",
+    name: "Related Products",
+    category: "Products",
+    description: "Cross-sell grid or carousel of complementary store items.",
+    icon: "🔄",
+  },
+  {
+    type: "category_header",
+    name: "Category Header",
+    category: "Products",
+    description: "Collection title, description banner, and breadcrumbs.",
+    icon: "🗂️",
+  },
+  {
+    type: "category_filters",
+    name: "Category Filters",
+    category: "Products",
+    description: "Sidebar or horizontal filters for collections, price range, and stock.",
+    icon: "🎛️",
+  },
+  {
+    type: "category_grid",
+    name: "Category Grid",
+    category: "Products",
+    description: "Paginated product catalog grid with responsive column layout.",
+    icon: "📦",
+  },
+
+  // Marketing
+  {
     type: "testimonials",
     name: "Customer Testimonials",
     category: "Marketing",
@@ -67,33 +170,28 @@ const SECTION_OPTIONS: SectionPickerOption[] = [
     description: "Lead capture section with custom heading, email input, and button.",
     icon: "✉️",
   },
+
+  // Commerce
   {
-    type: "banner",
-    name: "Promotional Banner",
-    category: "Marketing",
-    description: "Full-width or boxed promo callout with background imagery and button.",
-    icon: "🎯",
+    type: "cart_page_layout",
+    name: "Cart Page Layout",
+    category: "Commerce",
+    description: "Shopping cart table with line items, quantity, coupon code, and summary.",
+    icon: "🛒",
   },
   {
-    type: "image_text",
-    name: "Image with Text",
-    category: "Content",
-    description: "Editorial split layout pairing narrative brand copy with imagery.",
-    icon: "🖼️",
+    type: "checkout_page_layout",
+    name: "Checkout Page Layout",
+    category: "Commerce",
+    description: "Customer shipping details, order notes, payment options, and summary.",
+    icon: "💳",
   },
   {
-    type: "faq",
-    name: "FAQ Accordion",
-    category: "Content",
-    description: "Interactive accordion answering frequently asked shopper questions.",
-    icon: "❓",
-  },
-  {
-    type: "footer",
-    name: "Store Footer",
-    category: "Utility",
-    description: "Site-wide footer containing column links, social profiles, and copyright.",
-    icon: "⚓",
+    type: "account_dashboard",
+    name: "Account Dashboard",
+    category: "Commerce",
+    description: "Customer profile, recent order history, and saved address cards.",
+    icon: "👤",
   },
 ];
 
@@ -109,13 +207,14 @@ export function SectionPicker({ isOpen, onClose, onSelectSection }: SectionPicke
 
   if (!isOpen) return null;
 
-  const categories = ["All", "Content", "Products", "Marketing", "Utility"];
+  const categories = ["All", "Content", "Products", "Marketing", "Commerce"];
 
   const filteredSections = SECTION_OPTIONS.filter((sec) => {
     const matchesCategory = selectedCategory === "All" || sec.category === selectedCategory;
     const matchesSearch =
       sec.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      sec.description.toLowerCase().includes(searchTerm.toLowerCase());
+      sec.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      sec.type.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -130,7 +229,7 @@ export function SectionPicker({ isOpen, onClose, onSelectSection }: SectionPicke
           <div>
             <h3 className="text-base font-semibold text-slate-100">Add a Section</h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Select from the 12 built-in theme framework sections
+              Select from all 24 built-in theme framework sections
             </p>
           </div>
           <button
@@ -138,64 +237,62 @@ export function SectionPicker({ isOpen, onClose, onSelectSection }: SectionPicke
             onClick={onClose}
             className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            ✕
           </button>
         </div>
 
-        {/* Filter bar */}
-        <div className="px-5 py-3 border-b border-slate-800 bg-slate-950/40 flex flex-col sm:flex-row items-center justify-between gap-3">
-          {/* Categories */}
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto">
+        {/* Filter Bar */}
+        <div className="p-4 border-b border-slate-800 space-y-3 bg-slate-900/50">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search sections (e.g. Gallery, Cart, Hero)..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-700 bg-slate-800 text-slate-100 placeholder-slate-400 focus:outline-hidden focus:border-blue-500"
+            />
+            <span className="absolute left-3 top-2.5 text-xs text-slate-400">🔍</span>
+          </div>
+
+          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {categories.map((cat) => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+                className={`px-3 py-1 text-xs rounded-md font-medium whitespace-nowrap transition-colors ${
                   selectedCategory === cat
-                    ? "bg-indigo-600 text-white"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                    ? "bg-emerald-600 text-white"
+                    : "bg-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-700"
                 }`}
               >
                 {cat}
               </button>
             ))}
           </div>
-
-          {/* Search box */}
-          <div className="relative w-full sm:w-48">
-            <input
-              type="text"
-              placeholder="Search sections..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-md px-2.5 py-1 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
-            />
-          </div>
         </div>
 
         {/* Sections Grid */}
-        <div className="p-5 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 custom-scrollbar">
+        <div className="p-4 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
           {filteredSections.map((sec) => (
-            <div
+            <button
               key={sec.type}
+              type="button"
               onClick={() => {
                 onSelectSection(sec.type);
                 onClose();
               }}
-              className="p-3.5 rounded-lg border border-slate-800 bg-slate-800/40 hover:bg-slate-800 hover:border-indigo-500/50 cursor-pointer transition-all duration-150 flex items-start gap-3 group"
+              className="flex items-start gap-3 p-3 rounded-lg border border-slate-800 bg-slate-800/40 hover:bg-slate-800 hover:border-slate-700 transition-all text-left group cursor-pointer"
             >
-              <div className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-700 flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 rounded-lg bg-slate-800 group-hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-lg shrink-0 transition-colors">
                 {sec.icon}
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-semibold text-slate-200 group-hover:text-indigo-400 transition-colors">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-1">
+                  <h4 className="text-xs font-semibold text-slate-200 group-hover:text-white truncate">
                     {sec.name}
                   </h4>
-                  <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase font-mono">
                     {sec.category}
                   </span>
                 </div>
@@ -203,12 +300,12 @@ export function SectionPicker({ isOpen, onClose, onSelectSection }: SectionPicke
                   {sec.description}
                 </p>
               </div>
-            </div>
+            </button>
           ))}
 
           {filteredSections.length === 0 && (
-            <div className="col-span-2 text-center py-8 text-xs text-slate-500">
-              No matching sections found for &quot;{searchTerm}&quot;.
+            <div className="col-span-full py-8 text-center text-slate-400 text-xs">
+              No sections found matching your search.
             </div>
           )}
         </div>

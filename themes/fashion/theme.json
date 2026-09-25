@@ -1,0 +1,331 @@
+{
+  "schema_version": "1.0",
+  "slug": "fashion",
+  "name": "Atelier Fashion",
+  "version": "1.0.0",
+  "description": "High-fashion lookbook style featuring full-bleed banners, circular categories, and blush pastel hues.",
+  "category": "fashion",
+  "is_built_in": 0,
+  "settings": {
+    "colors": {
+      "primary": "#E07A7A",
+      "secondary": "#F4A4A4",
+      "accent": "#BE5959",
+      "background": "#FFF7F7",
+      "surface": "#FDECEC",
+      "text": "#3F3F3F",
+      "text_muted": "#786F6F",
+      "border": "#F3DCDC"
+    },
+    "fonts": {
+      "heading": "Cormorant Garamond",
+      "body": "Raleway"
+    },
+    "layout": {
+      "container_width": "1320px",
+      "section_spacing": "64px",
+      "border_radius": "0px",
+      "button_radius": "0px"
+    },
+    "logo": {
+      "type": "text",
+      "text": "ATELIER",
+      "color": "#E07A7A"
+    }
+  },
+  "sections": [
+    {
+      "id": "fash-header",
+      "type": "header",
+      "variant": "centered",
+      "enabled": true,
+      "settings": {
+        "logo_text": "ATELIER",
+        "sticky": true,
+        "show_search": true,
+        "show_cart": true,
+        "show_account": true
+      }
+    },
+    {
+      "id": "fash-hero",
+      "type": "hero",
+      "variant": "fullscreen",
+      "enabled": true,
+      "settings": {
+        "heading": "AUTUMN / WINTER LOOKBOOK",
+        "subheading": "Silhouettes tailored for self-expression, fluid textiles, and contemporary poise.",
+        "cta_text": "View Lookbook",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop",
+        "height": "680px",
+        "overlay_opacity": 0.35
+      }
+    },
+    {
+      "id": "fash-carousel",
+      "type": "product_carousel",
+      "variant": "scroll",
+      "enabled": true,
+      "settings": {
+        "heading": "Runway Highlights",
+        "show_arrows": true
+      }
+    },
+    {
+      "id": "fash-categories",
+      "type": "categories",
+      "variant": "circle",
+      "enabled": true,
+      "settings": {
+        "heading": "Shop by Mood",
+        "columns": 4,
+        "image_style": "circle"
+      }
+    },
+    {
+      "id": "fash-banner",
+      "type": "banner",
+      "variant": "side_by_side",
+      "enabled": true,
+      "settings": {
+        "heading": "The Capsule Wardrobe",
+        "text": "Essential seasonal pieces designed to mix, match, and elevate everyday attire.",
+        "cta_text": "Shop Capsule",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "fash-products",
+      "type": "product_grid",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Trending Silhouettes",
+        "columns": 4,
+        "rows": 2,
+        "show_price": true,
+        "show_rating": true,
+        "show_add_to_cart": true
+      }
+    },
+    {
+      "id": "fash-newsletter",
+      "type": "newsletter",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "VIP Salon Access",
+        "subheading": "Receive early invitations to private showroom events and runway drops."
+      }
+    },
+    {
+      "id": "fash-footer",
+      "type": "footer",
+      "variant": "expanded",
+      "enabled": true,
+      "settings": {
+        "logo_text": "ATELIER",
+        "copyright": "© 2026 Atelier Fashion Studio."
+      }
+    }
+  ],
+  "page_defaults": {
+    "product": [
+      {
+        "id": "pd-product-gallery",
+        "type": "product_gallery",
+        "variant": "classic",
+        "enabled": true,
+        "settings": {
+          "layout": "carousel",
+          "thumbnails_position": "bottom",
+          "zoom": "on"
+        }
+      },
+      {
+        "id": "pd-product-info",
+        "type": "product_info",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_sku": true,
+          "show_brand": true,
+          "show_rating": true,
+          "show_compare": true,
+          "show_wishlist": true,
+          "button_text": "Add to Cart",
+          "button_style": "primary"
+        }
+      },
+      {
+        "id": "pd-product-tabs",
+        "type": "product_tabs",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "default_tab": "description"
+        }
+      },
+      {
+        "id": "pd-product-reviews",
+        "type": "product_reviews_section",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "heading": "Customer Reviews",
+          "reviews_app_id": "auto",
+          "show_summary": true,
+          "show_form": true
+        }
+      },
+      {
+        "id": "pd-product-related",
+        "type": "product_related",
+        "variant": "grid",
+        "enabled": true,
+        "settings": {
+          "heading": "You May Also Like",
+          "max_products": 4,
+          "columns": 4
+        }
+      }
+    ],
+    "category": [
+      {
+        "id": "pd-category-header",
+        "type": "category_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "show_description": true,
+          "layout": "simple"
+        }
+      },
+      {
+        "id": "pd-category-filters",
+        "type": "category_filters",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "position": "sidebar",
+          "sticky": true,
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-category-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 3,
+          "per_page": 9,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ],
+    "cart": [
+      {
+        "id": "pd-cart-layout",
+        "type": "cart_page_layout",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_coupon": true,
+          "show_estimated_shipping": true,
+          "layout": "standard"
+        }
+      }
+    ],
+    "checkout": [
+      {
+        "id": "pd-checkout-layout",
+        "type": "checkout_page_layout",
+        "variant": "single_page",
+        "enabled": true,
+        "settings": {
+          "show_order_notes": true,
+          "layout": "single_page"
+        }
+      }
+    ],
+    "account": [
+      {
+        "id": "pd-account-dashboard",
+        "type": "account_dashboard",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "show_orders": true,
+          "show_addresses": true,
+          "show_profile": true,
+          "layout": "sidebar"
+        }
+      }
+    ],
+    "page": [
+      {
+        "id": "pd-page-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "center"
+        }
+      },
+      {
+        "id": "pd-page-content",
+        "type": "page_content",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "max_width": "max-w-4xl",
+          "padding_y": "py-8"
+        }
+      }
+    ],
+    "shop": [
+      {
+        "id": "pd-shop-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "left"
+        }
+      },
+      {
+        "id": "pd-shop-filters",
+        "type": "category_filters",
+        "variant": "horizontal",
+        "enabled": true,
+        "settings": {
+          "position": "top",
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-shop-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 4,
+          "per_page": 12,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ]
+  }
+}

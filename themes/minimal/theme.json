@@ -1,0 +1,310 @@
+{
+  "schema_version": "1.0",
+  "slug": "minimal",
+  "name": "Apex Minimal",
+  "version": "1.0.0",
+  "description": "Ultra-clean monochromatic design with sharp geometry, refined whitespace, and pure focus.",
+  "category": "minimal",
+  "is_built_in": 0,
+  "settings": {
+    "colors": {
+      "primary": "#18181B",
+      "secondary": "#52525B",
+      "accent": "#000000",
+      "background": "#FFFFFF",
+      "surface": "#F4F4F5",
+      "text": "#18181B",
+      "text_muted": "#71717A",
+      "border": "#E4E4E7"
+    },
+    "fonts": {
+      "heading": "Inter",
+      "body": "Inter"
+    },
+    "layout": {
+      "container_width": "1240px",
+      "section_spacing": "48px",
+      "border_radius": "2px",
+      "button_radius": "2px"
+    },
+    "logo": {
+      "type": "text",
+      "text": "MINIMAL",
+      "color": "#18181B"
+    }
+  },
+  "sections": [
+    {
+      "id": "min-announcement",
+      "type": "announcement",
+      "variant": "minimal",
+      "enabled": true,
+      "settings": {
+        "text": "Complimentary worldwide shipping on orders over $75",
+        "link": "/shop",
+        "dismissible": true
+      }
+    },
+    {
+      "id": "min-header",
+      "type": "header",
+      "variant": "classic",
+      "enabled": true,
+      "settings": {
+        "logo_text": "MINIMAL",
+        "sticky": true,
+        "show_search": true,
+        "show_cart": true,
+        "show_account": true
+      }
+    },
+    {
+      "id": "min-hero",
+      "type": "hero",
+      "variant": "split",
+      "enabled": true,
+      "settings": {
+        "heading": "Simplicity in Every Detail",
+        "subheading": "Essential objects designed with precision, intentionality, and quiet elegance.",
+        "cta_text": "Shop Collection",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "min-products",
+      "type": "product_grid",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Curated Essentials",
+        "subheading": "Refined everyday staples made to last",
+        "columns": 3,
+        "rows": 2,
+        "show_price": true,
+        "show_rating": true,
+        "show_add_to_cart": true
+      }
+    },
+    {
+      "id": "min-image-text",
+      "type": "image_text",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Crafted With Restraint",
+        "text": "Every seam, edge, and contour serves a deliberate purpose. Free of superficial clutter, our collection lets quality speak.",
+        "cta_text": "Our Philosophy",
+        "cta_link": "/about",
+        "image_url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "min-footer",
+      "type": "footer",
+      "variant": "minimal",
+      "enabled": true,
+      "settings": {
+        "logo_text": "MINIMAL",
+        "copyright": "© 2026 Minimal Storefront. All rights reserved."
+      }
+    }
+  ],
+  "page_defaults": {
+    "product": [
+      {
+        "id": "pd-product-gallery",
+        "type": "product_gallery",
+        "variant": "classic",
+        "enabled": true,
+        "settings": {
+          "layout": "carousel",
+          "thumbnails_position": "bottom",
+          "zoom": "on"
+        }
+      },
+      {
+        "id": "pd-product-info",
+        "type": "product_info",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_sku": true,
+          "show_brand": true,
+          "show_rating": true,
+          "show_compare": true,
+          "show_wishlist": true,
+          "button_text": "Add to Cart",
+          "button_style": "primary"
+        }
+      },
+      {
+        "id": "pd-product-tabs",
+        "type": "product_tabs",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "default_tab": "description"
+        }
+      },
+      {
+        "id": "pd-product-reviews",
+        "type": "product_reviews_section",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "heading": "Customer Reviews",
+          "reviews_app_id": "auto",
+          "show_summary": true,
+          "show_form": true
+        }
+      },
+      {
+        "id": "pd-product-related",
+        "type": "product_related",
+        "variant": "grid",
+        "enabled": true,
+        "settings": {
+          "heading": "You May Also Like",
+          "max_products": 4,
+          "columns": 4
+        }
+      }
+    ],
+    "category": [
+      {
+        "id": "pd-category-header",
+        "type": "category_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "show_description": true,
+          "layout": "simple"
+        }
+      },
+      {
+        "id": "pd-category-filters",
+        "type": "category_filters",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "position": "sidebar",
+          "sticky": true,
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-category-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 3,
+          "per_page": 9,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ],
+    "cart": [
+      {
+        "id": "pd-cart-layout",
+        "type": "cart_page_layout",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_coupon": true,
+          "show_estimated_shipping": true,
+          "layout": "standard"
+        }
+      }
+    ],
+    "checkout": [
+      {
+        "id": "pd-checkout-layout",
+        "type": "checkout_page_layout",
+        "variant": "single_page",
+        "enabled": true,
+        "settings": {
+          "show_order_notes": true,
+          "layout": "single_page"
+        }
+      }
+    ],
+    "account": [
+      {
+        "id": "pd-account-dashboard",
+        "type": "account_dashboard",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "show_orders": true,
+          "show_addresses": true,
+          "show_profile": true,
+          "layout": "sidebar"
+        }
+      }
+    ],
+    "page": [
+      {
+        "id": "pd-page-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "center"
+        }
+      },
+      {
+        "id": "pd-page-content",
+        "type": "page_content",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "max_width": "max-w-4xl",
+          "padding_y": "py-8"
+        }
+      }
+    ],
+    "shop": [
+      {
+        "id": "pd-shop-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "left"
+        }
+      },
+      {
+        "id": "pd-shop-filters",
+        "type": "category_filters",
+        "variant": "horizontal",
+        "enabled": true,
+        "settings": {
+          "position": "top",
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-shop-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 4,
+          "per_page": 12,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ]
+  }
+}

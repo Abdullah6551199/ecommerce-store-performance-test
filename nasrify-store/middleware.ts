@@ -68,6 +68,19 @@ function addNoStoreHeaders(response: NextResponse): NextResponse {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // 0. Theme preview mode: strictly bypass edge cache and pass preview header
+  const previewTheme = request.nextUrl.searchParams.get("preview_theme");
+  if (previewTheme) {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-preview-theme", previewTheme);
+    const response = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+    return addNoStoreHeaders(response);
+  }
+
   // 1. Private routes: strictly bypass cache and forbid CDN storage
   if (isPrivateRoute(pathname)) {
     return addNoStoreHeaders(NextResponse.next());

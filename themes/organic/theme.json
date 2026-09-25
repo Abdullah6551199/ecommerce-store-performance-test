@@ -1,0 +1,338 @@
+{
+  "schema_version": "1.0",
+  "slug": "organic",
+  "name": "Verdant Organic",
+  "version": "1.0.0",
+  "description": "Earthy botanical tones, forest greens, warm cream background, and warm serif headings.",
+  "category": "organic",
+  "is_built_in": 0,
+  "settings": {
+    "colors": {
+      "primary": "#166534",
+      "secondary": "#15803D",
+      "accent": "#D97706",
+      "background": "#FEFCE8",
+      "surface": "#FEF9C3",
+      "text": "#1C1917",
+      "text_muted": "#713F12",
+      "border": "#EAB308"
+    },
+    "fonts": {
+      "heading": "Lora",
+      "body": "Open Sans"
+    },
+    "layout": {
+      "container_width": "1280px",
+      "section_spacing": "80px",
+      "border_radius": "12px",
+      "button_radius": "12px"
+    },
+    "logo": {
+      "type": "text",
+      "text": "VERDANT & EARTH",
+      "color": "#166534"
+    }
+  },
+  "sections": [
+    {
+      "id": "org-announcement",
+      "type": "announcement",
+      "variant": "minimal",
+      "enabled": true,
+      "settings": {
+        "text": "100% Certified Organic • Carbon Negative Shipping",
+        "link": "/about",
+        "dismissible": true
+      }
+    },
+    {
+      "id": "org-header",
+      "type": "header",
+      "variant": "classic",
+      "enabled": true,
+      "settings": {
+        "logo_text": "VERDANT & EARTH",
+        "sticky": true,
+        "show_search": true,
+        "show_cart": true,
+        "show_account": true
+      }
+    },
+    {
+      "id": "org-hero",
+      "type": "hero",
+      "variant": "split",
+      "enabled": true,
+      "settings": {
+        "heading": "Nurtured by Nature, Bottled for You",
+        "subheading": "Wildcrafted botanicals, regenerative farming, and clean formulations free of synthetic additives.",
+        "cta_text": "Shop Farm Fresh",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "org-image-text",
+      "type": "image_text",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "From Soil to Shelf",
+        "text": "We work directly with certified organic growers, ensuring fair wages, non-GMO seeds, and restorative agriculture.",
+        "cta_text": "Meet Our Growers",
+        "cta_link": "/about",
+        "image_url": "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1200&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "org-categories",
+      "type": "categories",
+      "variant": "grid",
+      "enabled": true,
+      "settings": {
+        "heading": "Pantry & Wellness",
+        "columns": 3
+      }
+    },
+    {
+      "id": "org-products",
+      "type": "product_grid",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Seasonal Harvest",
+        "columns": 3,
+        "rows": 2,
+        "show_price": true,
+        "show_rating": true,
+        "show_add_to_cart": true
+      }
+    },
+    {
+      "id": "org-testimonials",
+      "type": "testimonials",
+      "variant": "cards",
+      "enabled": true,
+      "settings": {
+        "heading": "From Our Community"
+      }
+    },
+    {
+      "id": "org-newsletter",
+      "type": "newsletter",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Join the Regenerative Living Club",
+        "subheading": "Receive weekly farm recipes, wellness guides, and 15% off your first harvest box."
+      }
+    },
+    {
+      "id": "org-footer",
+      "type": "footer",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "logo_text": "VERDANT & EARTH",
+        "copyright": "© 2026 Verdant Organics Co."
+      }
+    }
+  ],
+  "page_defaults": {
+    "product": [
+      {
+        "id": "pd-product-gallery",
+        "type": "product_gallery",
+        "variant": "classic",
+        "enabled": true,
+        "settings": {
+          "layout": "carousel",
+          "thumbnails_position": "bottom",
+          "zoom": "on"
+        }
+      },
+      {
+        "id": "pd-product-info",
+        "type": "product_info",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_sku": true,
+          "show_brand": true,
+          "show_rating": true,
+          "show_compare": true,
+          "show_wishlist": true,
+          "button_text": "Add to Cart",
+          "button_style": "primary"
+        }
+      },
+      {
+        "id": "pd-product-tabs",
+        "type": "product_tabs",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "default_tab": "description"
+        }
+      },
+      {
+        "id": "pd-product-reviews",
+        "type": "product_reviews_section",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "heading": "Customer Reviews",
+          "reviews_app_id": "auto",
+          "show_summary": true,
+          "show_form": true
+        }
+      },
+      {
+        "id": "pd-product-related",
+        "type": "product_related",
+        "variant": "grid",
+        "enabled": true,
+        "settings": {
+          "heading": "You May Also Like",
+          "max_products": 4,
+          "columns": 4
+        }
+      }
+    ],
+    "category": [
+      {
+        "id": "pd-category-header",
+        "type": "category_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "show_description": true,
+          "layout": "simple"
+        }
+      },
+      {
+        "id": "pd-category-filters",
+        "type": "category_filters",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "position": "sidebar",
+          "sticky": true,
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-category-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 3,
+          "per_page": 9,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ],
+    "cart": [
+      {
+        "id": "pd-cart-layout",
+        "type": "cart_page_layout",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_coupon": true,
+          "show_estimated_shipping": true,
+          "layout": "standard"
+        }
+      }
+    ],
+    "checkout": [
+      {
+        "id": "pd-checkout-layout",
+        "type": "checkout_page_layout",
+        "variant": "single_page",
+        "enabled": true,
+        "settings": {
+          "show_order_notes": true,
+          "layout": "single_page"
+        }
+      }
+    ],
+    "account": [
+      {
+        "id": "pd-account-dashboard",
+        "type": "account_dashboard",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "show_orders": true,
+          "show_addresses": true,
+          "show_profile": true,
+          "layout": "sidebar"
+        }
+      }
+    ],
+    "page": [
+      {
+        "id": "pd-page-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "center"
+        }
+      },
+      {
+        "id": "pd-page-content",
+        "type": "page_content",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "max_width": "max-w-4xl",
+          "padding_y": "py-8"
+        }
+      }
+    ],
+    "shop": [
+      {
+        "id": "pd-shop-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "left"
+        }
+      },
+      {
+        "id": "pd-shop-filters",
+        "type": "category_filters",
+        "variant": "horizontal",
+        "enabled": true,
+        "settings": {
+          "position": "top",
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-shop-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 4,
+          "per_page": 12,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ]
+  }
+}

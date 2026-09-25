@@ -1,0 +1,316 @@
+{
+  "schema_version": "1.0",
+  "slug": "bold",
+  "name": "Apex Bold",
+  "version": "1.0.0",
+  "description": "High-contrast dark mode with neon amber accents, punchy typography, and statement hero banners.",
+  "category": "bold",
+  "is_built_in": 0,
+  "settings": {
+    "colors": {
+      "primary": "#F59E0B",
+      "secondary": "#D97706",
+      "accent": "#FBBF24",
+      "background": "#09090B",
+      "surface": "#18181B",
+      "text": "#FAFAFA",
+      "text_muted": "#A1A1AA",
+      "border": "#27272A"
+    },
+    "fonts": {
+      "heading": "Space Grotesk",
+      "body": "Inter"
+    },
+    "layout": {
+      "container_width": "1320px",
+      "section_spacing": "80px",
+      "border_radius": "0px",
+      "button_radius": "0px"
+    },
+    "logo": {
+      "type": "text",
+      "text": "BOLD.",
+      "color": "#F59E0B"
+    }
+  },
+  "sections": [
+    {
+      "id": "bold-header",
+      "type": "header",
+      "variant": "minimal",
+      "enabled": true,
+      "settings": {
+        "logo_text": "BOLD.",
+        "sticky": true,
+        "show_search": true,
+        "show_cart": true,
+        "show_account": true
+      }
+    },
+    {
+      "id": "bold-hero",
+      "type": "hero",
+      "variant": "fullscreen",
+      "enabled": true,
+      "settings": {
+        "heading": "UNCOMPROMISING SPEED & IMPACT",
+        "subheading": "Engineered for those who make bold moves. Next-generation apparel and gear.",
+        "cta_text": "EXPLORE NOW",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=1600&auto=format&fit=crop",
+        "height": "650px",
+        "overlay_opacity": 0.65
+      }
+    },
+    {
+      "id": "bold-carousel",
+      "type": "product_carousel",
+      "variant": "scroll",
+      "enabled": true,
+      "settings": {
+        "heading": "HEAVY HITTERS",
+        "show_arrows": true
+      }
+    },
+    {
+      "id": "bold-banner",
+      "type": "banner",
+      "variant": "full_width",
+      "enabled": true,
+      "settings": {
+        "heading": "NO COMPROMISES. NO LIMITS.",
+        "text": "Limited release drops available exclusively online while supplies last.",
+        "cta_text": "GRAB YOURS",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1600&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "bold-testimonials",
+      "type": "testimonials",
+      "variant": "cards",
+      "enabled": true,
+      "settings": {
+        "heading": "WHAT THE CREW SAYS"
+      }
+    },
+    {
+      "id": "bold-newsletter",
+      "type": "newsletter",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "JOIN THE REBELLION",
+        "subheading": "First dibs on private drops and exclusive offers.",
+        "button_text": "SUBSCRIBE"
+      }
+    },
+    {
+      "id": "bold-footer",
+      "type": "footer",
+      "variant": "expanded",
+      "enabled": true,
+      "settings": {
+        "logo_text": "BOLD.",
+        "copyright": "© 2026 BOLD Retail Inc."
+      }
+    }
+  ],
+  "page_defaults": {
+    "product": [
+      {
+        "id": "pd-product-gallery",
+        "type": "product_gallery",
+        "variant": "classic",
+        "enabled": true,
+        "settings": {
+          "layout": "carousel",
+          "thumbnails_position": "bottom",
+          "zoom": "on"
+        }
+      },
+      {
+        "id": "pd-product-info",
+        "type": "product_info",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_sku": true,
+          "show_brand": true,
+          "show_rating": true,
+          "show_compare": true,
+          "show_wishlist": true,
+          "button_text": "Add to Cart",
+          "button_style": "primary"
+        }
+      },
+      {
+        "id": "pd-product-tabs",
+        "type": "product_tabs",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "default_tab": "description"
+        }
+      },
+      {
+        "id": "pd-product-reviews",
+        "type": "product_reviews_section",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "heading": "Customer Reviews",
+          "reviews_app_id": "auto",
+          "show_summary": true,
+          "show_form": true
+        }
+      },
+      {
+        "id": "pd-product-related",
+        "type": "product_related",
+        "variant": "grid",
+        "enabled": true,
+        "settings": {
+          "heading": "You May Also Like",
+          "max_products": 4,
+          "columns": 4
+        }
+      }
+    ],
+    "category": [
+      {
+        "id": "pd-category-header",
+        "type": "category_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "show_description": true,
+          "layout": "simple"
+        }
+      },
+      {
+        "id": "pd-category-filters",
+        "type": "category_filters",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "position": "sidebar",
+          "sticky": true,
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-category-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 3,
+          "per_page": 9,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ],
+    "cart": [
+      {
+        "id": "pd-cart-layout",
+        "type": "cart_page_layout",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_coupon": true,
+          "show_estimated_shipping": true,
+          "layout": "standard"
+        }
+      }
+    ],
+    "checkout": [
+      {
+        "id": "pd-checkout-layout",
+        "type": "checkout_page_layout",
+        "variant": "single_page",
+        "enabled": true,
+        "settings": {
+          "show_order_notes": true,
+          "layout": "single_page"
+        }
+      }
+    ],
+    "account": [
+      {
+        "id": "pd-account-dashboard",
+        "type": "account_dashboard",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "show_orders": true,
+          "show_addresses": true,
+          "show_profile": true,
+          "layout": "sidebar"
+        }
+      }
+    ],
+    "page": [
+      {
+        "id": "pd-page-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "center"
+        }
+      },
+      {
+        "id": "pd-page-content",
+        "type": "page_content",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "max_width": "max-w-4xl",
+          "padding_y": "py-8"
+        }
+      }
+    ],
+    "shop": [
+      {
+        "id": "pd-shop-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "left"
+        }
+      },
+      {
+        "id": "pd-shop-filters",
+        "type": "category_filters",
+        "variant": "horizontal",
+        "enabled": true,
+        "settings": {
+          "position": "top",
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-shop-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 4,
+          "per_page": 12,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ]
+  }
+}

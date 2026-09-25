@@ -1,0 +1,330 @@
+{
+  "schema_version": "1.0",
+  "slug": "luxury",
+  "name": "Maison Luxury",
+  "version": "1.0.0",
+  "description": "Refined editorial aesthetic with gold accents, warm cream tones, and bespoke masonry collections.",
+  "category": "luxury",
+  "is_built_in": 0,
+  "settings": {
+    "colors": {
+      "primary": "#D4A574",
+      "secondary": "#A27B5C",
+      "accent": "#E2C799",
+      "background": "#FDFCFB",
+      "surface": "#F7F5F0",
+      "text": "#1C1917",
+      "text_muted": "#78716C",
+      "border": "#E7E5E4"
+    },
+    "fonts": {
+      "heading": "Playfair Display",
+      "body": "Lato"
+    },
+    "layout": {
+      "container_width": "1280px",
+      "section_spacing": "96px",
+      "border_radius": "2px",
+      "button_radius": "2px"
+    },
+    "logo": {
+      "type": "text",
+      "text": "MAISON & CO.",
+      "color": "#D4A574"
+    }
+  },
+  "sections": [
+    {
+      "id": "lux-announcement",
+      "type": "announcement",
+      "variant": "solid",
+      "enabled": true,
+      "settings": {
+        "text": "Complimentary White Glove Delivery on Fine Goods",
+        "bg_color": "#D4A574",
+        "text_color": "#1C1917",
+        "link": "/shop",
+        "dismissible": false
+      }
+    },
+    {
+      "id": "lux-header",
+      "type": "header",
+      "variant": "centered",
+      "enabled": true,
+      "settings": {
+        "logo_text": "MAISON & CO.",
+        "sticky": false,
+        "show_search": true,
+        "show_cart": true,
+        "show_account": true
+      }
+    },
+    {
+      "id": "lux-hero",
+      "type": "hero",
+      "variant": "split",
+      "enabled": true,
+      "settings": {
+        "heading": "Timeless Elegance, Enduring Craft",
+        "subheading": "An exquisite curation of heritage craftsmanship, rare materials, and timeless aesthetic.",
+        "cta_text": "Discover Collection",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1200&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "lux-categories",
+      "type": "categories",
+      "variant": "masonry",
+      "enabled": true,
+      "settings": {
+        "heading": "Private Collections"
+      }
+    },
+    {
+      "id": "lux-products",
+      "type": "product_grid",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Curated Masterpieces",
+        "subheading": "Pieces designed to transcend fleeting seasonal trends",
+        "columns": 2,
+        "rows": 2,
+        "show_price": true,
+        "show_rating": true,
+        "show_add_to_cart": true
+      }
+    },
+    {
+      "id": "lux-image-text",
+      "type": "image_text",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Centuries of Heritage",
+        "text": "Every piece tells a storied lineage of artisanal mastery, hand-selected stones, and bespoke silhouettes.",
+        "cta_text": "Our Heritage",
+        "cta_link": "/about",
+        "image_url": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1200&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "lux-testimonials",
+      "type": "testimonials",
+      "variant": "quote",
+      "enabled": true,
+      "settings": {
+        "heading": "Patron Acclaim"
+      }
+    },
+    {
+      "id": "lux-footer",
+      "type": "footer",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "logo_text": "MAISON & CO.",
+        "copyright": "© 2026 Maison Luxury Group. All rights reserved."
+      }
+    }
+  ],
+  "page_defaults": {
+    "product": [
+      {
+        "id": "pd-product-gallery",
+        "type": "product_gallery",
+        "variant": "classic",
+        "enabled": true,
+        "settings": {
+          "layout": "carousel",
+          "thumbnails_position": "bottom",
+          "zoom": "on"
+        }
+      },
+      {
+        "id": "pd-product-info",
+        "type": "product_info",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_sku": true,
+          "show_brand": true,
+          "show_rating": true,
+          "show_compare": true,
+          "show_wishlist": true,
+          "button_text": "Add to Cart",
+          "button_style": "primary"
+        }
+      },
+      {
+        "id": "pd-product-tabs",
+        "type": "product_tabs",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "default_tab": "description"
+        }
+      },
+      {
+        "id": "pd-product-reviews",
+        "type": "product_reviews_section",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "heading": "Customer Reviews",
+          "reviews_app_id": "auto",
+          "show_summary": true,
+          "show_form": true
+        }
+      },
+      {
+        "id": "pd-product-related",
+        "type": "product_related",
+        "variant": "grid",
+        "enabled": true,
+        "settings": {
+          "heading": "You May Also Like",
+          "max_products": 4,
+          "columns": 4
+        }
+      }
+    ],
+    "category": [
+      {
+        "id": "pd-category-header",
+        "type": "category_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "show_description": true,
+          "layout": "simple"
+        }
+      },
+      {
+        "id": "pd-category-filters",
+        "type": "category_filters",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "position": "sidebar",
+          "sticky": true,
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-category-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 3,
+          "per_page": 9,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ],
+    "cart": [
+      {
+        "id": "pd-cart-layout",
+        "type": "cart_page_layout",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_coupon": true,
+          "show_estimated_shipping": true,
+          "layout": "standard"
+        }
+      }
+    ],
+    "checkout": [
+      {
+        "id": "pd-checkout-layout",
+        "type": "checkout_page_layout",
+        "variant": "single_page",
+        "enabled": true,
+        "settings": {
+          "show_order_notes": true,
+          "layout": "single_page"
+        }
+      }
+    ],
+    "account": [
+      {
+        "id": "pd-account-dashboard",
+        "type": "account_dashboard",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "show_orders": true,
+          "show_addresses": true,
+          "show_profile": true,
+          "layout": "sidebar"
+        }
+      }
+    ],
+    "page": [
+      {
+        "id": "pd-page-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "center"
+        }
+      },
+      {
+        "id": "pd-page-content",
+        "type": "page_content",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "max_width": "max-w-4xl",
+          "padding_y": "py-8"
+        }
+      }
+    ],
+    "shop": [
+      {
+        "id": "pd-shop-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "left"
+        }
+      },
+      {
+        "id": "pd-shop-filters",
+        "type": "category_filters",
+        "variant": "horizontal",
+        "enabled": true,
+        "settings": {
+          "position": "top",
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-shop-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 4,
+          "per_page": 12,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ]
+  }
+}

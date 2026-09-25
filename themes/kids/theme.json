@@ -1,0 +1,338 @@
+{
+  "schema_version": "1.0",
+  "slug": "kids",
+  "name": "Playful Kids",
+  "version": "1.0.0",
+  "description": "Joyful pastel theme with rounded shapes, bouncy typography, sunny colors, and whimsical layout.",
+  "category": "kids",
+  "is_built_in": 0,
+  "settings": {
+    "colors": {
+      "primary": "#EC4899",
+      "secondary": "#3B82F6",
+      "accent": "#EAB308",
+      "background": "#FFFDF0",
+      "surface": "#FCE7F3",
+      "text": "#1E293B",
+      "text_muted": "#64748B",
+      "border": "#FED7AA"
+    },
+    "fonts": {
+      "heading": "Nunito",
+      "body": "Poppins"
+    },
+    "layout": {
+      "container_width": "1280px",
+      "section_spacing": "56px",
+      "border_radius": "16px",
+      "button_radius": "16px"
+    },
+    "logo": {
+      "type": "text",
+      "text": "PLAYFUL & CO 🧸",
+      "color": "#EC4899"
+    }
+  },
+  "sections": [
+    {
+      "id": "kids-announcement",
+      "type": "announcement",
+      "variant": "gradient",
+      "enabled": true,
+      "settings": {
+        "text": "🎈 Sunshine Festival: Free Toy with Every Order Over $40! 🌟",
+        "link": "/shop",
+        "dismissible": true
+      }
+    },
+    {
+      "id": "kids-header",
+      "type": "header",
+      "variant": "classic",
+      "enabled": true,
+      "settings": {
+        "logo_text": "PLAYFUL & CO 🧸",
+        "sticky": true,
+        "show_search": true,
+        "show_cart": true,
+        "show_account": true
+      }
+    },
+    {
+      "id": "kids-hero",
+      "type": "hero",
+      "variant": "text_only",
+      "enabled": true,
+      "settings": {
+        "heading": "Where Big Imaginations Come to Play! ✨",
+        "subheading": "Safe, non-toxic toys, cozy organic clothing, and cheerful books crafted for curious little minds.",
+        "cta_text": "Explore Fun Store",
+        "cta_link": "/shop"
+      }
+    },
+    {
+      "id": "kids-categories",
+      "type": "categories",
+      "variant": "circle",
+      "enabled": true,
+      "settings": {
+        "heading": "Shop by Wonder World",
+        "columns": 3,
+        "image_style": "circle"
+      }
+    },
+    {
+      "id": "kids-products",
+      "type": "product_grid",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Little Explorer Favorites",
+        "columns": 3,
+        "rows": 2,
+        "show_price": true,
+        "show_rating": true,
+        "show_add_to_cart": true
+      }
+    },
+    {
+      "id": "kids-banner",
+      "type": "banner",
+      "variant": "boxed",
+      "enabled": true,
+      "settings": {
+        "heading": "100% Kid-Safe & Eco-Friendly Toys",
+        "text": "Tested for safety, certified non-toxic, and made to withstand endless playtime adventures.",
+        "cta_text": "Learn Safety Standards",
+        "cta_link": "/about",
+        "image_url": "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=1600&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "kids-testimonials",
+      "type": "testimonials",
+      "variant": "cards",
+      "enabled": true,
+      "settings": {
+        "heading": "Loved by Kids & Parents"
+      }
+    },
+    {
+      "id": "kids-newsletter",
+      "type": "newsletter",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Join the Little Explorers Club",
+        "subheading": "Fun printables, birthday surprises, and 10% off your next gift order."
+      }
+    },
+    {
+      "id": "kids-footer",
+      "type": "footer",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "logo_text": "PLAYFUL & CO 🧸",
+        "copyright": "© 2026 Playful Kids World Inc."
+      }
+    }
+  ],
+  "page_defaults": {
+    "product": [
+      {
+        "id": "pd-product-gallery",
+        "type": "product_gallery",
+        "variant": "classic",
+        "enabled": true,
+        "settings": {
+          "layout": "carousel",
+          "thumbnails_position": "bottom",
+          "zoom": "on"
+        }
+      },
+      {
+        "id": "pd-product-info",
+        "type": "product_info",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_sku": true,
+          "show_brand": true,
+          "show_rating": true,
+          "show_compare": true,
+          "show_wishlist": true,
+          "button_text": "Add to Cart",
+          "button_style": "primary"
+        }
+      },
+      {
+        "id": "pd-product-tabs",
+        "type": "product_tabs",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "default_tab": "description"
+        }
+      },
+      {
+        "id": "pd-product-reviews",
+        "type": "product_reviews_section",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "heading": "Customer Reviews",
+          "reviews_app_id": "auto",
+          "show_summary": true,
+          "show_form": true
+        }
+      },
+      {
+        "id": "pd-product-related",
+        "type": "product_related",
+        "variant": "grid",
+        "enabled": true,
+        "settings": {
+          "heading": "You May Also Like",
+          "max_products": 4,
+          "columns": 4
+        }
+      }
+    ],
+    "category": [
+      {
+        "id": "pd-category-header",
+        "type": "category_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "show_description": true,
+          "layout": "simple"
+        }
+      },
+      {
+        "id": "pd-category-filters",
+        "type": "category_filters",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "position": "sidebar",
+          "sticky": true,
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-category-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 3,
+          "per_page": 9,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ],
+    "cart": [
+      {
+        "id": "pd-cart-layout",
+        "type": "cart_page_layout",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_coupon": true,
+          "show_estimated_shipping": true,
+          "layout": "standard"
+        }
+      }
+    ],
+    "checkout": [
+      {
+        "id": "pd-checkout-layout",
+        "type": "checkout_page_layout",
+        "variant": "single_page",
+        "enabled": true,
+        "settings": {
+          "show_order_notes": true,
+          "layout": "single_page"
+        }
+      }
+    ],
+    "account": [
+      {
+        "id": "pd-account-dashboard",
+        "type": "account_dashboard",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "show_orders": true,
+          "show_addresses": true,
+          "show_profile": true,
+          "layout": "sidebar"
+        }
+      }
+    ],
+    "page": [
+      {
+        "id": "pd-page-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "center"
+        }
+      },
+      {
+        "id": "pd-page-content",
+        "type": "page_content",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "max_width": "max-w-4xl",
+          "padding_y": "py-8"
+        }
+      }
+    ],
+    "shop": [
+      {
+        "id": "pd-shop-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "left"
+        }
+      },
+      {
+        "id": "pd-shop-filters",
+        "type": "category_filters",
+        "variant": "horizontal",
+        "enabled": true,
+        "settings": {
+          "position": "top",
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-shop-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 4,
+          "per_page": 12,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ]
+  }
+}

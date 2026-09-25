@@ -11,7 +11,8 @@ import { CompareProvider } from "@/components/CompareContext";
 import "./globals.css";
 import StorefrontOverlays from "@/components/StorefrontOverlays";
 import StorefrontFloating from "@/components/apps/StorefrontFloating";
-import { getActiveTheme } from "@/lib/themes/loader";
+import { headers } from "next/headers";
+import { getActiveTheme, getThemeBySlug } from "@/lib/themes/loader";
 import { generateThemeVarsCss } from "@/lib/themes/css";
 import { getFontsInUse, getFontFaceCSS, getFontPreloadLinks } from "@/lib/themes/fonts";
 import StorefrontLayoutWrapper from "@/components/StorefrontLayoutWrapper";
@@ -95,6 +96,19 @@ export default async function RootLayout({
     getActiveTheme(),
   ]);
 
+  let previewThemeConfig = null;
+  try {
+    const headerList = await headers();
+    const previewSlug = headerList.get("x-preview-theme");
+    if (previewSlug) {
+      previewThemeConfig = await getThemeBySlug(previewSlug);
+    }
+  } catch (_e) {
+    // Non-fatal
+  }
+
+  const effectiveThemeConfig = previewThemeConfig || activeThemeConfig;
+
   // Synchronize dynamic appearance overrides into store settings if provided
   const mergedSettings = {
     ...settings,
@@ -103,8 +117,8 @@ export default async function RootLayout({
   };
 
   const themeCss = generateThemeCss(theme);
-  const activeThemeCss = generateThemeVarsCss(activeThemeConfig);
-  const fontsInUse = getFontsInUse(activeThemeConfig);
+  const activeThemeCss = generateThemeVarsCss(effectiveThemeConfig);
+  const fontsInUse = getFontsInUse(effectiveThemeConfig);
   const fontFaceCss = getFontFaceCSS(fontsInUse);
   const preloadLinks = getFontPreloadLinks(fontsInUse);
 
@@ -158,7 +172,7 @@ export default async function RootLayout({
                     legacyHeader={
                       <Header
                         id="layout-header"
-                        themeSettings={activeThemeConfig.settings}
+                        themeSettings={effectiveThemeConfig.settings}
                         settings={{
                           logo_text: mergedSettings.storeName,
                           logo_url: mergedSettings.logoUrl,
@@ -168,7 +182,7 @@ export default async function RootLayout({
                     legacyFooter={
                       <Footer
                         id="layout-footer"
-                        themeSettings={activeThemeConfig.settings}
+                        themeSettings={effectiveThemeConfig.settings}
                         settings={{
                           logo_text: mergedSettings.storeName,
                         }}

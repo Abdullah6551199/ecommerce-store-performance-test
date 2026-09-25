@@ -1,0 +1,343 @@
+{
+  "schema_version": "1.0",
+  "slug": "tech",
+  "name": "Nexus Tech",
+  "version": "1.0.0",
+  "description": "Futuristic dark slate palette, electric cyan highlights, sleek sticky header, and dense grid layouts.",
+  "category": "tech",
+  "is_built_in": 0,
+  "settings": {
+    "colors": {
+      "primary": "#0EA5E9",
+      "secondary": "#0284C7",
+      "accent": "#38BDF8",
+      "background": "#0F172A",
+      "surface": "#1E293B",
+      "text": "#F8FAFC",
+      "text_muted": "#94A3B8",
+      "border": "#334155"
+    },
+    "fonts": {
+      "heading": "Inter",
+      "body": "Inter"
+    },
+    "layout": {
+      "container_width": "1320px",
+      "section_spacing": "64px",
+      "border_radius": "8px",
+      "button_radius": "8px"
+    },
+    "logo": {
+      "type": "text",
+      "text": "NEXUS // TECH",
+      "color": "#0EA5E9"
+    }
+  },
+  "sections": [
+    {
+      "id": "tech-announcement",
+      "type": "announcement",
+      "variant": "gradient",
+      "enabled": true,
+      "settings": {
+        "text": "Cyber Week: 25% Off Hardware Ecosystem with Code NEXUS25",
+        "link": "/shop",
+        "dismissible": true
+      }
+    },
+    {
+      "id": "tech-header",
+      "type": "header",
+      "variant": "classic",
+      "enabled": true,
+      "settings": {
+        "logo_text": "NEXUS // TECH",
+        "sticky": true,
+        "show_search": true,
+        "show_cart": true,
+        "show_account": true
+      }
+    },
+    {
+      "id": "tech-hero",
+      "type": "hero",
+      "variant": "fullscreen",
+      "enabled": true,
+      "settings": {
+        "heading": "NEXT-GEN HARDWARE ARCHITECTURE",
+        "subheading": "High-performance compute, neural peripherals, and edge devices built for power creators.",
+        "cta_text": "Discover Hardware",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1600&auto=format&fit=crop",
+        "height": "640px",
+        "overlay_opacity": 0.6
+      }
+    },
+    {
+      "id": "tech-products",
+      "type": "product_grid",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Flagship Gear",
+        "columns": 4,
+        "rows": 2,
+        "show_price": true,
+        "show_rating": true,
+        "show_add_to_cart": true
+      }
+    },
+    {
+      "id": "tech-banner",
+      "type": "banner",
+      "variant": "boxed",
+      "enabled": true,
+      "settings": {
+        "heading": "Engineered for Overclockers",
+        "text": "Zero thermal throttling. Unprecedented throughput. Backed by a 5-year hardware guarantee.",
+        "cta_text": "Spec Sheet",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1526738549149-8e07eca6c147?q=80&w=1600&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "tech-image-text",
+      "type": "image_text",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Precision CNC Aluminum & Graphene",
+        "text": "Every enclosure is milled from aerospace-grade 6061 alloy with integrated graphene heat dissipators.",
+        "cta_text": "Architecture Docs",
+        "cta_link": "/about",
+        "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "tech-testimonials",
+      "type": "testimonials",
+      "variant": "grid",
+      "enabled": true,
+      "settings": {
+        "heading": "Verified Engineers"
+      }
+    },
+    {
+      "id": "tech-newsletter",
+      "type": "newsletter",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "NEXUS FIRMWARE DISPATCH",
+        "subheading": "Receive developer updates, patch notes, and hardware launch schedules."
+      }
+    },
+    {
+      "id": "tech-footer",
+      "type": "footer",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "logo_text": "NEXUS // TECH",
+        "copyright": "© 2026 Nexus Hardware Labs Inc."
+      }
+    }
+  ],
+  "page_defaults": {
+    "product": [
+      {
+        "id": "pd-product-gallery",
+        "type": "product_gallery",
+        "variant": "classic",
+        "enabled": true,
+        "settings": {
+          "layout": "carousel",
+          "thumbnails_position": "bottom",
+          "zoom": "on"
+        }
+      },
+      {
+        "id": "pd-product-info",
+        "type": "product_info",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_sku": true,
+          "show_brand": true,
+          "show_rating": true,
+          "show_compare": true,
+          "show_wishlist": true,
+          "button_text": "Add to Cart",
+          "button_style": "primary"
+        }
+      },
+      {
+        "id": "pd-product-tabs",
+        "type": "product_tabs",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "default_tab": "description"
+        }
+      },
+      {
+        "id": "pd-product-reviews",
+        "type": "product_reviews_section",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "heading": "Customer Reviews",
+          "reviews_app_id": "auto",
+          "show_summary": true,
+          "show_form": true
+        }
+      },
+      {
+        "id": "pd-product-related",
+        "type": "product_related",
+        "variant": "grid",
+        "enabled": true,
+        "settings": {
+          "heading": "You May Also Like",
+          "max_products": 4,
+          "columns": 4
+        }
+      }
+    ],
+    "category": [
+      {
+        "id": "pd-category-header",
+        "type": "category_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "show_description": true,
+          "layout": "simple"
+        }
+      },
+      {
+        "id": "pd-category-filters",
+        "type": "category_filters",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "position": "sidebar",
+          "sticky": true,
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-category-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 3,
+          "per_page": 9,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ],
+    "cart": [
+      {
+        "id": "pd-cart-layout",
+        "type": "cart_page_layout",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_coupon": true,
+          "show_estimated_shipping": true,
+          "layout": "standard"
+        }
+      }
+    ],
+    "checkout": [
+      {
+        "id": "pd-checkout-layout",
+        "type": "checkout_page_layout",
+        "variant": "single_page",
+        "enabled": true,
+        "settings": {
+          "show_order_notes": true,
+          "layout": "single_page"
+        }
+      }
+    ],
+    "account": [
+      {
+        "id": "pd-account-dashboard",
+        "type": "account_dashboard",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "show_orders": true,
+          "show_addresses": true,
+          "show_profile": true,
+          "layout": "sidebar"
+        }
+      }
+    ],
+    "page": [
+      {
+        "id": "pd-page-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "center"
+        }
+      },
+      {
+        "id": "pd-page-content",
+        "type": "page_content",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "max_width": "max-w-4xl",
+          "padding_y": "py-8"
+        }
+      }
+    ],
+    "shop": [
+      {
+        "id": "pd-shop-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "left"
+        }
+      },
+      {
+        "id": "pd-shop-filters",
+        "type": "category_filters",
+        "variant": "horizontal",
+        "enabled": true,
+        "settings": {
+          "position": "top",
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-shop-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 4,
+          "per_page": 12,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ]
+  }
+}

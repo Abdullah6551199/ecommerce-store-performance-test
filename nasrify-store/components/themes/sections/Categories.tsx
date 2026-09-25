@@ -31,6 +31,58 @@ export default function Categories({
 
   const gridClass = colClasses[columns] || colClasses[4];
 
+  if (variant === "masonry") {
+    return (
+      <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
+            {heading}
+          </h2>
+          <Link
+            href="/shop"
+            className="text-sm font-semibold text-[var(--theme-accent,#2563EB)] hover:underline inline-flex items-center gap-1"
+          >
+            All collections &rarr;
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[240px]">
+          {categoriesList.slice(0, 5).map((category, idx) => {
+            const isSpan = idx === 0 || idx === 3;
+            return (
+              <Link
+                key={category.id}
+                href={`/category/${category.slug}`}
+                className={`group relative overflow-hidden rounded-[var(--theme-radius,8px)] shadow-md flex items-end p-6 ${
+                  isSpan ? "md:col-span-2" : "md:col-span-1"
+                }`}
+              >
+                <Image
+                  src={
+                    category.imageUrl ||
+                    "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=800&auto=format&fit=crop"
+                  }
+                  alt={category.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                <div className="relative z-10 text-white">
+                  <h3 className="font-bold text-xl sm:text-2xl font-[family-name:var(--theme-font-heading)]">
+                    {category.name}
+                  </h3>
+                  <span className="text-xs uppercase tracking-wider font-semibold opacity-80 group-hover:opacity-100 transition-opacity">
+                    Explore &rarr;
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
+
   if (variant === "list") {
     return (
       <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

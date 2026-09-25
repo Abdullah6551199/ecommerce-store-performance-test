@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import type { ThemeMarketplaceListing, ThemeConfig } from "@/types/themes";
 
 interface ThemeMockupPreviewProps {
   theme: ThemeMarketplaceListing | {
     name: string;
     themeId: string;
+    slug?: string | null;
     author?: string | null;
     version?: string;
     configJson?: string | null;
@@ -17,51 +18,83 @@ interface ThemeMockupPreviewProps {
   isModal?: boolean;
 }
 
-export function ThemeMockupPreview({ theme, onClose, isModal = false }: ThemeMockupPreviewProps): React.JSX.Element {
+export function ThemeMockupPreview({
+  theme,
+  onClose,
+  isModal = false,
+}: ThemeMockupPreviewProps): React.JSX.Element {
   const [device, setDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
+  const [isLoading, setIsLoading] = useState(true);
+  const [iframeKey, setIframeKey] = useState(0);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  let config: ThemeConfig = {};
-  if (theme.configJson) {
-    try {
-      config = JSON.parse(theme.configJson);
-    } catch {
-      config = {};
-    }
-  }
-
-  const primaryColor = config.colors?.primary || "#780AC2";
-  const secondaryColor = config.colors?.secondary || "#960DF2";
-  const accentColor = config.colors?.accent || "#C06EF7";
-  const bgColor = config.colors?.background || "#FAFAFA";
-  const surfaceColor = config.colors?.surface || "#FFFFFF";
-  const textColor = config.colors?.text || "#18181B";
-  const headingFont = config.typography?.headingFont || "inherit";
-  const bodyFont = config.typography?.bodyFont || "inherit";
-  const borderRadius = config.layout?.borderRadius || "12px";
+  const storefrontBase =
+    process.env.NEXT_PUBLIC_STOREFRONT_URL || "https://nasrify-store.zia291930.workers.dev";
+  const themeSlug =
+    ("slug" in theme && theme.slug) ? theme.slug : theme.themeId;
+  const previewUrl = `${storefrontBase}/?preview_theme=${encodeURIComponent(themeSlug)}`;
 
   const containerWidthClass =
-    device === "mobile" ? "max-w-[375px]" : device === "tablet" ? "max-w-[680px]" : "max-w-full";
+    device === "mobile"
+      ? "w-[375px] max-w-full"
+      : device === "tablet"
+      ? "w-[768px] max-w-full"
+      : "w-full max-w-full";
+
+  const handleRefresh = () => {
+    setIsLoading(true);
+    setIframeKey((prev) => prev + 1);
+  };
 
   const content = (
     <div className="flex flex-col h-full bg-zinc-100 dark:bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-xl">
-      {/* Browser chrome header */}
-      <div className="bg-zinc-200/80 dark:bg-zinc-800/90 px-4 py-2.5 flex items-center justify-between border-b border-zinc-300 dark:border-zinc-700 select-none">
-        <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded-full bg-rose-500 inline-block" />
-          <span className="h-3 w-3 rounded-full bg-amber-500 inline-block" />
-          <span className="h-3 w-3 rounded-full bg-emerald-500 inline-block" />
-          <span className="text-xs text-zinc-500 dark:text-zinc-400 font-mono ml-2 truncate max-w-[200px]">
-            preview.nasrify.com/{theme.themeId}
-          </span>
+      {/* Browser Chrome Header */}
+      <div className="bg-zinc-200/90 dark:bg-zinc-800/90 px-4 py-2.5 flex flex-wrap items-center justify-between border-b border-zinc-300 dark:border-zinc-700 select-none gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="h-3 w-3 rounded-full bg-rose-500 inline-block" />
+            <span className="h-3 w-3 rounded-full bg-amber-500 inline-block" />
+            <span className="h-3 w-3 rounded-full bg-emerald-500 inline-block" />
+          </div>
+
+          {/* Simulated address bar */}
+          <div className="flex items-center gap-2 bg-white dark:bg-zinc-900 px-3 py-1 rounded-md border border-zinc-300 dark:border-zinc-700 text-xs text-zinc-600 dark:text-zinc-300 font-mono ml-2 max-w-xs sm:max-w-md truncate shadow-2xs">
+            <span className="text-emerald-500 shrink-0">🔒</span>
+            <span className="truncate">
+              nasrify-store.workers.dev/?preview_theme={themeSlug}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleRefresh}
+            title="Reload preview"
+            className="p-1 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-colors text-xs"
+          >
+            🔄
+          </button>
+
+          <a
+            href={previewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Open in new window"
+            className="p-1 rounded text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-300/50 dark:hover:bg-zinc-700/50 transition-colors text-xs flex items-center gap-1"
+          >
+            <span>↗</span>
+            <span className="hidden md:inline text-[11px] font-sans font-medium">Full Tab</span>
+          </a>
         </div>
 
         {/* Device toggle */}
-        <div className="flex items-center gap-1 bg-zinc-300/60 dark:bg-zinc-700/60 p-1 rounded-lg">
+        <div className="flex items-center gap-1 bg-zinc-300/70 dark:bg-zinc-700/70 p-1 rounded-lg">
           <button
             type="button"
             onClick={() => setDevice("desktop")}
-            className={`px-2 py-0.5 text-xs font-semibold rounded ${
-              device === "desktop" ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm" : "text-zinc-600 dark:text-zinc-300"
+            className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
+              device === "desktop"
+                ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs"
+                : "text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white"
             }`}
           >
             🖥️ Desktop
@@ -69,8 +102,10 @@ export function ThemeMockupPreview({ theme, onClose, isModal = false }: ThemeMoc
           <button
             type="button"
             onClick={() => setDevice("tablet")}
-            className={`px-2 py-0.5 text-xs font-semibold rounded ${
-              device === "tablet" ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm" : "text-zinc-600 dark:text-zinc-300"
+            className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
+              device === "tablet"
+                ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs"
+                : "text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white"
             }`}
           >
             📱 Tablet
@@ -78,8 +113,10 @@ export function ThemeMockupPreview({ theme, onClose, isModal = false }: ThemeMoc
           <button
             type="button"
             onClick={() => setDevice("mobile")}
-            className={`px-2 py-0.5 text-xs font-semibold rounded ${
-              device === "mobile" ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm" : "text-zinc-600 dark:text-zinc-300"
+            className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all ${
+              device === "mobile"
+                ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs"
+                : "text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white"
             }`}
           >
             📲 Mobile
@@ -97,223 +134,30 @@ export function ThemeMockupPreview({ theme, onClose, isModal = false }: ThemeMoc
         )}
       </div>
 
-      {/* Simulated Storefront Container */}
-      <div className="p-4 sm:p-6 overflow-y-auto flex-1 flex justify-center bg-zinc-200/50 dark:bg-zinc-950/50">
+      {/* Live Storefront Iframe Container */}
+      <div className="p-2 sm:p-4 overflow-hidden flex-1 flex justify-center bg-zinc-200/50 dark:bg-zinc-950/50 relative">
         <div
-          className={`w-full transition-all duration-300 ${containerWidthClass} shadow-2xl rounded-2xl overflow-hidden border border-black/5`}
-          style={{
-            backgroundColor: bgColor,
-            color: textColor,
-            fontFamily: bodyFont,
-          }}
+          className={`h-full transition-all duration-300 ${containerWidthClass} shadow-2xl rounded-xl overflow-hidden border border-zinc-300 dark:border-zinc-800 bg-white relative flex flex-col`}
         >
-          {/* Top Announcement Bar */}
-          <div
-            className="px-4 py-2 text-center text-xs font-medium text-white transition-colors"
-            style={{ backgroundColor: primaryColor }}
-          >
-            Free worldwide shipping on orders over $50 • Previewing <strong>{theme.name}</strong>
-          </div>
-
-          {/* Storefront Header */}
-          <header
-            className="px-6 py-4 flex items-center justify-between border-b"
-            style={{
-              backgroundColor: surfaceColor,
-              borderColor: "rgba(0,0,0,0.08)",
-            }}
-          >
-            <div className="flex items-center gap-3">
-              <span
-                className="h-8 w-8 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-sm"
-                style={{ backgroundColor: primaryColor, borderRadius }}
-              >
-                ✦
-              </span>
-              <span
-                className="font-extrabold text-lg tracking-tight"
-                style={{ fontFamily: headingFont }}
-              >
-                APEX STORE
+          {isLoading && (
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xs transition-opacity">
+              <div className="w-8 h-8 border-3 border-purple-600 border-t-transparent rounded-full animate-spin mb-3" />
+              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
+                Rendering {theme.name} live from storefront...
               </span>
             </div>
-            <nav className="hidden sm:flex items-center gap-6 text-xs font-semibold opacity-80">
-              <span className="hover:opacity-100 cursor-pointer">Shop</span>
-              <span className="hover:opacity-100 cursor-pointer">Collections</span>
-              <span className="hover:opacity-100 cursor-pointer">Stories</span>
-            </nav>
-            <div className="flex items-center gap-3">
-              <span
-                className="px-3 py-1.5 text-xs font-bold rounded-lg cursor-pointer text-white shadow-sm"
-                style={{ backgroundColor: primaryColor, borderRadius }}
-              >
-                Bag (2)
-              </span>
-            </div>
-          </header>
+          )}
 
-          {/* Hero Banner */}
-          <section className="p-6 sm:p-10 text-center relative overflow-hidden">
-            <div
-              className="inline-block px-3 py-1 text-[11px] font-bold uppercase tracking-wider mb-4 rounded-full"
-              style={{
-                backgroundColor: `${primaryColor}15`,
-                color: primaryColor,
-              }}
-            >
-              {theme.category || "Featured Collection"} Edition
-            </div>
-            <h1
-              className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3"
-              style={{ fontFamily: headingFont }}
-            >
-              Designed for Speed &amp; Elegance.
-            </h1>
-            <p className="text-xs sm:text-sm max-w-md mx-auto opacity-75 mb-6">
-              Experience edge-speed retail rendered instantly across 300+ global Cloudflare locations.
-            </p>
-            <div className="flex items-center justify-center gap-3">
-              <button
-                type="button"
-                className="px-5 py-2.5 text-xs font-bold text-white shadow-md transition-transform hover:scale-105"
-                style={{ backgroundColor: primaryColor, borderRadius }}
-              >
-                Explore Catalog
-              </button>
-              <button
-                type="button"
-                className="px-5 py-2.5 text-xs font-bold border transition-colors"
-                style={{
-                  borderColor: primaryColor,
-                  color: primaryColor,
-                  borderRadius,
-                }}
-              >
-                Learn More
-              </button>
-            </div>
-          </section>
-
-          {/* Showcase Product Grid */}
-          <section className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2
-                className="text-base font-bold"
-                style={{ fontFamily: headingFont }}
-              >
-                Trending Now
-              </h2>
-              <span className="text-xs font-medium opacity-60">View all &rarr;</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                {
-                  id: "p1",
-                  name: "Minimalist Aero Jacket",
-                  price: "$149.00",
-                  tag: "Bestseller",
-                  bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
-                },
-                {
-                  id: "p2",
-                  name: "Ceramic Smart Watch",
-                  price: "$289.00",
-                  tag: "New Arrival",
-                  bg: "linear-gradient(135deg, #334155 0%, #1e293b 100%)",
-                },
-                {
-                  id: "p3",
-                  name: "Sleek Carbon Daypack",
-                  price: "$89.00",
-                  tag: "Limited",
-                  bg: "linear-gradient(135deg, #475569 0%, #334155 100%)",
-                },
-              ].map((prod) => (
-                <div
-                  key={prod.id}
-                  className="p-4 border shadow-sm transition-all hover:shadow-md flex flex-col justify-between"
-                  style={{
-                    backgroundColor: surfaceColor,
-                    borderColor: "rgba(0,0,0,0.06)",
-                    borderRadius,
-                  }}
-                >
-                  <div
-                    className="h-32 rounded-xl mb-3 flex items-center justify-center text-white text-3xl shadow-inner relative"
-                    style={{ background: prod.bg }}
-                  >
-                    <span
-                      className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded text-white"
-                      style={{ backgroundColor: accentColor }}
-                    >
-                      {prod.tag}
-                    </span>
-                    🛍️
-                  </div>
-                  <div>
-                    <h3
-                      className="text-xs font-bold truncate"
-                      style={{ fontFamily: headingFont }}
-                    >
-                      {prod.name}
-                    </h3>
-                    <p className="text-xs font-black mt-1" style={{ color: primaryColor }}>
-                      {prod.price}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    className="w-full mt-3 py-1.5 text-xs font-semibold text-white shadow-sm"
-                    style={{ backgroundColor: secondaryColor, borderRadius }}
-                  >
-                    Add to Bag
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Color palette debug footer */}
-          <div
-            className="px-6 py-4 border-t flex flex-wrap items-center justify-between gap-3 text-xs"
-            style={{
-              backgroundColor: surfaceColor,
-              borderColor: "rgba(0,0,0,0.08)",
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-[11px] opacity-70">Palette:</span>
-              <span
-                className="h-4 w-4 rounded-full border border-black/10 shadow-sm inline-block"
-                style={{ backgroundColor: primaryColor }}
-                title={`Primary: ${primaryColor}`}
-              />
-              <span
-                className="h-4 w-4 rounded-full border border-black/10 shadow-sm inline-block"
-                style={{ backgroundColor: secondaryColor }}
-                title={`Secondary: ${secondaryColor}`}
-              />
-              <span
-                className="h-4 w-4 rounded-full border border-black/10 shadow-sm inline-block"
-                style={{ backgroundColor: accentColor }}
-                title={`Accent: ${accentColor}`}
-              />
-              <span
-                className="h-4 w-4 rounded-full border border-black/10 shadow-sm inline-block"
-                style={{ backgroundColor: surfaceColor }}
-                title={`Surface: ${surfaceColor}`}
-              />
-              <span
-                className="h-4 w-4 rounded-full border border-black/10 shadow-sm inline-block"
-                style={{ backgroundColor: bgColor }}
-                title={`Background: ${bgColor}`}
-              />
-            </div>
-            <div className="text-[11px] opacity-60 font-mono">
-              Font: {headingFont || "Sans"} / {bodyFont || "Sans"}
-            </div>
-          </div>
+          <iframe
+            key={iframeKey}
+            ref={iframeRef}
+            src={previewUrl}
+            title={`${theme.name} Live Storefront Preview`}
+            className="w-full h-full border-0 bg-white"
+            onLoad={() => setIsLoading(false)}
+            loading="eager"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+          />
         </div>
       </div>
     </div>
@@ -324,8 +168,8 @@ export function ThemeMockupPreview({ theme, onClose, isModal = false }: ThemeMoc
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div className="w-full max-w-5xl h-[85vh]">{content}</div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
+      <div className="w-full max-w-6xl h-[90vh]">{content}</div>
     </div>
   );
 }

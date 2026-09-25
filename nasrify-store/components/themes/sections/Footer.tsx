@@ -88,8 +88,37 @@ export default function Footer({
     );
   }
 
+  const isExpanded = variant === "expanded";
+
   return (
     <footer className="border-t border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-text,#18181B)]">
+      {isExpanded && (
+        <div className="border-b border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-background,#FFFFFF)] py-10 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div className="flex items-center gap-4 justify-center md:justify-start">
+              <span className="text-3xl">🚀</span>
+              <div>
+                <h4 className="font-bold text-sm text-[var(--theme-text,#18181B)]">Global Express Delivery</h4>
+                <p className="text-xs text-[var(--theme-text-muted,#71717A)]">Shipped with real-time tracking worldwide</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 justify-center md:justify-start">
+              <span className="text-3xl">🛡️</span>
+              <div>
+                <h4 className="font-bold text-sm text-[var(--theme-text,#18181B)]">Safe &amp; Secure Checkout</h4>
+                <p className="text-xs text-[var(--theme-text-muted,#71717A)]">Encrypted transactions &amp; fraud defense</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 justify-center md:justify-start">
+              <span className="text-3xl">✨</span>
+              <div>
+                <h4 className="font-bold text-sm text-[var(--theme-text,#18181B)]">Exceptional Quality</h4>
+                <p className="text-xs text-[var(--theme-text-muted,#71717A)]">Tested rigorously for durability &amp; style</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand info */}

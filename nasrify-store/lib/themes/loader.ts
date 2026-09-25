@@ -118,3 +118,34 @@ export const getActiveTheme = cache(async (customDb?: any): Promise<ThemeConfig>
   cachedActiveTheme = { theme: DEFAULT_THEME, timestamp: Date.now() };
   return DEFAULT_THEME;
 });
+
+/**
+ * Get a theme by its slug from the D1 themes table (for preview purposes, zero cache)
+ */
+export async function getThemeBySlug(slug: string, customDb?: any): Promise<ThemeConfig | null> {
+  const db = customDb || getDb();
+  if (!db || !slug) return null;
+
+  try {
+    const { themes } = await import("../db");
+    const { or } = await import("drizzle-orm");
+    const rows = await db
+      .select({
+        id: themes.id,
+        slug: themes.slug,
+        themeJson: themes.themeJson,
+      })
+      .from(themes)
+      .where(or(eq(themes.slug, slug), eq(themes.id, slug)))
+      .limit(1);
+
+    if (rows.length > 0 && rows[0].themeJson) {
+      return validateThemeConfig(rows[0].themeJson);
+    }
+  } catch (err) {
+    console.error(`[Themes Engine] Failed to fetch theme by slug "${slug}":`, err);
+  }
+
+  return null;
+}
+

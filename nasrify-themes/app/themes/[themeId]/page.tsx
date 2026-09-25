@@ -6,6 +6,7 @@ import { getThemeByThemeId, getApprovedThemeListings } from "@/lib/themes/market
 import { getThemeInstallCount } from "@/lib/themes/installs";
 import { ThemeCard } from "@/components/ThemeCard";
 import { ThemeMockupPreview } from "@/components/ThemeMockupPreview";
+import { ThemeDetailTabs } from "@/components/ThemeDetailTabs";
 import type { ThemeConfig } from "@/types/themes";
 import { getListingRatingSummary, getListingReviews } from "@/lib/marketplace/reviews";
 import { getAuthenticatedMarketplaceUser } from "@/lib/marketplace/auth";
@@ -191,152 +192,148 @@ export default async function ThemeDetailPage({
         </div>
       </section>
 
-      {/* Primary Screenshot / Preview Gallery */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
-          Theme Preview &amp; Gallery
-        </h2>
-
-        {theme.previewUrl ? (
-          <div className="aspect-[16/9] w-full rounded-3xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-md bg-zinc-100 dark:bg-zinc-800">
-            <img
-              src={theme.previewUrl}
-              alt={`${theme.name} Preview`}
-              className="w-full h-full object-cover object-top"
-            />
+      {/* Tabbed Interface: Live Preview / Gallery / Changelog / Reviews */}
+      <ThemeDetailTabs
+        livePreview={
+          <div className="h-[760px] w-full">
+            <ThemeMockupPreview theme={theme} isModal={false} />
           </div>
-        ) : null}
+        }
+        galleryAndTokens={
+          <div className="space-y-10">
+            {/* Primary Screenshot / Preview Gallery */}
+            <section className="space-y-4">
+              <h2 className="text-lg font-bold text-zinc-900 dark:text-white">
+                Theme Preview &amp; Gallery
+              </h2>
 
-        {screenshots.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
-            {screenshots.map((sUrl, idx) => (
-              <div
-                key={idx}
-                className="aspect-[16/10] rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-sm bg-zinc-100 dark:bg-zinc-800"
-              >
-                <img
-                  src={sUrl}
-                  alt={`${theme.name} Screenshot ${idx + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+              {theme.previewUrl ? (
+                <div className="aspect-[16/9] w-full rounded-3xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-md bg-zinc-100 dark:bg-zinc-800">
+                  <img
+                    src={theme.previewUrl}
+                    alt={`${theme.name} Preview`}
+                    className="w-full h-full object-cover object-top"
+                  />
+                </div>
+              ) : null}
 
-      {/* Design System & Token Inspector */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Color Palette Display */}
-        <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm">
-          <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
-            <span>🎨</span>
-            <span>Color Palette &amp; Accents</span>
-          </h3>
+              {screenshots.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
+                  {screenshots.map((sUrl, idx) => (
+                    <div
+                      key={idx}
+                      className="aspect-[16/10] rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-sm bg-zinc-100 dark:bg-zinc-800"
+                    >
+                      <img
+                        src={sUrl}
+                        alt={`${theme.name} Screenshot ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {[
-              { label: "Primary", color: primaryColor },
-              { label: "Secondary", color: secondaryColor },
-              { label: "Accent", color: accentColor },
-              { label: "Surface", color: surfaceColor },
-              { label: "Background", color: bgColor },
-              { label: "Text", color: textColor },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center gap-3"
-              >
-                <span
-                  className="h-7 w-7 rounded-xl border border-black/10 shadow-sm shrink-0"
-                  style={{ backgroundColor: item.color }}
-                />
-                <div className="min-w-0">
-                  <span className="block text-[11px] font-bold text-zinc-800 dark:text-zinc-200 truncate">
-                    {item.label}
-                  </span>
-                  <span className="block text-[10px] font-mono text-zinc-400 truncate">
-                    {item.color}
-                  </span>
+            {/* Design System & Token Inspector */}
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Color Palette Display */}
+              <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                  <span>🎨</span>
+                  <span>Color Palette &amp; Accents</span>
+                </h3>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {[
+                    { label: "Primary", color: primaryColor },
+                    { label: "Secondary", color: secondaryColor },
+                    { label: "Accent", color: accentColor },
+                    { label: "Surface", color: surfaceColor },
+                    { label: "Background", color: bgColor },
+                    { label: "Text", color: textColor },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center gap-3"
+                    >
+                      <span
+                        className="h-7 w-7 rounded-xl border border-black/10 shadow-sm shrink-0"
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <div className="min-w-0">
+                        <span className="block text-[11px] font-bold text-zinc-800 dark:text-zinc-200 truncate">
+                          {item.label}
+                        </span>
+                        <span className="block text-[10px] font-mono text-zinc-400 truncate">
+                          {item.color}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
+
+              {/* Typography & Layout Tokens */}
+              <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                  <span>🔤</span>
+                  <span>Typography &amp; Layout Tokens</span>
+                </h3>
+
+                <div className="space-y-3 text-xs">
+                  <div className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center justify-between">
+                    <span className="font-semibold text-zinc-500">Heading Font:</span>
+                    <span className="font-mono font-bold text-zinc-900 dark:text-white">
+                      {config.typography?.headingFont || "Inter, sans-serif"}
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center justify-between">
+                    <span className="font-semibold text-zinc-500">Body Font:</span>
+                    <span className="font-mono font-bold text-zinc-900 dark:text-white">
+                      {config.typography?.bodyFont || "Inter, sans-serif"}
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center justify-between">
+                    <span className="font-semibold text-zinc-500">Border Radius:</span>
+                    <span className="font-mono font-bold text-zinc-900 dark:text-white">
+                      {config.layout?.borderRadius || "12px"}
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center justify-between">
+                    <span className="font-semibold text-zinc-500">Header Style:</span>
+                    <span className="font-mono font-bold text-zinc-900 dark:text-white capitalize">
+                      {config.layout?.headerStyle || "Default Minimal"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
-        </div>
-
-        {/* Typography & Layout Tokens */}
-        <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm">
-          <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
-            <span>🔤</span>
-            <span>Typography &amp; Layout Tokens</span>
-          </h3>
-
-          <div className="space-y-3 text-xs">
-            <div className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center justify-between">
-              <span className="font-semibold text-zinc-500">Heading Font:</span>
-              <span className="font-mono font-bold text-zinc-900 dark:text-white">
-                {config.typography?.headingFont || "Inter, sans-serif"}
-              </span>
+        }
+        changelog={
+          theme.changelog ? (
+            <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-2">
+                Release Changelog
+              </h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 font-mono whitespace-pre-wrap leading-relaxed">
+                {theme.changelog}
+              </p>
             </div>
-            <div className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center justify-between">
-              <span className="font-semibold text-zinc-500">Body Font:</span>
-              <span className="font-mono font-bold text-zinc-900 dark:text-white">
-                {config.typography?.bodyFont || "Inter, sans-serif"}
-              </span>
-            </div>
-            <div className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center justify-between">
-              <span className="font-semibold text-zinc-500">Border Radius:</span>
-              <span className="font-mono font-bold text-zinc-900 dark:text-white">
-                {config.layout?.borderRadius || "12px"}
-              </span>
-            </div>
-            <div className="p-3 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 flex items-center justify-between">
-              <span className="font-semibold text-zinc-500">Header Style:</span>
-              <span className="font-mono font-bold text-zinc-900 dark:text-white capitalize">
-                {config.layout?.headerStyle || "Default Minimal"}
-              </span>
-            </div>
+          ) : undefined
+        }
+        reviews={
+          <div id="reviews-section">
+            <ReviewsSection
+              listingType="theme"
+              listingId={theme.id}
+              initialSummary={ratingSummary}
+              initialReviews={initialReviews}
+              initialUser={currentUser}
+            />
           </div>
-        </div>
-      </section>
-
-      {/* Live Interactive Mockup Section */}
-      <section id="live-preview" className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white">
-              Interactive Storefront Mockup
-            </h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Simulate how this theme looks on desktop, tablet, and mobile with realistic storefront data.
-            </p>
-          </div>
-        </div>
-
-        <div className="h-[750px] w-full">
-          <ThemeMockupPreview theme={theme} isModal={false} />
-        </div>
-      </section>
-
-      {/* Changelog Section */}
-      {theme.changelog && (
-        <section className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm">
-          <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-2">
-            Release Changelog
-          </h3>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 font-mono whitespace-pre-wrap leading-relaxed">
-            {theme.changelog}
-          </p>
-        </section>
-      )}
-
-      {/* Reviews Section */}
-      <ReviewsSection
-        listingType="theme"
-        listingId={theme.id}
-        initialSummary={ratingSummary}
-        initialReviews={initialReviews}
-        initialUser={currentUser}
+        }
       />
 
       {/* Related Themes */}

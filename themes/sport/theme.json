@@ -1,0 +1,328 @@
+{
+  "schema_version": "1.0",
+  "slug": "sport",
+  "name": "Velocity Sport",
+  "version": "1.0.0",
+  "description": "High-energy athletic theme with dynamic red accents, sharp geometry, and multi-column catalog feeds.",
+  "category": "sport",
+  "is_built_in": 0,
+  "settings": {
+    "colors": {
+      "primary": "#DC2626",
+      "secondary": "#B91C1C",
+      "accent": "#EF4444",
+      "background": "#FFFFFF",
+      "surface": "#F8FAFC",
+      "text": "#0F172A",
+      "text_muted": "#64748B",
+      "border": "#E2E8F0"
+    },
+    "fonts": {
+      "heading": "Poppins",
+      "body": "Inter"
+    },
+    "layout": {
+      "container_width": "1320px",
+      "section_spacing": "48px",
+      "border_radius": "0px",
+      "button_radius": "0px"
+    },
+    "logo": {
+      "type": "text",
+      "text": "VELOCITY SPORT",
+      "color": "#DC2626"
+    }
+  },
+  "sections": [
+    {
+      "id": "sport-header",
+      "type": "header",
+      "variant": "centered",
+      "enabled": true,
+      "settings": {
+        "logo_text": "VELOCITY SPORT",
+        "sticky": true,
+        "show_search": true,
+        "show_cart": true,
+        "show_account": true
+      }
+    },
+    {
+      "id": "sport-hero",
+      "type": "hero",
+      "variant": "fullscreen",
+      "enabled": true,
+      "settings": {
+        "heading": "FASTER. STRONGER. UNSTOPPABLE.",
+        "subheading": "High-performance compression wear, trail-tested footwear, and athlete-grade training gear.",
+        "cta_text": "GEAR UP",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1600&auto=format&fit=crop",
+        "height": "640px",
+        "overlay_opacity": 0.5
+      }
+    },
+    {
+      "id": "sport-banner",
+      "type": "banner",
+      "variant": "full_width",
+      "enabled": true,
+      "settings": {
+        "heading": "THE PRO ATHLETE SERIES",
+        "text": "Tested and worn by Olympic champions. Engineered for maximum thermal regulation.",
+        "cta_text": "SEE THE GEAR",
+        "cta_link": "/shop",
+        "image_url": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1600&auto=format&fit=crop"
+      }
+    },
+    {
+      "id": "sport-products",
+      "type": "product_grid",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "heading": "Top Performance Picks",
+        "columns": 4,
+        "rows": 2,
+        "show_price": true,
+        "show_rating": true,
+        "show_add_to_cart": true
+      }
+    },
+    {
+      "id": "sport-categories",
+      "type": "categories",
+      "variant": "list",
+      "enabled": true,
+      "settings": {
+        "heading": "Disciplines & Sports"
+      }
+    },
+    {
+      "id": "sport-carousel",
+      "type": "product_carousel",
+      "variant": "scroll",
+      "enabled": true,
+      "settings": {
+        "heading": "New Equipment Drops",
+        "show_arrows": true
+      }
+    },
+    {
+      "id": "sport-testimonials",
+      "type": "testimonials",
+      "variant": "grid",
+      "enabled": true,
+      "settings": {
+        "heading": "Athlete Testimonials"
+      }
+    },
+    {
+      "id": "sport-footer",
+      "type": "footer",
+      "variant": "standard",
+      "enabled": true,
+      "settings": {
+        "logo_text": "VELOCITY SPORT",
+        "copyright": "© 2026 Velocity Sport Global."
+      }
+    }
+  ],
+  "page_defaults": {
+    "product": [
+      {
+        "id": "pd-product-gallery",
+        "type": "product_gallery",
+        "variant": "classic",
+        "enabled": true,
+        "settings": {
+          "layout": "carousel",
+          "thumbnails_position": "bottom",
+          "zoom": "on"
+        }
+      },
+      {
+        "id": "pd-product-info",
+        "type": "product_info",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_sku": true,
+          "show_brand": true,
+          "show_rating": true,
+          "show_compare": true,
+          "show_wishlist": true,
+          "button_text": "Add to Cart",
+          "button_style": "primary"
+        }
+      },
+      {
+        "id": "pd-product-tabs",
+        "type": "product_tabs",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "default_tab": "description"
+        }
+      },
+      {
+        "id": "pd-product-reviews",
+        "type": "product_reviews_section",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "heading": "Customer Reviews",
+          "reviews_app_id": "auto",
+          "show_summary": true,
+          "show_form": true
+        }
+      },
+      {
+        "id": "pd-product-related",
+        "type": "product_related",
+        "variant": "grid",
+        "enabled": true,
+        "settings": {
+          "heading": "You May Also Like",
+          "max_products": 4,
+          "columns": 4
+        }
+      }
+    ],
+    "category": [
+      {
+        "id": "pd-category-header",
+        "type": "category_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "show_description": true,
+          "layout": "simple"
+        }
+      },
+      {
+        "id": "pd-category-filters",
+        "type": "category_filters",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "position": "sidebar",
+          "sticky": true,
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-category-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 3,
+          "per_page": 9,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ],
+    "cart": [
+      {
+        "id": "pd-cart-layout",
+        "type": "cart_page_layout",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "show_coupon": true,
+          "show_estimated_shipping": true,
+          "layout": "standard"
+        }
+      }
+    ],
+    "checkout": [
+      {
+        "id": "pd-checkout-layout",
+        "type": "checkout_page_layout",
+        "variant": "single_page",
+        "enabled": true,
+        "settings": {
+          "show_order_notes": true,
+          "layout": "single_page"
+        }
+      }
+    ],
+    "account": [
+      {
+        "id": "pd-account-dashboard",
+        "type": "account_dashboard",
+        "variant": "sidebar",
+        "enabled": true,
+        "settings": {
+          "show_orders": true,
+          "show_addresses": true,
+          "show_profile": true,
+          "layout": "sidebar"
+        }
+      }
+    ],
+    "page": [
+      {
+        "id": "pd-page-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "center"
+        }
+      },
+      {
+        "id": "pd-page-content",
+        "type": "page_content",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "max_width": "max-w-4xl",
+          "padding_y": "py-8"
+        }
+      }
+    ],
+    "shop": [
+      {
+        "id": "pd-shop-header",
+        "type": "page_header",
+        "variant": "simple",
+        "enabled": true,
+        "settings": {
+          "show_breadcrumb": true,
+          "alignment": "left"
+        }
+      },
+      {
+        "id": "pd-shop-filters",
+        "type": "category_filters",
+        "variant": "horizontal",
+        "enabled": true,
+        "settings": {
+          "position": "top",
+          "show_price": true,
+          "show_categories": true,
+          "show_attributes": true
+        }
+      },
+      {
+        "id": "pd-shop-grid",
+        "type": "category_grid",
+        "variant": "standard",
+        "enabled": true,
+        "settings": {
+          "columns": 4,
+          "per_page": 12,
+          "show_pagination": true,
+          "card_variant": "standard"
+        }
+      }
+    ]
+  }
+}

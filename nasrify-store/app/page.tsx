@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { getStoreSettings } from "@/lib/settings";
 import { getBaseUrl } from "@/lib/seo";
-import { getActiveTheme } from "@/lib/themes/loader";
+import { getActiveTheme, getThemeBySlug } from "@/lib/themes/loader";
 import { renderTheme } from "@/lib/themes/engine";
 import { fetchProducts, fetchCategories } from "@/lib/themes/data";
 import { normalizeImageUrl } from "@/lib/utils";
@@ -45,13 +45,27 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function HomePage(): Promise<React.JSX.Element> {
-  const [activeTheme, storeSettings, products, categories] = await Promise.all([
+interface HomePageProps {
+  searchParams?: Promise<{
+    preview_theme?: string;
+  }>;
+}
+
+export default async function HomePage({
+  searchParams,
+}: HomePageProps): Promise<React.JSX.Element> {
+  const resolvedParams = searchParams ? await searchParams : undefined;
+  const previewSlug = resolvedParams?.preview_theme;
+
+  const [activeTheme, previewTheme, storeSettings, products, categories] = await Promise.all([
     getActiveTheme(),
+    previewSlug ? getThemeBySlug(previewSlug) : Promise.resolve(null),
     getStoreSettings(),
     fetchProducts(undefined, 12),
     fetchCategories(undefined, 8),
   ]);
+
+  const effectiveTheme = previewTheme || activeTheme;
 
   const storeData = {
     products,
@@ -60,7 +74,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
   };
 
   // Find hero section if present to preload image for LCP
-  const heroSection = activeTheme.sections.find(
+  const heroSection = effectiveTheme.sections.find(
     (s) => s.type === "hero" && s.enabled
   );
   const heroImageUrl = heroSection?.settings?.image_url
@@ -82,7 +96,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
         />
       )}
       <div className="w-full min-h-screen">
-        <ThemePreviewWrapper initialTheme={activeTheme} storeData={storeData} />
+        <ThemePreviewWrapper initialTheme={effectiveTheme} storeData={storeData} />
       </div>
     </>
   );

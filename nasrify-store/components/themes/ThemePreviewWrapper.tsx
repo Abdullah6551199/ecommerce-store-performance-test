@@ -18,6 +18,26 @@ export default function ThemePreviewWrapper({
   const [theme, setTheme] = useState<ThemeConfig>(initialTheme);
 
   useEffect(() => {
+    setTheme(initialTheme);
+  }, [initialTheme]);
+
+  useEffect(() => {
+    const isPreviewTheme =
+      typeof window !== "undefined" &&
+      window.location.search.includes("preview_theme=");
+
+    if (isPreviewTheme && initialTheme) {
+      const styleTag = document.getElementById("nasrify-theme-vars");
+      if (styleTag) {
+        styleTag.innerHTML = generateThemeVarsCss(initialTheme);
+      }
+      const fontStyleTag = document.getElementById("nasrify-fonts-css");
+      if (fontStyleTag) {
+        const inUse = getFontsInUse(initialTheme);
+        fontStyleTag.innerHTML = getFontFaceCSS(inUse);
+      }
+    }
+
     const isPreviewMode =
       typeof window !== "undefined" &&
       window.location.search.includes("preview=1");

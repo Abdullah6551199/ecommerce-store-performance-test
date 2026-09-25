@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real, index } from "drizzle-orm/sqlite-core";
 import { sql, relations } from "drizzle-orm";
 
 /**
@@ -1553,5 +1553,33 @@ export const chatbotConversations = sqliteTable("chatbot_conversations", {
 export type ChatbotConversationRecord = typeof chatbotConversations.$inferSelect;
 export type NewChatbotConversationRecord = typeof chatbotConversations.$inferInsert;
 
+// 67. Advanced Editor Settings Table (Stage 42.6)
+export const advancedEditorSettings = sqliteTable("advanced_editor_settings", {
+  id: text("id").primaryKey().default("default"),
+  enabled: integer("enabled").default(1),
+  enableCustomCss: integer("enable_custom_css").default(1),
+  enableAnimations: integer("enable_animations").default(1),
+  enableResponsive: integer("enable_responsive").default(1),
+  enableBreakpoints: integer("enable_breakpoints").default(1),
+  breakpoints: text("breakpoints").default('[{"name":"tablet","width":1024},{"name":"mobile","width":767}]'),
+  updatedAt: integer("updated_at"),
+});
 
+export type AdvancedEditorSettingRecord = typeof advancedEditorSettings.$inferSelect;
+export type NewAdvancedEditorSettingRecord = typeof advancedEditorSettings.$inferInsert;
+
+// 68. Advanced Editor Presets Table (Stage 42.6)
+export const advancedEditorPresets = sqliteTable("advanced_editor_presets", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  type: text("type").notNull(), // typography | button | shadow | animation | spacing
+  presetJson: text("preset_json").notNull(),
+  isGlobal: integer("is_global").default(0),
+  createdAt: integer("created_at"),
+}, (table) => [
+  index("idx_advanced_presets_type").on(table.type),
+]);
+
+export type AdvancedEditorPresetRecord = typeof advancedEditorPresets.$inferSelect;
+export type NewAdvancedEditorPresetRecord = typeof advancedEditorPresets.$inferInsert;
 

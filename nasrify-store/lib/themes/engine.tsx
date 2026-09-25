@@ -30,6 +30,48 @@ import PageHeader from "@/components/themes/sections/PageHeader";
 import PageContent from "@/components/themes/sections/PageContent";
 
 import { DEFAULT_THEME } from "./default-theme";
+import { generateAdvancedCSS } from "@/apps/advanced-theme-editor/lib/css-generator";
+
+// 60-second theme advanced CSS cache for performance (<10ms CPU target)
+const advancedCSSCache = new Map<string, { css: string; expiry: number }>();
+
+export function invalidateThemeAdvancedCSSCache(): void {
+  advancedCSSCache.clear();
+}
+
+function getThemeAdvancedCSS(sections?: ThemeSection[], themeId: string = "default"): string {
+  if (!sections || !Array.isArray(sections)) return "";
+  const now = Date.now();
+  const hasAdvanced = sections.some((s) => Boolean(s.settings?._advanced));
+  if (!hasAdvanced) return "";
+
+  // Fingerprint based on sections with _advanced
+  const advancedSummary = sections
+    .filter((s) => Boolean(s.settings?._advanced))
+    .map((s) => `${s.id}:${JSON.stringify(s.settings?._advanced)}`)
+    .join(";");
+  const cacheKey = `${themeId}_${advancedSummary}`;
+
+  const cached = advancedCSSCache.get(cacheKey);
+  if (cached && cached.expiry > now) {
+    return cached.css;
+  }
+
+  try {
+    const sectionsMap: Record<string, any> = {};
+    sections.forEach((s) => {
+      if (s.settings?._advanced) {
+        sectionsMap[s.id] = { settings: s.settings };
+      }
+    });
+
+    const css = generateAdvancedCSS({ sections: sectionsMap });
+    advancedCSSCache.set(cacheKey, { css, expiry: now + 60 * 1000 });
+    return css;
+  } catch {
+    return "";
+  }
+}
 
 /**
  * High-performance Theme Rendering Engine (<10ms CPU target)
@@ -41,8 +83,17 @@ export function renderTheme(theme: ThemeConfig, storeData: StoreData): React.Rea
     return null;
   }
 
+  const themeId = (theme as any)?.id || theme?.name || "default";
+  const advancedCSS = getThemeAdvancedCSS(theme.sections, themeId);
+
   return (
     <>
+      {advancedCSS && (
+        <style
+          id="theme-advanced-css"
+          dangerouslySetInnerHTML={{ __html: advancedCSS }}
+        />
+      )}
       {theme.sections
         .filter((s) => s.enabled)
         .map((section) => renderSection(section, theme.settings, storeData))}
@@ -69,9 +120,17 @@ export function renderPageTheme(
   }
 
   const settings = activeTheme.settings || DEFAULT_THEME.settings;
+  const themeId = (activeTheme as any)?.id || activeTheme?.name || "default";
+  const advancedCSS = getThemeAdvancedCSS(pageSections, themeId);
 
   return (
     <>
+      {advancedCSS && (
+        <style
+          id="theme-advanced-page-css"
+          dangerouslySetInnerHTML={{ __html: advancedCSS }}
+        />
+      )}
       {pageSections
         .filter((s) => s.enabled !== false)
         .map((section) => renderSection(section, settings, storeData))}
@@ -93,66 +152,105 @@ export function renderSection(
       storeData,
     };
 
+    let element: React.ReactNode = null;
+
     switch (section.type) {
       // 12 Original Sections
       case "announcement":
       case "announcement_bar":
-        return <AnnouncementBar key={section.id} {...props} />;
+        element = <AnnouncementBar key={section.id} {...props} />;
+        break;
       case "header":
-        return <Header key={section.id} {...props} />;
+        element = <Header key={section.id} {...props} />;
+        break;
       case "hero":
-        return <Hero key={section.id} {...props} />;
+        element = <Hero key={section.id} {...props} />;
+        break;
       case "product_grid":
-        return <ProductGrid key={section.id} {...props} />;
+        element = <ProductGrid key={section.id} {...props} />;
+        break;
       case "product_carousel":
-        return <ProductCarousel key={section.id} {...props} />;
+        element = <ProductCarousel key={section.id} {...props} />;
+        break;
       case "categories":
-        return <Categories key={section.id} {...props} />;
+        element = <Categories key={section.id} {...props} />;
+        break;
       case "testimonials":
-        return <Testimonials key={section.id} {...props} />;
+        element = <Testimonials key={section.id} {...props} />;
+        break;
       case "newsletter":
-        return <Newsletter key={section.id} {...props} />;
+        element = <Newsletter key={section.id} {...props} />;
+        break;
       case "banner":
-        return <Banner key={section.id} {...props} />;
+        element = <Banner key={section.id} {...props} />;
+        break;
       case "image_text":
-        return <ImageText key={section.id} {...props} />;
+        element = <ImageText key={section.id} {...props} />;
+        break;
       case "faq":
-        return <FAQ key={section.id} {...props} />;
+        element = <FAQ key={section.id} {...props} />;
+        break;
       case "footer":
-        return <Footer key={section.id} {...props} />;
+        element = <Footer key={section.id} {...props} />;
+        break;
 
       // 13 New Page Sections
       case "product_gallery":
-        return <ProductGallery key={section.id} {...props} />;
+        element = <ProductGallery key={section.id} {...props} />;
+        break;
       case "product_info":
-        return <ProductInfo key={section.id} {...props} />;
+        element = <ProductInfo key={section.id} {...props} />;
+        break;
       case "product_tabs":
-        return <ProductTabs key={section.id} {...props} />;
+        element = <ProductTabs key={section.id} {...props} />;
+        break;
       case "product_reviews_section":
-        return <ProductReviewsSection key={section.id} {...props} />;
+        element = <ProductReviewsSection key={section.id} {...props} />;
+        break;
       case "product_related":
-        return <ProductRelated key={section.id} {...props} />;
+        element = <ProductRelated key={section.id} {...props} />;
+        break;
       case "category_header":
-        return <CategoryHeader key={section.id} {...props} />;
+        element = <CategoryHeader key={section.id} {...props} />;
+        break;
       case "category_filters":
-        return <CategoryFilters key={section.id} {...props} />;
+        element = <CategoryFilters key={section.id} {...props} />;
+        break;
       case "category_grid":
-        return <CategoryGrid key={section.id} {...props} />;
+        element = <CategoryGrid key={section.id} {...props} />;
+        break;
       case "cart_page_layout":
-        return <CartPageLayout key={section.id} {...props} />;
+        element = <CartPageLayout key={section.id} {...props} />;
+        break;
       case "checkout_page_layout":
-        return <CheckoutPageLayout key={section.id} {...props} />;
+        element = <CheckoutPageLayout key={section.id} {...props} />;
+        break;
       case "account_dashboard":
-        return <AccountDashboard key={section.id} {...props} />;
+        element = <AccountDashboard key={section.id} {...props} />;
+        break;
       case "page_header":
-        return <PageHeader key={section.id} {...props} />;
+        element = <PageHeader key={section.id} {...props} />;
+        break;
       case "page_content":
-        return <PageContent key={section.id} {...props} />;
+        element = <PageContent key={section.id} {...props} />;
+        break;
 
       default:
         console.warn(`[Themes Engine] Unknown section type skipped: ${section.type}`);
         return null;
     }
+
+    if (!element) return null;
+
+    const adv = section.settings?._advanced;
+    const customClasses = adv?.advanced?.layout?.cssClasses ? ` ${adv.advanced.layout.cssClasses}` : "";
+    const customId = adv?.advanced?.layout?.cssId || undefined;
+
+    return (
+      <div key={section.id} id={customId} className={`section-${section.id}${customClasses}`}>
+        {element}
+      </div>
+    );
   } catch (err) {
     console.error(
       `[Themes Engine] Failed to render section ${section.id} (${section.type}):`,

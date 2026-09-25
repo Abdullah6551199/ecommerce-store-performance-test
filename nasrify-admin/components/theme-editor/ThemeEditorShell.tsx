@@ -1,12 +1,21 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import dynamic from "next/dynamic";
 import { TopBar, DeviceMode } from "./TopBar";
 import { SectionsList, SectionItemData } from "./SectionsList";
 import { SettingsPanel } from "./SettingsPanel";
 import { PreviewFrame } from "./PreviewFrame";
 import { SectionPicker } from "./SectionPicker";
 import { PublishConfirmModal } from "./PublishConfirmModal";
+
+const AdvancedEditorWrapper = dynamic(
+  () =>
+    import("@/apps/advanced-theme-editor/admin/AdvancedEditorWrapper").then(
+      (m) => m.AdvancedEditorWrapper
+    ),
+  { ssr: false }
+);
 
 interface ThemeConfig {
   id: string;
@@ -42,6 +51,8 @@ export function ThemeEditorShell() {
   const [currentTheme, setCurrentTheme] = useState<ThemeConfig | null>(null);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [device, setDevice] = useState<DeviceMode>("desktop");
+  const [editorMode, setEditorMode] = useState<"basic" | "advanced">("basic");
+  const [hasAdvancedApp, setHasAdvancedApp] = useState<boolean>(false);
   const [undoStack, setUndoStack] = useState<ThemeConfig[]>([]);
   const [redoStack, setRedoStack] = useState<ThemeConfig[]>([]);
   const [isDirty, setIsDirty] = useState<boolean>(false);
@@ -72,6 +83,15 @@ export function ThemeEditorShell() {
           if (data && data.theme) {
             setCurrentTheme(data.theme);
           }
+        }
+
+        const appsRes = await fetch("/api/admin/apps");
+        if (appsRes.ok) {
+          const apps = (await appsRes.json()) as any[];
+          const isInstalled = apps.some(
+            (a: any) => a.id === "advanced-theme-editor" && a.enabled
+          );
+          setHasAdvancedApp(isInstalled);
         }
       } catch (err) {
         console.error("Failed to load theme draft", err);
@@ -396,6 +416,9 @@ export function ThemeEditorShell() {
         onOpenPublishModal={() => setIsPublishModalOpen(true)}
         onDiscardDraft={handleDiscard}
         isDiscarding={isDiscarding}
+        editorMode={editorMode}
+        onEditorModeChange={setEditorMode}
+        hasAdvancedApp={hasAdvancedApp}
       />
 
       {/* 3-Column Main Editor Workspace */}
@@ -417,16 +440,31 @@ export function ThemeEditorShell() {
           device={device}
         />
 
-        {/* Right Sidebar: Selected Section or Global Settings */}
-        <SettingsPanel
-          selectedSection={selectedSection}
-          globalSettings={currentTheme.settings}
-          onUpdateSectionSettings={handleUpdateSectionSettings}
-          onUpdateGlobalSettings={handleUpdateGlobalSettings}
-          onDeselectSection={() => setSelectedSectionId(null)}
-          onDeleteSection={handleDeleteSection}
-          onToggleSectionVisibility={handleToggleVisibility}
-        />
+        {/* Right Sidebar: Selected Section or Global Settings (Basic) OR Advanced Editor Panel */}
+        {editorMode === "advanced" && hasAdvancedApp ? (
+          <aside className="w-84 shrink-0 bg-slate-900 border-l border-slate-800 flex flex-col h-full overflow-hidden select-none">
+            <AdvancedEditorWrapper
+              theme={currentTheme}
+              selectedSectionId={selectedSectionId}
+              onSelectSection={handleSelectSection}
+              onUpdateTheme={(updatedTheme: any) => {
+                pushToUndoStack(currentTheme);
+                setCurrentTheme(updatedTheme);
+              }}
+              onSave={() => saveDraft()}
+            />
+          </aside>
+        ) : (
+          <SettingsPanel
+            selectedSection={selectedSection}
+            globalSettings={currentTheme.settings}
+            onUpdateSectionSettings={handleUpdateSectionSettings}
+            onUpdateGlobalSettings={handleUpdateGlobalSettings}
+            onDeselectSection={() => setSelectedSectionId(null)}
+            onDeleteSection={handleDeleteSection}
+            onToggleSectionVisibility={handleToggleVisibility}
+          />
+        )}
       </div>
 
       {/* Section Picker Modal */}

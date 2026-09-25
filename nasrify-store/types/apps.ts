@@ -19,6 +19,7 @@ export const APP_PERMISSIONS = [
   "write:media",
   "read:analytics",
   "send:notifications",
+  "write:reviews",
 ] as const;
 
 export type AppPermission = (typeof APP_PERMISSIONS)[number];
@@ -29,6 +30,7 @@ export const APP_EXTENSION_POINTS = [
   "admin.route",
   "admin.order.detail.below",
   "admin.product.form.below",
+  "admin.theme-editor.advanced",
   "storefront.product.below",
   "storefront.homepage.section",
   "storefront.cart.below",

@@ -1,4 +1,5 @@
 export interface ThemeConfig {
+  id?: string;
   schema_version: string; // "1.0"
   name: string;
   version: string;

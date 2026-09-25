@@ -30,6 +30,7 @@ export const APP_EXTENSION_POINTS = [
   "admin.route",
   "admin.order.detail.below",
   "admin.product.form.below",
+  "admin.theme-editor.advanced",
   "storefront.product.below",
   "storefront.homepage.section",
   "storefront.cart.below",

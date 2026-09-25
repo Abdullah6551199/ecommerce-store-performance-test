@@ -1,0 +1,50 @@
+{
+  "id": "advanced-theme-editor",
+  "name": "Advanced Theme Editor",
+  "version": "1.0.0",
+  "description": "Elementor-like visual theme customization with custom CSS, animations, and responsive controls.",
+  "author": "Nasrify",
+  "authorUrl": "https://nasrify.com",
+  "icon": "icon.svg",
+  "pricing": "paid",
+  "price": 500,
+  "category": "design",
+  "permissions": [
+    "read:settings",
+    "write:settings"
+  ],
+  "extensionPoints": [
+    "admin.theme-editor.advanced"
+  ],
+  "databaseTables": [
+    "advanced_editor_settings",
+    "advanced_editor_presets"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": [],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "settingsSchema": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Advanced Editor"
+    },
+    "enableCustomCSS": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Custom CSS"
+    },
+    "enableAnimations": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Motion Effects & Animations"
+    },
+    "enableResponsive": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable Responsive Per-Breakpoint Controls"
+    }
+  }
+}

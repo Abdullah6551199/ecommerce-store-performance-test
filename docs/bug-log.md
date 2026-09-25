@@ -153,3 +153,14 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 |---|---|---|---|---|
 | BUG-42.8d-01 | CSS / Tailwind Syntax | Regex replacement of `shadow-purple-500/20` resulted in `.shadow-[#25D366]/20` utility class in `globals.css`, causing CSS parser syntax warning. | Replaced arbitrary color utility class with dedicated CSS classes `.shadow-green-soft` and `.shadow-green-card`. | Complete |
 | BUG-42.8d-02 | App Admin Prebuild Sync | `sync-apps.ts --target=admin` copies `apps/<app>/admin/` to `nasrify-admin/apps/<app>/admin/` on prebuild, overwriting uncommitted target edits. | Rebranded root `apps/<app>/admin/` source files alongside `nasrify-admin/` components, then re-ran `sync-apps.ts`. | Complete |
+
+---
+
+## Stage 42.6 (Advanced Theme Editor App — Elementor-like Visual Controls)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-42.6-01 | TypeScript Schema Import | Drizzle ORM `idx_advanced_presets_type` index declaration required `index` imported explicitly from `drizzle-orm/sqlite-core`. | Added `index` to imports across root, admin, and storefront `schema.ts`. | Complete |
+| BUG-42.6-02 | CSS Generator Resilience | `generateSectionCSS` in `css-generator.ts` expected nested `{ style, advanced }` structure; flat payloads caused declarations to be skipped. | Enhanced generator to support both nested and flat structures, with string/responsive font size and spacing parsing. | Complete |
+| BUG-42.6-03 | Storefront CSS Caching | In `nasrify-store/lib/themes/engine.tsx`, static cache key `${themeId}_${sections.length}` caused unchanged keys when modifying existing section `_advanced` styles. | Updated cache key to fingerprint based on section `_advanced` payloads and exported `invalidateThemeAdvancedCSSCache()` hook. | Complete |
+

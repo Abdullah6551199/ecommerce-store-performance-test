@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real, index } from "drizzle-orm/sqlite-core";
 import { sql, relations } from "drizzle-orm";
 
 /**
@@ -1116,16 +1116,143 @@ export const appInstallLogs = sqliteTable("app_install_log", {
 export type AppInstallLogDbRecord = typeof appInstallLogs.$inferSelect;
 export type NewAppInstallLogDbRecord = typeof appInstallLogs.$inferInsert;
 
+// 42. App Marketplace Listings Table (Stage 37A)
+export const appMarketplaceListings = sqliteTable("app_marketplace_listings", {
+  id: text("id").primaryKey(),
+  appId: text("app_id").notNull(),
+  version: text("version").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  author: text("author"),
+  authorUrl: text("author_url"),
+  iconUrl: text("icon_url"),
+  category: text("category"),
+  pricing: text("pricing"),
+  price: real("price"),
+  status: text("status", {
+    enum: ["draft", "pending", "approved", "rejected", "delisted"],
+  }),
+  submittedBy: text("submitted_by"),
+  submittedAt: integer("submitted_at"),
+  approvedBy: text("approved_by"),
+  approvedAt: integer("approved_at"),
+  rejectionReason: text("rejection_reason"),
+  downloadUrl: text("download_url"),
+  manifestJson: text("manifest_json"),
+  changelog: text("changelog"),
+  createdAt: integer("created_at"),
+  updatedAt: integer("updated_at"),
+});
+
+export type AppMarketplaceListingRecord = typeof appMarketplaceListings.$inferSelect;
+export type NewAppMarketplaceListingRecord = typeof appMarketplaceListings.$inferInsert;
+
+// 43. App Marketplace Versions Table (Stage 37A)
+export const appMarketplaceVersions = sqliteTable("app_marketplace_versions", {
+  id: text("id").primaryKey(),
+  listingId: text("listing_id").notNull(),
+  version: text("version").notNull(),
+  submittedAt: integer("submitted_at"),
+  manifestJson: text("manifest_json"),
+  downloadUrl: text("download_url"),
+  status: text("status", {
+    enum: ["pending", "approved", "rejected"],
+  }),
+  notes: text("notes"),
+});
+
+export type AppMarketplaceVersionRecord = typeof appMarketplaceVersions.$inferSelect;
+export type NewAppMarketplaceVersionRecord = typeof appMarketplaceVersions.$inferInsert;
+
+// 44. App Marketplace Installs Table (Stage 37A)
+export const appMarketplaceInstalls = sqliteTable("app_marketplace_installs", {
+  id: text("id").primaryKey(),
+  listingId: text("listing_id").notNull(),
+  storeId: text("store_id"),
+  installedAt: integer("installed_at"),
+  uninstalledAt: integer("uninstalled_at"),
+  status: text("status", {
+    enum: ["active", "uninstalled"],
+  }),
+});
+
+export type AppMarketplaceInstallRecord = typeof appMarketplaceInstalls.$inferSelect;
+export type NewAppMarketplaceInstallRecord = typeof appMarketplaceInstalls.$inferInsert;
+
+// 45. Theme Marketplace Listings Table (Stage 37B)
+export const themeMarketplaceListings = sqliteTable("theme_marketplace_listings", {
+  id: text("id").primaryKey(),
+  themeId: text("theme_id").notNull(),
+  version: text("version").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  author: text("author"),
+  authorUrl: text("author_url"),
+  previewUrl: text("preview_url"),
+  screenshotUrls: text("screenshot_urls"),
+  category: text("category"),
+  pricing: text("pricing"),
+  price: real("price"),
+  status: text("status", {
+    enum: ["draft", "pending", "approved", "rejected", "delisted"],
+  }),
+  submittedBy: text("submitted_by"),
+  submittedAt: integer("submitted_at"),
+  approvedBy: text("approved_by"),
+  approvedAt: integer("approved_at"),
+  rejectionReason: text("rejection_reason"),
+  downloadUrl: text("download_url"),
+  configJson: text("config_json"),
+  changelog: text("changelog"),
+  createdAt: integer("created_at"),
+  updatedAt: integer("updated_at"),
+});
+
+export type ThemeMarketplaceListingRecord = typeof themeMarketplaceListings.$inferSelect;
+export type NewThemeMarketplaceListingRecord = typeof themeMarketplaceListings.$inferInsert;
+
+// 46. Theme Marketplace Versions Table (Stage 37B)
+export const themeMarketplaceVersions = sqliteTable("theme_marketplace_versions", {
+  id: text("id").primaryKey(),
+  listingId: text("listing_id").notNull(),
+  version: text("version").notNull(),
+  submittedAt: integer("submitted_at"),
+  configJson: text("config_json"),
+  downloadUrl: text("download_url"),
+  status: text("status", {
+    enum: ["pending", "approved", "rejected"],
+  }),
+  notes: text("notes"),
+});
+
+export type ThemeMarketplaceVersionRecord = typeof themeMarketplaceVersions.$inferSelect;
+export type NewThemeMarketplaceVersionRecord = typeof themeMarketplaceVersions.$inferInsert;
+
+// 47. Theme Marketplace Installs Table (Stage 37B)
+export const themeMarketplaceInstalls = sqliteTable("theme_marketplace_installs", {
+  id: text("id").primaryKey(),
+  listingId: text("listing_id").notNull(),
+  storeId: text("store_id"),
+  installedAt: integer("installed_at"),
+  uninstalledAt: integer("uninstalled_at"),
+  status: text("status", {
+    enum: ["active", "uninstalled"],
+  }),
+});
+
+export type ThemeMarketplaceInstallRecord = typeof themeMarketplaceInstalls.$inferSelect;
+export type NewThemeMarketplaceInstallRecord = typeof themeMarketplaceInstalls.$inferInsert;
+
 // 48. Digital Products Table (Stage 38)
 export const digitalProducts = sqliteTable("digital_products", {
   id: text("id").primaryKey(),
   productId: text("product_id").notNull(),
   filesJson: text("files_json").notNull(),
-  downloadLimit: integer("download_limit").default(5),
-  expiryDays: integer("expiry_days").default(30),
-  licenseEnabled: integer("license_enabled").default(0),
-  createdAt: integer("created_at"),
-  updatedAt: integer("updated_at"),
+  downloadLimit: integer("download_limit").default(5).notNull(),
+  expiryDays: integer("expiry_days").default(30).notNull(),
+  licenseEnabled: integer("license_enabled").default(0).notNull(),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
 });
 
 export type DigitalProductRecord = typeof digitalProducts.$inferSelect;
@@ -1138,13 +1265,13 @@ export const digitalDownloads = sqliteTable("digital_downloads", {
   productId: text("product_id").notNull(),
   customerId: text("customer_id"),
   customerEmail: text("customer_email"),
-  fileName: text("file_name"),
-  r2Key: text("r2_key"),
-  downloadToken: text("download_token").notNull().unique(),
-  downloadedCount: integer("downloaded_count").default(0),
-  maxDownloads: integer("max_downloads").default(5),
+  fileName: text("file_name").notNull(),
+  r2Key: text("r2_key").notNull(),
+  downloadToken: text("download_token").notNull(),
+  downloadedCount: integer("downloaded_count").default(0).notNull(),
+  maxDownloads: integer("max_downloads").default(5).notNull(),
   expiresAt: integer("expires_at"),
-  createdAt: integer("created_at"),
+  createdAt: integer("created_at").notNull(),
   lastDownloadAt: integer("last_download_at"),
 });
 
@@ -1156,14 +1283,48 @@ export const digitalLicenses = sqliteTable("digital_licenses", {
   id: text("id").primaryKey(),
   orderId: text("order_id").notNull(),
   productId: text("product_id").notNull(),
-  licenseKey: text("license_key").unique(),
+  licenseKey: text("license_key").unique().notNull(),
   customerEmail: text("customer_email"),
-  status: text("status").default("active"),
-  createdAt: integer("created_at"),
+  status: text("status").default("active").notNull(),
+  createdAt: integer("created_at").notNull(),
 });
 
 export type DigitalLicenseRecord = typeof digitalLicenses.$inferSelect;
 export type NewDigitalLicenseRecord = typeof digitalLicenses.$inferInsert;
+
+// 51. Marketplace Reviews Table (Stage 37C)
+export const marketplaceReviews = sqliteTable("marketplace_reviews", {
+  id: text("id").primaryKey(),
+  listingType: text("listing_type").notNull(), // 'app' | 'theme'
+  listingId: text("listing_id").notNull(),
+  userId: text("user_id"),
+  userEmail: text("user_email"),
+  userName: text("user_name"),
+  rating: integer("rating").notNull(), // 1 to 5
+  title: text("title"),
+  body: text("body"),
+  helpfulCount: integer("helpful_count").default(0).notNull(),
+  status: text("status").default("published").notNull(), // 'published' | 'hidden' | 'flagged'
+  teamResponse: text("team_response"),
+  teamResponseAt: integer("team_response_at"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export type MarketplaceReviewRecord = typeof marketplaceReviews.$inferSelect;
+export type NewMarketplaceReviewRecord = typeof marketplaceReviews.$inferInsert;
+
+// 52. Marketplace Review Votes Table (Stage 37C)
+export const marketplaceReviewVotes = sqliteTable("marketplace_review_votes", {
+  id: text("id").primaryKey(),
+  reviewId: text("review_id").notNull(),
+  userId: text("user_id").notNull(),
+  voteType: text("vote_type").notNull(), // 'helpful' | 'not_helpful'
+  createdAt: integer("created_at").notNull(),
+});
+
+export type MarketplaceReviewVoteRecord = typeof marketplaceReviewVotes.$inferSelect;
+export type NewMarketplaceReviewVoteRecord = typeof marketplaceReviewVotes.$inferInsert;
 
 // 53. Product Questions Table (Stage 40)
 export const productQuestions = sqliteTable("product_questions", {
@@ -1392,4 +1553,33 @@ export const chatbotConversations = sqliteTable("chatbot_conversations", {
 export type ChatbotConversationRecord = typeof chatbotConversations.$inferSelect;
 export type NewChatbotConversationRecord = typeof chatbotConversations.$inferInsert;
 
+// 67. Advanced Editor Settings Table (Stage 42.6)
+export const advancedEditorSettings = sqliteTable("advanced_editor_settings", {
+  id: text("id").primaryKey().default("default"),
+  enabled: integer("enabled").default(1),
+  enableCustomCss: integer("enable_custom_css").default(1),
+  enableAnimations: integer("enable_animations").default(1),
+  enableResponsive: integer("enable_responsive").default(1),
+  enableBreakpoints: integer("enable_breakpoints").default(1),
+  breakpoints: text("breakpoints").default('[{"name":"tablet","width":1024},{"name":"mobile","width":767}]'),
+  updatedAt: integer("updated_at"),
+});
+
+export type AdvancedEditorSettingRecord = typeof advancedEditorSettings.$inferSelect;
+export type NewAdvancedEditorSettingRecord = typeof advancedEditorSettings.$inferInsert;
+
+// 68. Advanced Editor Presets Table (Stage 42.6)
+export const advancedEditorPresets = sqliteTable("advanced_editor_presets", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  type: text("type").notNull(), // typography | button | shadow | animation | spacing
+  presetJson: text("preset_json").notNull(),
+  isGlobal: integer("is_global").default(0),
+  createdAt: integer("created_at"),
+}, (table) => [
+  index("idx_advanced_presets_type").on(table.type),
+]);
+
+export type AdvancedEditorPresetRecord = typeof advancedEditorPresets.$inferSelect;
+export type NewAdvancedEditorPresetRecord = typeof advancedEditorPresets.$inferInsert;
 

@@ -239,3 +239,40 @@ When an administrator activates a theme via `/admin/themes`:
 2. `nasrify-admin` sends a signed cross-worker request to `https://nasrify-store.zia291930.workers.dev/api/cache/invalidate`.
 3. `nasrify-store` invalidates in-memory micro-cache (`invalidateActiveThemeCache()`) and purges edge HTML cache for `/`.
 4. Subsequent requests to the storefront immediately read and render the new active theme.
+
+---
+
+## 8. Advanced Theme Editor (Stage 42.6)
+
+For stores requiring Elementor-like granular design controls, the `advanced-theme-editor` paid app adds an **Advanced** tab to the Theme Editor via the `admin.theme-editor.advanced` extension point:
+
+### Section `_advanced` Configuration
+Each section's settings object can store an optional `_advanced` payload containing:
+- `style`: Typography, classic/gradient/image background, border, box-shadow, and CSS filters/transform effects.
+- `advanced`: Margin/padding layout, entrance motion animations, per-device visibility, and sanitized custom CSS.
+
+```json
+{
+  "id": "sec-hero",
+  "type": "hero",
+  "settings": {
+    "title": "Welcome",
+    "_advanced": {
+      "style": {
+        "typography": { "fontSize": "32px", "fontWeight": "800", "color": "#0f172a" },
+        "background": { "type": "gradient", "gradient": { "color1": "#f8fafc", "color2": "#e2e8f0" } },
+        "border": { "type": "solid", "color": "#cbd5e1", "width": { "top": "1px", "bottom": "1px" } },
+        "boxShadow": { "x": 0, "y": 8, "blur": 24, "color": "rgba(0,0,0,0.06)" }
+      },
+      "advanced": {
+        "motion": { "entranceAnimation": "fadeInUp", "animationDuration": 800 },
+        "customCss": "selector { transition: transform 0.3s ease; }"
+      }
+    }
+  }
+}
+```
+
+### Storefront Performance Target
+The storefront engine (`nasrify-store/lib/themes/engine.tsx`) automatically compiles `_advanced` section data into `<style id="theme-advanced-css">` with a 60-second micro-cache keyed on section configuration fingerprints (<10ms CPU target). All custom CSS is sanitized to eliminate external requests and security risks.
+

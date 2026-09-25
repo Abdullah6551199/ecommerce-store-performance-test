@@ -56,6 +56,11 @@ export async function POST(req: NextRequest) {
       invalidateActiveThemeCache();
     } catch {}
 
+    try {
+      const { invalidateThemeAdvancedCSSCache } = await import("@/lib/themes/engine");
+      invalidateThemeAdvancedCSSCache();
+    } catch {}
+
     // Purge edge cache
     if (path) {
       await purgeEdgeCache(path);

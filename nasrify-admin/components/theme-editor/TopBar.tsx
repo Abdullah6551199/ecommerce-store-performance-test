@@ -20,6 +20,9 @@ interface TopBarProps {
   onDiscardDraft: () => Promise<void>;
   isDiscarding: boolean;
   liveUrl?: string;
+  editorMode?: "basic" | "advanced";
+  onEditorModeChange?: (mode: "basic" | "advanced") => void;
+  hasAdvancedApp?: boolean;
 }
 
 export function TopBar({
@@ -37,6 +40,9 @@ export function TopBar({
   onDiscardDraft,
   isDiscarding,
   liveUrl = "https://nasrify-store.zia291930.workers.dev",
+  editorMode = "basic",
+  onEditorModeChange,
+  hasAdvancedApp = false,
 }: TopBarProps) {
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -61,9 +67,38 @@ export function TopBar({
           <h1 className="text-xs font-semibold text-slate-200 truncate max-w-40 sm:max-w-xs">
             {storeName}
           </h1>
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">
-            Basic Editor
-          </span>
+
+          {/* Tab Switcher: [Basic] [Advanced] */}
+          {hasAdvancedApp ? (
+            <div className="flex items-center bg-slate-950 p-0.5 rounded-md border border-slate-800 text-xs ml-1">
+              <button
+                type="button"
+                onClick={() => onEditorModeChange?.("basic")}
+                className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+                  editorMode === "basic"
+                    ? "bg-slate-800 text-[#25D366] font-semibold shadow-xs"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                Basic
+              </button>
+              <button
+                type="button"
+                onClick={() => onEditorModeChange?.("advanced")}
+                className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+                  editorMode === "advanced"
+                    ? "bg-indigo-600 text-white font-semibold shadow-xs"
+                    : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                Advanced
+              </button>
+            </div>
+          ) : (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">
+              Basic Editor
+            </span>
+          )}
         </div>
       </div>
 

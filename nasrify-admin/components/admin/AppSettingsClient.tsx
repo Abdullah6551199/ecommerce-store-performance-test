@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import AdminLoadingSkeleton from "@/components/admin/AdminLoadingSkeleton";
 import Toggle from "@/components/ui/Toggle";
+import { loadAdminAppComponent } from "@/lib/apps/loader";
 
 interface SchemaProperty {
   type: "boolean" | "string" | "number" | "select";
@@ -57,7 +58,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
   const [data, setData] = useState<AppDetailsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"settings" | "overview" | "logs">("settings");
+  const [activeTab, setActiveTab] = useState<"manage" | "settings" | "overview" | "logs">("manage");
   const [formValues, setFormValues] = useState<Record<string, any>>({});
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -197,8 +198,23 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
   const schema = manifest.settingsSchema || {};
   const schemaKeys = Object.keys(schema);
 
+  // App manager components
+  const managerNameMap: Record<string, string> = {
+    bundles: "BundlesManager",
+    coupons: "CouponsManager",
+    broadcast: "BroadcastManager",
+    "trust-badges": "TrustBadgesManager",
+    "cookie-consent": "CookieConsentManager",
+    "digital-products": "DigitalProductsManager",
+    reviews: "ReviewsManager",
+    "product-qa": "ProductQAManager",
+  };
+  const CustomManagerComponent = managerNameMap[appId]
+    ? loadAdminAppComponent(appId, managerNameMap[appId])
+    : null;
+
   return (
-    <div className="space-y-8 max-w-4xl">
+    <div className="space-y-8 max-w-5xl">
       {/* Breadcrumbs & Navigation */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-white/60">
@@ -284,6 +300,19 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
 
         {/* Tab Navigation */}
         <div className="mt-6 flex border-b border-zinc-100 dark:border-white/10 gap-6">
+          {CustomManagerComponent && (
+            <button
+              type="button"
+              onClick={() => setActiveTab("manage")}
+              className={`pb-3 text-xs font-bold transition-all border-b-2 ${
+                activeTab === "manage"
+                  ? "border-[#1EA855] text-[#25D366] dark:text-zinc-400"
+                  : "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-white/60 dark:hover:text-white"
+              }`}
+            >
+              Dashboard &amp; Manage
+            </button>
+          )}
           <button
             type="button"
             onClick={() => setActiveTab("settings")}
@@ -337,6 +366,13 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
           >
             Dismiss
           </button>
+        </div>
+      )}
+
+      {/* TAB 0: CUSTOM MANAGER / DASHBOARD */}
+      {activeTab === "manage" && CustomManagerComponent && (
+        <div className="space-y-6">
+          <CustomManagerComponent />
         </div>
       )}
 

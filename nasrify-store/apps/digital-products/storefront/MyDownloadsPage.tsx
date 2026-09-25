@@ -67,7 +67,7 @@ export function MyDownloadsPage({ initialEmail = "" }: MyDownloadsPageProps): Re
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xl">💾</span>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                 Digital Vault
               </span>
             </div>
@@ -86,11 +86,11 @@ export function MyDownloadsPage({ initialEmail = "" }: MyDownloadsPageProps): Re
               placeholder="Enter order email..."
               value={emailInput}
               onChange={(e) => setEmailInput(e.target.value)}
-              className="px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-purple-500"
+              className="px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-[#25D366]"
             />
             <button
               type="submit"
-              className="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 transition-colors shadow-sm"
+              className="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-[#25D366] hover:bg-[#1EA855] transition-colors shadow-sm"
             >
               Lookup
             </button>
@@ -125,7 +125,7 @@ export function MyDownloadsPage({ initialEmail = "" }: MyDownloadsPageProps): Re
           </p>
           <Link
             href="/"
-            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 inline-block shadow-sm"
+            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#25D366] hover:bg-[#1EA855] inline-block shadow-sm"
           >
             Browse Storefront
           </Link>
@@ -139,7 +139,7 @@ export function MyDownloadsPage({ initialEmail = "" }: MyDownloadsPageProps): Re
             return (
               <div
                 key={dl.id}
-                className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm hover:border-purple-500/30 transition-all"
+                className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm hover:border-[#25D366]/40 transition-all"
               >
                 <div className="space-y-2 max-w-xl">
                   <div className="flex items-center gap-2">
@@ -163,11 +163,11 @@ export function MyDownloadsPage({ initialEmail = "" }: MyDownloadsPageProps): Re
 
                   {/* License Key Display (if enabled) */}
                   {dl.licenseKey && (
-                    <div className="p-2.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60 inline-flex items-center gap-2 text-xs">
-                      <span className="text-purple-600 dark:text-purple-400 font-bold">
+                    <div className="p-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 inline-flex items-center gap-2 text-xs">
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">
                         License Key:
                       </span>
-                      <code className="font-mono font-black text-purple-700 dark:text-purple-300 select-all">
+                      <code className="font-mono font-black text-zinc-900 dark:text-zinc-100 select-all">
                         {dl.licenseKey}
                       </code>
                     </div>

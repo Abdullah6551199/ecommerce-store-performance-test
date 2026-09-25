@@ -188,7 +188,7 @@ export default function AskQuestionForm({
             <button
               type="submit"
               disabled={submitting || question.trim().length < 3}
-              className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold shadow-md shadow-purple-600/20 transition-all cursor-pointer flex items-center gap-2"
+              className="px-5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] active:bg-[#1EA855] disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold shadow-md shadow-emerald-500/20 transition-all cursor-pointer flex items-center gap-2"
             >
               {submitting ? (
                 <>
@@ -207,7 +207,7 @@ export default function AskQuestionForm({
 
   if (isInline) {
     return (
-      <div className="p-5 rounded-2xl border border-purple-200 dark:border-purple-800/40 bg-purple-50/30 dark:bg-purple-950/20 shadow-sm">
+      <div className="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 shadow-sm">
         {content}
       </div>
     );
@@ -215,7 +215,7 @@ export default function AskQuestionForm({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-lg p-6 bg-white dark:bg-[#120524] rounded-3xl border border-zinc-200 dark:border-purple-800/40 shadow-2xl">
+      <div className="w-full max-w-lg p-6 bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-2xl">
         {content}
       </div>
     </div>

@@ -19,7 +19,7 @@ function Toggle({
       disabled={disabled}
       onClick={() => !disabled && onChange(!checked)}
       className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-hidden ${
-        checked ? "bg-[#960DF2]" : "bg-gray-300 dark:bg-gray-700"
+        checked ? "bg-[#25D366]" : "bg-gray-300 dark:bg-gray-700"
       } ${disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
     >
       <span
@@ -120,24 +120,24 @@ export default function CookieCustomizeModal({
       aria-modal="true"
       aria-labelledby="cookie-preferences-title"
     >
-      <div className="relative w-full max-w-lg rounded-3xl border border-purple-100 dark:border-purple-800/60 bg-white dark:bg-[#1a052e] p-6 shadow-2xl space-y-6 sm:p-8">
+      <div className="relative w-full max-w-lg rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-2xl space-y-6 sm:p-8">
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2
               id="cookie-preferences-title"
-              className="text-xl font-black text-[#3C0561] dark:text-white sm:text-2xl"
+              className="text-xl font-black text-[#18181B] dark:text-white sm:text-2xl"
             >
               Cookie Preferences
             </h2>
-            <p className="mt-1 text-xs text-[#5A0891]/80 dark:text-[#EACFFC]/70">
+            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
               Customize your privacy choices. Necessary cookies remain enabled to allow core
               functionality.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 text-gray-400 hover:bg-purple-50 dark:hover:bg-purple-950 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            className="rounded-full p-1.5 text-gray-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
             aria-label="Close modal"
           >
             ✕
@@ -145,19 +145,19 @@ export default function CookieCustomizeModal({
         </div>
 
         {/* Categories */}
-        <div className="space-y-4 divide-y divide-purple-100 dark:divide-purple-900/40">
+        <div className="space-y-4 divide-y divide-zinc-200 dark:divide-zinc-800">
           {/* Necessary (Locked) */}
           <div className="pt-2 flex items-start justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-[#3C0561] dark:text-white">
+                <span className="text-sm font-bold text-[#18181B] dark:text-white">
                   Strictly Necessary
                 </span>
-                <span className="rounded-md bg-purple-100 dark:bg-purple-900/50 px-2 py-0.5 text-[10px] font-bold text-[#960DF2] dark:text-[#EACFFC]">
+                <span className="rounded-md bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 text-[10px] font-bold text-[#25D366]">
                   Always Active
                 </span>
               </div>
-              <p className="text-xs text-[#5A0891]/70 dark:text-[#EACFFC]/60">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 Required for core website operations, session safety, and cart checkout.
               </p>
             </div>
@@ -170,10 +170,10 @@ export default function CookieCustomizeModal({
           {analyticsEnabled && (
             <div className="pt-4 flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <span className="text-sm font-bold text-[#3C0561] dark:text-white">
+                <span className="text-sm font-bold text-[#18181B] dark:text-white">
                   Analytics & Insights
                 </span>
-                <p className="text-xs text-[#5A0891]/70 dark:text-[#EACFFC]/60">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   Allows anonymous tracking of visit traffic and popular pages to optimize loading
                   speed.
                 </p>
@@ -191,10 +191,10 @@ export default function CookieCustomizeModal({
           {marketingEnabled && (
             <div className="pt-4 flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <span className="text-sm font-bold text-[#3C0561] dark:text-white">
+                <span className="text-sm font-bold text-[#18181B] dark:text-white">
                   Marketing & Pixels
                 </span>
-                <p className="text-xs text-[#5A0891]/70 dark:text-[#EACFFC]/60">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   Used by social advertising partners (Meta, TikTok) to present relevant offers.
                 </p>
               </div>
@@ -211,10 +211,10 @@ export default function CookieCustomizeModal({
           {functionalEnabled && (
             <div className="pt-4 flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <span className="text-sm font-bold text-[#3C0561] dark:text-white">
+                <span className="text-sm font-bold text-[#18181B] dark:text-white">
                   Functional & Preferences
                 </span>
-                <p className="text-xs text-[#5A0891]/70 dark:text-[#EACFFC]/60">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
                   Remembers your currency selection, wishlist items, and display theme.
                 </p>
               </div>
@@ -234,14 +234,14 @@ export default function CookieCustomizeModal({
             <button
               type="button"
               onClick={handleRejectAll}
-              className="w-full sm:w-auto rounded-xl border border-purple-200 dark:border-purple-800/80 px-4 py-2 text-xs font-bold text-[#5A0891] dark:text-[#EACFFC] hover:bg-purple-50 dark:hover:bg-purple-950/50 transition-colors"
+              className="w-full sm:w-auto rounded-xl border border-zinc-200 dark:border-zinc-700 px-4 py-2 text-xs font-bold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
             >
               Reject Non-Essential
             </button>
             <button
               type="button"
               onClick={handleAcceptAll}
-              className="w-full sm:w-auto rounded-xl border border-purple-200 dark:border-purple-800/80 px-4 py-2 text-xs font-bold text-[#5A0891] dark:text-[#EACFFC] hover:bg-purple-50 dark:hover:bg-purple-950/50 transition-colors"
+              className="w-full sm:w-auto rounded-xl border border-zinc-200 dark:border-zinc-700 px-4 py-2 text-xs font-bold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
             >
               Accept All
             </button>
@@ -250,7 +250,7 @@ export default function CookieCustomizeModal({
           <button
             type="button"
             onClick={handleSave}
-            className="w-full sm:w-auto rounded-xl bg-[#960DF2] px-6 py-2 text-xs font-black text-white shadow-sm hover:bg-[#7907C7] transition-all hover:scale-102"
+            className="w-full sm:w-auto rounded-xl bg-[#25D366] px-6 py-2 text-xs font-black text-white shadow-sm hover:bg-[#1EA855] transition-all hover:scale-102"
           >
             Save My Preferences
           </button>

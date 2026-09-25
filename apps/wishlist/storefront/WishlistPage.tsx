@@ -84,10 +84,10 @@ export default function WishlistPage(): React.JSX.Element {
   if (isLoading) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="h-6 w-48 bg-purple-100 dark:bg-purple-950/40 rounded-xl" />
+        <div className="h-6 w-48 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-64 rounded-3xl bg-purple-100/50 dark:bg-purple-950/40" />
+            <div key={i} className="h-64 rounded-3xl bg-zinc-100 dark:bg-zinc-800/40" />
           ))}
         </div>
       </div>
@@ -96,15 +96,15 @@ export default function WishlistPage(): React.JSX.Element {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-purple-100 dark:border-purple-800/40">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-zinc-200 dark:border-zinc-800">
         <div>
-          <h1 className="text-2xl font-black text-[#3C0561] dark:text-white tracking-tight flex items-center gap-2.5">
+          <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight flex items-center gap-2.5">
             <span>My Wishlist</span>
-            <span className="rounded-full bg-purple-100 dark:bg-purple-900/60 px-2.5 py-0.5 text-xs font-mono font-bold text-purple-700 dark:text-purple-300">
+            <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 text-xs font-mono font-bold text-[#25D366]">
               {items.length}
             </span>
           </h1>
-          <p className="text-xs text-slate-500 dark:text-purple-300/80 mt-0.5">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
             Saved items accessible across devices with your account profile.
           </p>
         </div>
@@ -113,7 +113,7 @@ export default function WishlistPage(): React.JSX.Element {
           <button
             type="button"
             onClick={handleAddAllToCart}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white px-5 py-2.5 text-xs font-bold shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white px-5 py-2.5 text-xs font-bold shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -124,8 +124,8 @@ export default function WishlistPage(): React.JSX.Element {
       </div>
 
       {items.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm">
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] mb-4">
+        <div className="p-12 text-center rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-[#25D366] mb-4">
             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -135,13 +135,13 @@ export default function WishlistPage(): React.JSX.Element {
               />
             </svg>
           </div>
-          <h3 className="text-base font-extrabold text-[#3C0561] dark:text-white">Your Wishlist is Empty</h3>
-          <p className="text-xs text-slate-500 dark:text-purple-300/70 mt-1 mb-6 max-w-sm mx-auto">
+          <h3 className="text-base font-extrabold text-zinc-900 dark:text-white">Your Wishlist is Empty</h3>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 mb-6 max-w-sm mx-auto">
             Save technical activewear, shoes, and accessories you love to easily purchase them later.
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center px-6 py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex items-center px-6 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white font-extrabold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             Discover Products &rarr;
           </Link>
@@ -157,10 +157,10 @@ export default function WishlistPage(): React.JSX.Element {
             return (
               <div
                 key={record.id || record.productId}
-                className="group p-4 rounded-3xl border border-purple-100 dark:border-purple-900/40 bg-white dark:bg-[#1E0230] shadow-sm flex flex-col justify-between hover:border-purple-300 dark:hover:border-purple-700 transition space-y-3"
+                className="group p-4 rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm flex flex-col justify-between hover:border-zinc-400 dark:hover:border-zinc-700 transition space-y-3"
               >
                 <div>
-                  <div className="relative aspect-square w-full rounded-2xl bg-purple-50/50 dark:bg-[#2A0344]/50 overflow-hidden mb-3 border border-purple-100 dark:border-purple-800/40">
+                  <div className="relative aspect-square w-full rounded-2xl bg-zinc-100 dark:bg-zinc-800 overflow-hidden mb-3 border border-zinc-200 dark:border-zinc-800">
                     {imageSrc ? (
                       <Image
                         src={imageSrc}
@@ -182,7 +182,7 @@ export default function WishlistPage(): React.JSX.Element {
                       ✕
                     </button>
                     {hasSale && (
-                      <span className="absolute top-2.5 left-2.5 rounded-full bg-purple-600 px-2 py-0.5 text-[9px] font-bold text-white shadow-sm">
+                      <span className="absolute top-2.5 left-2.5 rounded-full bg-[#25D366] px-2 py-0.5 text-[9px] font-bold text-white shadow-sm">
                         SALE
                       </span>
                     )}
@@ -190,13 +190,13 @@ export default function WishlistPage(): React.JSX.Element {
 
                   <Link
                     href={`/product/${prod.slug || prod.id}`}
-                    className="text-xs font-bold text-slate-900 dark:text-white hover:text-[#960DF2] dark:hover:text-[#EACFFC] line-clamp-2"
+                    className="text-xs font-bold text-slate-900 dark:text-white hover:text-[#25D366] line-clamp-2"
                   >
                     {prod.name}
                   </Link>
 
                   <div className="flex items-baseline gap-2 mt-1.5">
-                    <span className="text-sm font-black text-[#960DF2] dark:text-[#EACFFC]">
+                    <span className="text-sm font-black text-zinc-900 dark:text-white">
                       Rs. {Number(effectivePrice).toFixed(2)}
                     </span>
                     {hasSale && (
@@ -210,7 +210,7 @@ export default function WishlistPage(): React.JSX.Element {
                 <button
                   type="button"
                   onClick={() => handleAddToCart(record)}
-                  className="w-full py-2.5 rounded-xl bg-[#960DF2] hover:bg-[#850bd8] text-white font-extrabold text-xs shadow-md shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] text-white font-extrabold text-xs shadow-md shadow-emerald-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <span>Move to Cart</span>
                 </button>

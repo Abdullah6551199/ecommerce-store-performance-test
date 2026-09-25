@@ -97,21 +97,21 @@ export default function CookieConsentBanner(): React.JSX.Element | null {
         }`}
         data-app="cookie-consent"
       >
-        <div className="mx-auto max-w-5xl rounded-3xl border border-purple-200/80 dark:border-purple-800/80 bg-white/95 dark:bg-[#1a052e]/95 p-5 sm:p-6 shadow-2xl backdrop-blur-md">
+        <div className="mx-auto max-w-5xl rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 p-5 sm:p-6 shadow-2xl backdrop-blur-md">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
             {/* Message */}
             <div className="space-y-1.5 max-w-2xl">
               <div className="flex items-center gap-2">
                 <span className="text-xl">🍪</span>
-                <h3 className="text-base font-black text-[#3C0561] dark:text-white sm:text-lg">
+                <h3 className="text-base font-black text-[#18181B] dark:text-white sm:text-lg">
                   {title}
                 </h3>
               </div>
-              <p className="text-xs sm:text-sm text-[#5A0891]/80 dark:text-[#EACFFC]/80 leading-relaxed">
+              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
                 {message}{" "}
                 <Link
                   href="/cookie-policy"
-                  className="font-bold underline text-[#960DF2] dark:text-[#EACFFC] hover:opacity-80 transition-opacity"
+                  className="font-bold underline text-[#25D366] hover:opacity-80 transition-opacity"
                 >
                   Read Cookie Policy
                 </Link>
@@ -124,7 +124,7 @@ export default function CookieConsentBanner(): React.JSX.Element | null {
                 <button
                   type="button"
                   onClick={() => setShowModal(true)}
-                  className="rounded-xl border border-purple-200 dark:border-purple-800 px-4 py-2.5 text-xs font-bold text-[#5A0891] dark:text-[#EACFFC] hover:bg-purple-50 dark:hover:bg-purple-950/60 transition-colors"
+                  className="rounded-xl border border-zinc-200 dark:border-zinc-700 px-4 py-2.5 text-xs font-bold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                 >
                   {customizeText}
                 </button>
@@ -132,14 +132,14 @@ export default function CookieConsentBanner(): React.JSX.Element | null {
               <button
                 type="button"
                 onClick={handleRejectAll}
-                className="rounded-xl border border-purple-200 dark:border-purple-800 px-4 py-2.5 text-xs font-bold text-[#5A0891] dark:text-[#EACFFC] hover:bg-purple-50 dark:hover:bg-purple-950/60 transition-colors"
+                className="rounded-xl border border-zinc-200 dark:border-zinc-700 px-4 py-2.5 text-xs font-bold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               >
                 {rejectText}
               </button>
               <button
                 type="button"
                 onClick={handleAcceptAll}
-                className="rounded-xl bg-[#960DF2] px-6 py-2.5 text-xs font-black text-white shadow-sm hover:bg-[#7907C7] transition-all hover:scale-102"
+                className="rounded-xl bg-[#25D366] px-6 py-2.5 text-xs font-black text-white shadow-sm hover:bg-[#1EA855] transition-all hover:scale-102"
               >
                 {acceptText}
               </button>

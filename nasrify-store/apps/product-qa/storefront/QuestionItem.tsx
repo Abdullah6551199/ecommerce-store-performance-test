@@ -151,8 +151,8 @@ export default function QuestionItem({
       id={`qa-question-${item.id}`}
       className={`rounded-2xl border transition-all p-5 ${
         item.isPinned
-          ? "border-purple-300 dark:border-purple-600/50 bg-purple-50/20 dark:bg-purple-950/15 shadow-sm"
-          : "border-zinc-200 dark:border-white/10 bg-white dark:bg-[#130725]/40"
+          ? "border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/20 dark:bg-emerald-950/15 shadow-sm"
+          : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40"
       }`}
     >
       {/* Question Header & Content */}
@@ -160,7 +160,7 @@ export default function QuestionItem({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             {item.isPinned && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/60 text-[#25D366] border border-emerald-200 dark:border-emerald-800">
                 📌 Pinned
               </span>
             )}
@@ -173,7 +173,7 @@ export default function QuestionItem({
           </div>
 
           <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 leading-snug">
-            <span className="text-purple-600 dark:text-purple-400 font-bold mr-1.5">Q:</span>
+            <span className="text-[#25D366] font-bold mr-1.5">Q:</span>
             {item.question}
           </h4>
         </div>
@@ -187,12 +187,12 @@ export default function QuestionItem({
             aria-label="Upvote this question"
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer shrink-0 ${
               questionUpvoted
-                ? "border-purple-600 bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 shadow-sm"
-                : "border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:border-purple-400 hover:text-purple-600"
+                ? "border-[#25D366] bg-emerald-50 dark:bg-emerald-950/60 text-[#25D366] shadow-sm"
+                : "border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:border-[#25D366] hover:text-[#25D366]"
             }`}
           >
             <svg
-              className={`w-3.5 h-3.5 transition-transform ${questionUpvoted ? "scale-110 text-purple-600" : ""}`}
+              className={`w-3.5 h-3.5 transition-transform ${questionUpvoted ? "scale-110 text-[#25D366]" : ""}`}
               fill={questionUpvoted ? "currentColor" : "none"}
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -214,18 +214,18 @@ export default function QuestionItem({
                 key={ans.id}
                 className={`rounded-xl p-3.5 text-xs transition-all ${
                   isNasrifyTeam
-                    ? "border border-purple-200 dark:border-purple-800/40 bg-purple-50/40 dark:bg-purple-950/20"
+                    ? "border border-emerald-200 dark:border-emerald-800/40 bg-emerald-50/30 dark:bg-emerald-950/20"
                     : "border border-zinc-100 dark:border-white/5 bg-zinc-50/50 dark:bg-white/5"
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 mb-1.5">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-purple-600 dark:text-purple-400">A:</span>
+                    <span className="font-bold text-[#25D366]">A:</span>
                     <span className="font-semibold text-zinc-900 dark:text-white">
                       {isNasrifyTeam ? "Nasrify Team" : ans.authorName}
                     </span>
                     {isNasrifyTeam && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-600 text-white">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#25D366] text-white">
                         Verified Store Team
                       </span>
                     )}
@@ -243,7 +243,7 @@ export default function QuestionItem({
                     <button
                       type="button"
                       onClick={() => handleToggleAnswerUpvote(ans)}
-                      className="flex items-center gap-1 text-[11px] text-zinc-500 dark:text-zinc-400 hover:text-purple-600 transition-colors cursor-pointer"
+                      className="flex items-center gap-1 text-[11px] text-zinc-500 dark:text-zinc-400 hover:text-[#25D366] transition-colors cursor-pointer"
                     >
                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
@@ -271,12 +271,12 @@ export default function QuestionItem({
             <button
               type="button"
               onClick={() => setShowAnswerForm(true)}
-              className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline inline-flex items-center gap-1 cursor-pointer"
+              className="text-xs font-semibold text-[#25D366] hover:underline inline-flex items-center gap-1 cursor-pointer"
             >
               <span>+ Answer this question</span>
             </button>
           ) : (
-            <form onSubmit={handlePostAnswer} className="mt-3 p-3.5 rounded-xl border border-purple-200 dark:border-purple-800/40 bg-purple-50/20 dark:bg-purple-950/10 space-y-3">
+            <form onSubmit={handlePostAnswer} className="mt-3 p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 space-y-3">
               {answerError && (
                 <div className="p-2 text-xs rounded-lg bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300">
                   {answerError}
@@ -317,7 +317,7 @@ export default function QuestionItem({
                 <button
                   type="submit"
                   disabled={submittingAnswer || !answerText.trim()}
-                  className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50 cursor-pointer"
+                  className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-[#25D366] hover:bg-[#1EA855] text-white disabled:opacity-50 cursor-pointer"
                 >
                   {submittingAnswer ? "Posting..." : "Submit Answer"}
                 </button>

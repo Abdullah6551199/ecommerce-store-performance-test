@@ -95,12 +95,12 @@ export default function WishlistButton({
           className={`w-full flex items-center justify-center gap-2.5 rounded-2xl py-3 px-5 font-bold text-xs shadow-sm transition-all duration-200 cursor-pointer border ${
             inWishlist
               ? "bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-300 hover:bg-rose-100"
-              : "bg-white dark:bg-[#1E0230] border-purple-200/70 dark:border-purple-800/60 text-purple-900 dark:text-purple-100 hover:border-purple-400 hover:scale-[1.01]"
+              : "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 hover:border-zinc-400 hover:scale-[1.01]"
           }`}
         >
           <svg
             className={`h-4 w-4 transition-transform duration-200 ${
-              inWishlist ? "fill-rose-500 text-rose-500 scale-110" : "fill-none text-purple-600 dark:text-purple-300"
+              inWishlist ? "fill-rose-500 text-rose-500 scale-110" : "fill-none text-zinc-600 dark:text-zinc-400"
             }`}
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -128,7 +128,7 @@ export default function WishlistButton({
         className={`inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-xl border transition-all cursor-pointer ${
           inWishlist
             ? "border-rose-400 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400"
-            : "border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-200 hover:border-purple-400"
+            : "border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 text-zinc-700 dark:text-zinc-200 hover:border-zinc-400"
         } ${className}`}
       >
         <svg

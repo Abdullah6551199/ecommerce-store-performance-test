@@ -32,7 +32,7 @@ export default function BundleCard({ bundle, badgeText }: BundleCardProps): Reac
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center text-purple-400 text-xs font-bold">
+            <div className="flex h-full w-full flex-col items-center justify-center text-zinc-400 text-xs font-bold">
               Product Bundle
             </div>
           )}

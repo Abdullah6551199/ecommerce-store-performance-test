@@ -26,16 +26,16 @@ export function DigitalProductBadge({ productId }: DigitalProductBadgeProps): Re
   if (!isDigital) return null;
 
   return (
-    <div className="rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-gradient-to-r from-purple-50/80 to-indigo-50/50 dark:from-purple-950/40 dark:to-zinc-900 p-4 my-4 flex items-center gap-3.5 shadow-sm">
-      <div className="h-10 w-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg shrink-0 shadow-md shadow-purple-500/20">
+    <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-gradient-to-r from-emerald-50/80 to-zinc-50/50 dark:from-zinc-900/40 dark:to-zinc-900 p-4 my-4 flex items-center gap-3.5 shadow-sm">
+      <div className="h-10 w-10 rounded-xl bg-[#25D366] text-white flex items-center justify-center text-lg shrink-0 shadow-md shadow-emerald-500/20">
         ⚡
       </div>
       <div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-black text-purple-950 dark:text-purple-200 tracking-tight">
+          <span className="text-xs font-black text-zinc-900 dark:text-zinc-100 tracking-tight">
             Instant Digital Delivery
           </span>
-          <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-purple-600/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+          <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
             Downloadable
           </span>
         </div>

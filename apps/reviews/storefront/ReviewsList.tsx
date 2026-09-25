@@ -281,7 +281,7 @@ export default function ReviewsList({
             setSubmissionMessage(null);
             setErrorMessage(null);
           }}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-purple-400 hover:bg-purple-500 active:scale-95 transition-all shadow-md shadow-purple-500/20 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1EA855] active:scale-95 transition-all shadow-md shadow-emerald-500/20 cursor-pointer"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -317,7 +317,7 @@ export default function ReviewsList({
               type="button"
               onClick={() => setSelectedRating(selectedRating === item.stars ? null : item.stars)}
               className={`w-full flex items-center gap-3 text-xs group cursor-pointer p-1 rounded-lg transition-colors ${
-                selectedRating === item.stars ? "bg-purple-500/10 dark:bg-purple-500/20" : "hover:bg-zinc-100 dark:hover:bg-white/5"
+                selectedRating === item.stars ? "bg-[#25D366]/10 text-[#25D366]" : "hover:bg-zinc-100 dark:hover:bg-white/5"
               }`}
             >
               <span className="w-12 font-medium text-zinc-700 dark:text-zinc-300 flex items-center justify-end gap-1">
@@ -325,7 +325,7 @@ export default function ReviewsList({
               </span>
               <div className="flex-1 h-2.5 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-amber-400 group-hover:bg-purple-400 transition-all duration-300"
+                  className="h-full rounded-full bg-amber-400 group-hover:bg-[#25D366] transition-all duration-300"
                   style={{ width: `${item.percentage}%` }}
                 />
               </div>
@@ -409,7 +409,7 @@ export default function ReviewsList({
                 placeholder="e.g. Ahmed Khan"
                 value={formName}
                 onChange={(e) => setFormName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-purple-400"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-[#25D366]"
               />
             </div>
             <div>
@@ -422,7 +422,7 @@ export default function ReviewsList({
                 placeholder="e.g. ahmed@example.com"
                 value={formEmail}
                 onChange={(e) => setFormEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-purple-400"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-[#25D366]"
               />
             </div>
           </div>
@@ -437,7 +437,7 @@ export default function ReviewsList({
               placeholder="e.g. Highly recommend for daily training"
               value={formTitle}
               onChange={(e) => setFormTitle(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-purple-400"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-[#25D366]"
             />
           </div>
 
@@ -452,7 +452,7 @@ export default function ReviewsList({
               placeholder="What did you like or dislike? How is the fit and performance?"
               value={formContent}
               onChange={(e) => setFormContent(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-purple-400 resize-y"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-[#25D366] resize-y"
             />
           </div>
 
@@ -476,7 +476,7 @@ export default function ReviewsList({
               ))}
 
               {uploadedImages.length < 5 && (
-                <label className="w-16 h-16 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-300 dark:border-white/20 hover:border-purple-400 cursor-pointer text-zinc-500 dark:text-white/50 hover:text-purple-400 transition-colors">
+                <label className="w-16 h-16 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-300 dark:border-white/20 hover:border-[#25D366] cursor-pointer text-zinc-500 dark:text-white/50 hover:text-[#25D366] transition-colors">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
@@ -507,7 +507,7 @@ export default function ReviewsList({
             <button
               type="submit"
               disabled={isSubmitting || isUploadingImage}
-              className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-purple-400 hover:bg-purple-500 disabled:opacity-50 transition-all shadow-md cursor-pointer"
+              className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1EA855] disabled:opacity-50 transition-all shadow-md cursor-pointer"
             >
               {isSubmitting ? "Submitting..." : "Submit Review"}
             </button>
@@ -552,7 +552,7 @@ export default function ReviewsList({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as any)}
-            className="px-3 py-1.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-xs font-medium focus:outline-none focus:border-purple-400"
+            className="px-3 py-1.5 rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/50 text-zinc-900 dark:text-white text-xs font-medium focus:outline-none focus:border-[#25D366]"
           >
             <option value="recent">Most Recent</option>
             <option value="helpful">Most Helpful</option>
@@ -595,7 +595,7 @@ export default function ReviewsList({
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5">
                     {/* Initials Avatar */}
-                    <div className="w-8 h-8 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300 font-bold text-xs flex items-center justify-center border border-purple-500/30">
+                    <div className="w-8 h-8 rounded-full bg-[#25D366]/10 text-[#25D366] font-bold text-xs flex items-center justify-center border border-[#25D366]/20">
                       {rev.customerName.charAt(0).toUpperCase()}
                     </div>
                     <div>
@@ -604,7 +604,7 @@ export default function ReviewsList({
                           {rev.customerName}
                         </span>
                         {rev.isVerifiedPurchase === 1 && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300 px-2 py-0.5 text-[10px] font-semibold border border-purple-500/20">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-[#25D366] px-2 py-0.5 text-[10px] font-semibold border border-emerald-200 dark:border-emerald-800">
                             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                             </svg>
@@ -646,7 +646,7 @@ export default function ReviewsList({
                         key={img.id}
                         type="button"
                         onClick={() => setLightboxImage(img.imageUrl)}
-                        className="relative w-14 h-14 rounded-xl overflow-hidden border border-zinc-200 dark:border-white/10 hover:border-purple-400 transition-colors"
+                        className="relative w-14 h-14 rounded-xl overflow-hidden border border-zinc-200 dark:border-white/10 hover:border-[#25D366] transition-colors"
                       >
                         <Image src={img.imageUrl} alt="Customer review photo" fill className="object-cover" />
                       </button>
@@ -657,7 +657,7 @@ export default function ReviewsList({
                 {/* Store Owner / Admin Reply */}
                 {rev.adminReply && (
                   <div className="mt-3 p-3.5 rounded-xl bg-zinc-100 dark:bg-white/[0.03] border border-zinc-200 dark:border-white/10 space-y-1">
-                    <div className="flex items-center justify-between text-xs font-semibold text-purple-600 dark:text-purple-300">
+                    <div className="flex items-center justify-between text-xs font-semibold text-[#25D366]">
                       <span className="flex items-center gap-1.5">
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
@@ -685,7 +685,7 @@ export default function ReviewsList({
                       onClick={() => handleVote(rev.id, "helpful")}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition-colors ${
                         hasVoted === "helpful"
-                          ? "bg-purple-500/10 border-purple-500/40 text-purple-600 dark:text-purple-300 font-semibold"
+                          ? "bg-emerald-50 dark:bg-emerald-950/40 border-[#25D366]/40 text-[#25D366] font-semibold"
                           : "border-zinc-200 dark:border-white/10 hover:border-zinc-400 text-zinc-600 dark:text-zinc-400"
                       }`}
                     >

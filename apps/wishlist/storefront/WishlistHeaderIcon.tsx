@@ -54,7 +54,7 @@ export default function WishlistHeaderIcon({
       <Link
         href="/account/wishlist"
         id="wishlist-header-nav-btn"
-        className={`group relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center rounded-xl border border-purple-300/60 dark:border-white/10 bg-white/50 dark:bg-white/5 px-2.5 py-1 transition-all hover:scale-105 hover:border-red-500/50 hover:bg-white/80 dark:hover:bg-white/10 cursor-pointer shadow-sm ${className}`}
+        className={`group relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center rounded-xl border border-zinc-200 dark:border-white/10 bg-white/50 dark:bg-white/5 px-2.5 py-1 transition-all hover:scale-105 hover:border-red-500/50 hover:bg-white/80 dark:hover:bg-white/10 cursor-pointer shadow-sm ${className}`}
         aria-label={`Wishlist, ${itemCount} items`}
         title={`Wishlist (${itemCount} items)`}
       >
@@ -63,7 +63,7 @@ export default function WishlistHeaderIcon({
             className={`h-4 w-4 transition-colors ${
               itemCount > 0
                 ? "text-red-500 fill-red-500 group-hover:text-red-600"
-                : "text-[#3C0561] dark:text-white group-hover:text-red-500"
+                : "text-zinc-700 dark:text-white group-hover:text-red-500"
             }`}
             fill={itemCount > 0 ? "currentColor" : "none"}
             viewBox="0 0 24 24"
@@ -86,7 +86,7 @@ export default function WishlistHeaderIcon({
             </span>
           )}
         </div>
-        <span className="text-[10px] font-bold text-[#3C0561] dark:text-white/60 group-hover:text-red-500 leading-tight mt-0.5 tracking-tight transition-colors">
+        <span className="text-[10px] font-bold text-zinc-700 dark:text-white/60 group-hover:text-red-500 leading-tight mt-0.5 tracking-tight transition-colors">
           Wishlist
         </span>
       </Link>

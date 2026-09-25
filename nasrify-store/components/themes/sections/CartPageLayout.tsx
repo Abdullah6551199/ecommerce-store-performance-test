@@ -162,9 +162,15 @@ export default function CartPageLayout({
             {/* Items List */}
             <div className="rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-white divide-y divide-[var(--theme-border,#E4E4E7)] overflow-hidden shadow-sm">
               {items.map((item) => {
-                const imgUrl = item.imageUrl
-                  ? normalizeImageUrl(item.imageUrl, { width: 160, quality: 75 })
-                  : null;
+                const rawImg =
+                  item.imageUrl ||
+                  (item as any).image ||
+                  (item as any).productImage ||
+                  (item as any).mainImage ||
+                  "";
+                const imgUrl = rawImg
+                  ? normalizeImageUrl(rawImg, { width: 160, quality: 75 })
+                  : "/placeholder.png";
                 const isOutOfStock = item.stockStatus === "out_of_stock";
 
                 return (
@@ -175,21 +181,16 @@ export default function CartPageLayout({
                     {/* Item Thumbnail */}
                     <Link
                       href={`/product/${item.productSlug}`}
-                      className="relative h-24 w-24 sm:h-28 sm:w-28 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] flex-shrink-0 overflow-hidden"
+                      className="relative block h-24 w-24 sm:h-28 sm:w-28 rounded-xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] shrink-0 overflow-hidden"
                     >
-                      {imgUrl ? (
-                        <Image
-                          src={imgUrl}
-                          alt={item.productName}
-                          fill
-                          className="object-cover transition-transform hover:scale-105"
-                          sizes="112px"
-                        />
-                      ) : (
-                        <div className="h-full w-full flex items-center justify-center text-[var(--theme-text-muted,#71717A)] text-xs">
-                          No image
-                        </div>
-                      )}
+                      <Image
+                        src={imgUrl}
+                        alt={item.productName || "Product"}
+                        fill
+                        sizes="(max-width: 640px) 96px, 112px"
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform hover:scale-105"
+                      />
                     </Link>
 
                     {/* Item Details */}

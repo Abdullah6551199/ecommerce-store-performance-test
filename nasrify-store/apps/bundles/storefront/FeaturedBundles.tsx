@@ -23,19 +23,19 @@ export default async function FeaturedBundles({ bundles: propBundles }: Props): 
       aria-label="Featured Product Bundles"
       className="space-y-6 pt-4 w-full"
     >
-      <div className="flex items-center justify-between border-b border-purple-200/70 dark:border-purple-800/50 pb-4">
+      <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-4">
         <div>
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#960DF2] dark:text-[#C06EF7]">
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#25D366]">
             <span>★ Exclusive Packages</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-[#3C0561] dark:text-white mt-1">
+          <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white mt-1">
             Featured Bundles
           </h2>
         </div>
 
         <Link
           href="/bundles"
-          className="text-xs font-bold text-[#960DF2] dark:text-[#C06EF7] hover:underline flex items-center gap-1"
+          className="text-xs font-bold text-[#25D366] hover:underline flex items-center gap-1"
         >
           <span>View All Bundles</span>
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

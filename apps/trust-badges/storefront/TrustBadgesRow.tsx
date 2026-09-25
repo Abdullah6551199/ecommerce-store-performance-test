@@ -72,7 +72,7 @@ export default function TrustBadgesRow({
         {Array.from({ length: limit || 4 }).map((_, i) => (
           <div
             key={i}
-            className="h-14 rounded-xl bg-purple-50/60 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-800/40"
+            className="h-14 rounded-xl bg-zinc-100 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800"
           />
         ))}
       </div>
@@ -128,19 +128,19 @@ export default function TrustBadgesRow({
           {displayBadges.map((badge) => (
             <div
               key={badge.id}
-              className="flex items-center gap-2 rounded-xl border border-purple-100 dark:border-purple-800/60 bg-purple-50/40 dark:bg-purple-950/30 p-2.5 transition-all hover:border-purple-300 dark:hover:border-purple-700"
+              className="flex items-center gap-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-2.5 transition-all hover:border-[#25D366]/40"
             >
               <div
-                className={`flex ${sizeIconBox} shrink-0 items-center justify-center rounded-lg bg-[#960DF2]/10 dark:bg-[#960DF2]/20 text-[#960DF2] dark:text-[#EACFFC]`}
+                className={`flex ${sizeIconBox} shrink-0 items-center justify-center rounded-lg bg-[#25D366]/10 text-[#25D366]`}
               >
                 <LucideIcon name={badge.icon} className={sizeIcon} />
               </div>
               <div className="min-w-0 flex-1">
-                <h4 className={`${sizeTitle} text-[#3C0561] dark:text-white truncate`}>
+                <h4 className={`${sizeTitle} text-zinc-900 dark:text-white truncate`}>
                   {badge.title}
                 </h4>
                 {badge.description && (
-                  <p className={`${sizeDesc} text-[#5A0891]/70 dark:text-[#EACFFC]/70 truncate`}>
+                  <p className={`${sizeDesc} text-zinc-500 dark:text-zinc-400 truncate`}>
                     {badge.description}
                   </p>
                 )}
@@ -165,19 +165,19 @@ export default function TrustBadgesRow({
         {displayBadges.map((badge) => (
           <div
             key={badge.id}
-            className="group relative flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-2.5 rounded-xl border border-purple-100/80 dark:border-purple-800/60 bg-purple-50/50 dark:bg-[#3C0561]/20 p-2.5 sm:p-3 shadow-xs transition-all hover:border-[#960DF2]/40 hover:bg-purple-50/80 dark:hover:bg-[#3C0561]/40"
+            className="group relative flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-2 sm:gap-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-2.5 sm:p-3 shadow-xs transition-all hover:border-[#25D366]/40 hover:bg-emerald-50/20 dark:hover:bg-zinc-800/40"
           >
             <div
-              className={`flex ${sizeIconBox} shrink-0 items-center justify-center rounded-xl bg-purple-100 dark:bg-purple-900/60 text-[#960DF2] dark:text-[#EACFFC] shadow-xs group-hover:scale-105 transition-transform`}
+              className={`flex ${sizeIconBox} shrink-0 items-center justify-center rounded-xl bg-[#25D366]/10 text-[#25D366] shadow-xs group-hover:scale-105 transition-transform`}
             >
               <LucideIcon name={badge.icon} className={sizeIcon} />
             </div>
             <div className="min-w-0 flex-1">
-              <h4 className={`${sizeTitle} text-[#3C0561] dark:text-white truncate`}>
+              <h4 className={`${sizeTitle} text-zinc-900 dark:text-white truncate`}>
                 {badge.title}
               </h4>
               {badge.description && (
-                <p className={`${sizeDesc} text-[#5A0891]/70 dark:text-[#EACFFC]/70 truncate`}>
+                <p className={`${sizeDesc} text-zinc-500 dark:text-zinc-400 truncate`}>
                   {badge.description}
                 </p>
               )}

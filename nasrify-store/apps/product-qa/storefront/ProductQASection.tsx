@@ -77,13 +77,13 @@ export default function ProductQASection({ productId }: Props): React.JSX.Elemen
     <section
       id="product-qa-section"
       aria-label="Product Questions and Answers"
-      className="w-full rounded-3xl border border-zinc-200 dark:border-white/10 bg-white/70 dark:bg-[#0c0418]/60 backdrop-blur-md p-6 sm:p-8 mt-10 shadow-sm"
+      className="w-full rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/60 backdrop-blur-md p-6 sm:p-8 mt-10 shadow-sm"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800">
         <div>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#25D366]/10 text-[#25D366]">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
@@ -108,7 +108,7 @@ export default function ProductQASection({ productId }: Props): React.JSX.Elemen
           id="ask-question-btn"
           type="button"
           onClick={() => setShowAskModal(true)}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white text-xs font-bold shadow-lg shadow-purple-600/25 transition-all cursor-pointer shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-[#25D366] hover:bg-[#1EA855] active:bg-[#1EA855] text-white text-xs font-bold shadow-lg shadow-emerald-500/20 transition-all cursor-pointer shrink-0"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -130,7 +130,7 @@ export default function ProductQASection({ productId }: Props): React.JSX.Elemen
       <div id="qa-questions-list" className="mt-6 space-y-4">
         {loading ? (
           <div className="py-12 text-center">
-            <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-purple-600 border-t-transparent dark:border-purple-400" />
+            <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-[#25D366] border-t-transparent" />
             <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">Loading questions...</p>
           </div>
         ) : questions.length === 0 ? (
@@ -145,7 +145,7 @@ export default function ProductQASection({ productId }: Props): React.JSX.Elemen
             <button
               type="button"
               onClick={() => setShowAskModal(true)}
-              className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-purple-300 dark:border-purple-700 text-xs font-semibold text-purple-600 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition-colors cursor-pointer"
+              className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-zinc-300 dark:border-zinc-700 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
             >
               Ask Now
             </button>

@@ -46,7 +46,7 @@ export function DownloadButton({
       className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
         isLimitReached
           ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed"
-          : "bg-purple-600 hover:bg-purple-700 text-white shadow-sm shadow-purple-500/20 active:scale-95"
+          : "bg-[#25D366] hover:bg-[#1EA855] text-white shadow-sm shadow-emerald-500/20 active:scale-95"
       } ${className}`}
     >
       <span>{isLimitReached ? "🔒" : downloading ? "⏳" : "⬇️"}</span>

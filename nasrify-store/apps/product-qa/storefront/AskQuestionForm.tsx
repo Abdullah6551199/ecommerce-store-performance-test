@@ -138,7 +138,7 @@ export default function AskQuestionForm({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Alex M."
-                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-all"
               />
             </div>
             <div>
@@ -150,7 +150,7 @@ export default function AskQuestionForm({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. alex@example.com"
-                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-all"
               />
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function AskQuestionForm({
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask anything about this product: sizing, materials, compatibility, usage..."
-              className="w-full px-3 py-2.5 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all resize-none"
+              className="w-full px-3 py-2.5 text-sm rounded-xl border border-zinc-300 dark:border-white/15 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-all resize-none"
             />
           </div>
 
@@ -188,7 +188,7 @@ export default function AskQuestionForm({
             <button
               type="submit"
               disabled={submitting || question.trim().length < 3}
-              className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold shadow-md shadow-purple-600/20 transition-all cursor-pointer flex items-center gap-2"
+              className="px-5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EA855] active:bg-[#1EA855] disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold shadow-md shadow-emerald-500/20 transition-all cursor-pointer flex items-center gap-2"
             >
               {submitting ? (
                 <>
@@ -207,7 +207,7 @@ export default function AskQuestionForm({
 
   if (isInline) {
     return (
-      <div className="p-5 rounded-2xl border border-purple-200 dark:border-purple-800/40 bg-purple-50/30 dark:bg-purple-950/20 shadow-sm">
+      <div className="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 shadow-sm">
         {content}
       </div>
     );
@@ -215,7 +215,7 @@ export default function AskQuestionForm({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-lg p-6 bg-white dark:bg-[#120524] rounded-3xl border border-zinc-200 dark:border-purple-800/40 shadow-2xl">
+      <div className="w-full max-w-lg p-6 bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-2xl">
         {content}
       </div>
     </div>

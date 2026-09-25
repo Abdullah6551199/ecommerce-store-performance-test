@@ -33,8 +33,8 @@ export default function CompareButton({
         title={active ? "In comparison (Click to remove)" : "Compare product"}
         className={`inline-flex items-center justify-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-xl border transition-all cursor-pointer ${
           active
-            ? "border-[#960DF2] bg-[#960DF2] text-white shadow-md shadow-purple-500/20"
-            : "border-purple-200 dark:border-purple-700 bg-purple-50/50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-200 hover:border-purple-400 hover:bg-purple-100/50"
+            ? "border-[#25D366] bg-[#25D366] text-white shadow-md shadow-emerald-500/20"
+            : "border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-700"
         } ${className}`}
       >
         <svg
@@ -64,8 +64,8 @@ export default function CompareButton({
       title={active ? "In comparison (Click to remove)" : "Compare product"}
       className={`group flex h-8 w-8 items-center justify-center rounded-full border transition-all duration-200 cursor-pointer ${
         active
-          ? "border-[#960DF2] bg-[#960DF2] text-white shadow-md shadow-purple-500/25 scale-105"
-          : "border-purple-200/80 dark:border-purple-700/80 bg-white/90 dark:bg-[#3C0561]/90 text-purple-700 dark:text-purple-300 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/50 hover:scale-110"
+          ? "border-[#25D366] bg-[#25D366] text-white shadow-md shadow-emerald-500/25 scale-105"
+          : "border-zinc-200/80 dark:border-zinc-700/80 bg-white/90 dark:bg-zinc-800/90 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 hover:scale-110"
       } ${className}`}
     >
       <svg

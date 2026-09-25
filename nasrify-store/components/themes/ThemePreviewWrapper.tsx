@@ -69,7 +69,144 @@ export default function ThemePreviewWrapper({
       };
 
       window.addEventListener("message", handleMessage);
-      return () => window.removeEventListener("message", handleMessage);
+
+      // --- INLINE EDITING (Shopify-like) ---
+      let activeEditingEl: HTMLElement | null = null;
+      let originalText = "";
+
+      const handleDblClick = (e: MouseEvent) => {
+        // Disable on touch devices
+        if ("ontouchstart" in window && window.innerWidth <= 768) return;
+
+        const target = e.target as HTMLElement | null;
+        if (!target) return;
+
+        // Find editable target
+        const editableEl = target.closest<HTMLElement>("[data-editable]") ||
+          (target.matches("h1, h2, h3, h4, p, span, button, a") && target.closest<HTMLElement>("[data-section-id]") ? target : null);
+
+        if (!editableEl) return;
+
+        const sectionContainer = editableEl.closest<HTMLElement>("[data-section-id]");
+        if (!sectionContainer) return;
+
+        const sectionId = sectionContainer.getAttribute("data-section-id");
+        if (!sectionId) return;
+
+        let field = editableEl.getAttribute("data-editable");
+        if (!field) {
+          // Infer field from tag
+          const tag = editableEl.tagName.toLowerCase();
+          if (tag.startsWith("h")) field = "heading";
+          else if (tag === "p") field = "subheading";
+          else if (tag === "button" || tag === "a") field = "cta_text";
+          else field = "text";
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        activeEditingEl = editableEl;
+        originalText = editableEl.innerText;
+
+        editableEl.contentEditable = "true";
+        editableEl.style.outline = "2px solid #25D366";
+        editableEl.style.outlineOffset = "4px";
+        editableEl.style.borderRadius = "4px";
+        editableEl.style.boxShadow = "0 0 12px rgba(37, 211, 102, 0.4)";
+        editableEl.focus();
+
+        // Select all text in element
+        const range = document.createRange();
+        range.selectNodeContents(editableEl);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+
+        // Key handler for Enter / Esc
+        const onKeyDown = (keyEvent: KeyboardEvent) => {
+          if (keyEvent.key === "Enter" && !keyEvent.shiftKey) {
+            keyEvent.preventDefault();
+            const newVal = editableEl.innerText.trim();
+            cleanup();
+            if (newVal !== originalText) {
+              window.parent?.postMessage(
+                {
+                  type: "INLINE_EDIT",
+                  sectionId,
+                  field,
+                  value: newVal,
+                },
+                "*"
+              );
+            }
+          } else if (keyEvent.key === "Escape") {
+            keyEvent.preventDefault();
+            editableEl.innerText = originalText;
+            cleanup();
+          }
+        };
+
+        const onBlur = () => {
+          const newVal = editableEl.innerText.trim();
+          cleanup();
+          if (newVal !== originalText) {
+            window.parent?.postMessage(
+              {
+                type: "INLINE_EDIT",
+                sectionId,
+                field,
+                value: newVal,
+              },
+              "*"
+            );
+          }
+        };
+
+        const cleanup = () => {
+          editableEl.contentEditable = "false";
+          editableEl.style.outline = "";
+          editableEl.style.outlineOffset = "";
+          editableEl.style.borderRadius = "";
+          editableEl.style.boxShadow = "";
+          editableEl.removeEventListener("keydown", onKeyDown);
+          editableEl.removeEventListener("blur", onBlur);
+          activeEditingEl = null;
+        };
+
+        editableEl.addEventListener("keydown", onKeyDown);
+        editableEl.addEventListener("blur", onBlur);
+      };
+
+      // Click to select section in editor sidebar
+      const handleClick = (e: MouseEvent) => {
+        if (activeEditingEl) return;
+        const target = e.target as HTMLElement | null;
+        if (!target) return;
+
+        const sectionContainer = target.closest<HTMLElement>("[data-section-id]");
+        if (sectionContainer) {
+          const sectionId = sectionContainer.getAttribute("data-section-id");
+          if (sectionId) {
+            window.parent?.postMessage(
+              {
+                type: "SELECT_SECTION",
+                sectionId,
+              },
+              "*"
+            );
+          }
+        }
+      };
+
+      document.addEventListener("dblclick", handleDblClick);
+      document.addEventListener("click", handleClick);
+
+      return () => {
+        window.removeEventListener("message", handleMessage);
+        document.removeEventListener("dblclick", handleDblClick);
+        document.removeEventListener("click", handleClick);
+      };
     }
   }, []);
 

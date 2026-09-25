@@ -37,16 +37,23 @@ export default function Banner({
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-[var(--theme-surface,#F4F4F5)] rounded-[var(--theme-radius,8px)] p-8 sm:p-12 overflow-hidden shadow-sm">
           <div className="space-y-4">
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
+            <h2
+              data-editable="heading"
+              className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+            >
               {heading}
             </h2>
-            <p className="text-base text-[var(--theme-text-muted,#71717A)] max-w-md font-[family-name:var(--theme-font-body)]">
+            <p
+              data-editable="text"
+              className="text-base text-[var(--theme-text-muted,#71717A)] max-w-md font-[family-name:var(--theme-font-body)]"
+            >
               {text}
             </p>
             {ctaText && (
               <div className="pt-2">
                 <Link
                   href={ctaLink}
+                  data-editable="cta_text"
                   className="inline-flex items-center justify-center px-6 py-3 rounded-[var(--theme-radius,8px)] bg-[var(--theme-primary,#18181B)] text-white font-bold hover:bg-[var(--theme-accent,#2563EB)] transition-all shadow-md hover:-translate-y-0.5"
                 >
                   {ctaText}

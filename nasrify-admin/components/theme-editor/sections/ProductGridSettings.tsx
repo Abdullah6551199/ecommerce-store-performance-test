@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import MultiProductPicker from "../MultiProductPicker";
+import { getSectionPresets } from "@/lib/themes/section-presets";
 
 interface ProductGridSettingsProps {
   settings: Record<string, any>;
@@ -17,35 +18,111 @@ export default function ProductGridSettings({
   onVariantChange,
 }: ProductGridSettingsProps) {
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"settings" | "presets">("settings");
+  const presets = getSectionPresets("product_grid");
   const productIds = (settings.product_ids as string[]) || [];
 
   return (
     <div className="space-y-4 text-xs">
-      <div>
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
-          Section Heading
-        </label>
-        <input
-          type="text"
-          value={settings.heading || ""}
-          onChange={(e) => onChange({ heading: e.target.value })}
-          placeholder="Featured Products"
-          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
-        />
-      </div>
+      {/* Preset / Custom Toggle */}
+      {presets.length > 0 && (
+        <div className="flex rounded bg-slate-800/80 p-0.5 border border-slate-700">
+          <button
+            type="button"
+            onClick={() => setActiveTab("settings")}
+            className={`flex-1 py-1 px-2 rounded text-center text-[11px] font-medium transition-colors ${
+              activeTab === "settings"
+                ? "bg-slate-700 text-white shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            Settings
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("presets")}
+            className={`flex-1 py-1 px-2 rounded text-center text-[11px] font-medium transition-colors ${
+              activeTab === "presets"
+                ? "bg-slate-700 text-white shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            Presets ({presets.length})
+          </button>
+        </div>
+      )}
 
-      <div>
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
-          Subheading
-        </label>
-        <input
-          type="text"
-          value={settings.subheading || ""}
-          onChange={(e) => onChange({ subheading: e.target.value })}
-          placeholder="Hand-picked favorites crafted for perfection"
-          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
-        />
-      </div>
+      {activeTab === "presets" ? (
+        <div className="space-y-2">
+          <div className="text-[11px] text-slate-400 mb-2">
+            Click a preset to configure grid layout, columns, and product limits:
+          </div>
+          {presets.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              onClick={() => {
+                onChange(preset.settings);
+              }}
+              className="w-full text-left p-2.5 rounded-lg border border-slate-700 hover:border-[#25D366] bg-slate-800/50 hover:bg-slate-800 transition-all flex flex-col gap-1 group"
+            >
+              <div className="font-semibold text-slate-200 group-hover:text-[#25D366] flex items-center justify-between">
+                <span>{preset.name}</span>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  {preset.settings.columns} cols
+                </span>
+              </div>
+              <div className="text-[11px] text-slate-400 leading-relaxed">
+                {preset.description}
+              </div>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <>
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="font-semibold text-gray-700 dark:text-gray-300">
+                Section Heading
+              </label>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider font-mono">Size</span>
+                <select
+                  value={settings.heading_size || "xl"}
+                  onChange={(e) => onChange({ heading_size: e.target.value })}
+                  className="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-slate-300 text-[11px] focus:outline-none focus:border-[#25D366]"
+                >
+                  <option value="sm">SM</option>
+                  <option value="md">MD</option>
+                  <option value="lg">LG</option>
+                  <option value="xl">XL</option>
+                  <option value="2xl">2XL</option>
+                </select>
+              </div>
+            </div>
+            <input
+              type="text"
+              value={settings.heading || ""}
+              onChange={(e) => onChange({ heading: e.target.value })}
+              placeholder="Featured Products"
+              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label className="font-semibold text-gray-700 dark:text-gray-300">
+              Subheading
+            </label>
+            <input
+              type="text"
+              value={settings.subheading || ""}
+              onChange={(e) => onChange({ subheading: e.target.value })}
+              placeholder="Hand-picked favorites crafted for perfection"
+              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+            />
+          </div>
+        </>
+      )}
 
       <div className="grid grid-cols-2 gap-2">
         <div>

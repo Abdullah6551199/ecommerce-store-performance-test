@@ -164,3 +164,14 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-42.6-02 | CSS Generator Resilience | `generateSectionCSS` in `css-generator.ts` expected nested `{ style, advanced }` structure; flat payloads caused declarations to be skipped. | Enhanced generator to support both nested and flat structures, with string/responsive font size and spacing parsing. | Complete |
 | BUG-42.6-03 | Storefront CSS Caching | In `nasrify-store/lib/themes/engine.tsx`, static cache key `${themeId}_${sections.length}` caused unchanged keys when modifying existing section `_advanced` styles. | Updated cache key to fingerprint based on section `_advanced` payloads and exported `invalidateThemeAdvancedCSSCache()` hook. | Complete |
 
+---
+
+## Stage 42.5b (Basic Theme Editor Upgrade — Shopify Parity + Beyond)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-42.5b-01 | Inline Editing on Touch | Double-click text editing on mobile viewports can trigger unintended zoom or keyboard layout shifts. | Disabled inline editing on touch devices (`ontouchstart` + screen width <= 768px) per rules. | Complete |
+| BUG-42.5b-02 | Component Named vs Default Export | `ImageUploadField.tsx` was initially exported as `export default function`, causing named import `{ ImageUploadField }` to fail Next.js Turbopack build. | Exported both as named `export function ImageUploadField` and `export default ImageUploadField`. | Complete |
+| BUG-42.5b-03 | Rich Text XSS Risk | Custom rich text editor inputs could allow malicious script injections if rendered directly. | Sanitized all HTML using DOMParser / strict regex tag stripping allowing only safe tags (`<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<a>`, `<ul>`, `<ol>`, `<li>`, `<p>`, `<br>`). | Complete |
+
+

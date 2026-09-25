@@ -276,3 +276,14 @@ Each section's settings object can store an optional `_advanced` payload contain
 ### Storefront Performance Target
 The storefront engine (`nasrify-store/lib/themes/engine.tsx`) automatically compiles `_advanced` section data into `<style id="theme-advanced-css">` with a 60-second micro-cache keyed on section configuration fingerprints (<10ms CPU target). All custom CSS is sanitized to eliminate external requests and security risks.
 
+---
+
+## 9. Basic Visual Theme Editor (Stage 42.5b — Shopify Parity)
+
+The **Basic Visual Theme Editor** provides Shopify-level visual customization with native web capabilities:
+- **Inline Editing**: Live double-click editing on text nodes with `data-editable` attributes in the storefront preview frame. Dispatches `INLINE_EDIT` postMessages directly back to the editor shell.
+- **Section Presets**: Pre-configured JSON presets for rapid 1-click styling (`SECTION_PRESETS`).
+- **Responsive Visibility**: Per-device visibility controls (`visibility: { desktop, tablet, mobile }`) rendered via zero-JS CSS classes (`.hide-desktop`, `.hide-tablet`, `.hide-mobile`).
+- **Image Crop & Positioning**: 9-grid position selector and focal points stored as `crop_data` rendered natively via CSS `object-fit` and `object-position`.
+- **Sanitized Rich Text**: In-browser rich text toolbar with strict XSS sanitization for subheadings and body copy.
+

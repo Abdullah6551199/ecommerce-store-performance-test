@@ -85,9 +85,18 @@ export function renderTheme(theme: ThemeConfig, storeData: StoreData): React.Rea
 
   const themeId = (theme as any)?.id || theme?.name || "default";
   const advancedCSS = getThemeAdvancedCSS(theme.sections, themeId);
+  const visibilityBaseCSS = `
+    @media (min-width: 1025px) { .hide-desktop { display: none !important; } }
+    @media (min-width: 768px) and (max-width: 1024px) { .hide-tablet { display: none !important; } }
+    @media (max-width: 767px) { .hide-mobile { display: none !important; } }
+  `;
 
   return (
     <>
+      <style
+        id="theme-visibility-css"
+        dangerouslySetInnerHTML={{ __html: visibilityBaseCSS }}
+      />
       {advancedCSS && (
         <style
           id="theme-advanced-css"
@@ -246,8 +255,22 @@ export function renderSection(
     const customClasses = adv?.advanced?.layout?.cssClasses ? ` ${adv.advanced.layout.cssClasses}` : "";
     const customId = adv?.advanced?.layout?.cssId || undefined;
 
+    const visibilityClasses: string[] = [];
+    if (section.visibility) {
+      if (section.visibility.desktop === false) visibilityClasses.push("hide-desktop");
+      if (section.visibility.tablet === false) visibilityClasses.push("hide-tablet");
+      if (section.visibility.mobile === false) visibilityClasses.push("hide-mobile");
+    }
+    const visClassStr = visibilityClasses.length > 0 ? ` ${visibilityClasses.join(" ")}` : "";
+
     return (
-      <div key={section.id} id={customId} className={`section-${section.id}${customClasses}`}>
+      <div
+        key={section.id}
+        id={customId}
+        data-section-id={section.id}
+        data-section-type={section.type}
+        className={`section-${section.id}${customClasses}${visClassStr}`}
+      >
         {element}
       </div>
     );

@@ -324,12 +324,105 @@ export function ThemeEditorShell() {
     }
   };
 
+  // Copied section state (synced with sessionStorage)
+  const [copiedSection, setCopiedSection] = useState<SectionItemData | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = sessionStorage.getItem("nasrify_theme_copied_section");
+        return saved ? JSON.parse(saved) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  });
+
+  const handleCopySection = useCallback((sec: SectionItemData) => {
+    setCopiedSection(sec);
+    try {
+      sessionStorage.setItem("nasrify_theme_copied_section", JSON.stringify(sec));
+    } catch (e) {}
+    showToast(`Copied ${sec.name || sec.type}`);
+  }, []);
+
+  const handlePasteSection = useCallback(() => {
+    if (!currentTheme || !copiedSection) return;
+    const clone: SectionItemData = {
+      ...JSON.parse(JSON.stringify(copiedSection)),
+      id: `${copiedSection.type}_${Date.now()}`,
+      name: `${copiedSection.name || copiedSection.type} (Copy)`,
+    };
+    pushToUndoStack(currentTheme);
+    setCurrentTheme({
+      ...currentTheme,
+      sections: [...currentTheme.sections, clone],
+    });
+    setSelectedSectionId(clone.id);
+    showToast(`Pasted ${clone.name}`);
+  }, [currentTheme, copiedSection, pushToUndoStack]);
+
+  const handleDuplicateSection = useCallback((id: string) => {
+    if (!currentTheme) return;
+    const index = currentTheme.sections.findIndex((s) => s.id === id);
+    if (index === -1) return;
+    const original = currentTheme.sections[index];
+    const clone: SectionItemData = {
+      ...JSON.parse(JSON.stringify(original)),
+      id: `${original.type}_${Date.now()}`,
+      name: `${original.name || original.type} (Copy)`,
+    };
+    pushToUndoStack(currentTheme);
+    const newSections = [...currentTheme.sections];
+    newSections.splice(index + 1, 0, clone);
+    setCurrentTheme({ ...currentTheme, sections: newSections });
+    setSelectedSectionId(clone.id);
+    showToast(`Duplicated ${original.name || original.type}`);
+  }, [currentTheme, pushToUndoStack]);
+
+  const handleUpdateSectionVisibility = useCallback(
+    (id: string, visibility: { desktop?: boolean; tablet?: boolean; mobile?: boolean }) => {
+      if (!currentTheme) return;
+      pushToUndoStack(currentTheme);
+      const updated = currentTheme.sections.map((sec) =>
+        sec.id === id ? { ...sec, visibility } : sec
+      );
+      setCurrentTheme({ ...currentTheme, sections: updated });
+    },
+    [currentTheme, pushToUndoStack]
+  );
+
+  const handleInlineEdit = useCallback(
+    (sectionId: string, field: string, value: string) => {
+      if (!currentTheme) return;
+      pushToUndoStack(currentTheme);
+      const updated = currentTheme.sections.map((sec) => {
+        if (sec.id === sectionId) {
+          return {
+            ...sec,
+            settings: {
+              ...(sec.settings || {}),
+              [field]: value,
+            },
+          };
+        }
+        return sec;
+      });
+      setCurrentTheme({ ...currentTheme, sections: updated });
+      showToast(`Updated "${field}"`);
+    },
+    [currentTheme, pushToUndoStack]
+  );
+
   // 6. Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Check if inside input or textarea
       const target = e.target as HTMLElement;
-      const isInput = target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT");
+      const isInput =
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable);
 
       // Ctrl/Cmd + Z → Undo
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !e.shiftKey) {
@@ -356,6 +449,63 @@ export function ThemeEditorShell() {
         saveDraft();
       }
 
+      // Ctrl/Cmd + D → Duplicate selected section
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "d") {
+        if (!isInput && selectedSectionId) {
+          e.preventDefault();
+          handleDuplicateSection(selectedSectionId);
+        }
+      }
+
+      // Ctrl/Cmd + C → Copy selected section
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c") {
+        if (!isInput && selectedSectionId && currentTheme) {
+          const sec = currentTheme.sections.find((s) => s.id === selectedSectionId);
+          if (sec) {
+            e.preventDefault();
+            handleCopySection(sec);
+          }
+        }
+      }
+
+      // Ctrl/Cmd + V → Paste section
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "v") {
+        if (!isInput && copiedSection) {
+          e.preventDefault();
+          handlePasteSection();
+        }
+      }
+
+      // Delete key → Delete selected section
+      if (e.key === "Delete" || e.key === "Backspace") {
+        if (!isInput && selectedSectionId && currentTheme) {
+          const sec = currentTheme.sections.find((s) => s.id === selectedSectionId);
+          if (sec && confirm(`Delete '${sec.name || sec.type}'? This cannot be undone.`)) {
+            e.preventDefault();
+            handleDeleteSection(selectedSectionId);
+          }
+        }
+      }
+
+      // Arrow Up / Down → Navigate sections
+      if (e.key === "ArrowDown" && !isInput && currentTheme?.sections.length) {
+        e.preventDefault();
+        const currentIndex = currentTheme.sections.findIndex((s) => s.id === selectedSectionId);
+        if (currentIndex < currentTheme.sections.length - 1) {
+          setSelectedSectionId(currentTheme.sections[currentIndex + 1].id);
+        } else if (currentIndex === -1) {
+          setSelectedSectionId(currentTheme.sections[0].id);
+        }
+      }
+
+      if (e.key === "ArrowUp" && !isInput && currentTheme?.sections.length) {
+        e.preventDefault();
+        const currentIndex = currentTheme.sections.findIndex((s) => s.id === selectedSectionId);
+        if (currentIndex > 0) {
+          setSelectedSectionId(currentTheme.sections[currentIndex - 1].id);
+        }
+      }
+
       // Esc → Deselect section / close modals
       if (e.key === "Escape") {
         if (isPickerOpen) {
@@ -370,7 +520,20 @@ export function ThemeEditorShell() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleUndo, handleRedo, saveDraft, isPickerOpen, isPublishModalOpen, selectedSectionId]);
+  }, [
+    handleUndo,
+    handleRedo,
+    saveDraft,
+    handleDuplicateSection,
+    handleCopySection,
+    handlePasteSection,
+    handleDeleteSection,
+    copiedSection,
+    currentTheme,
+    isPickerOpen,
+    isPublishModalOpen,
+    selectedSectionId,
+  ]);
 
   if (!currentTheme) {
     return (
@@ -430,6 +593,11 @@ export function ThemeEditorShell() {
           onSelectSection={handleSelectSection}
           onReorderSections={handleReorderSections}
           onToggleVisibility={handleToggleVisibility}
+          onUpdateSectionVisibility={handleUpdateSectionVisibility}
+          onDuplicateSection={handleDuplicateSection}
+          onCopySection={handleCopySection}
+          onPasteSection={handlePasteSection}
+          canPaste={!!copiedSection}
           onDeleteSection={handleDeleteSection}
           onOpenSectionPicker={() => setIsPickerOpen(true)}
         />
@@ -438,6 +606,8 @@ export function ThemeEditorShell() {
         <PreviewFrame
           themeConfig={currentTheme}
           device={device}
+          onInlineEdit={handleInlineEdit}
+          onSelectSection={handleSelectSection}
         />
 
         {/* Right Sidebar: Selected Section or Global Settings (Basic) OR Advanced Editor Panel */}

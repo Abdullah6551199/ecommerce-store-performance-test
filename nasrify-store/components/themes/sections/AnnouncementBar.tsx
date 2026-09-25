@@ -36,7 +36,7 @@ export default function AnnouncementBar({
 
   const content = (
     <div className="flex items-center justify-center gap-2 text-center">
-      <span>{text}</span>
+      <span data-editable="text">{text}</span>
       {link && (
         <span className="underline underline-offset-2 hover:opacity-80 transition-opacity">
           Learn more &rarr;

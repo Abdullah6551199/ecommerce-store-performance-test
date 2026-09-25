@@ -7,16 +7,52 @@ interface PreviewFrameProps {
   themeConfig: any;
   device: DeviceMode;
   previewUrl?: string;
+  onInlineEdit?: (sectionId: string, field: string, value: string) => void;
+  onSelectSection?: (sectionId: string) => void;
 }
 
 export function PreviewFrame({
   themeConfig,
   device,
   previewUrl = "https://nasrify-store.zia291930.workers.dev/?preview=1",
+  onInlineEdit,
+  onSelectSection,
 }: PreviewFrameProps) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [iframeLoaded, setIframeLoaded] = useState<boolean>(false);
+
+  // Listen for iframe messages (INLINE_EDIT, SELECT_SECTION, PREVIEW_READY)
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "INLINE_EDIT") {
+        const { sectionId, field, value } = event.data;
+        if (sectionId && field && onInlineEdit) {
+          onInlineEdit(sectionId, field, value);
+        }
+      } else if (event.data?.type === "SELECT_SECTION") {
+        const { sectionId } = event.data;
+        if (sectionId && onSelectSection) {
+          onSelectSection(sectionId);
+        }
+      } else if (event.data?.type === "PREVIEW_READY") {
+        setIsLoading(false);
+        setIframeLoaded(true);
+        if (iframeRef.current?.contentWindow) {
+          iframeRef.current.contentWindow.postMessage(
+            {
+              type: "UPDATE_THEME",
+              theme: themeConfig,
+            },
+            "*"
+          );
+        }
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [themeConfig, onInlineEdit, onSelectSection]);
 
   // Send theme updates to the iframe whenever themeConfig changes (debounced 300ms)
   useEffect(() => {

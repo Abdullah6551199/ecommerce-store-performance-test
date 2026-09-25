@@ -50,6 +50,11 @@ export interface ThemeSection {
   variant?: string; // section variant
   enabled: boolean;
   settings: Record<string, any>;
+  visibility?: {
+    desktop?: boolean;
+    tablet?: boolean;
+    mobile?: boolean;
+  };
 }
 
 export type SectionType =

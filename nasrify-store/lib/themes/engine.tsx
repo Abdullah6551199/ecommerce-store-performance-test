@@ -30,7 +30,7 @@ import PageHeader from "@/components/themes/sections/PageHeader";
 import PageContent from "@/components/themes/sections/PageContent";
 
 import { DEFAULT_THEME } from "./default-theme";
-import { generateAdvancedCSS } from "@/apps/advanced-theme-editor/lib/css-generator";
+import { generateAdvancedCSS } from "./section-css-generator";
 
 // 60-second theme advanced CSS cache for performance (<10ms CPU target)
 const advancedCSSCache = new Map<string, { css: string; expiry: number }>();

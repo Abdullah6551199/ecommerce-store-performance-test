@@ -1,12 +1,12 @@
-# Basic Visual Theme Editor (Shopify-like)
+# Visual Theme Editor (Elementor+ Level, Shopify Layout)
 
 ## Overview
-The **Basic Visual Theme Editor** (`/admin/theme-editor`) is Nasrify's core built-in theme customizer. It provides store owners with an intuitive, drag-and-drop, no-code visual experience to customize their storefront theme layout, typography, colors, and content in real-time.
+The **Visual Theme Editor** (`/admin/theme-editor`) is Nasrify's unified, state-of-the-art visual customization suite. Following **Stage 46**, all advanced Elementor-grade styling, motion, and layout capabilities have been merged directly into the Visual Theme Editor, while retaining its clean, intuitive Shopify-style 3-pane layout.
 
 ---
 
 ## Editor Architecture & Layout
-The editor renders in a dedicated full-screen workspace bypassing standard admin chrome:
+The editor renders in a dedicated full-screen workspace:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -16,16 +16,16 @@ The editor renders in a dedicated full-screen workspace bypassing standard admin
 │              │                                          │              │
 │ LEFT         │ CENTER                                   │ RIGHT        │
 │ SECTIONS     │ Live Preview (iframe)                    │ SETTINGS     │
-│              │                                          │              │
-│ ▸ Annc. Bar  │ ┌──────────────────────────────────────┐ │ Selected:    │
-│ ▸ Header     │ │                                      │ │ Hero Banner  │
+│              │                                          │ [Content]    │
+│ ▸ Annc. Bar  │ ┌──────────────────────────────────────┐ │ [Style]      │
+│ ▸ Header     │ │                                      │ │ [Advanced]   │
 │ ▸ Hero       │ │ Storefront Live Render               │ │              │
-│ ▸ Products   │ │                                      │ │ Heading:     │
-│ ▸ Categories │ │                                      │ │ [__________] │
-│ ▸ Banner     │ │                                      │ │ Image:       │
-│ ▸ Footer     │ │                                      │ │ [Upload]     │
-│              │ └──────────────────────────────────────┘ │ CTA Text:    │
-│ [+ Add Sec]  │                                          │ [__________] │
+│ ▸ Products   │ │                                      │ │ Accordions:  │
+│ ▸ Categories │ │                                      │ │ 🔤 Typography│
+│ ▸ Banner     │ │                                      │ │ 🎨 Background│
+│ ▸ Footer     │ │                                      │ │ 🔲 Border    │
+│              │ └──────────────────────────────────────┘ │ 🌓 Shadows   │
+│ [+ Add Sec]  │                                          │ ⚡ Hover      │
 └──────────────┴──────────────────────────────────────────┴──────────────┘
 ```
 
@@ -33,140 +33,114 @@ The editor renders in a dedicated full-screen workspace bypassing standard admin
    - Navigation back to `/admin`
    - Store name & status indicator
    - Device switcher: Desktop (100%), Tablet (768px), Mobile (375px)
-   - Undo (`Ctrl+Z`) and Redo (`Ctrl+Shift+Z`)
+   - Undo (`Ctrl+Z`) and Redo (`Ctrl+Shift+Z`) with 30-step history stack
    - Draft status indicator (`Draft saved`, `Saving draft...`, `Unsaved changes`)
    - Manual `Save Draft` (`Ctrl+S`)
    - New tab preview launcher (`?preview=1`)
    - Publish to live dropdown with discard draft option
 
 2. **Left Sidebar — Page Sections (`SectionsList.tsx`)**:
-   - Vertical draggable list powered by `@dnd-kit/core` & `@dnd-kit/sortable`
+   - Draggable sections tree powered by `@dnd-kit/core` & `@dnd-kit/sortable`
    - Real-time drag-and-drop reordering
    - Section visibility toggle (enable / disable without deleting)
    - Section deletion with undo snapshot
-   - `+ Add Section` modal (`SectionPicker.tsx`) offering all 12 framework sections
+   - `+ Add Section` modal offering all 25+ framework sections
 
 3. **Center — Live Preview Frame (`PreviewFrame.tsx`)**:
    - Zero-database overhead: communicates with storefront via `postMessage` (`UPDATE_THEME`)
-   - Storefront `ThemePreviewWrapper.tsx` updates dynamic CSS variables (`#nasrify-theme-vars`) and section tree in real time without refreshing or writing to D1
+   - Storefront `ThemePreviewWrapper.tsx` updates dynamic CSS variables, scoped CSS (`#theme-advanced-css`), and section tree in real time without refreshing or writing to D1
    - Device mode toggles viewport width smoothly
+   - Inline double-click text editing on any heading, paragraph, or button
 
 4. **Right Sidebar — Settings Panel (`SettingsPanel.tsx`)**:
-   - If a section is selected: loads section-specific preset controls (`SectionSettings.tsx`)
-   - If no section is selected: loads Global Theme Settings (`GlobalSettings.tsx`):
-     - **Typography / FontPicker (`FontPicker.tsx`)**: Visual font selector for Heading and Body fonts with category tabs (Sans, Serif, Display, Handwriting, Mono), live preview samples, and R2-backed font loading.
-     - **Colors**: Primary, secondary, background, and surface color palettes.
-     - **Store Identity**: Logo upload, favicon, and brand spacing.
+   - **Content Tab**: Section-specific fields (e.g. Hero headings, CTA buttons, layout variants, image upload with cropping).
+   - **Style Tab**:
+     - 🔤 **Typography**: Font family (curated R2 fonts), weight (100-900), size, line height, letter spacing, transform, decoration, align, color.
+     - 🎨 **Background**: Solid color, Unlimited gradient (linear/radial/conic, unlimited color stops), image with crop/fit/parallax, video background (mp4/webm), background overlay with blend modes.
+     - 🔲 **Border & Corner Radius**: 8 border styles (including gradient border), per-side widths with link toggle, per-corner radius with link toggle, animated borders (pulse, glow, marching ants).
+     - 🌓 **Multi-Layer Shadows**: Stacked unlimited shadow layers (inset + outset simultaneously), X/Y offsets, blur, spread, alpha color, animated shadows (pulse, glow).
+     - ⚡ **Hover Effects**: Scale (0.5x-2x), rotate (-180° to 180°), lift (translate X/Y), opacity, hover colors, elevation shadow presets, transition curves and duration.
+   - **Advanced Tab**:
+     - 📐 **Spacing & Layout**: Elementor-style 4-side Padding & Margin with link toggle, Position mode (static, relative, absolute, fixed, sticky) and 4-direction offsets.
+     - 📍 **Z-Index Layering**: Numerical index with auto-increment and quick presets.
+     - 🎬 **Motion & Animations**: 20 entrance animation presets, scroll reveal with viewport trigger offset percentage, replay preview button.
+     - 📱 **Responsive Visibility**: Per-device visibility toggles (Hide on Desktop, Hide on Tablet, Hide on Mobile).
+     - 💻 **Custom CSS**: Scoped CSS editor supporting `selector` keyword, built-in snippets (Glassmorphism, Neon Glow, Skew, Hover Lift), and auto-sanitization.
 
 ---
 
-## Draft vs. Publish Workflow
+## 60+ Feature Matrix
 
-| Feature | Draft State | Published State |
-| :--- | :--- | :--- |
-| **Storage** | `theme_drafts` D1 table (`id = 'active-draft'`) | `active_theme` D1 table (`id = 'default'`) & `themes` row |
-| **Live Storefront Impact** | Zero impact on regular customers | Immediate public update |
-| **Auto-save** | Debounced 2s after any change | Requires confirmation dialog |
-| **Edge Cache** | 20s in-memory micro-cache on admin reads | Instant storefront cache purge via cross-worker call |
-| **Discarding** | Can be reverted to live active theme anytime | Permanent commit logged to `theme_audit_log` |
+### Core & Framework
+1. Clean 3-pane Shopify-style layout
+2. Instant postMessage zero-reload live preview
+3. 30-step undo/redo stack
+4. Keyboard shortcuts (Ctrl+S, Ctrl+Z, Ctrl+Shift+Z)
+5. Auto-save draft debounce (2s)
+6. Publish to live with atomic D1 transaction
+7. Discard draft rollback
+8. Multi-device preview (Desktop, Tablet, Mobile)
+9. Drag-and-drop section reordering
+10. Section visibility toggle
+11. Duplicate section
+12. 1-click section style presets
+13. Global theme settings (Colors, Fonts, Layout)
+14. Section library (25+ section types supported)
 
----
+### Typography & Rich Text
+15. R2 Curated WebFont System (zero-latency Google Fonts alternative)
+16. Font weight fine control (100 to 900)
+17. Font size with multi-unit support (`px`, `rem`, `em`, `%`, `vw`, `vh`)
+18. Line height and letter spacing sliders
+19. Text transform (UPPERCASE, lowercase, Capitalize)
+20. Text decoration (Underline, Line-through)
+21. Text alignment (Left, Center, Right, Justify)
+22. Multi-color text spans (`<span style="color:#HEX">`)
+23. Per-word color styling
+24. Per-letter color styling
+25. Per-word animations (`anim-bounceIn`, `anim-pulse`, `anim-glow`, `anim-rainbow`)
+26. Inline double-click text editing
+27. Rich text link dialog
+28. Strict XSS sanitization on rich text and custom CSS
 
-## Keyboard Shortcuts
+### Backgrounds & Overlays
+29. Solid color with hex and opacity alpha slider
+30. Unlimited gradient color stops (add 3rd, 4th, 5th, up to 20 stops)
+31. Linear gradient with 0-360° angle slider
+32. Radial gradient
+33. Conic gradient
+34. 10 designer gradient presets
+35. Background image upload with canvas cropping
+36. Image fit (cover, contain, fill, auto)
+37. Image position (9-grid anchor positions)
+38. Image attachment (scroll, fixed, parallax)
+39. Background video (MP4/WebM with loop, muted, autoplay)
+40. Background overlay with color and opacity
+41. Background overlay blend modes (normal, multiply, screen, overlay, darken, lighten)
 
-| Shortcut | Action |
-| :--- | :--- |
-| `Ctrl + Z` / `Cmd + Z` | Undo last change |
-| `Ctrl + Shift + Z` / `Cmd + Shift + Z` | Redo undone change |
-| `Ctrl + S` / `Cmd + S` | Save draft immediately |
-| `Ctrl + D` / `Cmd + D` | Duplicate currently selected section |
-| `Ctrl + C` / `Cmd + C` | Copy currently selected section to clipboard |
-| `Ctrl + V` / `Cmd + V` | Paste copied section into theme |
-| `Delete` / `Backspace` | Delete selected section (with confirmation modal) |
-| `Arrow Up` / `Arrow Down` | Navigate and select sections in order |
-| `Esc` | Deselect active section / Close open modals |
+### Borders & Shadows
+42. 8 border styles (solid, dashed, dotted, double, groove, ridge, none, gradient)
+43. Per-side border widths with link toggle
+44. Gradient border with dynamic stops
+45. Per-corner radius with link toggle
+46. Corner radius quick presets (0, 4, 8, 12, 16, pill)
+47. Animated borders (pulse, glow, marching ants)
+48. Multi-layer box shadows (unlimited stacked layers)
+49. Simultaneous inset and outset shadows
+50. Shadow animations (infinite pulse, alternating glow)
 
----
-
-## Stage 42.5b Upgrades (Shopify Parity + Beyond)
-
-### 1. Inline Editing
-- **Double-click text in preview**: Double-clicking any heading, subheading, paragraph, banner text, or CTA button immediately enables inline editing directly in the storefront preview frame with visual focus outlines.
-- **Save / Cancel**: Press `Enter` to confirm changes and dispatch `INLINE_EDIT` postMessage to the editor shell. Press `Esc` to cancel.
-- **Safety**: Automatically disabled on touch / mobile devices (`ontouchstart` + screen width <= 768px) to protect mobile interactions.
-
-### 2. Text Size Controls
-- Dedicated size dropdowns (`sm`, `md`, `lg`, `xl`, `2xl`, `3xl`) for headings, subheadings, and CTA buttons.
-- Standard Tailwind-compatible typography scaling applied dynamically on the storefront.
-
-### 3. Duplicate Section
-- Dedicated duplicate button on each section row in the sidebar.
-- Clones section directly below the original with a new ID and duplicate name suffix, preserving all settings.
-
-### 4. Delete with Confirmation
-- Prevents accidental loss of complex sections via an interactive confirmation modal: *"Delete '[Section Name]'? This cannot be undone."*
-
-### 5. Image Crop & 9-Grid Position Modal
-- Built-in visual image modal supporting:
-  - **Aspect ratios**: Free, 1:1, 16:9, 4:3, 3:2.
-  - **9-point position grid**: Top-left, top-center, top-right, center-left, center, center-right, bottom-left, bottom-center, bottom-right.
-  - **Zoom slider**: 100% to 200%.
-  - **Fit modes**: `cover`, `contain`, `fill`.
-- Stored as `crop_data` JSON and rendered natively using CSS `object-fit` and `object-position`.
-
-### 6. Rich Text Editor
-- Custom lightweight rich text editor with interactive toolbar:
-  - Bold (`Ctrl+B`), Italic (`Ctrl+I`), Underline (`Ctrl+U`)
-  - Link modal (URL insertion)
-  - Bullet and numbered lists
-  - Clear formatting
-- Zero heavy dependencies; HTML output strictly sanitized against XSS attacks before storage and rendering.
-
-### 7. Section Presets (1-Click Apply)
-- One-click style presets for major sections:
-  - **Hero**: *Centered Bold*, *Split Layout*, *Minimal Text*, *Fullscreen Cinematic*.
-  - **Product Grid**: *Feature 4 Columns*, *Compact 3 Columns*, *Detailed 2 Columns*.
-  - **Banner**: *Sale Alert*, *New Arrival*, *Side-by-Side Split*.
-  - **Announcement Bar**: *Solid Brand*, *Vibrant Gradient*, *Subtle Bordered*.
-
-### 8. Section Library with Wireframe Thumbnails
-- Visual section picker with SVG wireframe thumbnails (200x120px) showing layout architecture for each section.
-- Categorized tabs: *All*, *Content*, *Products*, *Marketing*, *Commerce*.
-- Search filter for rapid section discovery.
-
-### 9. Copy / Paste Section
-- Copy button on section row stores section JSON into clipboard state and session storage.
-- Dedicated paste action allows duplicating sections across pages or within the same page.
-
-### 10. Per-Device Visibility
-- Section visibility dropdown controls visibility per breakpoint:
-  - Desktop (`min-width: 1025px`)
-  - Tablet (`768px - 1024px`)
-  - Mobile (`max-width: 767px`)
-- Rendered via SSR responsive CSS classes (`hide-desktop`, `hide-tablet`, `hide-mobile`) with zero client-side layout shift.
-
----
-
-## Section Settings Reference (Basic Mode)
-
-- **Announcement Bar**: Text, link, background color, text color, dismissible toggle, presets.
-- **Header Navigation**: Logo image upload, brand text fallback, navigation links repeater, sticky toggle.
-- **Hero Banner**: Heading, heading size, rich text subheading, subheading size, CTA button text, button size & link, background image upload with crop modal, height, text alignment, style presets.
-- **Product Grid**: Heading, heading size, subheading, columns (2/3/4), rows, multi-product picker (up to 16), price/rating/cart toggles, style presets.
-- **Product Carousel**: Heading, multi-product picker (up to 12), autoplay, arrows, dots toggles.
-- **Categories Showcase**: Heading, multi-category picker, column count, variant.
-- **Customer Testimonials**: Heading, testimonial items repeater (quote, author, role, avatar upload).
-- **Newsletter Signup**: Heading, subheading, input placeholder, button label, background color.
-- **Promotional Banner**: Heading, heading size, rich text subtext, CTA button, button size & link, background image with crop modal, height, full-width / boxed variant, style presets.
-- **Image with Text**: Heading, narrative copy, image upload with crop modal, left/right alignment, CTA button & link.
-- **FAQ Accordion**: Heading, questions & answers repeater (up to 20 items), layout variant.
-- **Store Footer**: Brand text, column links repeater (up to 4 columns), social links repeater, copyright notice, newsletter toggle.
-
----
-
-## Performance & Guardrails
-- **Editor State**: Managed 100% in memory with 30-snapshot history stack.
-- **Auto-Save**: Debounced 2s to minimize D1 write load.
-- **Preview Frame**: Communicates exclusively over `postMessage`; zero database queries, zero edge cache writes.
-- **Storefront CPU**: Maintained under `<10ms` budget on all edge requests.
-
+### Motion, Hover & Advanced
+51. 20 entrance animations (fadeIn, slideInUp, zoomIn, bounceIn, flipInX, rotateIn, pulse, etc.)
+52. Scroll reveal triggered by viewport intersection
+53. Viewport offset percentage trigger (0-50%)
+54. Animation repeat toggle
+55. Interactive replay animation button
+56. Hover transform scale (0.5x to 2.0x)
+57. Hover rotate (-180° to +180°)
+58. Hover lift (translate X and Y)
+59. Hover opacity and color changes (bg, text, border)
+60. Hover shadow elevation presets
+61. Transition duration (0-2000ms) and easing curves
+62. Responsive device visibility (hide on desktop, tablet, mobile)
+63. Monospace Custom CSS editor with `selector` scoping
+64. Sub-10ms edge CPU performance with 60s micro-cache

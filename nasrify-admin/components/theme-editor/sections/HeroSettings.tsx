@@ -64,16 +64,16 @@ export default function HeroSettings({
         </div>
       )}
 
-      {/* 2. Heading with Size control */}
+      {/* 2. Heading with Rich Text (Multi-Color & Word Animations) & Size control */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <label className="font-semibold text-slate-300">Heading</label>
+          <label className="font-semibold text-slate-300">Heading (Rich Text / Multi-Color)</label>
           <div className="flex items-center gap-1">
             <span className="text-[10px] text-slate-500">Size:</span>
             <select
               value={settings.heading_size || "xl"}
               onChange={(e) => onChange({ heading_size: e.target.value })}
-              className="bg-slate-950 border border-slate-800 rounded px-1.5 py-0.5 text-[10px] text-slate-300 focus:outline-hidden"
+              className="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-[10px] text-slate-200 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
               {TEXT_SIZES.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -83,12 +83,11 @@ export default function HeroSettings({
             </select>
           </div>
         </div>
-        <input
-          type="text"
+        <RichTextField
           value={settings.heading || ""}
-          onChange={(e) => onChange({ heading: e.target.value })}
+          onChange={(val) => onChange({ heading: val })}
           placeholder="Elevate Your Lifestyle"
-          className="w-full px-2.5 py-1.5 rounded-lg border border-slate-800 bg-slate-950 text-xs text-slate-100 focus:border-[#25D366] focus:outline-hidden"
+          minHeight="60px"
         />
       </div>
 
@@ -101,7 +100,7 @@ export default function HeroSettings({
             <select
               value={settings.subheading_size || "md"}
               onChange={(e) => onChange({ subheading_size: e.target.value })}
-              className="bg-slate-950 border border-slate-800 rounded px-1.5 py-0.5 text-[10px] text-slate-300 focus:outline-hidden"
+              className="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-[10px] text-slate-200 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
               {TEXT_SIZES.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -126,7 +125,7 @@ export default function HeroSettings({
             <select
               value={settings.button_size || "md"}
               onChange={(e) => onChange({ button_size: e.target.value })}
-              className="bg-slate-950 border border-slate-800 rounded px-1.5 py-0.5 text-[10px] text-slate-300 focus:outline-hidden"
+              className="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-[10px] text-slate-200 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
               {TEXT_SIZES.slice(0, 4).map((s) => (
                 <option key={s.value} value={s.value}>
@@ -172,7 +171,7 @@ export default function HeroSettings({
           <select
             value={settings.height || "600px"}
             onChange={(e) => onChange({ height: e.target.value })}
-            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-800 bg-slate-950 text-xs text-slate-100"
+            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 [&>option]:bg-slate-900 [&>option]:text-slate-100"
           >
             <option value="450px">Short (450px)</option>
             <option value="600px">Medium (600px)</option>
@@ -187,7 +186,7 @@ export default function HeroSettings({
           <select
             value={settings.alignment || "center"}
             onChange={(e) => onChange({ alignment: e.target.value })}
-            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-800 bg-slate-950 text-xs text-slate-100"
+            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 [&>option]:bg-slate-900 [&>option]:text-slate-100"
           >
             <option value="left">Left</option>
             <option value="center">Center</option>
@@ -221,7 +220,7 @@ export default function HeroSettings({
         <select
           value={variant || "full_image"}
           onChange={(e) => onVariantChange(e.target.value)}
-          className="w-full px-2.5 py-1.5 rounded-lg border border-slate-800 bg-slate-950 text-xs text-slate-100"
+          className="w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 [&>option]:bg-slate-900 [&>option]:text-slate-100"
         >
           <option value="full_image">Full Image / Background</option>
           <option value="split">Split Layout (Text Left / Image Right)</option>

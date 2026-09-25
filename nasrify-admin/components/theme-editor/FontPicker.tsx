@@ -86,9 +86,9 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white flex items-center justify-between hover:border-[#25D366]/50 transition-colors"
+        className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-xs text-slate-100 flex items-center justify-between hover:border-[#25D366]/60 hover:bg-slate-750 transition-colors"
       >
-        <span style={{ fontFamily: `"${currentDisplay}", sans-serif` }} className="font-semibold text-sm">
+        <span style={{ fontFamily: `"${currentDisplay}", sans-serif` }} className="font-semibold text-sm text-slate-100">
           {currentDisplay}
         </span>
         <span className="text-[11px] text-[#25D366] font-medium">Browse Fonts →</span>

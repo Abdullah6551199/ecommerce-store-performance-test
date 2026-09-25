@@ -5,6 +5,8 @@ import { ThemeConfig, StoreData } from "@/lib/themes/types";
 import { renderTheme } from "@/lib/themes/engine";
 import { generateThemeVarsCss } from "@/lib/themes/css";
 import { getFontsInUse, getFontFaceCSS } from "@/lib/themes/fonts";
+import { generateAdvancedCSS } from "@/lib/themes/section-css-generator";
+import { ThemeAnimationObserver } from "@/components/themes/ThemeAnimationObserver";
 
 interface ThemePreviewWrapperProps {
   initialTheme: ThemeConfig;
@@ -64,6 +66,18 @@ export default function ThemePreviewWrapper({
           if (fontStyleTag) {
             const inUse = getFontsInUse(newTheme);
             fontStyleTag.innerHTML = getFontFaceCSS(inUse);
+          }
+
+          // Live update advanced scoped CSS (multi-gradient, shadows, animations, hover)
+          const advStyleTag = document.getElementById("theme-advanced-css");
+          const advancedCSS = generateAdvancedCSS(newTheme);
+          if (advStyleTag) {
+            advStyleTag.innerHTML = advancedCSS;
+          } else if (advancedCSS) {
+            const newStyle = document.createElement("style");
+            newStyle.id = "theme-advanced-css";
+            newStyle.innerHTML = advancedCSS;
+            document.head.appendChild(newStyle);
           }
         }
       };
@@ -210,5 +224,10 @@ export default function ThemePreviewWrapper({
     }
   }, []);
 
-  return <>{renderTheme(theme, storeData)}</>;
+  return (
+    <>
+      <ThemeAnimationObserver />
+      {renderTheme(theme, storeData)}
+    </>
+  );
 }

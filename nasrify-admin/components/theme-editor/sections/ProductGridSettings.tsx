@@ -105,12 +105,12 @@ export default function ProductGridSettings({
               value={settings.heading || ""}
               onChange={(e) => onChange({ heading: e.target.value })}
               placeholder="Featured Products"
-              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="font-semibold text-gray-700 dark:text-gray-300">
+            <label className="font-semibold text-slate-300">
               Subheading
             </label>
             <input
@@ -118,7 +118,7 @@ export default function ProductGridSettings({
               value={settings.subheading || ""}
               onChange={(e) => onChange({ subheading: e.target.value })}
               placeholder="Hand-picked favorites crafted for perfection"
-              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none"
             />
           </div>
         </>
@@ -126,13 +126,13 @@ export default function ProductGridSettings({
 
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="font-semibold text-gray-700 dark:text-gray-300">
+          <label className="font-semibold text-slate-300">
             Columns
           </label>
           <select
             value={settings.columns || 4}
             onChange={(e) => onChange({ columns: parseInt(e.target.value, 10) })}
-            className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+            className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
           >
             <option value={2}>2 Columns</option>
             <option value={3}>3 Columns</option>
@@ -141,13 +141,13 @@ export default function ProductGridSettings({
         </div>
 
         <div>
-          <label className="font-semibold text-gray-700 dark:text-gray-300">
+          <label className="font-semibold text-slate-300">
             Rows
           </label>
           <select
             value={settings.rows || 2}
             onChange={(e) => onChange({ rows: parseInt(e.target.value, 10) })}
-            className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+            className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
           >
             <option value={1}>1 Row</option>
             <option value={2}>2 Rows</option>
@@ -158,13 +158,13 @@ export default function ProductGridSettings({
       </div>
 
       <div>
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
+        <label className="font-semibold text-slate-300">
           Display Variant
         </label>
         <select
           value={variant || "standard"}
           onChange={(e) => onVariantChange(e.target.value)}
-          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
         >
           <option value="standard">Standard Grid</option>
           <option value="compact">Compact Grid</option>

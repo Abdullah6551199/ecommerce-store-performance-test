@@ -52,7 +52,7 @@ export function ImageTextSettings({ settings, onChange }: ImageTextSettingsProps
         <select
           value={image_position}
           onChange={(e) => onChange({ image_position: e.target.value })}
-          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
+          className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366] [&>option]:bg-slate-900 [&>option]:text-slate-100"
         >
           <option value="left">Left</option>
           <option value="right">Right</option>

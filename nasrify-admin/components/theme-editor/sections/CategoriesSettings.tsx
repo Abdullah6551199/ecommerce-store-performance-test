@@ -22,7 +22,7 @@ export default function CategoriesSettings({
   return (
     <div className="space-y-4 text-xs">
       <div>
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
+        <label className="font-semibold text-slate-300">
           Section Heading
         </label>
         <input
@@ -30,18 +30,18 @@ export default function CategoriesSettings({
           value={settings.heading || ""}
           onChange={(e) => onChange({ heading: e.target.value })}
           placeholder="Shop by Category"
-          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none"
         />
       </div>
 
       <div>
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
+        <label className="font-semibold text-slate-300">
           Columns
         </label>
         <select
           value={settings.columns || 4}
           onChange={(e) => onChange({ columns: parseInt(e.target.value, 10) })}
-          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
         >
           <option value={2}>2 Columns</option>
           <option value={3}>3 Columns</option>
@@ -51,13 +51,13 @@ export default function CategoriesSettings({
       </div>
 
       <div>
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
+        <label className="font-semibold text-slate-300">
           Image Style / Shape
         </label>
         <select
           value={settings.image_style || "rounded"}
           onChange={(e) => onChange({ image_style: e.target.value })}
-          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
         >
           <option value="rounded">Rounded Rectangle</option>
           <option value="circle">Circle / Avatar</option>
@@ -66,13 +66,13 @@ export default function CategoriesSettings({
       </div>
 
       <div>
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
+        <label className="font-semibold text-slate-300">
           Display Variant
         </label>
         <select
           value={variant || "grid"}
           onChange={(e) => onVariantChange(e.target.value)}
-          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
         >
           <option value="grid">Grid</option>
           <option value="circle">Circular Badges</option>
@@ -80,7 +80,7 @@ export default function CategoriesSettings({
         </select>
       </div>
 
-      <div className="p-3 rounded-lg border border-gray-200 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-800/30 space-y-2">
+      <div className="p-3 rounded-lg border border-slate-800 bg-slate-950 space-y-2">
         <div className="flex items-center justify-between">
           <div>
             <p className="font-semibold text-gray-800 dark:text-gray-200">

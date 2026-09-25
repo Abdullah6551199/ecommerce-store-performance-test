@@ -116,9 +116,6 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
     ChatbotDashboardWidget: dynamic(() => import("@/apps/chatbot/admin/ChatbotDashboardWidget")),
     DashboardWidget: dynamic(() => import("@/apps/chatbot/admin/ChatbotDashboardWidget")),
   },
-  "advanced-theme-editor": {
-    AdvancedEditorWrapper: dynamic(() => import("@/apps/advanced-theme-editor/admin/AdvancedEditorWrapper").then((m) => m.AdvancedEditorWrapper)),
-  },
 };
 
 export function loadAdminAppComponent(

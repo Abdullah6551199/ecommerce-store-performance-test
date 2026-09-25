@@ -13,7 +13,6 @@ import couponsManifest from "@/apps/coupons/manifest.json";
 import productQaManifest from "@/apps/product-qa/manifest.json";
 import aiReviewGeneratorManifest from "@/apps/ai-review-generator/manifest.json";
 import chatbotManifest from "@/apps/chatbot/manifest.json";
-import advancedThemeEditorManifest from "@/apps/advanced-theme-editor/manifest.json";
 import { type AppManifest } from "@/types/apps";
 import { validateManifest } from "./manifest";
 
@@ -37,7 +36,6 @@ const RAW_MANIFESTS: Record<string, unknown> = {
   "product-qa": productQaManifest,
   "ai-review-generator": aiReviewGeneratorManifest,
   chatbot: chatbotManifest,
-  "advanced-theme-editor": advancedThemeEditorManifest,
 };
 
 const VALIDATED_MANIFESTS: Record<string, AppManifest> = {};

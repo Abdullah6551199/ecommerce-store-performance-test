@@ -143,7 +143,7 @@ export function FooterSettings({ settings, onChange }: FooterSettingsProps) {
           <select
             value={variant}
             onChange={(e) => onChange({ variant: e.target.value })}
-            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
+            className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366] [&>option]:bg-slate-900 [&>option]:text-slate-100"
           >
             <option value="standard">Standard</option>
             <option value="minimal">Minimal</option>

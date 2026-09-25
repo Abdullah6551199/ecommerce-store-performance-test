@@ -287,3 +287,31 @@ The **Basic Visual Theme Editor** provides Shopify-level visual customization wi
 - **Image Crop & Positioning**: 9-grid position selector and focal points stored as `crop_data` rendered natively via CSS `object-fit` and `object-position`.
 - **Sanitized Rich Text**: In-browser rich text toolbar with strict XSS sanitization for subheadings and body copy.
 
+---
+
+## 10. Visual Theme Editor (Stage 46 — Elementor+ Parity)
+
+In Stage 46, all Elementor-grade styling capabilities were merged directly into the core **Visual Theme Editor** while retaining the 3-panel Shopify layout. The standalone `advanced-theme-editor` app was archived to `_archive/advanced-theme-editor/`.
+
+### 15 Core Controls Architecture
+Located in `nasrify-admin/components/theme-editor/controls/`:
+1. `SizeControl`: Slider, numeric input, +/- step buttons, and multi-unit support (`px`, `rem`, `em`, `%`, `vw`, `vh`).
+2. `SpacingControl`: 4-side margin/padding inputs with uniform link toggle and unit dropdowns.
+3. `ColorControl`: Native color picker, HEX/RGBA text input, opacity slider, brand palette swatches, and Eyedropper API.
+4. `GradientControl`: Linear, radial, and conic gradients with unlimited color stops (2-20), position sliders, and preset library.
+5. `ShadowControl`: Multi-layer box shadows (unlimited layers, inset/outset, blur/spread, color/gradient) rendered simultaneously.
+6. `BorderControl`: 8 border styles (including gradient border), per-side widths, per-corner radii, and CSS animations.
+7. `TypographyControl`: R2 font family selection, weights 100-900, size, line-height, letter-spacing, transform, and text decoration.
+8. `HoverControl`: Transform scale, rotation, Y-lift, opacity, hover colors/shadows, and customizable cubic-bezier transitions.
+9. `AnimationControl`: 20 entrance animations, scroll-triggered reveals via `IntersectionObserver`, delay, duration, and loop controls.
+10. `ResponsiveControl`: Device breakpoint overrides (Desktop >1024px, Tablet 768-1024px, Mobile <768px) with indicator dots.
+11. `RichTextControl`: In-browser rich text editing with multi-color selection, per-word/letter color spans, and per-word animations.
+12. `ZIndexControl`: Layer elevation input with quick preset buttons.
+13. `CustomCSSControl`: Scoped CSS editor replacing `selector` with `.section-{id}` and strict CSS sanitization.
+14. `PositionControl`: CSS position modes (static, relative, absolute, fixed, sticky) and 4-directional offsets.
+15. `BackgroundControl`: Unified background manager supporting solid colors, unlimited gradients, cover/contain images, and video loops.
+
+### Performance & Edge Rendering
+- Edge CSS is dynamically compiled by `section-css-generator.ts` with a 60-second in-memory fingerprint cache (`theme_advanced_css_cache`), ensuring edge CPU overhead remains `<10ms`.
+- Client-side editor preview receives real-time `UPDATE_THEME` postMessages and immediately updates `<style id="theme-advanced-css">` without requiring iframe page reloads.
+

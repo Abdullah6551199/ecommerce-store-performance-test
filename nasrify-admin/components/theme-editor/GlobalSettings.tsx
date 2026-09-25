@@ -187,13 +187,13 @@ export function GlobalSettings({ settings, onChange }: GlobalSettingsProps) {
 
         <div className="space-y-2">
           <div>
-            <label className="text-gray-600 dark:text-gray-400 font-medium">
+            <label className="text-slate-300 font-medium">
               Container Max Width
             </label>
             <select
               value={layout.container_width || "1280px"}
               onChange={(e) => handleLayoutChange("container_width", e.target.value)}
-              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
               {CONTAINER_WIDTHS.map((w) => (
                 <option key={w} value={w}>
@@ -204,13 +204,13 @@ export function GlobalSettings({ settings, onChange }: GlobalSettingsProps) {
           </div>
 
           <div>
-            <label className="text-gray-600 dark:text-gray-400 font-medium">
+            <label className="text-slate-300 font-medium">
               Section Spacing
             </label>
             <select
               value={layout.section_spacing || "64px"}
               onChange={(e) => handleLayoutChange("section_spacing", e.target.value)}
-              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
               {SECTION_SPACINGS.map((s) => (
                 <option key={s} value={s}>
@@ -221,13 +221,13 @@ export function GlobalSettings({ settings, onChange }: GlobalSettingsProps) {
           </div>
 
           <div>
-            <label className="text-gray-600 dark:text-gray-400 font-medium">
+            <label className="text-slate-300 font-medium">
               Default Border Radius
             </label>
             <select
               value={layout.border_radius || "8px"}
               onChange={(e) => handleLayoutChange("border_radius", e.target.value)}
-              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
               {BORDER_RADII.map((r) => (
                 <option key={r} value={r}>
@@ -238,13 +238,13 @@ export function GlobalSettings({ settings, onChange }: GlobalSettingsProps) {
           </div>
 
           <div>
-            <label className="text-gray-600 dark:text-gray-400 font-medium">
+            <label className="text-slate-300 font-medium">
               Button Border Radius
             </label>
             <select
               value={layout.button_radius || layout.border_radius || "8px"}
               onChange={(e) => handleLayoutChange("button_radius", e.target.value)}
-              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+              className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
               {BUTTON_RADII.map((r) => (
                 <option key={r} value={r}>

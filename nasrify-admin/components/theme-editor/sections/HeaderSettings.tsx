@@ -47,7 +47,7 @@ export default function HeaderSettings({
       />
 
       <div>
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
+        <label className="font-semibold text-slate-300">
           Logo Text Fallback
         </label>
         <input
@@ -55,30 +55,30 @@ export default function HeaderSettings({
           value={settings.logo_text || ""}
           onChange={(e) => onChange({ logo_text: e.target.value })}
           placeholder="Nasrify Store"
-          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none"
         />
       </div>
 
       <div className="flex items-center justify-between pt-2">
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
+        <label className="font-semibold text-slate-300">
           Sticky Header on Scroll
         </label>
         <input
           type="checkbox"
           checked={settings.sticky !== false}
           onChange={(e) => onChange({ sticky: e.target.checked })}
-          className="h-4 w-4 rounded text-blue-600"
+          className="h-4 w-4 rounded text-green-500 bg-slate-900 border-slate-700"
         />
       </div>
 
       <div className="pt-2">
-        <label className="font-semibold text-gray-700 dark:text-gray-300">
+        <label className="font-semibold text-slate-300">
           Header Variant
         </label>
         <select
           value={variant || "classic"}
           onChange={(e) => onVariantChange(e.target.value)}
-          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs text-gray-900 dark:text-white"
+          className="mt-1 w-full px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-xs text-slate-100 focus:border-green-500 focus:outline-none [&>option]:bg-slate-900 [&>option]:text-slate-100"
         >
           <option value="classic">Classic (Logo Left, Menu Center)</option>
           <option value="centered">Centered (Logo Top Center)</option>

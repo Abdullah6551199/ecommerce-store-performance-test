@@ -2,6 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
+import { ThemeAnimationObserver } from "./themes/ThemeAnimationObserver";
 
 interface StorefrontLayoutWrapperProps {
   children: React.ReactNode;
@@ -17,15 +18,18 @@ export default function StorefrontLayoutWrapper({
   const pathname = usePathname();
   const isHomepage = !pathname || pathname === "/" || pathname === "";
 
-  if (isHomepage) {
-    return <main className="flex-1">{children}</main>;
-  }
-
   return (
     <>
-      {legacyHeader}
-      <main className="flex-1">{children}</main>
-      {legacyFooter}
+      <ThemeAnimationObserver />
+      {isHomepage ? (
+        <main className="flex-1">{children}</main>
+      ) : (
+        <>
+          {legacyHeader}
+          <main className="flex-1">{children}</main>
+          {legacyFooter}
+        </>
+      )}
     </>
   );
 }

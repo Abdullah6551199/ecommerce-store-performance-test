@@ -182,6 +182,12 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 |---|---|---|---|---|
 | BUG-42.5c-01 | App Status API Parsing | In `ThemeEditorShell.tsx`, `fetch("/api/admin/apps")` response was cast as raw array `apps as any[]`, but endpoint returns `{ success: true, data: [...] }`. Calling `.some()` threw a TypeError, causing `hasAdvancedApp` to remain `false` and hiding the mode toggle. | Updated parsing to support both wrapped `{ data: [...] }` and flat array responses with `credentials: "include"`. | Complete |
 | BUG-42.5c-02 | Mode State Persistence | Switching between Visual and Advanced editor modes previously reset upon page reload. | Persisted `editorMode` state in `localStorage` under `nasrify_theme_editor_mode`. | Complete |
+---
 
+## Stage 46 (Visual Theme Editor Upgrade — Elementor+ Parity)
 
-
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-46-01 | UI/Cosmetic | Browser native `<select>` dropdown menus displayed white-on-white text in Windows and dark mode theme editor panels due to unstyled `<option>` elements inheriting light system backgrounds. | Fixed by appending explicit Tailwind child selector `[&>option]:bg-slate-900 [&>option]:text-slate-100` and dark slate styling across all theme editor form dropdowns and pickers. | Complete |
+| BUG-46-02 | Build / Architecture | Synchronizing `apps/` after archiving `advanced-theme-editor` required removing the folder from `scripts/sync-apps.ts` and runtime registries to avoid orphaned build copy steps. | Removed from `sync-apps.ts` and worker registries; app safely archived in `_archive/advanced-theme-editor/`. | Complete |
+| BUG-46-03 | Edge CSS Injection | Dynamically compiling multi-layer shadows, unlimited gradients, and keyframe animations on every edge request could introduce runtime CPU overhead. | Generated scoped section CSS on edge with 60-second in-memory fingerprint caching (`theme_advanced_css_cache`) and client-side iframe live-injection via postMessage, keeping edge CPU under 10ms. | Complete |

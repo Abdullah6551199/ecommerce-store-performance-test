@@ -1,21 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import dynamic from "next/dynamic";
 import { TopBar, DeviceMode } from "./TopBar";
 import { SectionsList, SectionItemData } from "./SectionsList";
 import { SettingsPanel } from "./SettingsPanel";
 import { PreviewFrame } from "./PreviewFrame";
 import { SectionPicker } from "./SectionPicker";
 import { PublishConfirmModal } from "./PublishConfirmModal";
-
-const AdvancedEditorWrapper = dynamic(
-  () =>
-    import("@/apps/advanced-theme-editor/admin/AdvancedEditorWrapper").then(
-      (m) => m.AdvancedEditorWrapper
-    ),
-  { ssr: false }
-);
 
 interface ThemeConfig {
   id: string;
@@ -51,18 +42,6 @@ export function ThemeEditorShell() {
   const [currentTheme, setCurrentTheme] = useState<ThemeConfig | null>(null);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [device, setDevice] = useState<DeviceMode>("desktop");
-  const [editorMode, setEditorMode] = useState<"basic" | "advanced">(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("nasrify_theme_editor_mode");
-        if (saved === "advanced" || saved === "basic") {
-          return saved;
-        }
-      } catch (e) {}
-    }
-    return "basic";
-  });
-  const [hasAdvancedApp, setHasAdvancedApp] = useState<boolean>(false);
   const [undoStack, setUndoStack] = useState<ThemeConfig[]>([]);
   const [redoStack, setRedoStack] = useState<ThemeConfig[]>([]);
   const [isDirty, setIsDirty] = useState<boolean>(false);
@@ -83,16 +62,6 @@ export function ThemeEditorShell() {
     }, 3500);
   };
 
-  const handleEditorModeChange = (mode: "basic" | "advanced") => {
-    setEditorMode(mode);
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem("nasrify_theme_editor_mode", mode);
-      } catch (e) {}
-    }
-    showToast(mode === "advanced" ? "Switched to Advanced Theme Editor" : "Switched to Visual Theme Editor");
-  };
-
   // 1. Fetch initial theme draft on mount
   useEffect(() => {
     async function loadInitialDraft() {
@@ -103,32 +72,6 @@ export function ThemeEditorShell() {
           if (data && data.theme) {
             setCurrentTheme(data.theme);
           }
-        }
-
-        try {
-          const appsRes = await fetch("/api/admin/apps", {
-            credentials: "include",
-            cache: "no-store",
-          });
-          if (appsRes.ok) {
-            const json = (await appsRes.json()) as any;
-            const appList = Array.isArray(json)
-              ? json
-              : Array.isArray(json?.data)
-              ? json.data
-              : [];
-            const isInstalled = appList.some(
-              (a: any) =>
-                a.id === "advanced-theme-editor" &&
-                (a.enabled === true || a.enabled === 1)
-            );
-            setHasAdvancedApp(Boolean(isInstalled));
-            if (!isInstalled) {
-              setEditorMode("basic");
-            }
-          }
-        } catch (err) {
-          console.warn("[ThemeEditor] Could not fetch apps list:", err);
         }
       } catch (err) {
         console.error("Failed to load theme draft", err);
@@ -277,12 +220,18 @@ export function ThemeEditorShell() {
 
     const updated = currentTheme.sections.map((sec) => {
       if (sec.id === id) {
+        const nextSettings = {
+          ...(sec.settings || {}),
+          ...(patch.settings !== undefined ? patch.settings : patch),
+        };
+        // Clean up accidental settings.settings if any
+        if (nextSettings.settings && typeof nextSettings.settings === "object") {
+          delete nextSettings.settings;
+        }
         return {
           ...sec,
-          settings: {
-            ...(sec.settings || {}),
-            ...patch,
-          },
+          ...(patch.variant ? { variant: patch.variant } : {}),
+          settings: nextSettings,
         };
       }
       return sec;
@@ -616,9 +565,6 @@ export function ThemeEditorShell() {
         onOpenPublishModal={() => setIsPublishModalOpen(true)}
         onDiscardDraft={handleDiscard}
         isDiscarding={isDiscarding}
-        editorMode={editorMode}
-        onEditorModeChange={handleEditorModeChange}
-        hasAdvancedApp={hasAdvancedApp}
       />
 
       {/* 3-Column Main Editor Workspace */}
@@ -647,31 +593,16 @@ export function ThemeEditorShell() {
           onSelectSection={handleSelectSection}
         />
 
-        {/* Right Sidebar: Selected Section or Global Settings (Visual) OR Advanced Editor Panel */}
-        {editorMode === "advanced" && hasAdvancedApp ? (
-          <aside className="w-84 shrink-0 bg-slate-900 border-l border-slate-800 flex flex-col h-full overflow-hidden select-none">
-            <AdvancedEditorWrapper
-              theme={currentTheme}
-              selectedSectionId={selectedSectionId}
-              onSelectSection={handleSelectSection}
-              onUpdateTheme={(updatedTheme: any) => {
-                pushToUndoStack(currentTheme);
-                setCurrentTheme(updatedTheme);
-              }}
-              onSave={() => saveDraft()}
-            />
-          </aside>
-        ) : (
-          <SettingsPanel
-            selectedSection={selectedSection}
-            globalSettings={currentTheme.settings}
-            onUpdateSectionSettings={handleUpdateSectionSettings}
-            onUpdateGlobalSettings={handleUpdateGlobalSettings}
-            onDeselectSection={() => setSelectedSectionId(null)}
-            onDeleteSection={handleDeleteSection}
-            onToggleSectionVisibility={handleToggleVisibility}
-          />
-        )}
+        {/* Right Sidebar: Selected Section or Global Settings (Visual) */}
+        <SettingsPanel
+          selectedSection={selectedSection}
+          globalSettings={currentTheme.settings}
+          onUpdateSectionSettings={handleUpdateSectionSettings}
+          onUpdateGlobalSettings={handleUpdateGlobalSettings}
+          onDeselectSection={() => setSelectedSectionId(null)}
+          onDeleteSection={handleDeleteSection}
+          onToggleSectionVisibility={handleToggleVisibility}
+        />
       </div>
 
       {/* Section Picker Modal */}

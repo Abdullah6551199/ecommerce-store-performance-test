@@ -95,7 +95,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
                 <select
                   value={heading_size}
                   onChange={(e) => onChange({ heading_size: e.target.value })}
-                  className="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-slate-300 text-[11px] focus:outline-none focus:border-[#25D366]"
+                  className="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-slate-300 text-[11px] focus:outline-none focus:border-[#25D366] [&>option]:bg-slate-900 [&>option]:text-slate-100"
                 >
                   <option value="sm">SM</option>
                   <option value="md">MD</option>
@@ -110,7 +110,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
               type="text"
               value={heading}
               onChange={(e) => onChange({ heading: e.target.value })}
-              className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
+              className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366] [&>option]:bg-slate-900 [&>option]:text-slate-100"
             />
           </div>
 
@@ -130,7 +130,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
                 <select
                   value={button_size}
                   onChange={(e) => onChange({ button_size: e.target.value })}
-                  className="bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-slate-300 text-[10px] focus:outline-none focus:border-[#25D366]"
+                  className="bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-slate-300 text-[10px] focus:outline-none focus:border-[#25D366] [&>option]:bg-slate-900 [&>option]:text-slate-100"
                 >
                   <option value="sm">SM</option>
                   <option value="md">MD</option>
@@ -142,7 +142,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
                 type="text"
                 value={cta_text}
                 onChange={(e) => onChange({ cta_text: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
+                className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366] [&>option]:bg-slate-900 [&>option]:text-slate-100"
               />
             </div>
             <div>
@@ -151,7 +151,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
                 type="text"
                 value={cta_link}
                 onChange={(e) => onChange({ cta_link: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
+                className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366] [&>option]:bg-slate-900 [&>option]:text-slate-100"
               />
             </div>
           </div>
@@ -174,7 +174,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
               <select
                 value={height}
                 onChange={(e) => onChange({ height: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
+                className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366] [&>option]:bg-slate-900 [&>option]:text-slate-100"
               >
                 <option value="short">Short</option>
                 <option value="medium">Medium</option>
@@ -187,7 +187,7 @@ export function BannerSettings({ settings, onChange }: BannerSettingsProps) {
               <select
                 value={variant}
                 onChange={(e) => onChange({ variant: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366]"
+                className="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-[#25D366] [&>option]:bg-slate-900 [&>option]:text-slate-100"
               >
                 <option value="full_width">Full Width</option>
                 <option value="boxed">Boxed</option>

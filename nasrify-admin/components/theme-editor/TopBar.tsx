@@ -68,35 +68,53 @@ export function TopBar({
             {storeName}
           </h1>
 
-          {/* Tab Switcher: [Basic] [Advanced] */}
+          {/* iOS-Style Toggle: Visual ↔ Advanced (Shows only when Advanced app is enabled) */}
           {hasAdvancedApp ? (
-            <div className="flex items-center bg-slate-950 p-0.5 rounded-md border border-slate-800 text-xs ml-1">
+            <div className="flex items-center gap-2.5 ml-2 pl-3 border-l border-slate-800">
+              <div className="hidden sm:flex flex-col text-left">
+                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-medium leading-none">
+                  Editor Mode
+                </span>
+                <span
+                  className={`text-[11px] font-semibold transition-colors leading-tight ${
+                    editorMode === "advanced" ? "text-white" : "text-[#25D366]"
+                  }`}
+                >
+                  {editorMode === "advanced" ? "Advanced" : "Visual"}
+                </span>
+              </div>
+
+              {/* iOS Switch: 44x24px with smooth 20x20px knob */}
               <button
                 type="button"
-                onClick={() => onEditorModeChange?.("basic")}
-                className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
-                  editorMode === "basic"
-                    ? "bg-slate-800 text-[#25D366] font-semibold shadow-xs"
-                    : "text-slate-400 hover:text-slate-200"
-                }`}
-              >
-                Basic
-              </button>
-              <button
-                type="button"
-                onClick={() => onEditorModeChange?.("advanced")}
-                className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+                role="switch"
+                aria-checked={editorMode === "advanced"}
+                onClick={() =>
+                  onEditorModeChange?.(editorMode === "advanced" ? "basic" : "advanced")
+                }
+                title={
                   editorMode === "advanced"
-                    ? "bg-indigo-600 text-white font-semibold shadow-xs"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "Switch to Visual Theme Editor"
+                    : "Switch to Advanced Theme Editor"
+                }
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-slate-900 ${
+                  editorMode === "advanced"
+                    ? "bg-[#25D366]"
+                    : "bg-slate-700 hover:bg-slate-600"
                 }`}
               >
-                Advanced
+                <span className="sr-only">Toggle Editor Mode</span>
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    editorMode === "advanced" ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
               </button>
             </div>
           ) : (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">
-              Basic Editor
+            <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium border border-slate-700/60 ml-1">
+              Visual Theme Editor
             </span>
           )}
         </div>

@@ -105,7 +105,7 @@ export function SettingsPanel({
                 </span>
               </div>
               <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/20">
-                Basic Settings
+                Visual Settings
               </span>
             </div>
 

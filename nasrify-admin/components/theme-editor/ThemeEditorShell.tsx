@@ -51,7 +51,17 @@ export function ThemeEditorShell() {
   const [currentTheme, setCurrentTheme] = useState<ThemeConfig | null>(null);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [device, setDevice] = useState<DeviceMode>("desktop");
-  const [editorMode, setEditorMode] = useState<"basic" | "advanced">("basic");
+  const [editorMode, setEditorMode] = useState<"basic" | "advanced">(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("nasrify_theme_editor_mode");
+        if (saved === "advanced" || saved === "basic") {
+          return saved;
+        }
+      } catch (e) {}
+    }
+    return "basic";
+  });
   const [hasAdvancedApp, setHasAdvancedApp] = useState<boolean>(false);
   const [undoStack, setUndoStack] = useState<ThemeConfig[]>([]);
   const [redoStack, setRedoStack] = useState<ThemeConfig[]>([]);
@@ -73,6 +83,16 @@ export function ThemeEditorShell() {
     }, 3500);
   };
 
+  const handleEditorModeChange = (mode: "basic" | "advanced") => {
+    setEditorMode(mode);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("nasrify_theme_editor_mode", mode);
+      } catch (e) {}
+    }
+    showToast(mode === "advanced" ? "Switched to Advanced Theme Editor" : "Switched to Visual Theme Editor");
+  };
+
   // 1. Fetch initial theme draft on mount
   useEffect(() => {
     async function loadInitialDraft() {
@@ -85,13 +105,30 @@ export function ThemeEditorShell() {
           }
         }
 
-        const appsRes = await fetch("/api/admin/apps");
-        if (appsRes.ok) {
-          const apps = (await appsRes.json()) as any[];
-          const isInstalled = apps.some(
-            (a: any) => a.id === "advanced-theme-editor" && a.enabled
-          );
-          setHasAdvancedApp(isInstalled);
+        try {
+          const appsRes = await fetch("/api/admin/apps", {
+            credentials: "include",
+            cache: "no-store",
+          });
+          if (appsRes.ok) {
+            const json = (await appsRes.json()) as any;
+            const appList = Array.isArray(json)
+              ? json
+              : Array.isArray(json?.data)
+              ? json.data
+              : [];
+            const isInstalled = appList.some(
+              (a: any) =>
+                a.id === "advanced-theme-editor" &&
+                (a.enabled === true || a.enabled === 1)
+            );
+            setHasAdvancedApp(Boolean(isInstalled));
+            if (!isInstalled) {
+              setEditorMode("basic");
+            }
+          }
+        } catch (err) {
+          console.warn("[ThemeEditor] Could not fetch apps list:", err);
         }
       } catch (err) {
         console.error("Failed to load theme draft", err);
@@ -580,7 +617,7 @@ export function ThemeEditorShell() {
         onDiscardDraft={handleDiscard}
         isDiscarding={isDiscarding}
         editorMode={editorMode}
-        onEditorModeChange={setEditorMode}
+        onEditorModeChange={handleEditorModeChange}
         hasAdvancedApp={hasAdvancedApp}
       />
 
@@ -610,7 +647,7 @@ export function ThemeEditorShell() {
           onSelectSection={handleSelectSection}
         />
 
-        {/* Right Sidebar: Selected Section or Global Settings (Basic) OR Advanced Editor Panel */}
+        {/* Right Sidebar: Selected Section or Global Settings (Visual) OR Advanced Editor Panel */}
         {editorMode === "advanced" && hasAdvancedApp ? (
           <aside className="w-84 shrink-0 bg-slate-900 border-l border-slate-800 flex flex-col h-full overflow-hidden select-none">
             <AdvancedEditorWrapper

@@ -174,4 +174,14 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-42.5b-02 | Component Named vs Default Export | `ImageUploadField.tsx` was initially exported as `export default function`, causing named import `{ ImageUploadField }` to fail Next.js Turbopack build. | Exported both as named `export function ImageUploadField` and `export default ImageUploadField`. | Complete |
 | BUG-42.5b-03 | Rich Text XSS Risk | Custom rich text editor inputs could allow malicious script injections if rendered directly. | Sanitized all HTML using DOMParser / strict regex tag stripping allowing only safe tags (`<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<a>`, `<ul>`, `<ol>`, `<li>`, `<p>`, `<br>`). | Complete |
 
+---
+
+## Stage 42.5c (Editor Toggle & Rebrand to Visual Theme Editor)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-42.5c-01 | App Status API Parsing | In `ThemeEditorShell.tsx`, `fetch("/api/admin/apps")` response was cast as raw array `apps as any[]`, but endpoint returns `{ success: true, data: [...] }`. Calling `.some()` threw a TypeError, causing `hasAdvancedApp` to remain `false` and hiding the mode toggle. | Updated parsing to support both wrapped `{ data: [...] }` and flat array responses with `credentials: "include"`. | Complete |
+| BUG-42.5c-02 | Mode State Persistence | Switching between Visual and Advanced editor modes previously reset upon page reload. | Persisted `editorMode` state in `localStorage` under `nasrify_theme_editor_mode`. | Complete |
+
+
 

@@ -61,6 +61,10 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
   "product-qa": {
     ProductQASection: dynamic(() => import("@/apps/product-qa/storefront/ProductQASection")),
   },
+  chatbot: {
+    ChatWidget: dynamic(() => import("@/apps/chatbot/storefront/ChatWidget")),
+    ChatWindow: dynamic(() => import("@/apps/chatbot/storefront/ChatWindow")),
+  },
 };
 
 export function loadAdminAppComponent(

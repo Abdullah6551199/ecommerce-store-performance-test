@@ -44,6 +44,14 @@ const ScriptBlocker = dynamic(
   }
 );
 
+const ChatWidget = dynamic(
+  () => import("@/apps/chatbot/storefront/ChatWidget"),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
 interface Props {
   enabledAppIds: string[];
 }
@@ -59,8 +67,9 @@ export default function StorefrontFloatingClient({
   const hasCompare = enabledAppIds.includes("compare");
   const hasBroadcast = enabledAppIds.includes("broadcast");
   const hasCookieConsent = enabledAppIds.includes("cookie-consent");
+  const hasChatbot = enabledAppIds.includes("chatbot");
 
-  if (!hasWhatsApp && !hasCompare && !hasBroadcast && !hasCookieConsent) {
+  if (!hasWhatsApp && !hasCompare && !hasBroadcast && !hasCookieConsent && !hasChatbot) {
     return null;
   }
 
@@ -80,6 +89,11 @@ export default function StorefrontFloatingClient({
         <AppErrorBoundary appId="cookie-consent" extensionPoint="storefront.floating">
           <CookieConsentBanner />
           <ScriptBlocker />
+        </AppErrorBoundary>
+      )}
+      {hasChatbot && (
+        <AppErrorBoundary appId="chatbot" extensionPoint="storefront.floating">
+          <ChatWidget />
         </AppErrorBoundary>
       )}
       {hasWhatsApp && (

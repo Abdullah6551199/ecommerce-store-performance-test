@@ -1358,4 +1358,38 @@ export const fontSettings = sqliteTable("font_settings", {
 export type FontSettingRecord = typeof fontSettings.$inferSelect;
 export type NewFontSettingRecord = typeof fontSettings.$inferInsert;
 
+// 65. Chatbot Settings Table (Stage 45)
+export const chatbotSettings = sqliteTable("chatbot_settings", {
+  id: text("id").primaryKey().default("default"),
+  enabled: integer("enabled").default(1),
+  xkiroApiKey: text("xkiro_api_key"),
+  preferredModel: text("preferred_model").default("deepseek/deepseek-v4.1-flash:free"),
+  fallbackModels: text("fallback_models").default('["mistralai/mistral-medium-3.5:free","minimax/minimax-m3:free","qwen/qwen3.6-plus:free"]'),
+  systemPrompt: text("system_prompt"),
+  maxTokens: integer("max_tokens").default(300),
+  temperature: real("temperature").default(0.7),
+  welcomeMessage: text("welcome_message").default("Hi! How can I help you today?"),
+  placeholderText: text("placeholder_text").default("Ask about products, orders, shipping..."),
+  position: text("position").default("bottom-right"),
+  accentColor: text("accent_color").default("#25D366"),
+  updatedAt: integer("updated_at"),
+});
+
+export type ChatbotSettingRecord = typeof chatbotSettings.$inferSelect;
+export type NewChatbotSettingRecord = typeof chatbotSettings.$inferInsert;
+
+// 66. Chatbot Conversations Table (Stage 45)
+export const chatbotConversations = sqliteTable("chatbot_conversations", {
+  id: text("id").primaryKey(),
+  sessionId: text("session_id").notNull(),
+  role: text("role").notNull(), // 'user' | 'assistant'
+  content: text("content").notNull(),
+  modelUsed: text("model_used"),
+  tokensUsed: integer("tokens_used"),
+  createdAt: integer("created_at"),
+});
+
+export type ChatbotConversationRecord = typeof chatbotConversations.$inferSelect;
+export type NewChatbotConversationRecord = typeof chatbotConversations.$inferInsert;
+
 

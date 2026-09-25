@@ -208,6 +208,7 @@ export default function AppSettingsClient({ appId }: Props): React.JSX.Element {
     "digital-products": "DigitalProductsManager",
     reviews: "ReviewsManager",
     "product-qa": "ProductQAManager",
+    chatbot: "ChatbotSettings",
   };
   const CustomManagerComponent = managerNameMap[appId]
     ? loadAdminAppComponent(appId, managerNameMap[appId])

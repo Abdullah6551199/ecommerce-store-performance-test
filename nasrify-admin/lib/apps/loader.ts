@@ -54,6 +54,11 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
     AIDashboardWidget: dynamic(() => import("@/apps/ai-review-generator/admin/AIDashboardWidget").then((m) => m.AIDashboardWidget)),
     DashboardWidget: dynamic(() => import("@/apps/ai-review-generator/admin/AIDashboardWidget").then((m) => m.AIDashboardWidget)),
   },
+  chatbot: {
+    ChatbotSettings: dynamic(() => import("@/apps/chatbot/admin/ChatbotSettings")),
+    ChatbotDashboardWidget: dynamic(() => import("@/apps/chatbot/admin/ChatbotDashboardWidget")),
+    DashboardWidget: dynamic(() => import("@/apps/chatbot/admin/ChatbotDashboardWidget")),
+  },
 };
 
 export function loadAdminAppComponent(

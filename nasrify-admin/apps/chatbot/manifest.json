@@ -1,0 +1,88 @@
+{
+  "id": "chatbot",
+  "name": "AI Chatbot",
+  "version": "1.0.0",
+  "description": "Smart, store-aware customer support chatbot powered by xKiro multi-model fallback.",
+  "author": "Nasrify",
+  "authorUrl": "https://nasrify.com",
+  "icon": "icon.svg",
+  "pricing": "free",
+  "category": "marketing",
+  "permissions": [
+    "read:products",
+    "read:orders",
+    "read:customers",
+    "read:settings"
+  ],
+  "extensionPoints": [
+    "storefront.floating",
+    "admin.dashboard.widget"
+  ],
+  "databaseTables": [
+    "chatbot_settings",
+    "chatbot_conversations"
+  ],
+  "workerScope": {
+    "admin": ["admin/"],
+    "storefront": ["storefront/"],
+    "shared": ["manifest.json", "icon.svg", "lib/", "shared/"]
+  },
+  "settingsSchema": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "label": "Enable AI Chatbot",
+      "description": "Activate floating AI chatbot on storefront"
+    },
+    "preferredModel": {
+      "type": "select",
+      "options": [
+        "deepseek/deepseek-v4.1-flash:free",
+        "minimax/minimax-m3:free",
+        "mistralai/mistral-medium-3.5:free",
+        "qwen/qwen3.6-plus:free",
+        "qwen/qwen3.5-397b-a17b:free"
+      ],
+      "default": "deepseek/deepseek-v4.1-flash:free",
+      "label": "Preferred Model",
+      "description": "Primary model used for customer chats"
+    },
+    "maxTokens": {
+      "type": "number",
+      "default": 300,
+      "min": 100,
+      "max": 1000,
+      "label": "Max Response Tokens",
+      "description": "Maximum token generation per reply"
+    },
+    "temperature": {
+      "type": "number",
+      "default": 0.7,
+      "min": 0,
+      "max": 1,
+      "label": "Temperature",
+      "description": "Sampling temperature (0 = strict, 1 = creative)"
+    },
+    "position": {
+      "type": "select",
+      "options": ["bottom-right", "bottom-left"],
+      "default": "bottom-right",
+      "label": "Widget Position",
+      "description": "Screen alignment for the floating widget"
+    },
+    "requireLogin": {
+      "type": "boolean",
+      "default": false,
+      "label": "Require Customer Login",
+      "description": "Restrict chat access only to logged-in customers"
+    },
+    "rateLimitPerHour": {
+      "type": "number",
+      "default": 30,
+      "min": 5,
+      "max": 200,
+      "label": "Session Rate Limit (Per Hour)",
+      "description": "Max messages allowed per customer session in a 1-hour window"
+    }
+  }
+}

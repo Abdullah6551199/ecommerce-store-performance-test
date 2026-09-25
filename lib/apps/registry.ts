@@ -12,6 +12,7 @@ import digitalProductsManifest from "@/apps/digital-products/manifest.json";
 import couponsManifest from "@/apps/coupons/manifest.json";
 import productQaManifest from "@/apps/product-qa/manifest.json";
 import aiReviewGeneratorManifest from "@/apps/ai-review-generator/manifest.json";
+import chatbotManifest from "@/apps/chatbot/manifest.json";
 import { type AppManifest } from "@/types/apps";
 import { validateManifest } from "./manifest";
 
@@ -34,6 +35,7 @@ const RAW_MANIFESTS: Record<string, unknown> = {
   coupons: couponsManifest,
   "product-qa": productQaManifest,
   "ai-review-generator": aiReviewGeneratorManifest,
+  chatbot: chatbotManifest,
 };
 
 const VALIDATED_MANIFESTS: Record<string, AppManifest> = {};

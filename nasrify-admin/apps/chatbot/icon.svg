@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="chatbot-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#25D366" />
+      <stop offset="50%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#059669" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Background circle with smooth gradient and shadow -->
+  <rect width="460" height="460" x="26" y="26" rx="100" fill="url(#chatbot-grad)" filter="url(#shadow)" />
+
+  <!-- Inner subtle glow -->
+  <rect width="456" height="456" x="28" y="28" rx="98" fill="none" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="4" />
+
+  <!-- Main Chat Bubble -->
+  <g fill="#FFFFFF">
+    <path d="M160 140 C 220 140, 360 140, 360 140 C 393.1 140, 420 166.9, 420 200 L 420 300 C 420 333.1, 393.1 360, 360 360 L 220 360 L 150 410 C 141.4 416.1, 130 409.9, 130 399.5 L 130 360 C 107.9 360, 90 342.1, 90 320 L 90 200 C 90 166.9, 116.9 140, 150 140 Z" opacity="0.98"/>
+    
+    <!-- AI Sparkles / Brain Nodes inside bubble (Accent Color #10B981) -->
+    <!-- Center friendly robot face / AI sparkle -->
+    <circle cx="205" cy="250" r="22" fill="#059669" />
+    <circle cx="305" cy="250" r="22" fill="#059669" />
+    <path d="M220 295 C 235 315, 275 315, 290 295" stroke="#059669" stroke-width="12" stroke-linecap="round" fill="none" />
+    
+    <!-- Antenna / Signal Sparkle -->
+    <path d="M255 105 L 255 135" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" />
+    <circle cx="255" cy="95" r="16" fill="#FFFFFF" />
+
+    <!-- AI Star Sparkle Top Right -->
+    <path d="M375 100 Q 375 125 395 125 Q 375 125 375 150 Q 375 125 355 125 Q 375 125 375 100 Z" fill="#FDE047" />
+  </g>
+</svg>

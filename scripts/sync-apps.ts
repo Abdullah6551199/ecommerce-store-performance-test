@@ -111,6 +111,11 @@ export const APP_ADMIN_COMPONENTS: Record<string, Record<string, React.Component
     AIDashboardWidget: dynamic(() => import("@/apps/ai-review-generator/admin/AIDashboardWidget").then((m) => m.AIDashboardWidget)),
     DashboardWidget: dynamic(() => import("@/apps/ai-review-generator/admin/AIDashboardWidget").then((m) => m.AIDashboardWidget)),
   },
+  chatbot: {
+    ChatbotSettings: dynamic(() => import("@/apps/chatbot/admin/ChatbotSettings")),
+    ChatbotDashboardWidget: dynamic(() => import("@/apps/chatbot/admin/ChatbotDashboardWidget")),
+    DashboardWidget: dynamic(() => import("@/apps/chatbot/admin/ChatbotDashboardWidget")),
+  },
 };
 
 export function loadAdminAppComponent(
@@ -198,6 +203,10 @@ export const APP_STOREFRONT_COMPONENTS: Record<string, Record<string, React.Comp
   },
   "product-qa": {
     ProductQASection: dynamic(() => import("@/apps/product-qa/storefront/ProductQASection")),
+  },
+  chatbot: {
+    ChatWidget: dynamic(() => import("@/apps/chatbot/storefront/ChatWidget")),
+    ChatWindow: dynamic(() => import("@/apps/chatbot/storefront/ChatWindow")),
   },
 };
 

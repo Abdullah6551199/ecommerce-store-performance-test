@@ -191,3 +191,14 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-46-01 | UI/Cosmetic | Browser native `<select>` dropdown menus displayed white-on-white text in Windows and dark mode theme editor panels due to unstyled `<option>` elements inheriting light system backgrounds. | Fixed by appending explicit Tailwind child selector `[&>option]:bg-slate-900 [&>option]:text-slate-100` and dark slate styling across all theme editor form dropdowns and pickers. | Complete |
 | BUG-46-02 | Build / Architecture | Synchronizing `apps/` after archiving `advanced-theme-editor` required removing the folder from `scripts/sync-apps.ts` and runtime registries to avoid orphaned build copy steps. | Removed from `sync-apps.ts` and worker registries; app safely archived in `_archive/advanced-theme-editor/`. | Complete |
 | BUG-46-03 | Edge CSS Injection | Dynamically compiling multi-layer shadows, unlimited gradients, and keyframe animations on every edge request could introduce runtime CPU overhead. | Generated scoped section CSS on edge with 60-second in-memory fingerprint caching (`theme_advanced_css_cache`) and client-side iframe live-injection via postMessage, keeping edge CPU under 10ms. | Complete |
+
+---
+
+## Stage 46.2 (BaseSection Architecture & Schema-Driven Settings)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-46.2-01 | Type Compatibility | Schema definition `FieldConfig` initially lacked `placeholder` and `fields` alias properties, causing compile-time errors in `faq.ts`, `testimonials.ts`, and text inputs. | Expanded `FieldConfig` to support `placeholder`, `fields`, and `itemFields` transparently in `section-schema.ts`. | Complete |
+| BUG-46.2-02 | Category Union | Section categories in some schemas used `"collection"` and `"product"`, whereas `SectionSchema` required `"collections"` and `"products"`. | Updated `category` union in `section-schema.ts` to allow singular and plural variants (`product` \| `products`, `collection` \| `collections`, `social`). | Complete |
+| BUG-46.2-03 | Control Props Parity | `ColorControl`, `SpacingControl`, and `ImageUploadField` required mandatory `label` string props, but some nested schema renderer calls omitted them. | Passed `label={field.label}` and descriptive defaults to all control component invocations in `SchemaFieldRenderer.tsx` and `BaseSectionSettings.tsx`. | Complete |
+

@@ -315,3 +315,18 @@ Located in `nasrify-admin/components/theme-editor/controls/`:
 - Edge CSS is dynamically compiled by `section-css-generator.ts` with a 60-second in-memory fingerprint cache (`theme_advanced_css_cache`), ensuring edge CPU overhead remains `<10ms`.
 - Client-side editor preview receives real-time `UPDATE_THEME` postMessages and immediately updates `<style id="theme-advanced-css">` without requiring iframe page reloads.
 
+---
+
+## 11. BaseSection Architecture (Stage 46.2)
+
+In Stage 46.2, duplicated settings markup across all 25 theme sections was replaced with the unified **BaseSection Architecture**:
+- **Schema-Driven (`nasrify-admin/lib/themes/section-schema.ts`)**: Every section defines its fields, options, and defaults in `lib/themes/schemas/{section-type}.ts`.
+- **Auto-Inherited Controls (`BaseSectionSettings.tsx`)**: Every section automatically inherits:
+  - Top preset 1-click apply bar.
+  - Variant selector dropdown.
+  - **Content Tab**: Dynamically mapped controls (`SchemaFieldRenderer.tsx`) for `text`, `richtext`, `image`, `number`, `boolean`, `select`, `repeater`, etc.
+  - **Style Tab**: All design panels (Typography, Background, Border, Shadow, Effects, Hover).
+  - **Advanced Tab**: Layout/Spacing, Motion/Animation, Responsive Device Visibility, Custom CSS, and Positioning.
+- **Sub-10 Minute Section Authoring**: Creating a new section requires only a schema definition and a React render component. Full details are documented in [section-schema.md](./section-schema.md).
+
+

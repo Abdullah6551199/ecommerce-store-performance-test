@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SectionProps } from "@/lib/themes/types";
 import { useCart } from "@/components/CartContext";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface HeaderMenuItem {
   label: string;
@@ -47,7 +48,10 @@ export default function Header({
   const showAccount = settings.show_account !== false;
   const isSticky = settings.sticky !== false;
 
-  const headerClass = `w-full bg-[var(--theme-background,#FFFFFF)] border-b border-[var(--theme-border,#E4E4E7)] transition-all z-30 ${
+  const hasCustomBg = Boolean((settings as any)?._advanced?.style?.background);
+  const headerBgClass = hasCustomBg ? "bg-transparent" : "bg-[var(--theme-background,#FFFFFF)]";
+
+  const headerClass = `w-full ${headerBgClass} border-b border-[var(--theme-border,#E4E4E7)] transition-all z-30 ${
     isSticky ? "sticky top-0 shadow-xs backdrop-blur-md bg-opacity-95" : "relative"
   }`;
 
@@ -95,9 +99,11 @@ export default function Header({
                   />
                 </div>
               ) : (
-                <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-[var(--theme-accent,#18181B)] group-hover:text-[var(--theme-primary,#25D366)] transition-colors font-[family-name:var(--theme-font-heading)]">
-                  {logoText}
-                </span>
+                <span
+                  data-editable="logo_text"
+                  className="font-extrabold text-xl sm:text-2xl tracking-tight text-[var(--theme-accent,#18181B)] group-hover:text-[var(--theme-primary,#25D366)] transition-colors font-[family-name:var(--theme-font-heading)]"
+                  dangerouslySetInnerHTML={renderRich(logoText)}
+                />
               )}
             </Link>
           </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { SectionProps } from "@/lib/themes/types";
 import { useCart } from "@/components/CartContext";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface ProductGridSettings {
   heading?: string;
@@ -69,13 +70,17 @@ export default function ProductGrid({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12">
         <div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-            {heading}
-          </h2>
+          <h2
+            data-editable="heading"
+            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
           {subheading && (
-            <p className="mt-2 text-sm sm:text-base text-[var(--theme-text-muted,#71717A)] font-[family-name:var(--theme-font-body)]">
-              {subheading}
-            </p>
+            <p
+              data-editable="subheading"
+              className="mt-2 text-sm sm:text-base text-[var(--theme-text-muted,#71717A)] font-[family-name:var(--theme-font-body)]"
+              dangerouslySetInnerHTML={renderRich(subheading)}
+            />
           )}
         </div>
         <Link

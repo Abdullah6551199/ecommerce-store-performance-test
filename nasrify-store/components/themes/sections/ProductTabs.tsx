@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface TabItem {
   id: string;
@@ -68,15 +69,16 @@ export default function ProductTabs({
                   onClick={() => toggleAccordion(tab.id)}
                   className="flex w-full items-center justify-between text-left font-semibold text-sm sm:text-base text-[var(--theme-text,#18181B)]"
                 >
-                  <span>{tab.label}</span>
+                  <span dangerouslySetInnerHTML={renderRich(tab.label)} />
                   <span className="text-xl transition-transform duration-200">
                     {isOpen ? "−" : "+"}
                   </span>
                 </button>
                 {isOpen && (
-                  <div className="mt-3 text-sm text-[var(--theme-text-muted,#71717A)] whitespace-pre-line leading-relaxed">
-                    {tab.content}
-                  </div>
+                  <div
+                    className="mt-3 text-sm text-[var(--theme-text-muted,#71717A)] whitespace-pre-line leading-relaxed"
+                    dangerouslySetInnerHTML={renderRich(tab.content)}
+                  />
                 )}
               </div>
             );
@@ -101,16 +103,17 @@ export default function ProductTabs({
                     active ? "bg-[var(--theme-background,#FFFFFF)]" : "hover:text-[var(--theme-text,#18181B)]"
                   }`}
                 >
-                  {tab.label}
+                  <span dangerouslySetInnerHTML={renderRich(tab.label)} />
                 </button>
               );
             })}
           </div>
 
           {/* Active Tab Content */}
-          <div className="p-6 text-sm text-[var(--theme-text-muted,#71717A)] leading-relaxed whitespace-pre-line">
-            {tabs.find((t) => t.id === activeTab)?.content || tabs[0]?.content}
-          </div>
+          <div
+            className="p-6 text-sm text-[var(--theme-text-muted,#71717A)] leading-relaxed whitespace-pre-line"
+            dangerouslySetInnerHTML={renderRich(tabs.find((t) => t.id === activeTab)?.content || tabs[0]?.content)}
+          />
         </div>
       )}
     </div>

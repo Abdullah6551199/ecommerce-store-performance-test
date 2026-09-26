@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface FAQItem {
   question: string;
@@ -49,18 +50,22 @@ export default function FAQ({
   if (variant === "two_column") {
     return (
       <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] mb-10 text-center font-[family-name:var(--theme-font-heading)]">
-          {heading}
-        </h2>
+        <h2
+          data-editable="heading"
+          className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] mb-10 text-center font-[family-name:var(--theme-font-heading)]"
+          dangerouslySetInnerHTML={renderRich(heading)}
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {items.map((item, idx) => (
             <div key={idx} className="p-6 rounded-[var(--theme-radius,8px)] border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-background,#FFFFFF)]">
-              <h3 className="font-bold text-base sm:text-lg text-[var(--theme-text,#18181B)] mb-2">
-                {item.question}
-              </h3>
-              <p className="text-sm text-[var(--theme-text-muted,#71717A)] leading-relaxed">
-                {item.answer}
-              </p>
+              <h3
+                className="font-bold text-base sm:text-lg text-[var(--theme-text,#18181B)] mb-2"
+                dangerouslySetInnerHTML={renderRich(item.question)}
+              />
+              <p
+                className="text-sm text-[var(--theme-text-muted,#71717A)] leading-relaxed"
+                dangerouslySetInnerHTML={renderRich(item.answer)}
+              />
             </div>
           ))}
         </div>
@@ -71,9 +76,11 @@ export default function FAQ({
   return (
     <section className="py-12 sm:py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-10">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-          {heading}
-        </h2>
+        <h2
+          data-editable="heading"
+          className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+          dangerouslySetInnerHTML={renderRich(heading)}
+        />
       </div>
 
       <div className="divide-y divide-[var(--theme-border,#E4E4E7)] border-y border-[var(--theme-border,#E4E4E7)]">
@@ -86,9 +93,10 @@ export default function FAQ({
                 onClick={() => setOpenIndex(isOpen ? null : idx)}
                 className="w-full flex items-center justify-between text-left focus:outline-hidden"
               >
-                <span className="font-semibold text-base sm:text-lg text-[var(--theme-text,#18181B)]">
-                  {item.question}
-                </span>
+                <span
+                  className="font-semibold text-base sm:text-lg text-[var(--theme-text,#18181B)]"
+                  dangerouslySetInnerHTML={renderRich(item.question)}
+                />
                 <span className="ml-4 shrink-0 text-[var(--theme-text-muted,#71717A)]">
                   <svg
                     className={`w-5 h-5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
@@ -101,9 +109,10 @@ export default function FAQ({
                 </span>
               </button>
               {isOpen && (
-                <div className="mt-3 text-sm sm:text-base text-[var(--theme-text-muted,#71717A)] leading-relaxed animate-in fade-in-50 duration-150">
-                  {item.answer}
-                </div>
+                <div
+                  className="mt-3 text-sm sm:text-base text-[var(--theme-text-muted,#71717A)] leading-relaxed animate-in fade-in-50 duration-150"
+                  dangerouslySetInnerHTML={renderRich(item.answer)}
+                />
               )}
             </div>
           );

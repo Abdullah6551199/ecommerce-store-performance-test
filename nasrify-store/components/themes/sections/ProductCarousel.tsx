@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface ProductCarouselSettings {
   heading?: string;
@@ -37,9 +38,11 @@ export default function ProductCarousel({
     <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 sm:mb-8">
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-          {heading}
-        </h2>
+        <h2
+          data-editable="heading"
+          className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+          dangerouslySetInnerHTML={renderRich(heading)}
+        />
         {showArrows && (
           <div className="flex items-center gap-2">
             <button

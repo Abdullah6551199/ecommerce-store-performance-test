@@ -64,9 +64,18 @@ export function sanitizeRichText(html?: string): string {
   return html
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
     .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
-    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, "")
-    .replace(/on\w+\s*=\s*[^>\s]+/gi, "")
-    .replace(/javascript\s*:/gi, "");
+    .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, "")
+    .replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, "")
+    .replace(/\son\w+\s*=\s*["'][^"']*["']/gi, "")
+    .replace(/\son\w+\s*=\s*[^>\s]+/gi, "")
+    .replace(/href\s*=\s*["']?javascript:[^"'>]*/gi, 'href="#"');
+}
+
+/**
+ * Returns sanitized HTML object for safe dangerouslySetInnerHTML usage
+ */
+export function renderRich(html?: string): { __html: string } {
+  return { __html: sanitizeRichText(html) };
 }
 
 export interface CropData {

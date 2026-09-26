@@ -13,6 +13,7 @@ import { BannerSettings } from "./sections/BannerSettings";
 import { ImageTextSettings } from "./sections/ImageTextSettings";
 import { FAQSettings } from "./sections/FAQSettings";
 import { FooterSettings } from "./sections/FooterSettings";
+import ProductInfoSettings from "./sections/ProductInfoSettings";
 
 interface SectionSettingsProps {
   section: {
@@ -25,6 +26,21 @@ interface SectionSettingsProps {
   onChange: (patch: Record<string, any>) => void;
 }
 
+const DEFAULT_SECTION_SETTINGS: Record<string, Record<string, any>> = {
+  product_gallery: { layout: "carousel", thumbnails_position: "bottom", zoom: "off" },
+  product_tabs: { default_tab: "description" },
+  product_reviews_section: { heading: "Customer Reviews", show_summary: true, show_form: true },
+  product_related: { heading: "Related Products", max_products: 4, columns: 4 },
+  category_header: { show_breadcrumb: true, show_description: true, layout: "simple" },
+  category_filters: { show_price_filter: true, show_brand_filter: true, show_availability_filter: true },
+  category_grid: { columns: 3, per_page: 9, show_pagination: true },
+  cart_page_layout: { show_coupon: true, show_estimated_shipping: true, show_recommendations: true },
+  checkout_page_layout: { show_order_summary: true, allow_guest_checkout: true },
+  account_dashboard: { show_wishlist: true, show_orders: true },
+  page_header: { show_breadcrumb: true, alignment: "center" },
+  page_content: { max_width: "max-w-4xl", padding_y: "py-6" },
+};
+
 function GenericSectionSettings({
   section,
   onChange,
@@ -32,18 +48,19 @@ function GenericSectionSettings({
   section: SectionSettingsProps["section"];
   onChange: (patch: Record<string, any>) => void;
 }) {
-  const settings = section.settings || {};
+  const defaults = DEFAULT_SECTION_SETTINGS[section.type] || {};
+  const settings = { ...defaults, ...(section.settings || {}) };
 
   const handleFieldChange = (key: string, value: any) => {
     onChange({
       settings: {
-        ...settings,
+        ...(section.settings || {}),
         [key]: value,
       },
     });
   };
 
-  const keys = Object.keys(settings);
+  const keys = Object.keys(settings).filter((k) => k !== "_advanced");
 
   return (
     <div className="space-y-4 text-xs">
@@ -197,6 +214,15 @@ export function SectionSettings({ section, onChange }: SectionSettingsProps) {
       return <FAQSettings settings={settings} onChange={onChange} />;
     case "footer":
       return <FooterSettings settings={settings} onChange={onChange} />;
+    case "product_info":
+      return (
+        <ProductInfoSettings
+          settings={settings}
+          variant={section.variant}
+          onChange={onChange}
+          onVariantChange={handleVariantChange}
+        />
+      );
     default:
       return <GenericSectionSettings section={section} onChange={onChange} />;
   }

@@ -411,7 +411,38 @@ export function generateSectionCSS(sectionId: string, advanced?: SectionAdvanced
     customCSS = sanitized.replace(/\bselector\b/g, selector);
   }
 
-  const desktopCSS = desktopDecls.length > 0 ? `${selector} {\n  ${desktopDecls.join("\n  ")}\n}` : "";
+  let desktopCSS = desktopDecls.length > 0 ? `${selector} {\n  ${desktopDecls.join("\n  ")}\n}` : "";
+
+  // Deep inheritance overrides for section child elements
+  const extraRules: string[] = [];
+  if (style.typography?.color) {
+    extraRules.push(
+      `${selector} h1, ${selector} h2, ${selector} h3, ${selector} h4, ${selector} p, ${selector} [data-editable], ${selector} span:not([style*="color"]) {\n  color: ${style.typography.color} !important;\n}`
+    );
+  }
+  if (style.typography?.fontFamily) {
+    extraRules.push(
+      `${selector} h1, ${selector} h2, ${selector} h3, ${selector} h4, ${selector} p, ${selector} span, ${selector} [data-editable] {\n  font-family: "${style.typography.fontFamily}", sans-serif !important;\n}`
+    );
+  }
+  if (style.background && (style.background.type === "color" || style.background.type === "gradient")) {
+    extraRules.push(
+      `${selector} > section, ${selector} > header, ${selector} > footer, ${selector} > aside {\n  background-color: transparent !important;\n}`
+    );
+  }
+  if (style.shadows && style.shadows.length > 0) {
+    const shadowCSS = compileShadowLayersCSS(style.shadows);
+    if (shadowCSS) {
+      extraRules.push(
+        `${selector} .group {\n  box-shadow: ${shadowCSS};\n}`
+      );
+    }
+  }
+
+  if (extraRules.length > 0) {
+    desktopCSS = desktopCSS ? `${desktopCSS}\n\n${extraRules.join("\n\n")}` : extraRules.join("\n\n");
+  }
+
   const tabletCSS = tabletDecls.length > 0 ? `${selector} {\n  ${tabletDecls.join("\n  ")}\n}` : "";
   const mobileCSS = mobileDecls.length > 0 ? `${selector} {\n  ${mobileDecls.join("\n  ")}\n}` : "";
   const hoverCSS = hoverDecls.length > 0 ? `${selector}:hover {\n  ${hoverDecls.join("\n  ")}\n}` : "";

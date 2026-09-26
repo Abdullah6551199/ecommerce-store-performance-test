@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface BannerSettings {
   heading?: string;
@@ -24,6 +25,8 @@ export default function Banner({
     "Discover selected premium items at limited-time promotional pricing. Use code SUMMER30 at checkout.";
   const ctaText = settings.cta_text || "Claim Discount";
   const ctaLink = settings.cta_link || "/shop";
+  const hasCustomBg = Boolean((settings as any)?._advanced?.style?.background);
+  const hasExplicitImage = Boolean(settings.image_url && settings.image_url.trim() !== "" && settings.image_url !== "none");
   const imageUrl =
     settings.image_url ||
     "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1600&auto=format&fit=crop";
@@ -40,15 +43,13 @@ export default function Banner({
             <h2
               data-editable="heading"
               className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
-            >
-              {heading}
-            </h2>
+              dangerouslySetInnerHTML={renderRich(heading)}
+            />
             <p
               data-editable="text"
               className="text-base text-[var(--theme-text-muted,#71717A)] max-w-md font-[family-name:var(--theme-font-body)]"
-            >
-              {text}
-            </p>
+              dangerouslySetInnerHTML={renderRich(text)}
+            />
             {ctaText && (
               <div className="pt-2">
                 <Link
@@ -56,7 +57,7 @@ export default function Banner({
                   data-editable="cta_text"
                   className="inline-flex items-center justify-center px-6 py-3 rounded-[var(--theme-radius,8px)] bg-[var(--theme-primary,#18181B)] text-white font-bold hover:bg-[var(--theme-accent,#2563EB)] transition-all shadow-md hover:-translate-y-0.5"
                 >
-                  {ctaText}
+                  <span dangerouslySetInnerHTML={renderRich(ctaText)} />
                 </Link>
               </div>
             )}
@@ -75,6 +76,8 @@ export default function Banner({
     );
   }
 
+  const renderBackground = hasExplicitImage || !hasCustomBg;
+
   return (
     <section className={isBoxed ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-12" : "w-full my-8"}>
       <div
@@ -83,29 +86,38 @@ export default function Banner({
         }`}
         style={{ minHeight: height }}
       >
-        <Image
-          src={imageUrl}
-          alt={heading}
-          fill
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-black" style={{ opacity: overlay }} />
+        {renderBackground && (
+          <>
+            <Image
+              src={imageUrl}
+              alt={heading}
+              fill
+              className="object-cover object-center"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-black" style={{ opacity: overlay }} />
+          </>
+        )}
 
-        <div className="relative z-10 max-w-3xl mx-auto text-center px-6 py-12 text-white space-y-4">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-[family-name:var(--theme-font-heading)]">
-            {heading}
-          </h2>
-          <p className="text-base sm:text-lg text-gray-200 max-w-xl mx-auto font-[family-name:var(--theme-font-body)]">
-            {text}
-          </p>
+        <div className={`relative z-10 max-w-3xl mx-auto text-center px-6 py-12 space-y-4 ${renderBackground ? "text-white" : "text-inherit"}`}>
+          <h2
+            data-editable="heading"
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-[family-name:var(--theme-font-heading)]"
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
+          <p
+            data-editable="text"
+            className={`text-base sm:text-lg max-w-xl mx-auto font-[family-name:var(--theme-font-body)] ${renderBackground ? "text-gray-200" : "text-inherit opacity-90"}`}
+            dangerouslySetInnerHTML={renderRich(text)}
+          />
           {ctaText && (
             <div className="pt-2">
               <Link
                 href={ctaLink}
+                data-editable="cta_text"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-[var(--theme-radius,8px)] bg-white text-gray-900 font-bold hover:bg-[var(--theme-accent,#2563EB)] hover:text-white transition-all shadow-md hover:-translate-y-0.5"
               >
-                {ctaText}
+                <span dangerouslySetInnerHTML={renderRich(ctaText)} />
               </Link>
             </div>
           )}

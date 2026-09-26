@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface FooterColumn {
   title: string;
@@ -79,10 +80,16 @@ export default function Footer({
     return (
       <footer className="border-t border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="font-extrabold text-lg tracking-tight text-[var(--theme-text,#18181B)]">
-            {logoText}
-          </span>
-          <p className="text-xs text-[var(--theme-text-muted,#71717A)]">{copyright}</p>
+          <span
+            data-editable="logo_text"
+            className="font-extrabold text-lg tracking-tight text-[var(--theme-text,#18181B)]"
+            dangerouslySetInnerHTML={renderRich(logoText)}
+          />
+          <p
+            data-editable="copyright"
+            className="text-xs text-[var(--theme-text-muted,#71717A)]"
+            dangerouslySetInnerHTML={renderRich(copyright)}
+          />
         </div>
       </footer>
     );
@@ -123,9 +130,11 @@ export default function Footer({
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand info */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1 space-y-4">
-            <span className="font-extrabold text-xl tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-              {logoText}
-            </span>
+            <span
+              data-editable="logo_text"
+              className="font-extrabold text-xl tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+              dangerouslySetInnerHTML={renderRich(logoText)}
+            />
             <p className="text-xs text-[var(--theme-text-muted,#71717A)] leading-relaxed font-[family-name:var(--theme-font-body)]">
               Designed for modern living. Engineered for peak performance and timeless aesthetics.
             </p>
@@ -170,7 +179,7 @@ export default function Footer({
 
         {/* Bottom copyright row */}
         <div className="mt-12 pt-8 border-t border-[var(--theme-border,#E4E4E7)] flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--theme-text-muted,#71717A)] gap-4">
-          <p>{copyright}</p>
+          <p data-editable="copyright" dangerouslySetInnerHTML={renderRich(copyright)} />
           <div className="flex items-center gap-4">
             <Link href="/privacy-policy" className="hover:underline">
               Privacy

@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface CategoriesSettings {
   heading?: string;
@@ -35,9 +36,11 @@ export default function Categories({
     return (
       <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-            {heading}
-          </h2>
+          <h2
+            data-editable="heading"
+            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
           <Link
             href="/shop"
             className="text-sm font-semibold text-[var(--theme-accent,#2563EB)] hover:underline inline-flex items-center gap-1"
@@ -86,9 +89,11 @@ export default function Categories({
   if (variant === "list") {
     return (
       <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] mb-6 font-[family-name:var(--theme-font-heading)]">
-          {heading}
-        </h2>
+        <h2
+          data-editable="heading"
+          className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] mb-6 font-[family-name:var(--theme-font-heading)]"
+          dangerouslySetInnerHTML={renderRich(heading)}
+        />
         <div className="divide-y divide-[var(--theme-border,#E4E4E7)] border-y border-[var(--theme-border,#E4E4E7)]">
           {categoriesList.map((cat) => (
             <Link
@@ -112,9 +117,11 @@ export default function Categories({
   return (
     <section id="categories" className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-8 sm:mb-12">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-          {heading}
-        </h2>
+        <h2
+          data-editable="heading"
+          className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+          dangerouslySetInnerHTML={renderRich(heading)}
+        />
         <Link
           href="/shop"
           className="text-sm font-semibold text-[var(--theme-accent,#2563EB)] hover:underline inline-flex items-center gap-1"

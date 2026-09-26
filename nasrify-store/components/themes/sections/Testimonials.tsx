@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface TestimonialItem {
   text: string;
@@ -50,16 +51,20 @@ export default function Testimonials({
       <section className="py-16 sm:py-24 bg-[var(--theme-surface,#F4F4F5)] px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-3xl mx-auto space-y-6">
           <div className="text-4xl text-[var(--theme-accent,#2563EB)] font-serif">“</div>
-          <p className="text-xl sm:text-2xl font-medium text-[var(--theme-text,#18181B)] italic font-[family-name:var(--theme-font-body)]">
-            {single.text}
-          </p>
+          <p
+            className="text-xl sm:text-2xl font-medium text-[var(--theme-text,#18181B)] italic font-[family-name:var(--theme-font-body)]"
+            dangerouslySetInnerHTML={renderRich(single.text)}
+          />
           <div className="pt-2 flex flex-col items-center">
             {single.avatar && (
               <div className="relative w-14 h-14 rounded-full overflow-hidden mb-2 shadow-sm">
                 <Image src={single.avatar} alt={single.author} fill className="object-cover" sizes="56px" />
               </div>
             )}
-            <h4 className="font-bold text-base text-[var(--theme-text,#18181B)]">{single.author}</h4>
+            <h4
+              className="font-bold text-base text-[var(--theme-text,#18181B)]"
+              dangerouslySetInnerHTML={renderRich(single.author)}
+            />
             {single.role && <p className="text-xs text-[var(--theme-text-muted,#71717A)]">{single.role}</p>}
           </div>
         </div>
@@ -70,9 +75,11 @@ export default function Testimonials({
   return (
     <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-10 sm:mb-14">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-          {heading}
-        </h2>
+        <h2
+          data-editable="heading"
+          className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+          dangerouslySetInnerHTML={renderRich(heading)}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -85,9 +92,10 @@ export default function Testimonials({
               <div className="flex items-center gap-1 text-amber-400 text-sm mb-4">
                 {"★★★★★"}
               </div>
-              <p className="text-sm sm:text-base text-[var(--theme-text,#18181B)] leading-relaxed italic">
-                “{item.text}”
-              </p>
+              <p
+                className="text-sm sm:text-base text-[var(--theme-text,#18181B)] leading-relaxed italic"
+                dangerouslySetInnerHTML={renderRich(`“${item.text}”`)}
+              />
             </div>
 
             <div className="mt-6 flex items-center gap-3 pt-4 border-t border-[var(--theme-border,#E4E4E7)]">
@@ -97,9 +105,10 @@ export default function Testimonials({
                 </div>
               )}
               <div>
-                <h4 className="font-semibold text-sm text-[var(--theme-text,#18181B)]">
-                  {item.author}
-                </h4>
+                <h4
+                  className="font-semibold text-sm text-[var(--theme-text,#18181B)]"
+                  dangerouslySetInnerHTML={renderRich(item.author)}
+                />
                 {item.role && (
                   <p className="text-xs text-[var(--theme-text-muted,#71717A)]">
                     {item.role}

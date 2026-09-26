@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface AnnouncementBarSettings {
   text?: string;
@@ -23,7 +24,8 @@ export default function AnnouncementBar({
 
   const text = settings.text || "Free shipping on orders over $50";
   const link = settings.link;
-  const bgColor = settings.bg_color || themeSettings.colors.primary || "#18181B";
+  const hasCustomBg = Boolean((settings as any)?._advanced?.style?.background);
+  const bgColor = hasCustomBg ? "transparent" : (settings.bg_color || themeSettings.colors.primary || "#18181B");
   const textColor = settings.text_color || "#FFFFFF";
   const isDismissible = settings.dismissible !== false;
 
@@ -36,7 +38,7 @@ export default function AnnouncementBar({
 
   const content = (
     <div className="flex items-center justify-center gap-2 text-center">
-      <span data-editable="text">{text}</span>
+      <span data-editable="text" dangerouslySetInnerHTML={renderRich(text)} />
       {link && (
         <span className="underline underline-offset-2 hover:opacity-80 transition-opacity">
           Learn more &rarr;

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 import ProductCard from "../blocks/ProductCard";
 
 export interface ProductRelatedSettings {
@@ -68,9 +69,11 @@ export default function ProductRelated({
   return (
     <div className="w-full my-12 pt-8 border-t border-[var(--theme-border,#E4E4E7)] font-[family-name:var(--theme-font-body)]">
       <div className="mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-          {heading}
-        </h2>
+        <h2
+          data-editable="heading"
+          className="text-xl sm:text-2xl font-bold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+          dangerouslySetInnerHTML={renderRich(heading)}
+        />
       </div>
 
       {variant === "carousel" ? (

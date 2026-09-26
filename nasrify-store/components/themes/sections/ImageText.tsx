@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface ImageTextSettings {
   heading?: string;
@@ -51,19 +52,24 @@ export default function ImageText({
 
         {/* Content */}
         <div className={`space-y-6 ${isRight ? "lg:order-1" : "lg:order-2"}`}>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-            {heading}
-          </h2>
-          <p className="text-base sm:text-lg text-[var(--theme-text-muted,#71717A)] leading-relaxed font-[family-name:var(--theme-font-body)]">
-            {text}
-          </p>
+          <h2
+            data-editable="heading"
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
+          <p
+            data-editable="text"
+            className="text-base sm:text-lg text-[var(--theme-text-muted,#71717A)] leading-relaxed font-[family-name:var(--theme-font-body)]"
+            dangerouslySetInnerHTML={renderRich(text)}
+          />
           {ctaText && (
             <div className="pt-2">
               <Link
                 href={ctaLink}
+                data-editable="cta_text"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-[var(--theme-radius,8px)] bg-[var(--theme-primary,#18181B)] text-white font-semibold hover:bg-[var(--theme-accent,#2563EB)] transition-colors shadow-xs"
               >
-                {ctaText}
+                <span dangerouslySetInnerHTML={renderRich(ctaText)} />
               </Link>
             </div>
           )}

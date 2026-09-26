@@ -6,7 +6,7 @@ import {
   getHeadingSizeClass,
   getSubheadingSizeClass,
   getButtonSizeClass,
-  sanitizeRichText,
+  renderRich,
   getImageCropStyle,
   CropData,
 } from "@/lib/themes/utils";
@@ -37,6 +37,8 @@ export default function Hero({
     "Premium craftsmanship, minimalist design, and uncompromised quality engineered for everyday elegance.";
   const ctaText = settings.cta_text || "Explore Collection";
   const ctaLink = settings.cta_link || "/shop";
+  const hasCustomBg = Boolean((settings as any)?._advanced?.style?.background);
+  const hasExplicitImage = Boolean(settings.image_url && settings.image_url.trim() !== "" && settings.image_url !== "none");
   const imageUrl =
     settings.image_url ||
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1600&auto=format&fit=crop";
@@ -48,7 +50,6 @@ export default function Hero({
   const subheadingSizeClass = getSubheadingSizeClass(settings.subheading_size);
   const buttonSizeClass = getButtonSizeClass(settings.button_size);
   const cropStyle = getImageCropStyle(settings.crop_data);
-  const sanitizedSubheading = sanitizeRichText(subheading);
 
   const alignClass =
     alignment === "left"
@@ -65,13 +66,12 @@ export default function Hero({
             <h1
               data-editable="heading"
               className={`${headingSizeClass} font-black tracking-tight text-[var(--theme-text,#18181B)] leading-tight font-[family-name:var(--theme-font-heading)]`}
-            >
-              {heading}
-            </h1>
+              dangerouslySetInnerHTML={renderRich(heading)}
+            />
             <div
               data-editable="subheading"
               className={`${subheadingSizeClass} text-[var(--theme-text-muted,#71717A)] max-w-xl font-[family-name:var(--theme-font-body)]`}
-              dangerouslySetInnerHTML={{ __html: sanitizedSubheading }}
+              dangerouslySetInnerHTML={renderRich(subheading)}
             />
             {ctaText && (
               <Link
@@ -106,13 +106,12 @@ export default function Hero({
           <h1
             data-editable="heading"
             className={`${headingSizeClass} font-black tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]`}
-          >
-            {heading}
-          </h1>
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
           <div
             data-editable="subheading"
             className={`${subheadingSizeClass} text-[var(--theme-text-muted,#71717A)] max-w-2xl mx-auto font-[family-name:var(--theme-font-body)]`}
-            dangerouslySetInnerHTML={{ __html: sanitizedSubheading }}
+            dangerouslySetInnerHTML={renderRich(subheading)}
           />
           {ctaText && (
             <div className="pt-4">
@@ -131,39 +130,42 @@ export default function Hero({
   }
 
   // Default: full_image / slider / video fallback
+  const renderBackground = hasExplicitImage || !hasCustomBg;
+
   return (
     <section
       className="relative w-full overflow-hidden flex items-center justify-center"
       style={{ minHeight: height }}
     >
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={imageUrl}
-          alt={heading}
-          fill
-          priority
-          style={cropStyle}
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-        <div
-          className="absolute inset-0 bg-black"
-          style={{ opacity: overlayOpacity }}
-        />
-      </div>
+      {renderBackground && (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={imageUrl}
+            alt={heading}
+            fill
+            priority
+            style={cropStyle}
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div
+            className="absolute inset-0 bg-black"
+            style={{ opacity: overlayOpacity }}
+          />
+        </div>
+      )}
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-white">
+      <div className={`relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 ${renderBackground ? "text-white" : "text-inherit"}`}>
         <div className={`flex flex-col ${alignClass} space-y-6 max-w-3xl`}>
           <h1
             data-editable="heading"
             className={`${headingSizeClass} font-black tracking-tight leading-tight drop-shadow-sm font-[family-name:var(--theme-font-heading)]`}
-          >
-            {heading}
-          </h1>
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
           <div
             data-editable="subheading"
-            className={`${subheadingSizeClass} text-gray-200 drop-shadow-sm font-[family-name:var(--theme-font-body)]`}
-            dangerouslySetInnerHTML={{ __html: sanitizedSubheading }}
+            className={`${subheadingSizeClass} drop-shadow-sm font-[family-name:var(--theme-font-body)] ${renderBackground ? "text-gray-200" : "text-inherit opacity-90"}`}
+            dangerouslySetInnerHTML={renderRich(subheading)}
           />
           {ctaText && (
             <div className="pt-4">

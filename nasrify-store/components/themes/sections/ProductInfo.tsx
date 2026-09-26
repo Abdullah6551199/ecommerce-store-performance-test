@@ -5,6 +5,7 @@ import { SectionProps } from "@/lib/themes/types";
 import { useCart } from "@/components/CartContext";
 import { useWishlist } from "@/components/WishlistContext";
 import { useCompare } from "@/components/CompareContext";
+import { renderRich } from "@/lib/themes/utils";
 import PriceTag from "../blocks/PriceTag";
 import RatingStars from "../blocks/RatingStars";
 import Button from "../blocks/Button";
@@ -112,9 +113,10 @@ export default function ProductInfo({
       </div>
 
       {/* Product Title */}
-      <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)] tracking-tight">
-        {product.name}
-      </h1>
+      <h1
+        className="text-2xl sm:text-3xl font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)] tracking-tight"
+        dangerouslySetInnerHTML={renderRich(product.name)}
+      />
 
       {/* Rating & Stock */}
       <div className="flex items-center gap-3">
@@ -225,7 +227,7 @@ export default function ProductInfo({
           onClick={handleAddToCart}
           className="h-11 shadow-md hover:shadow-lg"
         >
-          {isAdding ? "Adding..." : buttonText}
+          {isAdding ? "Adding..." : <span dangerouslySetInnerHTML={renderRich(buttonText)} />}
         </Button>
 
         {/* Buy Now Button */}

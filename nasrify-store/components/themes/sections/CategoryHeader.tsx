@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface CategoryHeaderSettings {
   show_breadcrumb?: boolean;
@@ -42,16 +43,18 @@ export default function CategoryHeader({
             <span>/</span>
             <Link href="/shop" className="hover:underline">Collections</Link>
             <span>/</span>
-            <span className="font-semibold text-white">{category.name}</span>
+            <span className="font-semibold text-white" dangerouslySetInnerHTML={renderRich(category.name)} />
           </nav>
         )}
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-[family-name:var(--theme-font-heading)]">
-          {category.name}
-        </h1>
+        <h1
+          className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-[family-name:var(--theme-font-heading)]"
+          dangerouslySetInnerHTML={renderRich(category.name)}
+        />
         {showDescription && category.description && (
-          <p className="mt-3 max-w-2xl text-sm sm:text-base text-gray-200">
-            {category.description}
-          </p>
+          <p
+            className="mt-3 max-w-2xl text-sm sm:text-base text-gray-200"
+            dangerouslySetInnerHTML={renderRich(category.description)}
+          />
         )}
       </div>
     );
@@ -75,20 +78,20 @@ export default function CategoryHeader({
             Collections
           </Link>
           <span>/</span>
-          <span className="font-medium text-[var(--theme-text,#18181B)]">
-            {category.name}
-          </span>
+          <span className="font-medium text-[var(--theme-text,#18181B)]" dangerouslySetInnerHTML={renderRich(category.name)} />
         </nav>
       )}
 
-      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-        {category.name}
-      </h1>
+      <h1
+        className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+        dangerouslySetInnerHTML={renderRich(category.name)}
+      />
 
       {showDescription && category.description && (
-        <p className="mt-2 text-sm text-[var(--theme-text-muted,#71717A)] max-w-3xl">
-          {category.description}
-        </p>
+        <p
+          className="mt-2 text-sm text-[var(--theme-text-muted,#71717A)] max-w-3xl"
+          dangerouslySetInnerHTML={renderRich(category.description)}
+        />
       )}
     </div>
   );

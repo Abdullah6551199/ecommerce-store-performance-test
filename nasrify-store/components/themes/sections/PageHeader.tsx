@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 
 export interface PageHeaderSettings {
   show_breadcrumb?: boolean;
@@ -36,12 +37,13 @@ export default function PageHeader({
           <nav className="flex items-center justify-center gap-2 text-xs text-[var(--theme-text-muted,#71717A)] mb-2">
             <Link href="/" className="hover:text-[var(--theme-primary,#25D366)]">Home</Link>
             <span>/</span>
-            <span className="font-semibold text-[var(--theme-text,#18181B)]">{page.title}</span>
+            <span className="font-semibold text-[var(--theme-text,#18181B)]" dangerouslySetInnerHTML={renderRich(page.title)} />
           </nav>
         )}
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-          {page.title}
-        </h1>
+        <h1
+          className="text-3xl sm:text-4xl font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+          dangerouslySetInnerHTML={renderRich(page.title)}
+        />
       </div>
     );
   }
@@ -56,12 +58,13 @@ export default function PageHeader({
         <nav className="flex items-center gap-2 text-xs text-[var(--theme-text-muted,#71717A)] mb-2.5">
           <Link href="/" className="hover:text-[var(--theme-primary,#25D366)]">Home</Link>
           <span>/</span>
-          <span className="font-medium text-[var(--theme-text,#18181B)]">{page.title}</span>
+          <span className="font-medium text-[var(--theme-text,#18181B)]" dangerouslySetInnerHTML={renderRich(page.title)} />
         </nav>
       )}
-      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-        {page.title}
-      </h1>
+      <h1
+        className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+        dangerouslySetInnerHTML={renderRich(page.title)}
+      />
     </div>
   );
 }

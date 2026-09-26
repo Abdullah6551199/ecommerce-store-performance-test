@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { SectionProps } from "@/lib/themes/types";
+import { renderRich } from "@/lib/themes/utils";
 import RatingStars from "../blocks/RatingStars";
 import Button from "../blocks/Button";
 
@@ -61,9 +62,11 @@ export default function ProductReviewsSection({
     <div className="w-full my-12 border-t border-[var(--theme-border,#E4E4E7)] pt-10 font-[family-name:var(--theme-font-body)]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]">
-            {heading}
-          </h2>
+          <h2
+            data-editable="heading"
+            className="text-xl sm:text-2xl font-bold text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
           {showSummary && (
             <div className="flex items-center gap-2 mt-1">
               <RatingStars rating={4.9} showNumber />

@@ -157,6 +157,13 @@ export const SECTION_OPTIONS: SectionPickerOption[] = [
 
   // Marketing
   {
+    type: "example_testimonial_compact",
+    name: "Compact Testimonials (Demo)",
+    category: "Marketing",
+    description: "Demo schema-driven compact testimonial block proving 10-minute section creation.",
+    icon: "⚡",
+  },
+  {
     type: "testimonials",
     name: "Customer Testimonials",
     category: "Marketing",

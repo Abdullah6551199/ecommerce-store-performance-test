@@ -56,6 +56,21 @@ export function loadCuratedAdminFonts(): void {
     "JetBrains+Mono:wght@400;600",
   ].join("&family=");
 
+  if (!document.getElementById("nasrify-fonts-preconnect-1")) {
+    const pre1 = document.createElement("link");
+    pre1.id = "nasrify-fonts-preconnect-1";
+    pre1.rel = "preconnect";
+    pre1.href = "https://fonts.googleapis.com";
+    document.head.appendChild(pre1);
+
+    const pre2 = document.createElement("link");
+    pre2.id = "nasrify-fonts-preconnect-2";
+    pre2.rel = "preconnect";
+    pre2.href = "https://fonts.gstatic.com";
+    pre2.crossOrigin = "anonymous";
+    document.head.appendChild(pre2);
+  }
+
   const linkId = "nasrify-admin-curated-fonts";
   if (!document.getElementById(linkId)) {
     const link = document.createElement("link");

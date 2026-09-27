@@ -87,21 +87,23 @@ The editor renders in a dedicated full-screen workspace:
 13. Global theme settings (Colors, Fonts, Layout)
 14. Section library (25+ section types supported)
 
-### Typography & Rich Text
-15. R2 Curated WebFont System (zero-latency Google Fonts alternative)
+### Typography & Rich Text (Stage 47.5 Word & Letter Level System)
+15. R2 Curated WebFont System + Google Fonts CDN fallback with category font fallbacks
 16. Font weight fine control (100 to 900)
 17. Font size with multi-unit support (`px`, `rem`, `em`, `%`, `vw`, `vh`)
 18. Line height and letter spacing sliders
 19. Text transform (UPPERCASE, lowercase, Capitalize)
 20. Text decoration (Underline, Line-through)
 21. Text alignment (Left, Center, Right, Justify)
-22. Multi-color text spans (`<span style="color:#HEX">`)
-23. Per-word color styling
-24. Per-letter color styling
-25. Per-word animations (`anim-bounceIn`, `anim-pulse`, `anim-glow`, `anim-rainbow`)
-26. Inline double-click text editing
-27. Rich text link dialog
-28. Strict XSS sanitization on rich text and custom CSS
+22. **Floating selection toolbar**: Double-clicking or selecting text reveals instant formatting popup
+23. **Word-level color styling**: Double-click or select any word to apply custom hex colors (`<span style="color:#HEX">word</span>`)
+24. **Letter-level color styling**: Select any individual letter to apply distinct colors for dramatic headline typography
+25. **Word-level animations**: Double-click word to apply CSS keyframe animations (`<span data-anim="bounce">word</span>`)
+26. **Letter-level animations**: Select single letters to stagger bounce, pulse, shake, wobble, or glow animations
+27. **Storefront Scroll Trigger**: `ThemeAnimationObserver.tsx` triggers keyframes via `IntersectionObserver` when scrolled into viewport
+28. Inline double-click text editing with instant sync to both section settings and micro-component schemas
+29. Rich text link dialog and formatting clear button
+30. Strict XSS sanitization preserving styled and animated span tags
 
 ### Backgrounds & Overlays
 29. Solid color with hex and opacity alpha slider

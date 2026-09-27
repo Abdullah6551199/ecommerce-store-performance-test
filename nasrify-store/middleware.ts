@@ -70,9 +70,12 @@ export async function middleware(request: NextRequest) {
 
   // 0. Theme preview mode: strictly bypass edge cache and pass preview header
   const previewTheme = request.nextUrl.searchParams.get("preview_theme");
-  if (previewTheme) {
+  const isPreview = request.nextUrl.searchParams.get("preview") === "1" || Boolean(previewTheme);
+  if (isPreview) {
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-preview-theme", previewTheme);
+    if (previewTheme) {
+      requestHeaders.set("x-preview-theme", previewTheme);
+    }
     const response = NextResponse.next({
       request: {
         headers: requestHeaders,

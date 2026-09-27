@@ -25,6 +25,19 @@ export interface FontPickerProps {
   description?: string;
 }
 
+function getCategoryFallback(cat?: string): string {
+  switch (cat?.toLowerCase()) {
+    case "serif":
+      return "serif";
+    case "handwriting":
+      return "cursive";
+    case "mono":
+      return "monospace";
+    default:
+      return "sans-serif";
+  }
+}
+
 export function FontPicker({ label, value, onChange, description }: FontPickerProps) {
   const [mounted, setMounted] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -135,6 +148,8 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
   }, [fonts, selectedCategory, modalSearch]);
 
   const currentDisplay = value || "Inter";
+  const activeCategory =
+    fonts.find((f) => f.family.toLowerCase() === currentDisplay.toLowerCase())?.category || "sans";
 
   return (
     <div className="space-y-1 text-xs">
@@ -151,7 +166,7 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
         className="w-full px-3 py-2 rounded-lg border border-slate-700 bg-slate-800 text-xs text-slate-100 flex items-center justify-between hover:border-emerald-500/60 hover:bg-slate-750 transition-all text-left"
       >
         <span
-          style={{ fontFamily: `"${currentDisplay}", sans-serif` }}
+          style={{ fontFamily: `"${currentDisplay}", ${getCategoryFallback(activeCategory)}` }}
           className="font-semibold text-sm text-slate-100 truncate"
         >
           {currentDisplay}
@@ -237,7 +252,7 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
                         <span className="text-[9px] uppercase font-mono text-slate-500">{f.category}</span>
                       </div>
                       <span
-                        style={{ fontFamily: `"${f.family}", sans-serif` }}
+                        style={{ fontFamily: `"${f.family}", ${getCategoryFallback(f.category)}` }}
                         className="text-sm text-slate-300 truncate mt-0.5"
                       >
                         The quick brown fox jumps
@@ -354,7 +369,7 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
                       </div>
 
                       <p
-                        style={{ fontFamily: `"${f.family}", sans-serif` }}
+                        style={{ fontFamily: `"${f.family}", ${getCategoryFallback(f.category)}` }}
                         className="text-base text-slate-100 my-2 truncate leading-snug"
                       >
                         The quick brown fox jumps over the lazy dog

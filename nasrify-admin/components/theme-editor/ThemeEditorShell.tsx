@@ -9,6 +9,7 @@ import { SectionPicker } from "./SectionPicker";
 import { ComponentPicker } from "./ComponentPicker";
 import { PublishConfirmModal } from "./PublishConfirmModal";
 import { getSectionSchema } from "@/lib/themes/section-schema";
+import { loadCuratedAdminFonts } from "@/lib/fonts/load-fonts";
 
 interface ThemeConfig {
   id: string;
@@ -94,6 +95,11 @@ export function ThemeEditorShell() {
     }, 3500);
   };
 
+  // Load all 21 curated font families on mount (BUG-5)
+  useEffect(() => {
+    loadCuratedAdminFonts();
+  }, []);
+
   // 1. Fetch initial theme draft for active page type
   useEffect(() => {
     async function loadInitialDraft() {
@@ -148,6 +154,14 @@ export function ThemeEditorShell() {
       const target = themeToSave || currentTheme;
       if (!target) return;
 
+      const cloned = JSON.parse(JSON.stringify(target));
+      if (activePageType !== "homepage") {
+        cloned.page_defaults = {
+          ...(cloned.page_defaults || {}),
+          [activePageType]: cloned.sections,
+        };
+      }
+
       setIsSaving(true);
       try {
         const res = await fetch("/api/admin/theme-editor/draft", {
@@ -155,7 +169,7 @@ export function ThemeEditorShell() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             page_type: activePageType,
-            theme_json: target,
+            theme_json: cloned,
           }),
         });
 
@@ -268,15 +282,49 @@ export function ThemeEditorShell() {
     pushToUndoStack(currentTheme);
 
     const updatedSections = currentTheme.sections.map((sec) => {
-      if (sec.id === sectionId && sec.settings?._components) {
-        const nextComponents = { ...sec.settings._components };
-        delete nextComponents[componentId];
+      if (sec.id === sectionId) {
+        const nextSettings = { ...(sec.settings || {}) };
+
+        // 1. Remove from _components if present
+        if (nextSettings._components) {
+          const nextComponents = { ...nextSettings._components };
+          delete nextComponents[componentId];
+          nextSettings._components = nextComponents;
+        }
+
+        // 2. Remove or clear direct field if matching componentId
+        if (nextSettings[componentId] !== undefined) {
+          delete nextSettings[componentId];
+        }
+        if (componentId === "heading" || componentId.startsWith("heading_")) {
+          nextSettings.heading = "";
+        }
+        if (componentId === "subheading" || componentId.startsWith("subheading_")) {
+          nextSettings.subheading = "";
+        }
+        if (
+          componentId === "button" ||
+          componentId === "cta" ||
+          componentId.startsWith("button_") ||
+          componentId.startsWith("cta_")
+        ) {
+          nextSettings.cta_text = "";
+          nextSettings.cta_link = "";
+        }
+        if (componentId === "image" || componentId.startsWith("image_")) {
+          nextSettings.image_url = "none";
+        }
+        if (
+          componentId === "announcement" ||
+          componentId === "text" ||
+          componentId.startsWith("text_")
+        ) {
+          nextSettings.text = "";
+        }
+
         return {
           ...sec,
-          settings: {
-            ...sec.settings,
-            _components: nextComponents,
-          },
+          settings: nextSettings,
         };
       }
       return sec;
@@ -424,12 +472,23 @@ export function ThemeEditorShell() {
     if (!currentTheme) return;
     setIsPublishing(true);
     try {
+      const cloned = JSON.parse(JSON.stringify(currentTheme));
+      if (activePageType !== "homepage") {
+        cloned.page_defaults = {
+          ...(cloned.page_defaults || {}),
+          [activePageType]: cloned.sections,
+        };
+      }
+
+      // Guarantee any pending draft changes are saved before publish
+      await saveDraft(cloned);
+
       const res = await fetch("/api/admin/theme-editor/publish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           page_type: activePageType,
-          theme_json: currentTheme,
+          theme_json: cloned,
         }),
       });
 
@@ -555,11 +614,24 @@ export function ThemeEditorShell() {
       pushToUndoStack(currentTheme);
       const updated = currentTheme.sections.map((sec) => {
         if (sec.id === sectionId) {
+          const nextComponents = sec.settings?._components
+            ? { ...sec.settings._components }
+            : {};
+          if (nextComponents[field]) {
+            nextComponents[field] = {
+              ...nextComponents[field],
+              settings: {
+                ...(nextComponents[field].settings || {}),
+                text: value,
+              },
+            };
+          }
           return {
             ...sec,
             settings: {
               ...(sec.settings || {}),
               [field]: value,
+              ...(sec.settings?._components ? { _components: nextComponents } : {}),
             },
           };
         }
@@ -570,6 +642,10 @@ export function ThemeEditorShell() {
     },
     [currentTheme, pushToUndoStack]
   );
+
+  const handleDeleteComponent = useCallback((sectionId: string, componentId: string) => {
+    setComponentToDelete({ sectionId, componentId });
+  }, []);
 
   // 6. Keyboard shortcuts
   useEffect(() => {
@@ -773,9 +849,7 @@ export function ThemeEditorShell() {
           onInlineEdit={handleInlineEdit}
           onSelectSection={handleSelectSection}
           onEditComponent={handleEditComponent}
-          onDeleteComponent={(sectionId, componentId) => {
-            setComponentToDelete({ sectionId, componentId });
-          }}
+          onDeleteComponent={handleDeleteComponent}
         />
 
         {/* Right Sidebar: Selected Section or Global Settings (Visual) */}

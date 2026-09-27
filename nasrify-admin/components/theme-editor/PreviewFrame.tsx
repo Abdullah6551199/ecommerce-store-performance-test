@@ -38,6 +38,38 @@ export function PreviewFrame({
   const baseStoreUrl = previewUrl.split("?")[0];
   const effectiveIframeSrc = `${baseStoreUrl}?preview=1&page=${pageType}`;
 
+  // Keep refs for current theme and callbacks to avoid listener recreation churning
+  const themeConfigRef = useRef(themeConfig);
+  themeConfigRef.current = themeConfig;
+
+  const pageTypeRef = useRef(pageType);
+  pageTypeRef.current = pageType;
+
+  const callbacksRef = useRef({
+    onInlineEdit,
+    onSelectSection,
+    onEditComponent,
+    onDeleteComponent,
+  });
+  callbacksRef.current = {
+    onInlineEdit,
+    onSelectSection,
+    onEditComponent,
+    onDeleteComponent,
+  };
+
+  const prepareTheme = useCallback((theme: any, pType: string) => {
+    if (!theme) return theme;
+    const cloned = JSON.parse(JSON.stringify(theme));
+    if (pType && pType !== "homepage") {
+      cloned.page_defaults = {
+        ...(cloned.page_defaults || {}),
+        [pType]: cloned.sections,
+      };
+    }
+    return cloned;
+  }, []);
+
   const flushQueue = useCallback(() => {
     if (!iframeRef.current?.contentWindow) return;
     while (messageQueueRef.current.length > 0) {
@@ -49,11 +81,12 @@ export function PreviewFrame({
   }, []);
 
   const sendToIframe = useCallback((msg: any) => {
-    if (isReadyRef.current && iframeRef.current?.contentWindow) {
+    if (iframeRef.current?.contentWindow) {
       try {
         iframeRef.current.contentWindow.postMessage(msg, "*");
       } catch (err) {}
-    } else {
+    }
+    if (!isReadyRef.current) {
       messageQueueRef.current.push(msg);
     }
   }, []);
@@ -61,25 +94,26 @@ export function PreviewFrame({
   // Listen for iframe messages
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      const cb = callbacksRef.current;
       if (event.data?.type === "INLINE_EDIT") {
         const { sectionId, field, value } = event.data;
-        if (sectionId && field && onInlineEdit) {
-          onInlineEdit(sectionId, field, value);
+        if (sectionId && field && cb.onInlineEdit) {
+          cb.onInlineEdit(sectionId, field, value);
         }
       } else if (event.data?.type === "SELECT_SECTION" || event.data?.type === "EDIT_SECTION") {
         const { sectionId } = event.data;
-        if (sectionId && onSelectSection) {
-          onSelectSection(sectionId);
+        if (sectionId && cb.onSelectSection) {
+          cb.onSelectSection(sectionId);
         }
       } else if (event.data?.type === "EDIT_COMPONENT") {
         const { sectionId, componentId, componentType } = event.data;
-        if (sectionId && componentId && onEditComponent) {
-          onEditComponent(sectionId, componentId, componentType);
+        if (sectionId && componentId && cb.onEditComponent) {
+          cb.onEditComponent(sectionId, componentId, componentType);
         }
       } else if (event.data?.type === "DELETE_COMPONENT") {
         const { sectionId, componentId } = event.data;
-        if (sectionId && componentId && onDeleteComponent) {
-          onDeleteComponent(sectionId, componentId);
+        if (sectionId && componentId && cb.onDeleteComponent) {
+          cb.onDeleteComponent(sectionId, componentId);
         }
       } else if (event.data?.type === "PREVIEW_READY" || event.data?.type === "READY") {
         isReadyRef.current = true;
@@ -88,8 +122,8 @@ export function PreviewFrame({
         // Send initial theme snapshot & flush any pending messages
         sendToIframe({
           type: "UPDATE_THEME",
-          theme: themeConfig,
-          pageType,
+          theme: prepareTheme(themeConfigRef.current, pageTypeRef.current),
+          pageType: pageTypeRef.current,
         });
         flushQueue();
       }
@@ -97,31 +131,31 @@ export function PreviewFrame({
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [themeConfig, pageType, onInlineEdit, onSelectSection, onEditComponent, onDeleteComponent, sendToIframe, flushQueue]);
+  }, [sendToIframe, flushQueue, prepareTheme]);
 
-  // Send theme updates to the iframe whenever themeConfig or pageType changes (Debounced: 100ms)
+  // Send theme updates to the iframe whenever themeConfig or pageType changes (Debounced: 60ms)
   useEffect(() => {
     const timer = setTimeout(() => {
       sendToIframe({
         type: "UPDATE_THEME",
-        theme: themeConfig,
+        theme: prepareTheme(themeConfig, pageType),
         pageType,
       });
-    }, 100);
+    }, 60);
 
     return () => clearTimeout(timer);
-  }, [themeConfig, pageType, sendToIframe]);
+  }, [themeConfig, pageType, sendToIframe, prepareTheme]);
 
   // Force refresh message when save draft succeeds
   useEffect(() => {
     if (forceRefreshTrigger > 0) {
       sendToIframe({
         type: "FORCE_REFRESH",
-        theme: themeConfig,
+        theme: prepareTheme(themeConfig, pageType),
         pageType,
       });
     }
-  }, [forceRefreshTrigger, themeConfig, pageType, sendToIframe]);
+  }, [forceRefreshTrigger, themeConfig, pageType, sendToIframe, prepareTheme]);
 
   const handleIframeLoad = () => {
     isReadyRef.current = true;

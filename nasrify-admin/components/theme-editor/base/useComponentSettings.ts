@@ -56,6 +56,81 @@ export function useComponentSettings({
     };
   }, [schema.defaultAdvanced, componentData._advanced, componentData.advanced]);
 
+  // Helper function to keep top-level section settings in sync with component edits
+  const syncDirectFields = (
+    patch: Record<string, any>,
+    cId: string,
+    content: Record<string, any>
+  ) => {
+    if (!content) return;
+
+    // 1. Text / Heading / Subheading
+    if (content.text !== undefined) {
+      if (cId === "heading" || cId.startsWith("heading_")) {
+        patch.heading = content.text;
+      } else if (cId === "subheading" || cId.startsWith("subheading_")) {
+        patch.subheading = content.text;
+      } else if (
+        cId === "text" ||
+        cId === "announcement" ||
+        cId.startsWith("text_") ||
+        cId.startsWith("announcement_")
+      ) {
+        patch.text = content.text;
+      } else if (patch[cId] !== undefined && typeof patch[cId] === "string") {
+        patch[cId] = content.text;
+      }
+    }
+
+    // 2. Buttons / CTAs
+    if (content.label !== undefined || content.text !== undefined) {
+      const btnText = content.label ?? content.text;
+      if (
+        cId === "button" ||
+        cId === "cta" ||
+        cId.startsWith("button_") ||
+        cId.startsWith("cta_")
+      ) {
+        patch.cta_text = btnText;
+      }
+    }
+    if (content.link !== undefined) {
+      if (
+        cId === "button" ||
+        cId === "cta" ||
+        cId.startsWith("button_") ||
+        cId.startsWith("cta_")
+      ) {
+        patch.cta_link = content.link;
+      } else if (cId === "announcement" || cId === "text") {
+        patch.link = content.link;
+      }
+    }
+
+    // 3. Images
+    if (content.url !== undefined || content.image_url !== undefined) {
+      const img = content.url ?? content.image_url;
+      if (cId === "image" || cId.startsWith("image_")) {
+        patch.image_url = img;
+      }
+    }
+
+    // 4. Colors
+    if (content.bg_color !== undefined) {
+      patch.bg_color = content.bg_color;
+    }
+    if (content.text_color !== undefined) {
+      patch.text_color = content.text_color;
+    }
+
+    // 5. Direct key matches if section already defines it
+    for (const [k, v] of Object.entries(content)) {
+      if (patch[k] !== undefined && typeof patch[k] === typeof v) {
+        patch[k] = v;
+      }
+    }
+  };
+
   // Helper to commit component changes to parent sectionSettings
   const commitComponent = (updatedComponent: Record<string, any>) => {
     const nextComponents = {
@@ -67,10 +142,15 @@ export function useComponentSettings({
       },
     };
 
-    onSectionChange({
+    const patch: Record<string, any> = {
       ...sectionSettings,
       _components: nextComponents,
-    });
+    };
+
+    const activeSettings = updatedComponent.settings || initialContent;
+    syncDirectFields(patch, componentId, activeSettings);
+
+    onSectionChange(patch);
   };
 
   // Content field change handler
@@ -80,7 +160,6 @@ export function useComponentSettings({
       [key]: value,
     };
 
-    // If the section directly had this property (e.g. sectionSettings.heading), also update it for backward compat!
     const patch: Record<string, any> = {
       ...sectionSettings,
       _components: {
@@ -95,9 +174,7 @@ export function useComponentSettings({
       },
     };
 
-    if (schema.content.length === 1 && schema.content[0].key === key && sectionSettings[componentId] !== undefined) {
-      patch[componentId] = value;
-    }
+    syncDirectFields(patch, componentId, nextSettings);
 
     onSectionChange(patch);
   };

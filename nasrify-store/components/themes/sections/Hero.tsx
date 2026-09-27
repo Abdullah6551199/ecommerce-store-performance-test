@@ -31,16 +31,34 @@ export default function Hero({
   settings = {},
   themeSettings,
 }: SectionProps<HeroSettings>) {
-  const heading = settings.heading || "Elevate Your Lifestyle with Modern Essentials";
+  const compSettings = (settings as any)?._components;
+  const heading =
+    compSettings?.heading?.settings?.text ||
+    settings.heading ||
+    "Elevate Your Lifestyle with Modern Essentials";
   const subheading =
+    compSettings?.subheading?.settings?.text ||
     settings.subheading ||
     "Premium craftsmanship, minimalist design, and uncompromised quality engineered for everyday elegance.";
-  const ctaText = settings.cta_text || "Explore Collection";
-  const ctaLink = settings.cta_link || "/shop";
+  const ctaText =
+    compSettings?.button?.settings?.label ||
+    compSettings?.button?.settings?.text ||
+    compSettings?.cta?.settings?.text ||
+    settings.cta_text ||
+    "Explore Collection";
+  const ctaLink =
+    compSettings?.button?.settings?.link ||
+    compSettings?.cta?.settings?.link ||
+    settings.cta_link ||
+    "/shop";
+  const explicitImage =
+    compSettings?.image?.settings?.url ||
+    compSettings?.image?.settings?.image_url ||
+    settings.image_url;
   const hasCustomBg = Boolean((settings as any)?._advanced?.style?.background);
-  const hasExplicitImage = Boolean(settings.image_url && settings.image_url.trim() !== "" && settings.image_url !== "none");
+  const hasExplicitImage = Boolean(explicitImage && explicitImage.trim() !== "" && explicitImage !== "none");
   const imageUrl =
-    settings.image_url ||
+    explicitImage ||
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1600&auto=format&fit=crop";
   const height = settings.height || "600px";
   const overlayOpacity = settings.overlay_opacity !== undefined ? settings.overlay_opacity : 0.45;

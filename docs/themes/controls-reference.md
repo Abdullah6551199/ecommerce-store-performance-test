@@ -28,14 +28,16 @@ This document provides a comprehensive reference for the 15 core controls availa
 ---
 
 ## 3. ColorControl (`ColorControl.tsx`)
-- **Capabilities**: High-precision color selection with alpha transparency, rendered via React Portal to prevent container clipping.
+- **Capabilities**: High-precision full color system with alpha transparency, RGBA controls, and presets, rendered via React Portal (`z-index: 99999`) to prevent container clipping.
 - **Controls**:
-  - Portal-rendered popup attached to `document.body` (`z-index: 9999`) avoiding clipping by `overflow: hidden` parent sidebars
-  - Native browser HTML5 color picker + Eyedropper API integration
-  - Hex code manual input (`#HEX`) with live conversion
-  - Alpha / Opacity slider (0% to 100%) converting automatically to `rgba(...)`
-  - 14 curated theme preset color swatches
-  - Viewport-aware collision detection (automatically flips popup above/below trigger button)
+  - Portal-rendered popup attached to `document.body` (`z-index: 99999`, width: 320px min, max-height: 500px scrollable) avoiding clipping by `overflow: hidden` parent sidebars
+  - Native browser HTML5 color picker + native EyeDropper API integration
+  - Hex code manual input (`#HEX`) with two-way sync
+  - RGBA numeric inputs (R, G, B: 0-255, A: 0-1) for precision color formulation
+  - Alpha / Opacity slider (0% to 100%) converting automatically between Hex and `rgba(...)`
+  - Preset palette (curated theme colors, brand accents, and recent swatches)
+  - Clear color button and "Save as Preset" option with localStorage persistence
+  - Viewport-aware smart collision detection (automatically flips popup upward when overflowing screen bottom)
 - **Use cases**: Text colors, solid background colors, overlay tints, accent highlights.
 
 ---
@@ -123,16 +125,25 @@ This document provides a comprehensive reference for the 15 core controls availa
 ---
 
 ## 9. AnimationControl (`AnimationControl.tsx`)
-- **Capabilities**: 20 cinematic CSS keyframe animations for page entrance and viewport scroll reveal.
-- **Entrance Animations**:
-  - Presets: `fadeIn`, `slideInUp`, `slideInDown`, `slideInLeft`, `slideInRight`, `zoomIn`, `zoomOut`, `bounceIn`, `flipInX`, `flipInY`, `rotateIn`, `pulse`, `swing`, `wobble`, `jello`, `heartBeat`, `flash`, `rubberBand`, `backInUp`, `lightSpeedInRight`
-  - Duration slider (100ms to 3000ms)
-  - Delay slider (0ms to 2000ms)
-  - Easing curves: `ease-out`, `ease-in-out`, `ease`, `linear`
+- **Capabilities**: 28 cinematic CSS keyframe animations grouped into 7 categories, rendered via React Portal dropdown (`z-index: 99999`) with instant search and hover animated previews.
+- **Animation Groups**:
+  - **Basic**: `fadeIn`, `fadeOut`
+  - **Slide**: `slideInUp`, `slideInDown`, `slideInLeft`, `slideInRight`
+  - **Zoom**: `zoomIn`, `zoomOut`
+  - **Rotate**: `rotateIn`, `rotateInUpLeft`, `rotateInUpRight`, `rotateInDownLeft`, `rotateInDownRight`
+  - **Attention**: `bounce`, `pulse`, `shake`, `swing`, `tada`, `wobble`, `jello`, `heartBeat`
+  - **3D**: `flipInX`, `flipInY`
+  - **Speed Variants**: `faster` (0.5s), `slower` (2s)
+- **Features**:
+  - React Portal attached to `document.body` (`z-index: 99999`) with smart collision positioning
+  - Instant search filter box at top of dropdown
+  - Interactive live hover animation preview on every item before selection
+  - Active checkmark indicator on currently applied animation
+  - Saves directly to `advanced.animation` across section and component schemas
+  - Duration slider (100ms to 3000ms), delay slider (0ms to 2000ms), and replay button
 - **Scroll Reveal**:
   - Viewport trigger offset percentage (0% to 50%)
   - Repeat every time in view toggle
-- **Replay button**: Instant live preview test without reloading
 - **Use cases**: Hero section reveal, product grid staggering, newsletter callouts.
 
 ---

@@ -64,7 +64,14 @@ export default function ThemePreviewWrapper({
 
       const handleMessage = (event: MessageEvent) => {
         if (event.data?.type === "UPDATE_THEME" && event.data?.theme) {
-          const newTheme = event.data.theme as ThemeConfig;
+          const newTheme = { ...event.data.theme } as ThemeConfig;
+          const targetPage = event.data?.pageType || currentPage;
+          if (targetPage && targetPage !== "homepage") {
+            newTheme.page_defaults = {
+              ...(newTheme.page_defaults || {}),
+              [targetPage]: newTheme.sections,
+            };
+          }
           setTheme(newTheme);
           if (event.data?.pageType) {
             setCurrentPage(event.data.pageType);
@@ -96,7 +103,15 @@ export default function ThemePreviewWrapper({
           }
         } else if (event.data?.type === "FORCE_REFRESH") {
           if (event.data?.theme) {
-            setTheme(JSON.parse(JSON.stringify(event.data.theme)));
+            const nextTheme = JSON.parse(JSON.stringify(event.data.theme));
+            const targetPage = event.data?.pageType || currentPage;
+            if (targetPage && targetPage !== "homepage") {
+              nextTheme.page_defaults = {
+                ...(nextTheme.page_defaults || {}),
+                [targetPage]: nextTheme.sections,
+              };
+            }
+            setTheme(nextTheme);
           }
           if (event.data?.pageType) {
             setCurrentPage(event.data.pageType);

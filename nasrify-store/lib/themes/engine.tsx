@@ -132,11 +132,18 @@ export function renderPageTheme(
   const activeTheme = theme || DEFAULT_THEME;
   const normalizedKey = pageType.startsWith("page_") || pageType.startsWith("cms_") ? "page" : pageType;
   const pageSections =
-    activeTheme.page_defaults?.[pageType] ||
-    activeTheme.page_defaults?.[normalizedKey] ||
+    (activeTheme.page_defaults?.[pageType] && activeTheme.page_defaults[pageType].length > 0
+      ? activeTheme.page_defaults[pageType]
+      : null) ||
+    (activeTheme.page_defaults?.[normalizedKey] && activeTheme.page_defaults[normalizedKey].length > 0
+      ? activeTheme.page_defaults[normalizedKey]
+      : null) ||
+    (activeTheme.sections && activeTheme.sections.length > 0 && pageType !== "homepage"
+      ? activeTheme.sections
+      : null) ||
     DEFAULT_THEME.page_defaults?.[pageType] ||
     DEFAULT_THEME.page_defaults?.[normalizedKey] ||
-    (activeTheme.sections && activeTheme.sections.length > 0 ? activeTheme.sections : null);
+    activeTheme.sections;
 
   if (!pageSections || !Array.isArray(pageSections)) {
     return null;

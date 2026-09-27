@@ -22,11 +22,23 @@ export default function AnnouncementBar({
 
   if (dismissed) return null;
 
-  const text = settings.text || "Free shipping on orders over $50";
-  const link = settings.link;
+  const compSettings = (settings as any)?._components;
+  const text =
+    compSettings?.announcement?.settings?.text ||
+    compSettings?.text?.settings?.text ||
+    settings.text ||
+    "Free shipping on orders over $50";
+  const link =
+    compSettings?.announcement?.settings?.link ||
+    settings.link;
   const hasCustomBg = Boolean((settings as any)?._advanced?.style?.background);
-  const bgColor = hasCustomBg ? "transparent" : (settings.bg_color || themeSettings.colors.primary || "#18181B");
-  const textColor = settings.text_color || "#FFFFFF";
+  const bgColor = hasCustomBg
+    ? "transparent"
+    : (compSettings?.announcement?.settings?.bg_color || settings.bg_color || themeSettings.colors.primary || "#18181B");
+  const textColor =
+    compSettings?.announcement?.settings?.text_color ||
+    settings.text_color ||
+    "#FFFFFF";
   const isDismissible = settings.dismissible !== false;
 
   let variantClass = "py-2 px-4 text-xs sm:text-sm font-medium transition-all";

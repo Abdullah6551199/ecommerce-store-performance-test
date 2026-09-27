@@ -113,23 +113,48 @@ export default function Header({
             <nav
               aria-label="Main Navigation"
               className={`hidden lg:flex items-center gap-8 ${
-                variant === "centered" ? "mr-auto" : "mx-8"
+                variant === "centered" || variant === "split" ? "mx-auto" : "mx-8"
               }`}
             >
               {menuItems.map((item, idx) => {
                 const isActive = pathname === item.url;
+                const isMega = variant === "mega_menu" && idx === 0;
+
                 return (
-                  <Link
-                    key={idx}
-                    href={item.url}
-                    className={`text-sm font-medium transition-colors ${
-                      isActive
-                        ? "text-[var(--theme-primary,#25D366)] font-bold"
-                        : "text-[var(--theme-text,#18181B)] hover:text-[var(--theme-primary,#25D366)]"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
+                  <div key={idx} className="relative group">
+                    <Link
+                      href={item.url}
+                      className={`text-sm font-medium transition-colors py-2 inline-flex items-center gap-1 ${
+                        isActive
+                          ? "text-[var(--theme-primary,#25D366)] font-bold"
+                          : "text-[var(--theme-text,#18181B)] hover:text-[var(--theme-primary,#25D366)]"
+                      }`}
+                    >
+                      {item.label}
+                      {isMega && <span className="text-[10px] opacity-60">▼</span>}
+                    </Link>
+
+                    {/* Mega Menu Dropdown */}
+                    {isMega && (
+                      <div className="absolute top-full left-0 w-80 p-4 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all z-50 grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">Collections</p>
+                          <ul className="space-y-1.5 text-xs text-gray-300">
+                            <li><Link href="/shop" className="hover:text-emerald-400">All Products</Link></li>
+                            <li><Link href="/shop" className="hover:text-emerald-400">New Arrivals</Link></li>
+                            <li><Link href="/shop" className="hover:text-emerald-400">Best Sellers</Link></li>
+                          </ul>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">Featured</p>
+                          <ul className="space-y-1.5 text-xs text-gray-300">
+                            <li><Link href="/about" className="hover:text-emerald-400">Atelier Story</Link></li>
+                            <li><Link href="/contact" className="hover:text-emerald-400">Lookbook 2026</Link></li>
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </nav>

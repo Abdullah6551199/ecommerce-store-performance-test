@@ -76,6 +76,77 @@ export default function Banner({
     );
   }
 
+  // Variant: stacked (Vertical stack with large image)
+  if (variant === "stacked") {
+    return (
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 my-12 text-center space-y-6">
+        <div className="relative aspect-[21/9] rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+          <Image src={imageUrl} alt={heading} fill className="object-cover" />
+        </div>
+        <div className="space-y-3">
+          <h2
+            data-editable="heading"
+            className="text-3xl sm:text-4xl font-black tracking-tight text-white font-[family-name:var(--theme-font-heading)]"
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
+          <p
+            data-editable="text"
+            className="text-base text-gray-300 max-w-xl mx-auto font-[family-name:var(--theme-font-body)]"
+            dangerouslySetInnerHTML={renderRich(text)}
+          />
+          {ctaText && (
+            <div className="pt-2">
+              <Link
+                href={ctaLink}
+                className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition-all shadow-lg"
+              >
+                {ctaText}
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  }
+
+  // Variant: diagonal (Angled diagonal split)
+  if (variant === "diagonal") {
+    return (
+      <section className="relative overflow-hidden bg-slate-950 border-y border-slate-800 my-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-6 space-y-4 z-10">
+            <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400">
+              Seasonal Exclusive
+            </span>
+            <h2
+              data-editable="heading"
+              className="text-3xl sm:text-5xl font-black text-white leading-tight font-[family-name:var(--theme-font-heading)]"
+              dangerouslySetInnerHTML={renderRich(heading)}
+            />
+            <p
+              data-editable="text"
+              className="text-base text-gray-300 max-w-md font-[family-name:var(--theme-font-body)]"
+              dangerouslySetInnerHTML={renderRich(text)}
+            />
+            {ctaText && (
+              <div className="pt-2">
+                <Link
+                  href={ctaLink}
+                  className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition-all shadow-md"
+                >
+                  {ctaText}
+                </Link>
+              </div>
+            )}
+          </div>
+          <div className="lg:col-span-6 relative aspect-video rounded-2xl overflow-hidden shadow-2xl border border-slate-800">
+            <Image src={imageUrl} alt={heading} fill className="object-cover" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const renderBackground = hasExplicitImage || !hasCustomBg;
 
   return (

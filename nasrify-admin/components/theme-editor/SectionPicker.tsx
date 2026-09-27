@@ -75,6 +75,34 @@ export const SECTION_OPTIONS: SectionPickerOption[] = [
     description: "Rich text and HTML content block rendering CMS page body.",
     icon: "📝",
   },
+  {
+    type: "video_hero",
+    name: "Video Hero",
+    category: "Content",
+    description: "High-impact cinematic video background with headline, callout text, and primary CTA.",
+    icon: "🎬",
+  },
+  {
+    type: "blog_posts",
+    name: "Editorial Blog Posts",
+    category: "Content",
+    description: "Curated article grid or swipeable carousel showcasing published CMS blog stories.",
+    icon: "📰",
+  },
+  {
+    type: "team_members",
+    name: "Team Members",
+    category: "Content",
+    description: "Spotlight company founders, designers, and artisans with portraits and biographies.",
+    icon: "👥",
+  },
+  {
+    type: "image_gallery",
+    name: "Curated Image Gallery",
+    category: "Content",
+    description: "Lookbook photo gallery in masonry, grid, or fullscreen carousel with lightbox view.",
+    icon: "🖼️",
+  },
 
   // Products
   {
@@ -169,6 +197,20 @@ export const SECTION_OPTIONS: SectionPickerOption[] = [
     category: "Marketing",
     description: "Social proof cards showcasing real customer quotes and ratings.",
     icon: "💬",
+  },
+  {
+    type: "pricing_table",
+    name: "Pricing & Membership Table",
+    category: "Marketing",
+    description: "Compare tiers, membership packages, and feature lists with highlight badges.",
+    icon: "🏷️",
+  },
+  {
+    type: "stats_counters",
+    name: "Stats & Milestone Counters",
+    category: "Marketing",
+    description: "Animated milestone counters showcasing store impact, community, and metrics.",
+    icon: "📈",
   },
   {
     type: "newsletter",
@@ -350,6 +392,81 @@ function SectionThumbnail({ type }: { type: string }) {
 
           <rect x="150" y="30" width="30" height="8" rx="1" fill="#fff" />
           <rect x="150" y="44" width="25" height="4" rx="1" fill="#64748b" />
+        </svg>
+      );
+    case "video_hero":
+      return (
+        <svg viewBox="0 0 200 120" className="w-full h-full bg-slate-950">
+          <rect x="10" y="10" width="180" height="100" rx="6" fill="#0f172a" stroke="#334155" strokeWidth="1" />
+          <circle cx="100" cy="55" r="18" fill="#25D366" opacity="0.85" />
+          <polygon points="96,47 108,55 96,63" fill="#0f172a" />
+          <rect x="40" y="85" width="120" height="6" rx="2" fill="#fff" opacity="0.8" />
+        </svg>
+      );
+    case "blog_posts":
+      return (
+        <svg viewBox="0 0 200 120" className="w-full h-full bg-slate-950">
+          <rect x="15" y="20" width="50" height="80" rx="4" fill="#1e293b" />
+          <rect x="20" y="25" width="40" height="30" rx="2" fill="#334155" />
+          <rect x="20" y="62" width="35" height="5" rx="1" fill="#fff" />
+          <rect x="20" y="72" width="40" height="4" rx="1" fill="#64748b" />
+          <rect x="75" y="20" width="50" height="80" rx="4" fill="#1e293b" />
+          <rect x="80" y="25" width="40" height="30" rx="2" fill="#334155" />
+          <rect x="80" y="62" width="35" height="5" rx="1" fill="#fff" />
+          <rect x="80" y="72" width="40" height="4" rx="1" fill="#64748b" />
+          <rect x="135" y="20" width="50" height="80" rx="4" fill="#1e293b" />
+          <rect x="140" y="25" width="40" height="30" rx="2" fill="#334155" />
+          <rect x="140" y="62" width="35" height="5" rx="1" fill="#fff" />
+          <rect x="140" y="72" width="40" height="4" rx="1" fill="#64748b" />
+        </svg>
+      );
+    case "team_members":
+      return (
+        <svg viewBox="0 0 200 120" className="w-full h-full bg-slate-950">
+          <circle cx="45" cy="45" r="20" fill="#334155" />
+          <rect x="25" y="72" width="40" height="6" rx="2" fill="#fff" />
+          <rect x="30" y="82" width="30" height="4" rx="1" fill="#25D366" />
+          <circle cx="100" cy="45" r="20" fill="#334155" />
+          <rect x="80" y="72" width="40" height="6" rx="2" fill="#fff" />
+          <rect x="85" y="82" width="30" height="4" rx="1" fill="#25D366" />
+          <circle cx="155" cy="45" r="20" fill="#334155" />
+          <rect x="135" y="72" width="40" height="6" rx="2" fill="#fff" />
+          <rect x="140" y="82" width="30" height="4" rx="1" fill="#25D366" />
+        </svg>
+      );
+    case "pricing_table":
+      return (
+        <svg viewBox="0 0 200 120" className="w-full h-full bg-slate-950">
+          <rect x="15" y="25" width="50" height="75" rx="4" fill="#1e293b" />
+          <rect x="73" y="15" width="54" height="90" rx="4" fill="#0f172a" stroke="#25D366" strokeWidth="1.5" />
+          <rect x="135" y="25" width="50" height="75" rx="4" fill="#1e293b" />
+          <rect x="80" y="22" width="40" height="8" rx="2" fill="#25D366" />
+          <rect x="80" y="36" width="30" height="12" rx="2" fill="#fff" />
+        </svg>
+      );
+    case "stats_counters":
+      return (
+        <svg viewBox="0 0 200 120" className="w-full h-full bg-slate-950">
+          <rect x="10" y="30" width="180" height="60" rx="6" fill="#0f172a" stroke="#334155" strokeWidth="1" />
+          <rect x="25" y="44" width="30" height="14" rx="2" fill="#25D366" />
+          <rect x="25" y="64" width="32" height="5" rx="1" fill="#94a3b8" />
+          <rect x="70" y="44" width="30" height="14" rx="2" fill="#25D366" />
+          <rect x="70" y="64" width="32" height="5" rx="1" fill="#94a3b8" />
+          <rect x="115" y="44" width="30" height="14" rx="2" fill="#25D366" />
+          <rect x="115" y="64" width="32" height="5" rx="1" fill="#94a3b8" />
+          <rect x="155" y="44" width="25" height="14" rx="2" fill="#25D366" />
+          <rect x="155" y="64" width="25" height="5" rx="1" fill="#94a3b8" />
+        </svg>
+      );
+    case "image_gallery":
+      return (
+        <svg viewBox="0 0 200 120" className="w-full h-full bg-slate-950">
+          <rect x="15" y="15" width="50" height="42" rx="3" fill="#1e293b" />
+          <rect x="75" y="15" width="50" height="42" rx="3" fill="#334155" />
+          <rect x="135" y="15" width="50" height="42" rx="3" fill="#1e293b" />
+          <rect x="15" y="63" width="50" height="42" rx="3" fill="#334155" />
+          <rect x="75" y="63" width="50" height="42" rx="3" fill="#1e293b" />
+          <rect x="135" y="63" width="50" height="42" rx="3" fill="#334155" />
         </svg>
       );
     default:

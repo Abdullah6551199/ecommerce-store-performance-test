@@ -8,6 +8,8 @@ export const PRODUCT_CAROUSEL_SCHEMA: SectionSchema = {
   variants: [
     { value: "scroll", label: "Smooth Scroll Track" },
     { value: "snap", label: "Snap Pagination" },
+    { value: "peek", label: "Peeking Edge Next Card" },
+    { value: "cards_lifted", label: "Cards with Hover Shadow Lift" },
   ],
   content: [
     {

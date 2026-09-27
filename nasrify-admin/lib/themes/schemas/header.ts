@@ -9,6 +9,8 @@ export const HEADER_SCHEMA: SectionSchema = {
     { value: "classic", label: "Classic Left Logo" },
     { value: "centered", label: "Centered Logo" },
     { value: "minimal", label: "Minimalist Bar" },
+    { value: "mega_menu", label: "Mega Menu Dropdown" },
+    { value: "split", label: "Split Menu (Center Logo)" },
   ],
   content: [
     {

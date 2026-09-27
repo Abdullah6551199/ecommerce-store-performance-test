@@ -8,6 +8,8 @@ export const PRODUCT_GRID_SCHEMA: SectionSchema = {
   variants: [
     { value: "standard", label: "Standard Grid" },
     { value: "compact", label: "Compact Cards" },
+    { value: "bento", label: "Bento Grid Layout" },
+    { value: "list_view", label: "Horizontal List Cards" },
   ],
   content: [
     {

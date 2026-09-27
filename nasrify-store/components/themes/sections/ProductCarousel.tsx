@@ -72,15 +72,24 @@ export default function ProductCarousel({
       {/* Carousel Track */}
       <div
         ref={scrollRef}
-        className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory scroll-smooth"
+        className={`flex ${variant === "peek" ? "gap-3 sm:gap-6 -mx-4 px-4 sm:mx-0 sm:px-0" : "gap-4 sm:gap-6"} overflow-x-auto pb-6 scrollbar-none snap-x snap-mandatory scroll-smooth`}
         style={{ scrollbarWidth: "none" }}
       >
         {productsList.map((product) => {
           const currentPrice = product.salePrice ?? product.price;
+          const isLifted = variant === "cards_lifted";
+          const isPeek = variant === "peek";
+
           return (
             <div
               key={product.id}
-              className="w-[240px] sm:w-[280px] shrink-0 snap-start flex flex-col rounded-[var(--theme-radius,8px)] border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-background,#FFFFFF)] overflow-hidden transition-all hover:shadow-md"
+              className={`${
+                isPeek ? "w-[75vw] sm:w-[280px]" : "w-[240px] sm:w-[280px]"
+              } shrink-0 snap-start flex flex-col rounded-[var(--theme-radius,8px)] border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-background,#FFFFFF)] overflow-hidden transition-all duration-300 ${
+                isLifted
+                  ? "shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:border-[var(--theme-accent,#2563EB)]"
+                  : "hover:shadow-md"
+              }`}
             >
               <Link
                 href={`/product/${product.slug}`}

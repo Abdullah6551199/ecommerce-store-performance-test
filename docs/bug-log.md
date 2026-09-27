@@ -202,3 +202,12 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-46.2-02 | Category Union | Section categories in some schemas used `"collection"` and `"product"`, whereas `SectionSchema` required `"collections"` and `"products"`. | Updated `category` union in `section-schema.ts` to allow singular and plural variants (`product` \| `products`, `collection` \| `collections`, `social`). | Complete |
 | BUG-46.2-03 | Control Props Parity | `ColorControl`, `SpacingControl`, and `ImageUploadField` required mandatory `label` string props, but some nested schema renderer calls omitted them. | Passed `label={field.label}` and descriptive defaults to all control component invocations in `SchemaFieldRenderer.tsx` and `BaseSectionSettings.tsx`. | Complete |
 
+---
+
+## Stage 46.3 (6 New Sections + 22 Variants)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-46.3-01 | Repeater Types | `pricing-table.ts` declared `{ key: 'highlighted', type: 'boolean' }` within repeater `fields`, but `RepeaterFieldConfig['type']` union was limited to `'text' \| 'image' \| 'url' \| 'number' \| 'richtext'`. | Added `'boolean'` and `'select'` to `RepeaterFieldConfig['type']` in `section-schema.ts`; `SchemaFieldRenderer.tsx` already handled rendering booleans natively. | Complete |
+| BUG-46.3-02 | Storefront Variant Mapping | Storefront components needed to handle new variants gracefully without missing fallback styles or broken layouts when user selects novel variants. | Implemented custom layout branches for all 22 requested variants across top 10 storefront section components with fallbacks to standard layouts. | Complete |
+

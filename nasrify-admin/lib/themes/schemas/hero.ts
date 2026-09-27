@@ -9,6 +9,9 @@ export const HERO_SCHEMA: SectionSchema = {
     { value: "full_image", label: "Full Width Image" },
     { value: "split", label: "Split Editorial Layout" },
     { value: "text_only", label: "Minimalist Text Only" },
+    { value: "video", label: "Video Background" },
+    { value: "product_focus", label: "Product Focus & Buy CTA" },
+    { value: "split_minimal", label: "Split Minimal 50/50" },
   ],
   content: [
     {

@@ -9,6 +9,8 @@ export const TESTIMONIALS_SCHEMA: SectionSchema = {
     { value: "cards", label: "Three Column Cards" },
     { value: "quote", label: "Single Featured Quote" },
     { value: "grid", label: "Multi Grid Layout" },
+    { value: "avatar_large", label: "Large Avatar + Prominent Quote" },
+    { value: "marquee", label: "Auto-Scrolling Infinite Marquee" },
   ],
   content: [
     {

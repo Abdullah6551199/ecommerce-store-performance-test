@@ -29,6 +29,14 @@ import AccountDashboard from "@/components/themes/sections/AccountDashboard";
 import PageHeader from "@/components/themes/sections/PageHeader";
 import PageContent from "@/components/themes/sections/PageContent";
 
+// 6 New Sections (Stage 46.3)
+import VideoHero from "@/components/themes/sections/VideoHero";
+import BlogPosts from "@/components/themes/sections/BlogPosts";
+import TeamMembers from "@/components/themes/sections/TeamMembers";
+import PricingTable from "@/components/themes/sections/PricingTable";
+import StatsCounters from "@/components/themes/sections/StatsCounters";
+import ImageGallery from "@/components/themes/sections/ImageGallery";
+
 import { DEFAULT_THEME } from "./default-theme";
 import { generateAdvancedCSS } from "./section-css-generator";
 
@@ -242,6 +250,26 @@ export function renderSection(
         break;
       case "page_content":
         element = <PageContent key={section.id} {...props} />;
+        break;
+
+      // 6 New Sections (Stage 46.3)
+      case "video_hero":
+        element = <VideoHero key={section.id} {...props} />;
+        break;
+      case "blog_posts":
+        element = <BlogPosts key={section.id} {...props} />;
+        break;
+      case "team_members":
+        element = <TeamMembers key={section.id} {...props} />;
+        break;
+      case "pricing_table":
+        element = <PricingTable key={section.id} {...props} />;
+        break;
+      case "stats_counters":
+        element = <StatsCounters key={section.id} {...props} />;
+        break;
+      case "image_gallery":
+        element = <ImageGallery key={section.id} {...props} />;
         break;
 
       default:

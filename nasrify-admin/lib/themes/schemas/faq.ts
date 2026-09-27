@@ -7,7 +7,8 @@ export const FAQ_SCHEMA: SectionSchema = {
   category: "content",
   variants: [
     { value: "accordion", label: "Single Column Accordion" },
-    { value: "two_column", label: "Two Column Grid" },
+    { value: "two_column", label: "Two Column Split" },
+    { value: "chat_style", label: "Interactive Chat Bubble Style" },
   ],
   content: [
     {

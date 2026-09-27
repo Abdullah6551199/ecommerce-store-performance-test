@@ -95,6 +95,138 @@ export default function Footer({
     );
   }
 
+  if (variant === "centered") {
+    return (
+      <footer className="border-t border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] py-14 px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-3xl mx-auto space-y-6">
+          <span
+            data-editable="logo_text"
+            className="font-extrabold text-2xl tracking-tight text-[var(--theme-text,#18181B)] inline-block"
+            dangerouslySetInnerHTML={renderRich(logoText)}
+          />
+          <p className="text-xs sm:text-sm text-[var(--theme-text-muted,#71717A)] max-w-md mx-auto">
+            Thoughtfully crafted products made for comfort, style, and endurance.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-6 pt-2">
+            {columns.flatMap((c) => c.links).slice(0, 6).map((link, idx) => (
+              <Link
+                key={idx}
+                href={link.url}
+                className="text-xs sm:text-sm font-medium text-[var(--theme-text,#18181B)] hover:text-[var(--theme-accent,#2563EB)] transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <div className="flex items-center justify-center gap-4 pt-2">
+            {socialLinks.map((s, idx) => (
+              <a
+                key={idx}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full border border-[var(--theme-border,#E4E4E7)] bg-white flex items-center justify-center text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-accent,#2563EB)] transition-colors shadow-2xs"
+                aria-label={s.platform}
+              >
+                <span className="capitalize text-xs font-bold">{s.platform[0]}</span>
+              </a>
+            ))}
+          </div>
+          <div className="pt-6 border-t border-[var(--theme-border,#E4E4E7)] text-xs text-[var(--theme-text-muted,#71717A)]">
+            <p data-editable="copyright" dangerouslySetInnerHTML={renderRich(copyright)} />
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
+  if (variant === "mega") {
+    return (
+      <footer className="border-t border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-surface,#F4F4F5)] text-[var(--theme-text,#18181B)]">
+        {/* Newsletter bar */}
+        <div className="border-b border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-background,#FFFFFF)] py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-xl font-bold tracking-tight text-[var(--theme-text,#18181B)]">Join our inner circle</h3>
+              <p className="text-xs sm:text-sm text-[var(--theme-text-muted,#71717A)] mt-1">Get 15% off your first order plus secret drop alerts.</p>
+            </div>
+            <div className="flex w-full md:w-auto max-w-md gap-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full px-4 py-2.5 text-xs sm:text-sm rounded-[var(--theme-radius,8px)] border border-[var(--theme-border,#E4E4E7)] bg-white focus:outline-hidden focus:ring-2 focus:ring-[var(--theme-accent,#2563EB)]"
+              />
+              <button
+                type="button"
+                className="shrink-0 px-5 py-2.5 text-xs sm:text-sm font-semibold rounded-[var(--theme-radius,8px)] bg-[var(--theme-primary,#18181B)] text-white hover:opacity-90 transition-opacity"
+              >
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 6 Column Matrix */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            <div className="col-span-2 md:col-span-3 lg:col-span-2 space-y-4">
+              <span
+                data-editable="logo_text"
+                className="font-extrabold text-2xl tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+                dangerouslySetInnerHTML={renderRich(logoText)}
+              />
+              <p className="text-xs text-[var(--theme-text-muted,#71717A)] leading-relaxed max-w-sm">
+                The flagship destination for curated lifestyle essentials. Built with edge performance and precision engineering.
+              </p>
+              <div className="flex items-center gap-3 pt-1">
+                {socialLinks.map((s, idx) => (
+                  <a
+                    key={idx}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full border border-[var(--theme-border,#E4E4E7)] bg-white flex items-center justify-center text-xs font-bold text-[var(--theme-text-muted,#71717A)] hover:text-black shadow-2xs"
+                  >
+                    {s.platform[0].toUpperCase()}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {columns.map((col, idx) => (
+              <div key={idx} className="space-y-3">
+                <h4 className="font-bold text-xs uppercase tracking-wider text-[var(--theme-text,#18181B)]">
+                  {col.title}
+                </h4>
+                <ul className="space-y-2">
+                  {col.links.map((link, lIdx) => (
+                    <li key={lIdx}>
+                      <Link
+                        href={link.url}
+                        className="text-xs text-[var(--theme-text-muted,#71717A)] hover:text-[var(--theme-text,#18181B)] transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 pt-8 border-t border-[var(--theme-border,#E4E4E7)] flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--theme-text-muted,#71717A)] gap-4">
+            <p data-editable="copyright" dangerouslySetInnerHTML={renderRich(copyright)} />
+            <div className="flex items-center gap-4">
+              <span>Encrypted 256-Bit SSL Checkout</span>
+              <span>•</span>
+              <span>All Major Cards Accepted</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   const isExpanded = variant === "expanded";
 
   return (

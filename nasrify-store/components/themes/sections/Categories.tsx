@@ -86,29 +86,79 @@ export default function Categories({
     );
   }
 
-  if (variant === "list") {
+  // Variant: circle_icons (Round category icons)
+  if (variant === "circle_icons") {
     return (
-      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="categories" className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2
           data-editable="heading"
-          className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] mb-6 font-[family-name:var(--theme-font-heading)]"
+          className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-8 font-[family-name:var(--theme-font-heading)]"
           dangerouslySetInnerHTML={renderRich(heading)}
         />
-        <div className="divide-y divide-[var(--theme-border,#E4E4E7)] border-y border-[var(--theme-border,#E4E4E7)]">
+        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8">
           {categoriesList.map((cat) => (
             <Link
               key={cat.id}
               href={`/category/${cat.slug}`}
-              className="py-4 flex items-center justify-between group hover:px-2 transition-all"
+              className="group flex flex-col items-center gap-3"
             >
-              <span className="font-semibold text-base sm:text-lg text-[var(--theme-text,#18181B)] group-hover:text-[var(--theme-accent,#2563EB)] transition-colors">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-slate-800 bg-slate-900 group-hover:border-emerald-500 transition-colors flex items-center justify-center p-2">
+                <span className="text-2xl">🏷️</span>
+              </div>
+              <span className="text-xs sm:text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
                 {cat.name}
-              </span>
-              <span className="text-sm text-[var(--theme-text-muted,#71717A)] group-hover:translate-x-1 transition-transform">
-                Explore &rarr;
               </span>
             </Link>
           ))}
+        </div>
+      </section>
+    );
+  }
+
+  // Variant: featured_one (1 Big + 4 Small Grid)
+  if (variant === "featured_one") {
+    const featured = categoriesList[0];
+    const smalls = categoriesList.slice(1, 5);
+
+    return (
+      <section id="categories" className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between mb-8">
+          <h2
+            data-editable="heading"
+            className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-[family-name:var(--theme-font-heading)]"
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
+          <Link href="/shop" className="text-sm font-semibold text-emerald-400 hover:underline">
+            All categories &rarr;
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {featured && (
+            <Link
+              href={`/category/${featured.slug}`}
+              className="lg:col-span-6 relative aspect-square rounded-2xl overflow-hidden p-8 flex items-end bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent border border-slate-800 group"
+            >
+              <div className="z-10 space-y-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">Featured Collection</span>
+                <h3 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                  {featured.name}
+                </h3>
+              </div>
+            </Link>
+          )}
+          <div className="lg:col-span-6 grid grid-cols-2 gap-4">
+            {smalls.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/category/${cat.slug}`}
+                className="relative aspect-square rounded-xl overflow-hidden p-4 flex items-end bg-slate-900 border border-slate-800 group hover:border-slate-700"
+              >
+                <h4 className="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">
+                  {cat.name}
+                </h4>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     );

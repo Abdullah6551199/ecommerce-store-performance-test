@@ -10,6 +10,8 @@ export const CATEGORIES_SCHEMA: SectionSchema = {
     { value: "masonry", label: "Editorial Masonry" },
     { value: "list", label: "Minimalist List" },
     { value: "circle", label: "Circular Badges" },
+    { value: "circle_icons", label: "Round Category Thumbnails" },
+    { value: "featured_one", label: "1 Featured + 4 Small Grid" },
   ],
   content: [
     {

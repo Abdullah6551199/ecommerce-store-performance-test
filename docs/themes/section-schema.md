@@ -155,3 +155,39 @@ The editor immediately provides full Content, Style, and Advanced tabs with 60+ 
 | `spacing` | `SpacingControl` | Margins and paddings |
 | `gradient` | `GradientControl` | Linear/radial background gradients |
 | `shadow` | `ShadowControl` | Multi-layer drop shadows |
+
+---
+
+## 5. New Sections Added in Stage 46.3 (BaseSection Architecture)
+
+In Stage 46.3, 6 brand new sections were created following the BaseSection pattern:
+
+1. **`video_hero`** (`nasrify-admin/lib/themes/schemas/video-hero.ts`)
+   - **Category**: Content
+   - **Content**: `video_url`, `heading`, `subheading`, `cta_text`, `cta_link`, `overlay_opacity`, `autoplay`, `muted`, `loop`
+   - **Variants**: `fullscreen`, `split_with_text`, `centered_minimal`
+
+2. **`blog_posts`** (`nasrify-admin/lib/themes/schemas/blog-posts.ts`)
+   - **Category**: Content
+   - **Content**: `heading`, `subheading`, `post_ids[]`, `show_date`, `show_author`, `show_excerpt`, `columns`
+   - **Variants**: `grid_3col`, `carousel`, `featured_plus_list`
+
+3. **`team_members`** (`nasrify-admin/lib/themes/schemas/team-members.ts`)
+   - **Category**: Content
+   - **Content**: `heading`, `subheading`, `members[]` (repeater: `name`, `role`, `image`, `bio`, `social_links`), `columns`
+   - **Variants**: `grid`, `carousel`, `horizontal`
+
+4. **`pricing_table`** (`nasrify-admin/lib/themes/schemas/pricing-table.ts`)
+   - **Category**: Marketing
+   - **Content**: `heading`, `subheading`, `plans[]` (repeater: `name`, `price`, `period`, `features[]`, `cta_text`, `cta_link`, `highlighted`), `columns`
+   - **Variants**: `classic_3col`, `comparison_table`, `cards_with_toggle`
+
+5. **`stats_counters`** (`nasrify-admin/lib/themes/schemas/stats-counters.ts`)
+   - **Category**: Marketing
+   - **Content**: `heading`, `stats[]` (repeater: `label`, `value`, `suffix`, `icon`, `animation`), `columns`, `background_type`
+   - **Variants**: `dark`, `light`, `gradient`
+
+6. **`image_gallery`** (`nasrify-admin/lib/themes/schemas/image-gallery.ts`)
+   - **Category**: Content
+   - **Content**: `heading`, `images[]`, `columns`, `layout` (`grid` | `masonry` | `carousel`), `lightbox_enabled`
+   - **Variants**: `grid_3col`, `masonry`, `carousel_fullscreen`

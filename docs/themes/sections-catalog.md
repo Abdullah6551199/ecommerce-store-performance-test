@@ -1,6 +1,6 @@
-# Nasrify Themes Framework — Section Components Catalog (25 Sections)
+# Nasrify Themes Framework — Section Components Catalog (31 Sections)
 
-The Themes Framework ships with 25 core section components located in `nasrify-store/components/themes/sections/` and a suite of shared UI building blocks in `nasrify-store/components/themes/blocks/`. Each section supports multiple visual variants and flexible configuration options.
+The Themes Framework ships with 31 core section components located in `nasrify-store/components/themes/sections/` and a suite of shared UI building blocks in `nasrify-store/components/themes/blocks/`. Each section supports multiple visual variants and flexible configuration options.
 
 ---
 
@@ -39,32 +39,32 @@ Displays top notification or promotional banner with link and dismiss option.
 
 ### 2. Header Navigation (`header`)
 Primary storefront navigation bar with logo, dynamic menu links, search, cart, and account buttons.
-- **Variants**: `classic`, `centered`, `minimal`
+- **Variants**: `classic`, `centered`, `minimal`, `mega_menu`, `split`
 - **Settings**: `logo_text`, `logo_url`, `menu_items`, `show_search`, `show_cart`, `show_account`, `sticky`
 
 ### 3. Hero (`hero`)
 High-impact visual showcase with heading, subheading, CTA button, and background imagery.
-- **Variants**: `full_image`, `split`, `minimal`
+- **Variants**: `full_image`, `split`, `minimal`, `video`, `product_focus`, `split_minimal`
 - **Settings**: `heading`, `subheading`, `cta_text`, `cta_link`, `image_url`, `height`, `overlay_opacity`, `alignment`
 
 ### 4. ProductGrid (`product_grid`)
 Responsive grid displaying products with pricing, ratings, badges, and Add-to-Cart actions.
-- **Variants**: `standard`, `compact`
+- **Variants**: `standard`, `compact`, `bento`, `list_view`
 - **Settings**: `heading`, `subheading`, `columns`, `rows`, `show_price`, `show_rating`, `show_add_to_cart`
 
 ### 5. ProductCarousel (`product_carousel`)
 Smooth, horizontal product slider with navigation arrows and dot indicators.
-- **Variants**: `scroll`, `cards`
+- **Variants**: `scroll`, `snap`, `peek`, `cards_lifted`
 - **Settings**: `heading`, `autoplay`, `show_arrows`, `show_dots`
 
 ### 6. Categories (`categories`)
 Visual grid of store product collections with imagery and quick shop links.
-- **Variants**: `grid`, `pills`, `cards`
+- **Variants**: `grid`, `pills`, `cards`, `circle_icons`, `featured_one`
 - **Settings**: `heading`, `columns`, `image_style`
 
 ### 7. Testimonials (`testimonials`)
 Social proof showcase with customer quotes, avatars, ratings, and roles.
-- **Variants**: `cards`, `slider`, `minimal`
+- **Variants**: `cards`, `quote`, `grid`, `avatar_large`, `marquee`
 - **Settings**: `heading`, `layout`, `items`
 
 ### 8. Newsletter (`newsletter`)
@@ -74,22 +74,22 @@ Subscription capture section for discounts, marketing drops, and company news.
 
 ### 9. Banner (`banner`)
 Full-width promotional banner for seasonal sales, announcements, or product highlights.
-- **Variants**: `full_width`, `boxed`
+- **Variants**: `full_width`, `boxed`, `diagonal`, `stacked`
 - **Settings**: `heading`, `text`, `cta_text`, `cta_link`, `image_url`, `overlay`, `height`
 
 ### 10. ImageText (`image_text`)
 Split editorial section with image and text column for storytelling and feature highlights.
-- **Variants**: `image_left`, `image_right`
+- **Variants**: `left_image`, `right_image`, `overlay_card`, `quote_block`
 - **Settings**: `heading`, `text`, `cta_text`, `cta_link`, `image_url`
 
 ### 11. FAQ (`faq`)
 Interactive accordion section answering common buyer inquiries.
-- **Variants**: `accordion`, `grid`
+- **Variants**: `accordion`, `two_column`, `chat_style`
 - **Settings**: `heading`, `items`
 
 ### 12. Footer (`footer`)
 Comprehensive storefront footer with multi-column links, newsletter, social handles, and copyright.
-- **Variants**: `standard`, `minimal`
+- **Variants**: `standard`, `minimal`, `expanded`, `centered`, `mega`
 - **Settings**: `logo_text`, `columns`, `social_links`, `copyright`, `newsletter_signup`
 
 ---
@@ -201,3 +201,37 @@ Rich HTML/Markdown CMS article container styled with typography tokens.
 - **Settings**:
   - `max_width`: string (e.g. `max-w-4xl`)
   - `padding_y`: string (e.g. `py-8`)
+
+---
+
+## Content & Marketing Sections (6 New in Stage 46.3)
+
+### 26. VideoHero (`video_hero`)
+High-impact cinematic video background with headline, callout text, and primary CTA.
+- **Variants**: `fullscreen`, `split_with_text`, `centered_minimal`
+- **Settings**: `video_url`, `heading`, `subheading`, `cta_text`, `cta_link`, `overlay_opacity`, `autoplay`, `muted`, `loop`
+
+### 27. BlogPosts (`blog_posts`)
+Curated article grid or swipeable carousel showcasing published CMS blog stories.
+- **Variants**: `grid_3col`, `carousel`, `featured_plus_list`
+- **Settings**: `heading`, `subheading`, `post_ids[]`, `show_date`, `show_author`, `show_excerpt`, `columns`
+
+### 28. TeamMembers (`team_members`)
+Spotlight company founders, designers, and artisans with portraits and biographies.
+- **Variants**: `grid`, `carousel`, `horizontal`
+- **Settings**: `heading`, `subheading`, `members[]` (repeater: `name`, `role`, `image`, `bio`, `social_links`), `columns`
+
+### 29. PricingTable (`pricing_table`)
+Compare tiers, membership packages, and feature lists with highlight badges.
+- **Variants**: `classic_3col`, `comparison_table`, `cards_with_toggle`
+- **Settings**: `heading`, `subheading`, `plans[]` (repeater: `name`, `price`, `period`, `features`, `cta_text`, `cta_link`, `highlighted`), `columns`
+
+### 30. StatsCounters (`stats_counters`)
+Animated milestone counters showcasing store impact, community, and metrics with on-scroll count-up.
+- **Variants**: `dark`, `light`, `gradient`
+- **Settings**: `heading`, `stats[]` (repeater: `label`, `value`, `suffix`, `icon`, `animation`), `columns`, `background_type`
+
+### 31. ImageGallery (`image_gallery`)
+Lookbook photo gallery in masonry, grid, or fullscreen carousel with interactive lightbox.
+- **Variants**: `grid_3col`, `masonry`, `carousel_fullscreen`
+- **Settings**: `heading`, `images[]`, `columns`, `layout`, `lightbox_enabled`

@@ -73,6 +73,46 @@ export default function FAQ({
     );
   }
 
+  if (variant === "chat_style") {
+    return (
+      <section className="py-12 sm:py-16 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10">
+          <h2
+            data-editable="heading"
+            className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)] font-[family-name:var(--theme-font-heading)]"
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
+          <p className="mt-2 text-xs sm:text-sm text-[var(--theme-text-muted,#71717A)]">Tap any topic to explore customer support dialogue</p>
+        </div>
+
+        <div className="space-y-6">
+          {items.map((item, idx) => (
+            <div key={idx} className="space-y-3 p-4 rounded-2xl bg-[var(--theme-surface,#F4F4F5)] border border-[var(--theme-border,#E4E4E7)]">
+              {/* Question / Customer bubble */}
+              <div className="flex items-start justify-end gap-2.5">
+                <div className="bg-[var(--theme-accent,#2563EB)] text-white text-xs sm:text-sm font-medium py-2.5 px-4 rounded-2xl rounded-tr-xs max-w-[85%] shadow-xs">
+                  <span dangerouslySetInnerHTML={renderRich(item.question)} />
+                </div>
+                <div className="w-7 h-7 rounded-full bg-[var(--theme-primary,#18181B)] text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                  You
+                </div>
+              </div>
+              {/* Answer / Support bubble */}
+              <div className="flex items-start gap-2.5">
+                <div className="w-7 h-7 rounded-full bg-emerald-600 text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                  Bot
+                </div>
+                <div className="bg-[var(--theme-background,#FFFFFF)] border border-[var(--theme-border,#E4E4E7)] text-[var(--theme-text,#18181B)] text-xs sm:text-sm leading-relaxed py-2.5 px-4 rounded-2xl rounded-tl-xs max-w-[85%] shadow-xs">
+                  <span dangerouslySetInnerHTML={renderRich(item.answer)} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-12 sm:py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-10">

@@ -25,3 +25,11 @@ export { default as CheckoutPageLayout } from "./CheckoutPageLayout";
 export { default as AccountDashboard } from "./AccountDashboard";
 export { default as PageHeader } from "./PageHeader";
 export { default as PageContent } from "./PageContent";
+
+// 6 New Sections (Stage 46.3)
+export { default as VideoHero } from "./VideoHero";
+export { default as BlogPosts } from "./BlogPosts";
+export { default as TeamMembers } from "./TeamMembers";
+export { default as PricingTable } from "./PricingTable";
+export { default as StatsCounters } from "./StatsCounters";
+export { default as ImageGallery } from "./ImageGallery";

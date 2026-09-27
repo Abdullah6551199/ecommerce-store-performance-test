@@ -9,6 +9,8 @@ export const FOOTER_SCHEMA: SectionSchema = {
     { value: "standard", label: "Multi-Column Standard" },
     { value: "expanded", label: "Expanded with Value Props" },
     { value: "minimal", label: "Minimalist Copyright Only" },
+    { value: "centered", label: "Centered Minimal Stacked" },
+    { value: "mega", label: "Mega Footer + 6 Columns" },
   ],
   content: [
     {

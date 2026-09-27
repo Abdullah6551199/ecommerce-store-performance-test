@@ -9,6 +9,8 @@ export const BANNER_SCHEMA: SectionSchema = {
     { value: "full_width", label: "Full Width" },
     { value: "boxed", label: "Boxed Container" },
     { value: "side_by_side", label: "Side-by-Side Split" },
+    { value: "diagonal", label: "Angled Diagonal Split" },
+    { value: "stacked", label: "Stacked Vertical Banner" },
   ],
   content: [
     {

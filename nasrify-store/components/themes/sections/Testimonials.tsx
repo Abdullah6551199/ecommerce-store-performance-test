@@ -72,6 +72,82 @@ export default function Testimonials({
     );
   }
 
+  if (variant === "avatar_large") {
+    const mainItem = items[0];
+    return (
+      <section className="py-16 sm:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="flex flex-col items-center">
+          {mainItem.avatar && (
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden mb-6 shadow-xl ring-4 ring-[var(--theme-border,#E4E4E7)]">
+              <Image src={mainItem.avatar} alt={mainItem.author} fill className="object-cover" sizes="112px" />
+            </div>
+          )}
+          <div className="flex items-center gap-1 text-amber-400 text-lg mb-6">
+            {"★★★★★"}
+          </div>
+          <blockquote className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-[var(--theme-text,#18181B)] max-w-3xl leading-snug">
+            “<span dangerouslySetInnerHTML={renderRich(mainItem.text)} />”
+          </blockquote>
+          <div className="mt-8">
+            <h3
+              className="text-lg font-bold text-[var(--theme-text,#18181B)]"
+              dangerouslySetInnerHTML={renderRich(mainItem.author)}
+            />
+            {mainItem.role && (
+              <p className="text-sm font-medium text-[var(--theme-accent,#2563EB)] mt-1">{mainItem.role}</p>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (variant === "marquee") {
+    return (
+      <section className="py-14 sm:py-20 bg-[var(--theme-surface,#F4F4F5)] overflow-hidden">
+        <div className="text-center mb-10 max-w-7xl mx-auto px-4">
+          <h2
+            data-editable="heading"
+            className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--theme-text,#18181B)]"
+            dangerouslySetInnerHTML={renderRich(heading)}
+          />
+        </div>
+        <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-none px-4 max-w-full">
+          {[...items, ...items].map((item, idx) => (
+            <div
+              key={idx}
+              className="min-w-[300px] sm:min-w-[360px] max-w-[380px] shrink-0 p-6 rounded-2xl border border-[var(--theme-border,#E4E4E7)] bg-[var(--theme-background,#FFFFFF)] shadow-sm"
+            >
+              <div className="flex items-center gap-1 text-amber-400 text-sm mb-3">
+                {"★★★★★"}
+              </div>
+              <p
+                className="text-sm text-[var(--theme-text,#18181B)] leading-relaxed italic mb-4"
+                dangerouslySetInnerHTML={renderRich(`“${item.text}”`)}
+              />
+              <div className="flex items-center gap-3 pt-3 border-t border-[var(--theme-border,#E4E4E7)]">
+                {item.avatar && (
+                  <div className="relative w-9 h-9 rounded-full overflow-hidden bg-gray-100 shrink-0">
+                    <Image src={item.avatar} alt={item.author} fill className="object-cover" sizes="36px" />
+                  </div>
+                )}
+                <div>
+                  <h4
+                    className="font-bold text-xs text-[var(--theme-text,#18181B)]"
+                    dangerouslySetInnerHTML={renderRich(item.author)}
+                  />
+                  {item.role && (
+                    <p className="text-[11px] text-[var(--theme-text-muted,#71717A)]">{item.role}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-10 sm:mb-14">

@@ -29,7 +29,7 @@ export interface FieldOption {
 
 export interface RepeaterFieldConfig {
   key: string;
-  type: 'text' | 'image' | 'url' | 'number' | 'richtext';
+  type: 'text' | 'image' | 'url' | 'number' | 'richtext' | 'boolean' | 'select';
   label: string;
   default?: any;
   options?: FieldOption[];
@@ -110,6 +110,12 @@ import { ACCOUNT_DASHBOARD_SCHEMA } from './schemas/account-dashboard';
 import { PAGE_HEADER_SCHEMA } from './schemas/page-header';
 import { PAGE_CONTENT_SCHEMA } from './schemas/page-content';
 import { EXAMPLE_TESTIMONIAL_COMPACT_SCHEMA } from './schemas/_example-testimonial-compact';
+import { VIDEO_HERO_SCHEMA } from './schemas/video-hero';
+import { BLOG_POSTS_SCHEMA } from './schemas/blog-posts';
+import { TEAM_MEMBERS_SCHEMA } from './schemas/team-members';
+import { PRICING_TABLE_SCHEMA } from './schemas/pricing-table';
+import { STATS_COUNTERS_SCHEMA } from './schemas/stats-counters';
+import { IMAGE_GALLERY_SCHEMA } from './schemas/image-gallery';
 
 // Re-export individual schemas
 export {
@@ -139,6 +145,12 @@ export {
   PAGE_HEADER_SCHEMA,
   PAGE_CONTENT_SCHEMA,
   EXAMPLE_TESTIMONIAL_COMPACT_SCHEMA,
+  VIDEO_HERO_SCHEMA,
+  BLOG_POSTS_SCHEMA,
+  TEAM_MEMBERS_SCHEMA,
+  PRICING_TABLE_SCHEMA,
+  STATS_COUNTERS_SCHEMA,
+  IMAGE_GALLERY_SCHEMA,
 };
 
 export const SECTION_SCHEMAS: Record<string, SectionSchema> = {
@@ -168,6 +180,12 @@ export const SECTION_SCHEMAS: Record<string, SectionSchema> = {
   page_header: PAGE_HEADER_SCHEMA,
   page_content: PAGE_CONTENT_SCHEMA,
   example_testimonial_compact: EXAMPLE_TESTIMONIAL_COMPACT_SCHEMA,
+  video_hero: VIDEO_HERO_SCHEMA,
+  blog_posts: BLOG_POSTS_SCHEMA,
+  team_members: TEAM_MEMBERS_SCHEMA,
+  pricing_table: PRICING_TABLE_SCHEMA,
+  stats_counters: STATS_COUNTERS_SCHEMA,
+  image_gallery: IMAGE_GALLERY_SCHEMA,
 };
 
 export function getSectionSchema(type: string): SectionSchema | undefined {

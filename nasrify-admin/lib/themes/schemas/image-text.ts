@@ -8,6 +8,8 @@ export const IMAGE_TEXT_SCHEMA: SectionSchema = {
   variants: [
     { value: "left_image", label: "Image on Left" },
     { value: "right_image", label: "Image on Right" },
+    { value: "overlay_card", label: "Overlay Rounded Card" },
+    { value: "quote_block", label: "Editorial Big Quote Block" },
   ],
   content: [
     {

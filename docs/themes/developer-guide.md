@@ -354,5 +354,54 @@ In Stage 47, the system was expanded from section-level control to **Elementor-l
   - `section-css-generator.ts` generates rules scoped to `.section-{id} .component-{id}`.
   - 60-second micro-cache at the Cloudflare Worker edge keeps CPU execution `<10ms`.
 
+---
+
+## 13. Multi-Page Architecture & `page_defaults` Extension (Stage 47.3-4)
+
+The theme definition JSON is extended with `page_defaults` mapping each non-homepage page type to its dedicated section sequence:
+
+```json
+{
+  "name": "Nasrify Default",
+  "sections": [ /* Homepage sections */ ],
+  "page_defaults": {
+    "product": [
+      { "id": "pd-gallery", "type": "product_gallery", "enabled": true, "settings": {} },
+      { "id": "pd-info", "type": "product_info", "enabled": true, "settings": {} },
+      { "id": "pd-tabs", "type": "product_tabs", "enabled": true, "settings": {} },
+      { "id": "pd-reviews", "type": "product_reviews_section", "enabled": true, "settings": {} },
+      { "id": "pd-related", "type": "product_related", "enabled": true, "settings": {} }
+    ],
+    "category": [
+      { "id": "pd-cat-hdr", "type": "category_header", "enabled": true, "settings": {} },
+      { "id": "pd-cat-flt", "type": "category_filters", "enabled": true, "settings": {} },
+      { "id": "pd-cat-grd", "type": "category_grid", "enabled": true, "settings": {} }
+    ],
+    "shop": [ /* Shop catalog sections */ ],
+    "cart": [ /* Cart layout sections */ ],
+    "checkout": [ /* Checkout single-page layout */ ],
+    "order_success": [ /* Order confirmation sections */ ],
+    "account": [ /* Customer account dashboard */ ],
+    "track_order": [ /* Order tracking layout */ ],
+    "wishlist": [ /* Wishlist grid */ ],
+    "compare": [ /* Product comparison layout */ ],
+    "bundles": [ /* Product bundle showcase */ ],
+    "custom_page": [ /* CMS page header + content */ ]
+  }
+}
+```
+
+### Rendering Engine (`renderPageTheme`)
+- Storefront pages invoke `renderPageTheme(theme, pageType, storeData)`.
+- If the active theme defines `page_defaults[pageType]`, those sections are mounted.
+- If undefined, the engine automatically falls back to `DEFAULT_THEME.page_defaults[pageType]`.
+- Dynamic CMS pages (`page_{slug}`) automatically inherit the `page` or `custom_page` layout with fallback.
+
+### Draft Isolation (`theme_page_drafts`)
+- Each page type has an independent draft stored under composite key `{theme_id}::{page_type}`.
+- Saving edits on a product page will never corrupt or prematurely modify the homepage draft.
+- Publishing a page draft merges the updated section array into `theme.page_defaults[pageType]` and purges the page draft.
+
+
 
 

@@ -172,3 +172,23 @@ When a component is selected:
 - Available inside any section via the **"+ Add Component"** button.
 - Catalog of 32+ components categorized into **Basic**, **E-Commerce**, **Forms**, and **Media**.
 - Instantly adds the chosen element into `section.settings._components[newId]` with live re-rendering.
+
+---
+
+## Multi-Page Editing & Page Switcher (Stage 47.3-4)
+
+The editor extends beyond the homepage to provide full multi-page visual customization:
+
+### Page Switcher Dropdown
+Located in the top bar adjacent to the store name:
+- **Instant Switching**: Choose between Core, Commerce, Content, and Dynamic CMS pages.
+- **Dynamic CMS Discovery**: All pages created in `/admin/pages` or the D1 `pages` table automatically appear in the switcher under "Dynamic (CMS Pages)" with zero configuration.
+- **Independent Page Drafts**: Each page maintains its own isolated draft in D1 table `theme_page_drafts` (`{theme_id}::{page_type}`).
+- **Per-Page Undo/Redo**: History snapshots and dirty states are isolated per page.
+- **Live Preview Routing**: Selecting a page updates the center preview frame (`?preview=1&page={pageType}`) and loads the page's dedicated section stack.
+
+### Component Delete & Hover Fixes
+- **Inside-Box Action Buttons**: Both the Edit (pencil) and Delete (trash) action buttons reside directly inside the hover bounding box (`top: 6px, right: 6px`, 28x28px each, `z-index: 10000`). This ensures the mouse cursor never leaves the element boundary when clicking an action.
+- **Delete Action**: Clicking the red trash icon prompts a confirmation modal, cleanly removing the component from `section.settings._components[componentId]`, saving the draft, and pushing an undo snapshot.
+- **Preview Synchronization**: Live update debounce reduced to 100ms with robust handshake (`READY`/`PREVIEW_READY`) and message queueing, guaranteeing zero dropped updates.
+

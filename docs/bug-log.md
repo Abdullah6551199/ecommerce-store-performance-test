@@ -234,5 +234,17 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-47.1-05 (BUG-5) | Font Control Elementor Upgrade | Font selection used basic modal without inline search or live typeface rendering. | Rewrote `FontPicker.tsx` into Elementor-style portal dropdown with live search, category pills (All/Sans/Serif/Display/Handwriting/Mono), live typeface preview, and 3-column Browse All modal. | Complete |
 | BUG-47.1-06 (BUG-6) | Component Selector Parity | Component CSS generator strictly checked `.component-${compKey}` and `[data-component-id="${compKey}"]`, missing `[data-editable="${compKey}"]` tags in storefront sections. | Added `[data-editable="${compKey}"]` to `compSelector` across storefront and admin CSS compilers. | Complete |
 
+---
+
+## Stage 47.3 + 47.4 (Component Hover Actions + Preview Sync + Multi-Page Editor)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-47.3-01 (BUG-1) | UI / Hover Overlay | Edit button rendered outside the hover box boundary (`-top-6 right-0`), causing the cursor to leave the target component on hover and losing element selection. | Moved Edit button INSIDE the box boundary (`top: 6px, right: 6px`, 28x28px square, `z-index: 10000`, white pencil icon). Cursor remains within element boundary so hover is never lost. | Complete |
+| BUG-47.3-02 (BUG-2) | UI / Component Actions | Components had no Delete action button on hover; only sections could be deleted via sidebar. | Added Delete button (red bg, trash icon, 28x28px) adjacent to Edit button. Clicking sends `DELETE_COMPONENT` postMessage; editor shows confirm modal, deletes from `section.settings._components`, saves draft, and records undo snapshot. | Complete |
+| BUG-47.3-03 (BUG-3) | Sync / Preview Delay | Preview updates had 300ms debounce lag and occasionally dropped state updates if iframe had not finished connecting. | Reduced debounce from 300ms to 100ms, implemented message queue with `READY`/`PREVIEW_READY` handshake, added `FORCE_REFRESH` on save draft API success, and added manual refresh button (🔄) in PreviewFrame. | Complete |
+| FEAT-47.4-01 | Architecture / Multi-Page | Visual Theme Editor only supported the homepage; other page types (Product, Category, Cart, Checkout, Shop, etc.) could not be visually edited. | Implemented Page Switcher dropdown in TopBar with grouped Core, Commerce, Content, and Dynamic CMS pages. Created D1 table `theme_page_drafts` with composite key `{theme_id}::{page_type}` for draft isolation. Preview iframe routes to `?preview=1&page={pageType}` and renders via `renderPageTheme()`. | Complete |
+
+
 
 

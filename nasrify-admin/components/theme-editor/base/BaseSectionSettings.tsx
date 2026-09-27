@@ -332,8 +332,8 @@ export function BaseSectionSettings({
             {openAccordions.animation && (
               <div className="p-3 border-t border-slate-800/80">
                 <AnimationControl
-                  value={advancedStyle.animation}
-                  onChange={(a) => setAdvancedStyle({ animation: a })}
+                  value={advanced.animation || advancedStyle.animation}
+                  onChange={(a) => setAdvanced({ animation: a })}
                 />
               </div>
             )}

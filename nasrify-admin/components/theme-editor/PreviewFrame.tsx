@@ -9,6 +9,7 @@ interface PreviewFrameProps {
   previewUrl?: string;
   onInlineEdit?: (sectionId: string, field: string, value: string) => void;
   onSelectSection?: (sectionId: string) => void;
+  onEditComponent?: (sectionId: string, componentId: string, componentType: string) => void;
 }
 
 export function PreviewFrame({
@@ -17,12 +18,13 @@ export function PreviewFrame({
   previewUrl = "https://nasrify-store.zia291930.workers.dev/?preview=1",
   onInlineEdit,
   onSelectSection,
+  onEditComponent,
 }: PreviewFrameProps) {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [iframeLoaded, setIframeLoaded] = useState<boolean>(false);
 
-  // Listen for iframe messages (INLINE_EDIT, SELECT_SECTION, PREVIEW_READY)
+  // Listen for iframe messages (INLINE_EDIT, SELECT_SECTION, EDIT_COMPONENT, EDIT_SECTION, PREVIEW_READY)
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === "INLINE_EDIT") {
@@ -30,10 +32,15 @@ export function PreviewFrame({
         if (sectionId && field && onInlineEdit) {
           onInlineEdit(sectionId, field, value);
         }
-      } else if (event.data?.type === "SELECT_SECTION") {
+      } else if (event.data?.type === "SELECT_SECTION" || event.data?.type === "EDIT_SECTION") {
         const { sectionId } = event.data;
         if (sectionId && onSelectSection) {
           onSelectSection(sectionId);
+        }
+      } else if (event.data?.type === "EDIT_COMPONENT") {
+        const { sectionId, componentId, componentType } = event.data;
+        if (sectionId && componentId && onEditComponent) {
+          onEditComponent(sectionId, componentId, componentType);
         }
       } else if (event.data?.type === "PREVIEW_READY") {
         setIsLoading(false);
@@ -52,7 +59,7 @@ export function PreviewFrame({
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [themeConfig, onInlineEdit, onSelectSection]);
+  }, [themeConfig, onInlineEdit, onSelectSection, onEditComponent]);
 
   // Send theme updates to the iframe whenever themeConfig changes (debounced 300ms)
   useEffect(() => {

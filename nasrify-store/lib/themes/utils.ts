@@ -71,6 +71,8 @@ export function sanitizeRichText(html?: string): string {
     .replace(/href\s*=\s*["']?javascript:[^"'>]*/gi, 'href="#"');
 }
 
+export const sanitizeHtml = sanitizeRichText;
+
 /**
  * Returns sanitized HTML object for safe dangerouslySetInnerHTML usage
  */

@@ -144,3 +144,31 @@ The editor renders in a dedicated full-screen workspace:
 62. Responsive device visibility (hide on desktop, tablet, mobile)
 63. Monospace Custom CSS editor with `selector` scoping
 64. Sub-10ms edge CPU performance with 60s micro-cache
+
+---
+
+## Component-Level Visual Editing (Elementor-Style, Stage 47)
+
+Every individual component inside sections (headings, buttons, images, badges, dividers, countdown timers, etc.) behaves as a mini-section with its own independent settings:
+
+### Visual Hover Workflow
+1. **Interactive Outline**: In the live preview, hovering over any element displays an interactive outline:
+   - **Green Border (#25D366)**: Micro-component target
+   - **Blue Border (#3B82F6)**: Section container target
+2. **Pencil Action & Badge**: Displays component type icon + label badge on top-left and an "✏️ Edit" action button on top-right.
+3. **1-Click Inspection**: Clicking the pencil immediately switches the right editor sidebar from Section settings to that component's dedicated settings panel.
+4. **Keyboard Accessibility**:
+   - `Tab` / `Shift+Tab`: Cycle through all editable elements on the page.
+   - `Esc`: Deselect and hide the inspection outline.
+
+### Component Settings Panel
+When a component is selected:
+- **Header**: Shows component icon, name, and "← Back to Section" navigation.
+- **Content Tab**: Micro-form tailored to the component (e.g. text content, URL, button size, countdown date).
+- **Style Tab**: All 60+ visual styling controls (Typography, Gradient/Color background, Multi-layer borders, Box shadows, Hover animations).
+- **Advanced Tab**: Layout spacing (margin/padding), Z-Index, Position, Responsive breakpoints, Custom CSS scoped specifically to `.section-{id} .component-{id}`.
+
+### Component Insertion (ComponentPicker)
+- Available inside any section via the **"+ Add Component"** button.
+- Catalog of 32+ components categorized into **Basic**, **E-Commerce**, **Forms**, and **Media**.
+- Instantly adds the chosen element into `section.settings._components[newId]` with live re-rendering.

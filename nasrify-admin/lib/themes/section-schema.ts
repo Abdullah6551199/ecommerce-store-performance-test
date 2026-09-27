@@ -81,6 +81,7 @@ export interface SectionSchema {
   presets?: SectionPreset[];
   content: FieldConfig[];
   defaults: Record<string, any>;
+  allowedComponents?: string[];
 }
 
 // Import all 25 section schemas

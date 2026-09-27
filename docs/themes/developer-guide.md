@@ -329,4 +329,30 @@ In Stage 46.2, duplicated settings markup across all 25 theme sections was repla
   - **Advanced Tab**: Layout/Spacing, Motion/Animation, Responsive Device Visibility, Custom CSS, and Positioning.
 - **Sub-10 Minute Section Authoring**: Creating a new section requires only a schema definition and a React render component. Full details are documented in [section-schema.md](./section-schema.md).
 
+---
+
+## 12. BaseComponent Architecture & Component-Level Editing (Stage 47)
+
+In Stage 47, the system was expanded from section-level control to **Elementor-level component editing**:
+- **Micro-Section Pattern**: Every micro-component (heading, button, image, divider, tabs, etc.) behaves as an autonomous unit storing settings in `section.settings._components[componentId]`.
+- **`BaseComponentSettings.tsx` & `useComponentSettings.ts`**:
+  - Dynamically binds component fields to `_components[componentId].settings`.
+  - Merges `_style` and `_advanced` with component defaults.
+  - Automatically furnishes all 60+ controls across Content, Style, and Advanced tabs.
+- **Storefront Component Wrapper (`EditableComponent.tsx`)**:
+  - Wraps elements with `data-component-id`, `data-component-type`, and `data-section-id`.
+  - Applies scoped class `component-{id}`.
+- **Real-Time Hover Inspection (`ThemePreviewOverlay.tsx`)**:
+  - Highlights hovered components in green (`#25D366`) and sections in blue (`#3B82F6`).
+  - Displays component icon, name badge, and pencil edit button.
+  - Keyboard navigation (`Tab` to cycle elements, `Esc` to deselect).
+  - Emits `EDIT_COMPONENT` and `EDIT_SECTION` postMessage events to the editor.
+- **Component Catalog & Picker (`ComponentPicker.tsx`)**:
+  - 47 total schemas (15 migrated core + 32 new across Basic, E-commerce, Forms, and Media).
+  - Searchable and categorized modal for inserting child components into any section.
+- **Scoped CSS Generation**:
+  - `section-css-generator.ts` generates rules scoped to `.section-{id} .component-{id}`.
+  - 60-second micro-cache at the Cloudflare Worker edge keeps CPU execution `<10ms`.
+
+
 

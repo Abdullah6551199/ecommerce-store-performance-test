@@ -72,7 +72,11 @@ function compileShadowLayersCSS(shadows: ShadowLayer[]): string {
     .join(", ");
 }
 
-export function generateSectionCSS(sectionId: string, advanced?: SectionAdvancedConfig): {
+export function generateSectionCSS(
+  sectionId: string,
+  advanced?: SectionAdvancedConfig,
+  customSelector?: string
+): {
   desktopCSS: string;
   tabletCSS: string;
   mobileCSS: string;
@@ -91,7 +95,7 @@ export function generateSectionCSS(sectionId: string, advanced?: SectionAdvanced
     };
   }
 
-  const selector = `.section-${sectionId}`;
+  const selector = customSelector || `.section-${sectionId}`;
   const style = advanced.style || {};
   const motion = advanced.animation;
   const responsive = advanced.responsive;
@@ -343,12 +347,20 @@ export function generateAdvancedCSS(themeConfig: {
     ? themeConfig.sections
     : Object.entries(themeConfig.sections).map(([id, s]) => ({ id, settings: s.settings }));
 
-  const hasAnyAdvanced = sectionsList.some((s) => Boolean(s.settings?._advanced));
+  const hasAnyAdvanced = sectionsList.some(
+    (s) =>
+      Boolean(s.settings?._advanced) ||
+      Boolean(s.settings?._components && Object.keys(s.settings._components).length > 0)
+  );
   if (!hasAnyAdvanced) return "";
 
   const fingerprint = sectionsList
-    .filter((s) => Boolean(s.settings?._advanced))
-    .map((s) => `${s.id}:${JSON.stringify(s.settings?._advanced)}`)
+    .map(
+      (s) =>
+        `${s.id}:${JSON.stringify(s.settings?._advanced || {})}:${JSON.stringify(
+          s.settings?._components || {}
+        )}`
+    )
     .join("::");
 
   const cached = compiledCache.get(fingerprint);
@@ -379,14 +391,41 @@ export function generateAdvancedCSS(themeConfig: {
   `);
 
   sectionsList.forEach((section) => {
-    if (!section.settings?._advanced) return;
-    const res = generateSectionCSS(section.id, section.settings._advanced);
-    if (res.desktopCSS) desktopBlocks.push(res.desktopCSS);
-    if (res.tabletCSS) tabletBlocks.push(res.tabletCSS);
-    if (res.mobileCSS) mobileBlocks.push(res.mobileCSS);
-    if (res.hoverCSS) hoverBlocks.push(res.hoverCSS);
-    if (res.customCSS) customBlocks.push(res.customCSS);
-    if (res.keyframesCSS) keyframesBlocks.push(res.keyframesCSS);
+    // 1. Section-level CSS
+    if (section.settings?._advanced) {
+      const res = generateSectionCSS(section.id, section.settings._advanced);
+      if (res.desktopCSS) desktopBlocks.push(res.desktopCSS);
+      if (res.tabletCSS) tabletBlocks.push(res.tabletCSS);
+      if (res.mobileCSS) mobileBlocks.push(res.mobileCSS);
+      if (res.hoverCSS) hoverBlocks.push(res.hoverCSS);
+      if (res.customCSS) customBlocks.push(res.customCSS);
+      if (res.keyframesCSS) keyframesBlocks.push(res.keyframesCSS);
+    }
+
+    // 2. Component-level CSS (_components)
+    const components = section.settings?._components;
+    if (components && typeof components === "object") {
+      Object.entries(components).forEach(([compKey, compVal]: [string, any]) => {
+        if (!compVal || typeof compVal !== "object") return;
+        const compAdvanced: SectionAdvancedConfig = {
+          ...(compVal._advanced || compVal.advanced || {}),
+          style: {
+            ...(compVal._style || compVal.style || {}),
+            ...((compVal._advanced || compVal.advanced || {}).style || {}),
+          },
+        };
+
+        const compSelector = `.section-${section.id} .component-${compKey}, .section-${section.id} [data-component-id="${compKey}"]`;
+        const compRes = generateSectionCSS(section.id, compAdvanced, compSelector);
+
+        if (compRes.desktopCSS) desktopBlocks.push(compRes.desktopCSS);
+        if (compRes.tabletCSS) tabletBlocks.push(compRes.tabletCSS);
+        if (compRes.mobileCSS) mobileBlocks.push(compRes.mobileCSS);
+        if (compRes.hoverCSS) hoverBlocks.push(compRes.hoverCSS);
+        if (compRes.customCSS) customBlocks.push(compRes.customCSS);
+        if (compRes.keyframesCSS) keyframesBlocks.push(compRes.keyframesCSS);
+      });
+    }
   });
 
   const parts: string[] = [];

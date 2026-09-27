@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { GlobalSettings } from "./GlobalSettings";
 import { SectionSettings } from "./SectionSettings";
+import { BaseComponentSettings } from "./base/BaseComponentSettings";
+import { getComponentSchema } from "@/lib/themes/component-schema";
 import {
   TypographyControl,
   BackgroundControl,
@@ -14,6 +16,12 @@ import {
   AnimationControl,
   CustomCSSControl,
 } from "./controls";
+
+export interface SelectedComponentInfo {
+  sectionId: string;
+  componentId: string;
+  componentType: string;
+}
 
 interface SettingsPanelProps {
   selectedSection: {
@@ -30,6 +38,10 @@ interface SettingsPanelProps {
   onDeselectSection: () => void;
   onDeleteSection?: (id: string) => void;
   onToggleSectionVisibility?: (id: string) => void;
+  selectedComponent?: SelectedComponentInfo | null;
+  onDeselectComponent?: () => void;
+  onSelectComponent?: (comp: SelectedComponentInfo | null) => void;
+  onOpenComponentPicker?: () => void;
 }
 
 type TabType = "content" | "style" | "advanced";
@@ -42,6 +54,10 @@ export function SettingsPanel({
   onDeselectSection,
   onDeleteSection,
   onToggleSectionVisibility,
+  selectedComponent,
+  onDeselectComponent,
+  onSelectComponent,
+  onOpenComponentPicker,
 }: SettingsPanelProps) {
   const [activeTab, setActiveTab] = useState<TabType>("content");
 
@@ -85,6 +101,81 @@ export function SettingsPanel({
       },
     });
   };
+
+  // If editing a specific component inside the selected section
+  if (selectedSection && selectedComponent && selectedComponent.sectionId === selectedSection.id) {
+    const compSchema = getComponentSchema(selectedComponent.componentType);
+    return (
+      <aside className="w-96 shrink-0 bg-slate-900 border-l border-slate-800 flex flex-col h-full overflow-hidden select-none">
+        {/* Panel Header */}
+        <div className="h-12 px-4 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-900/90 backdrop-blur-sm">
+          <button
+            type="button"
+            onClick={onDeselectComponent}
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-100 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Back to {selectedSection.name || selectedSection.type}</span>
+          </button>
+
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider">
+            {compSchema?.icon || "🧩"} {compSchema?.label || selectedComponent.componentType}
+          </span>
+        </div>
+
+        {/* Tabs Header for Component */}
+        <div className="grid grid-cols-3 bg-slate-950 border-b border-slate-800 p-1 text-xs shrink-0">
+          <button
+            type="button"
+            onClick={() => setActiveTab("content")}
+            className={`py-1.5 font-medium rounded transition-colors text-center ${
+              activeTab === "content"
+                ? "bg-slate-800 text-green-400 shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            Content
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("style")}
+            className={`py-1.5 font-medium rounded transition-colors text-center ${
+              activeTab === "style"
+                ? "bg-slate-800 text-green-400 shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            Style
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("advanced")}
+            className={`py-1.5 font-medium rounded transition-colors text-center ${
+              activeTab === "advanced"
+                ? "bg-slate-800 text-green-400 shadow-sm"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            Advanced
+          </button>
+        </div>
+
+        {/* Panel Body */}
+        <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+          <BaseComponentSettings
+            componentId={selectedComponent.componentId}
+            componentType={selectedComponent.componentType}
+            sectionSettings={selectedSection.settings || {}}
+            onSectionChange={(updatedSettings) => onUpdateSectionSettings(selectedSection.id, updatedSettings)}
+            activeTab={activeTab}
+            onBack={onDeselectComponent}
+          />
+        </div>
+      </aside>
+    );
+  }
 
   return (
     <aside className="w-96 shrink-0 bg-slate-900 border-l border-slate-800 flex flex-col h-full overflow-hidden select-none">
@@ -207,10 +298,121 @@ export function SettingsPanel({
 
             {/* TAB 1: CONTENT */}
             {activeTab === "content" && (
-              <SectionSettings
-                section={selectedSection}
-                onChange={(patch) => onUpdateSectionSettings(selectedSection.id, patch)}
-              />
+              <div className="space-y-4">
+                <SectionSettings
+                  section={selectedSection}
+                  onChange={(patch) => onUpdateSectionSettings(selectedSection.id, patch)}
+                />
+
+                {/* Section Components Management Card */}
+                <div className="pt-4 border-t border-slate-800 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                        <span>🧩</span>
+                        <span>Child Components</span>
+                      </h4>
+                      <p className="text-[10px] text-slate-400">
+                        Independent styling & content per component
+                      </p>
+                    </div>
+                    {onOpenComponentPicker && (
+                      <button
+                        type="button"
+                        onClick={onOpenComponentPicker}
+                        className="px-2.5 py-1 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/25 text-[11px] font-medium transition-all flex items-center gap-1"
+                      >
+                        <span>+ Add</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Configured components list */}
+                  {(() => {
+                    const componentsMap = (selectedSection.settings?._components || {}) as Record<string, any>;
+                    const componentEntries = Object.entries(componentsMap);
+
+                    if (componentEntries.length === 0) {
+                      return (
+                        <div className="p-3 rounded-lg border border-dashed border-slate-800 bg-slate-950/40 text-center space-y-1">
+                          <p className="text-[11px] text-slate-500">No child components configured yet</p>
+                          <p className="text-[10px] text-slate-600">
+                            Hover over elements in preview to edit or click &ldquo;+ Add&rdquo; above
+                          </p>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="space-y-1.5">
+                        {componentEntries.map(([compKey, compVal]) => {
+                          const cType = compVal?.type || compKey;
+                          const cSchema = getComponentSchema(cType);
+                          return (
+                            <div
+                              key={compKey}
+                              className="flex items-center justify-between p-2 rounded-lg border border-slate-800 bg-slate-950/60 hover:border-slate-700 transition-all text-xs group"
+                            >
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  onSelectComponent?.({
+                                    sectionId: selectedSection.id,
+                                    componentId: compKey,
+                                    componentType: cType,
+                                  })
+                                }
+                                className="flex items-center gap-2 text-left flex-1 min-w-0"
+                              >
+                                <span className="text-sm shrink-0">{cSchema?.icon || "🧩"}</span>
+                                <div className="truncate">
+                                  <div className="font-medium text-slate-200 group-hover:text-emerald-400 transition-colors truncate">
+                                    {cSchema?.label || compKey}
+                                  </div>
+                                  <div className="text-[10px] text-slate-500 font-mono truncate">
+                                    id: {compKey}
+                                  </div>
+                                </div>
+                              </button>
+
+                              <div className="flex items-center gap-1 shrink-0 ml-2">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    onSelectComponent?.({
+                                      sectionId: selectedSection.id,
+                                      componentId: compKey,
+                                      componentType: cType,
+                                    })
+                                  }
+                                  className="p-1 rounded text-slate-400 hover:text-emerald-400 hover:bg-slate-800 transition-colors"
+                                  title="Edit component settings"
+                                >
+                                  ✏️
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const nextComps = { ...componentsMap };
+                                    delete nextComps[compKey];
+                                    onUpdateSectionSettings(selectedSection.id, {
+                                      _components: nextComps,
+                                    });
+                                  }}
+                                  className="p-1 rounded text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+                                  title="Delete component"
+                                >
+                                  🗑️
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
             )}
 
             {/* TAB 2: STYLE */}

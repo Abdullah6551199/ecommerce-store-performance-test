@@ -6,7 +6,9 @@ import { SectionsList, SectionItemData } from "./SectionsList";
 import { SettingsPanel } from "./SettingsPanel";
 import { PreviewFrame } from "./PreviewFrame";
 import { SectionPicker } from "./SectionPicker";
+import { ComponentPicker } from "./ComponentPicker";
 import { PublishConfirmModal } from "./PublishConfirmModal";
+import { getSectionSchema } from "@/lib/themes/section-schema";
 
 interface ThemeConfig {
   id: string;
@@ -41,6 +43,11 @@ interface ThemeConfig {
 export function ThemeEditorShell() {
   const [currentTheme, setCurrentTheme] = useState<ThemeConfig | null>(null);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
+  const [selectedComponent, setSelectedComponent] = useState<{
+    sectionId: string;
+    componentId: string;
+    componentType: string;
+  } | null>(null);
   const [device, setDevice] = useState<DeviceMode>("desktop");
   const [undoStack, setUndoStack] = useState<ThemeConfig[]>([]);
   const [redoStack, setRedoStack] = useState<ThemeConfig[]>([]);
@@ -49,6 +56,7 @@ export function ThemeEditorShell() {
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [isDiscarding, setIsDiscarding] = useState<boolean>(false);
   const [isPickerOpen, setIsPickerOpen] = useState<boolean>(false);
+  const [isComponentPickerOpen, setIsComponentPickerOpen] = useState<boolean>(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -161,6 +169,48 @@ export function ThemeEditorShell() {
 
   const handleSelectSection = (id: string | null) => {
     setSelectedSectionId(id);
+    setSelectedComponent(null);
+  };
+
+  const handleEditComponent = (sectionId: string, componentId: string, componentType: string) => {
+    setSelectedSectionId(sectionId);
+    setSelectedComponent({ sectionId, componentId, componentType });
+  };
+
+  const handleAddComponentToSection = (componentType: string) => {
+    if (!currentTheme || !selectedSectionId) return;
+    pushToUndoStack(currentTheme);
+
+    const newCompId = `${componentType}_${Date.now()}`;
+    const updated = currentTheme.sections.map((sec) => {
+      if (sec.id === selectedSectionId) {
+        const nextComponents = {
+          ...(sec.settings?._components || {}),
+          [newCompId]: {
+            type: componentType,
+            settings: {},
+            _style: {},
+            _advanced: {},
+          },
+        };
+        return {
+          ...sec,
+          settings: {
+            ...(sec.settings || {}),
+            _components: nextComponents,
+          },
+        };
+      }
+      return sec;
+    });
+
+    setCurrentTheme({ ...currentTheme, sections: updated });
+    setSelectedComponent({
+      sectionId: selectedSectionId,
+      componentId: newCompId,
+      componentType,
+    });
+    showToast(`Added ${componentType.replace(/_/g, " ")} component`);
   };
 
   const handleReorderSections = (newSections: SectionItemData[]) => {
@@ -188,6 +238,7 @@ export function ThemeEditorShell() {
     setCurrentTheme({ ...currentTheme, sections: updated });
     if (selectedSectionId === id) {
       setSelectedSectionId(null);
+      setSelectedComponent(null);
     }
   };
 
@@ -591,6 +642,7 @@ export function ThemeEditorShell() {
           device={device}
           onInlineEdit={handleInlineEdit}
           onSelectSection={handleSelectSection}
+          onEditComponent={handleEditComponent}
         />
 
         {/* Right Sidebar: Selected Section or Global Settings (Visual) */}
@@ -599,9 +651,16 @@ export function ThemeEditorShell() {
           globalSettings={currentTheme.settings}
           onUpdateSectionSettings={handleUpdateSectionSettings}
           onUpdateGlobalSettings={handleUpdateGlobalSettings}
-          onDeselectSection={() => setSelectedSectionId(null)}
+          onDeselectSection={() => {
+            setSelectedSectionId(null);
+            setSelectedComponent(null);
+          }}
           onDeleteSection={handleDeleteSection}
           onToggleSectionVisibility={handleToggleVisibility}
+          selectedComponent={selectedComponent}
+          onDeselectComponent={() => setSelectedComponent(null)}
+          onSelectComponent={setSelectedComponent}
+          onOpenComponentPicker={() => setIsComponentPickerOpen(true)}
         />
       </div>
 
@@ -610,6 +669,15 @@ export function ThemeEditorShell() {
         isOpen={isPickerOpen}
         onClose={() => setIsPickerOpen(false)}
         onSelectSection={handleAddSection}
+      />
+
+      {/* Component Picker Modal (Stage 47) */}
+      <ComponentPicker
+        isOpen={isComponentPickerOpen}
+        onClose={() => setIsComponentPickerOpen(false)}
+        onSelectComponent={handleAddComponentToSection}
+        allowedTypes={selectedSection ? getSectionSchema(selectedSection.type)?.allowedComponents : undefined}
+        sectionName={selectedSection?.name || selectedSection?.type}
       />
 
       {/* Publish Confirmation Modal */}

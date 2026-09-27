@@ -39,6 +39,7 @@ import ImageGallery from "@/components/themes/sections/ImageGallery";
 
 import { DEFAULT_THEME } from "./default-theme";
 import { generateAdvancedCSS } from "./section-css-generator";
+import { renderComponent, COMPONENT_MAP } from "@/components/themes/components";
 
 // 60-second theme advanced CSS cache for performance (<10ms CPU target)
 const advancedCSSCache = new Map<string, { css: string; expiry: number }>();
@@ -291,6 +292,36 @@ export function renderSection(
     }
     const visClassStr = visibilityClasses.length > 0 ? ` ${visibilityClasses.join(" ")}` : "";
 
+    // Dynamic child components (Stage 47)
+    const componentsMap = section.settings?._components;
+    let extraComponents: React.ReactNode = null;
+    if (componentsMap && typeof componentsMap === "object") {
+      const dynamicEntries = Object.entries(componentsMap).filter(([key, val]: [string, any]) => {
+        return COMPONENT_MAP[val?.type || key] !== undefined;
+      });
+
+      if (dynamicEntries.length > 0) {
+        extraComponents = (
+          <div className="section-child-components w-full">
+            {dynamicEntries.map(([compKey, compVal]: [string, any]) => {
+              const compType = compVal?.type || compKey;
+              return (
+                <div key={compKey} className="w-full">
+                  {renderComponent(compType, {
+                    id: compKey,
+                    sectionId: section.id,
+                    settings: compVal?.settings || {},
+                    style: compVal?._style || {},
+                    advanced: compVal?._advanced || {},
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        );
+      }
+    }
+
     return (
       <div
         key={section.id}
@@ -300,6 +331,7 @@ export function renderSection(
         className={`section-${section.id}${customClasses}${visClassStr}`}
       >
         {element}
+        {extraComponents}
       </div>
     );
   } catch (err) {

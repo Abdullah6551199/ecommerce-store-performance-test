@@ -211,3 +211,14 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-46.3-01 | Repeater Types | `pricing-table.ts` declared `{ key: 'highlighted', type: 'boolean' }` within repeater `fields`, but `RepeaterFieldConfig['type']` union was limited to `'text' \| 'image' \| 'url' \| 'number' \| 'richtext'`. | Added `'boolean'` and `'select'` to `RepeaterFieldConfig['type']` in `section-schema.ts`; `SchemaFieldRenderer.tsx` already handled rendering booleans natively. | Complete |
 | BUG-46.3-02 | Storefront Variant Mapping | Storefront components needed to handle new variants gracefully without missing fallback styles or broken layouts when user selects novel variants. | Implemented custom layout branches for all 22 requested variants across top 10 storefront section components with fallbacks to standard layouts. | Complete |
 
+---
+
+## Stage 47 (Component-Level Editing System & 32 New Components)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-47-01 | TypeScript in .ts File | `components/index.ts` returned JSX `<Component {...props} />` inside a `.ts` file, triggering `TS1005: '>' expected`. | Converted return expression to `React.createElement(Component, props)` for strict TypeScript compatibility in non-TSX files. | Complete |
+| BUG-47-02 | Utility Export Parity | `CustomHTML.tsx` imported `sanitizeHtml`, but `utils.ts` had only exported `sanitizeRichText`. | Exported `sanitizeHtml = sanitizeRichText` alias in `utils.ts` and confirmed XSS security protection across storefront embeds. | Complete |
+| BUG-47-03 | Elementor Hover Target Detection | Elements inside existing sections used `data-editable` attributes, whereas new micro-components used `data-component-id`. | Enhanced `ThemePreviewOverlay.tsx` to detect both `[data-component-id]` and `[data-editable]`, resolving type and parent section ID automatically. | Complete |
+
+

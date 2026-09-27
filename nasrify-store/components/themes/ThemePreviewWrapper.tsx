@@ -7,6 +7,7 @@ import { generateThemeVarsCss } from "@/lib/themes/css";
 import { getFontsInUse, getFontFaceCSS } from "@/lib/themes/fonts";
 import { generateAdvancedCSS } from "@/lib/themes/section-css-generator";
 import { ThemeAnimationObserver } from "@/components/themes/ThemeAnimationObserver";
+import { ThemePreviewOverlay } from "./ThemePreviewOverlay";
 
 interface ThemePreviewWrapperProps {
   initialTheme: ThemeConfig;
@@ -227,6 +228,7 @@ export default function ThemePreviewWrapper({
   return (
     <>
       <ThemeAnimationObserver />
+      <ThemePreviewOverlay />
       {renderTheme(theme, storeData)}
     </>
   );

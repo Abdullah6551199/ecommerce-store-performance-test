@@ -26,6 +26,7 @@ export interface FontPickerProps {
 }
 
 export function FontPicker({ label, value, onChange, description }: FontPickerProps) {
+  const [mounted, setMounted] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fonts, setFonts] = useState<FontOption[]>(FALLBACK_FONTS);
@@ -43,11 +44,13 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
 
   // Load curated fonts CSS in admin document on mount (Stage 47.1 - BUG-4)
   useEffect(() => {
+    setMounted(true);
     loadCuratedAdminFonts();
   }, []);
 
   // Calculate dropdown coordinates when opened
   const updateCoords = () => {
+    if (typeof window === "undefined") return;
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       const dropdownWidth = Math.max(rect.width, 280);
@@ -162,8 +165,10 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
       </button>
 
       {/* Portal Dropdown Menu (Stage 47.1 - BUG-5) */}
-      {isDropdownOpen &&
+      {mounted &&
+        isDropdownOpen &&
         typeof document !== "undefined" &&
+        document.body &&
         createPortal(
           <div
             ref={dropdownRef}
@@ -262,8 +267,10 @@ export function FontPicker({ label, value, onChange, description }: FontPickerPr
         )}
 
       {/* Full Grid Modal (Stage 47.1 - Elementor-Style Upgrade) */}
-      {isModalOpen &&
+      {mounted &&
+        isModalOpen &&
         typeof document !== "undefined" &&
+        document.body &&
         createPortal(
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150">
             <div

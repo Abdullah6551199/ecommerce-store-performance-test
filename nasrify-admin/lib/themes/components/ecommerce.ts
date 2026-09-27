@@ -1,4 +1,4 @@
-import { ComponentSchema } from '../component-schema';
+import type { ComponentSchema } from '../component-schema';
 
 export const ECOMMERCE_COMPONENT_SCHEMAS: ComponentSchema[] = [
   {

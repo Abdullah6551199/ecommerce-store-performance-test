@@ -39,6 +39,7 @@ export function ColorControl({
   allowAlpha = true,
   description,
 }: ColorControlProps) {
+  const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -46,6 +47,10 @@ export function ColorControl({
     top: 0,
     left: 0,
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [opacity, setOpacity] = useState<number>(() => {
     if (value && value.startsWith("rgba")) {
@@ -61,6 +66,7 @@ export function ColorControl({
   });
 
   const updateCoordinates = () => {
+    if (typeof window === "undefined") return;
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       const popupWidth = 250;
@@ -208,8 +214,10 @@ export function ColorControl({
       </div>
 
       {/* React Portal Popup (Stage 47.1 - BUG-2) */}
-      {isOpen &&
+      {mounted &&
+        isOpen &&
         typeof document !== "undefined" &&
+        document.body &&
         createPortal(
           <div
             ref={popupRef}

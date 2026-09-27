@@ -1,4 +1,4 @@
-import { registerComponentSchemas, COMPONENT_SCHEMAS, ComponentSchema } from '../component-schema';
+import type { ComponentSchema } from '../component-schema';
 import { CORE_COMPONENT_SCHEMAS } from './core';
 import { BASIC_COMPONENT_SCHEMAS } from './basic';
 import { ECOMMERCE_COMPONENT_SCHEMAS } from './ecommerce';
@@ -18,6 +18,3 @@ export const ALL_COMPONENT_SCHEMAS: ComponentSchema[] = [
   ...FORM_COMPONENT_SCHEMAS,
   ...MEDIA_COMPONENT_SCHEMAS,
 ];
-
-// Register all schemas on module load
-registerComponentSchemas(ALL_COMPONENT_SCHEMAS);

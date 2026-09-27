@@ -30,7 +30,7 @@ export const CURATED_FONTS = [
 let fontsLoaded = false;
 
 export function loadCuratedAdminFonts(): void {
-  if (typeof window === "undefined" || fontsLoaded) return;
+  if (typeof window === "undefined" || typeof document === "undefined" || !document.head || fontsLoaded) return;
 
   const fontFamiliesQuery = [
     "Inter:wght@400;600;700",

@@ -35,21 +35,42 @@ export interface ComponentSchema {
 
 export const COMPONENT_SCHEMAS: Record<string, ComponentSchema> = {};
 
+let schemasInitialized = false;
+
+function ensureSchemasInitialized(): void {
+  if (schemasInitialized) return;
+  schemasInitialized = true;
+  if (typeof ALL_COMPONENT_SCHEMAS !== "undefined" && Array.isArray(ALL_COMPONENT_SCHEMAS)) {
+    for (const s of ALL_COMPONENT_SCHEMAS) {
+      if (s && s.type) {
+        COMPONENT_SCHEMAS[s.type] = s;
+      }
+    }
+  }
+}
+
 export function getComponentSchema(type: string): ComponentSchema | undefined {
+  ensureSchemasInitialized();
   return COMPONENT_SCHEMAS[type];
 }
 
 export function registerComponentSchema(schema: ComponentSchema): void {
-  COMPONENT_SCHEMAS[schema.type] = schema;
+  if (schema && schema.type) {
+    COMPONENT_SCHEMAS[schema.type] = schema;
+  }
 }
 
 export function registerComponentSchemas(schemas: ComponentSchema[]): void {
-  schemas.forEach((s) => {
-    COMPONENT_SCHEMAS[s.type] = s;
-  });
+  if (Array.isArray(schemas)) {
+    schemas.forEach((s) => {
+      if (s && s.type) {
+        COMPONENT_SCHEMAS[s.type] = s;
+      }
+    });
+  }
 }
 
 // Auto-register components
 import { ALL_COMPONENT_SCHEMAS } from './components';
-registerComponentSchemas(ALL_COMPONENT_SCHEMAS);
+ensureSchemasInitialized();
 

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { PageSwitcher } from "./PageSwitcher";
 
 export type DeviceMode = "desktop" | "tablet" | "mobile";
 
@@ -20,6 +21,10 @@ interface TopBarProps {
   onDiscardDraft: () => Promise<void>;
   isDiscarding: boolean;
   liveUrl?: string;
+  activePageType?: string;
+  onSelectPage?: (pageType: string) => void;
+  cmsPages?: Array<{ id: string; slug: string; title: string }>;
+  isLoadingPages?: boolean;
 }
 
 export function TopBar({
@@ -37,12 +42,16 @@ export function TopBar({
   onDiscardDraft,
   isDiscarding,
   liveUrl = "https://nasrify-store.zia291930.workers.dev",
+  activePageType = "homepage",
+  onSelectPage = () => {},
+  cmsPages = [],
+  isLoadingPages = false,
 }: TopBarProps) {
   const [showDropdown, setShowDropdown] = useState(false);
 
   return (
     <header className="h-14 bg-slate-900 border-b border-slate-800 px-4 flex items-center justify-between shrink-0 select-none z-30">
-      {/* Left section: Back button & Store Title */}
+      {/* Left section: Back button, Store Title & Page Switcher */}
       <div className="flex items-center gap-3">
         <Link
           href="/admin"
@@ -56,14 +65,21 @@ export function TopBar({
 
         <div className="h-4 w-px bg-slate-800" />
 
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <h1 className="text-xs font-semibold text-slate-200 truncate max-w-40 sm:max-w-xs">
+        <div className="flex items-center gap-2.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+          <h1 className="text-xs font-semibold text-slate-200 truncate max-w-32 sm:max-w-48">
             {storeName}
           </h1>
-          <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium border border-slate-700/60 ml-1">
-            Visual Theme Editor
-          </span>
+
+          <div className="h-4 w-px bg-slate-800" />
+
+          {/* Page Switcher Dropdown */}
+          <PageSwitcher
+            activePageType={activePageType}
+            onSelectPage={onSelectPage}
+            cmsPages={cmsPages}
+            isLoadingPages={isLoadingPages}
+          />
         </div>
       </div>
 
@@ -182,7 +198,7 @@ export function TopBar({
 
         {/* Open in new tab preview */}
         <a
-          href={`${liveUrl}?preview=1`}
+          href={`${liveUrl}?preview=1&page=${activePageType || "homepage"}`}
           target="_blank"
           rel="noopener noreferrer"
           title="Open preview in new tab"
@@ -198,7 +214,7 @@ export function TopBar({
           <button
             type="button"
             onClick={onOpenPublishModal}
-            className="px-3 py-1.5 rounded-l-lg bg-[#25D366] hover:bg-[#25D366] text-white text-xs font-medium transition-colors flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-l-lg bg-[#25D366] hover:bg-[#1fa851] text-white text-xs font-medium transition-colors flex items-center gap-1.5"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -209,7 +225,7 @@ export function TopBar({
           <button
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
-            className="px-1.5 py-1.5 rounded-r-lg bg-[#1EA855] hover:bg-[#25D366] text-white text-xs font-medium border-l border-[#25D366]/40 transition-colors"
+            className="px-1.5 py-1.5 rounded-r-lg bg-[#1EA855] hover:bg-[#1fa851] text-white text-xs font-medium border-l border-[#25D366]/40 transition-colors"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

@@ -38,6 +38,7 @@ interface ThemeConfig {
     logo_text?: string;
   };
   sections: SectionItemData[];
+  page_defaults?: Record<string, SectionItemData[]>;
 }
 
 export function ThemeEditorShell() {
@@ -60,6 +61,29 @@ export function ThemeEditorShell() {
   const [isPublishModalOpen, setIsPublishModalOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Multi-Page state (Stage 47.3 - 47.4)
+  const [activePageType, setActivePageType] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return localStorage.getItem("nasrify_theme_editor_page") || "homepage";
+      } catch {
+        return "homepage";
+      }
+    }
+    return "homepage";
+  });
+  const [cmsPages, setCmsPages] = useState<Array<{ id: string; slug: string; title: string }>>([]);
+  const [isLoadingCmsPages, setIsLoadingCmsPages] = useState<boolean>(false);
+
+  // Sync & Refresh triggers (BUG-3)
+  const [forceRefreshTrigger, setForceRefreshTrigger] = useState<number>(0);
+
+  // Component Delete Modal (BUG-2)
+  const [componentToDelete, setComponentToDelete] = useState<{
+    sectionId: string;
+    componentId: string;
+  } | null>(null);
+
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isInitialLoadRef = useRef<boolean>(true);
 
@@ -70,11 +94,11 @@ export function ThemeEditorShell() {
     }, 3500);
   };
 
-  // 1. Fetch initial theme draft on mount
+  // 1. Fetch initial theme draft for active page type
   useEffect(() => {
     async function loadInitialDraft() {
       try {
-        const res = await fetch("/api/admin/theme-editor/draft");
+        const res = await fetch(`/api/admin/theme-editor/draft?page=${activePageType}`);
         if (res.ok) {
           const data = (await res.json()) as any;
           if (data && data.theme) {
@@ -88,6 +112,27 @@ export function ThemeEditorShell() {
       }
     }
     loadInitialDraft();
+  }, [activePageType]);
+
+  // Fetch dynamic CMS pages from D1 for Page Switcher
+  useEffect(() => {
+    async function loadCmsPages() {
+      setIsLoadingCmsPages(true);
+      try {
+        const res = await fetch("/api/admin/pages");
+        if (res.ok) {
+          const json = (await res.json()) as any;
+          if (json?.data?.pages && Array.isArray(json.data.pages)) {
+            setCmsPages(json.data.pages);
+          }
+        }
+      } catch (err) {
+        // Silently continue if CMS pages table empty
+      } finally {
+        setIsLoadingCmsPages(false);
+      }
+    }
+    loadCmsPages();
   }, []);
 
   // Save snapshot to undo stack helper (max 30 snapshots)
@@ -97,7 +142,7 @@ export function ThemeEditorShell() {
     setIsDirty(true);
   }, []);
 
-  // 2. Auto-save draft debounced 2 seconds after changes
+  // 2. Save draft with page_type isolation and force-refresh trigger
   const saveDraft = useCallback(
     async (themeToSave?: ThemeConfig) => {
       const target = themeToSave || currentTheme;
@@ -108,11 +153,16 @@ export function ThemeEditorShell() {
         const res = await fetch("/api/admin/theme-editor/draft", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ theme_json: target }),
+          body: JSON.stringify({
+            page_type: activePageType,
+            theme_json: target,
+          }),
         });
 
         if (res.ok) {
           setIsDirty(false);
+          // Trigger preview sync (BUG-3)
+          setForceRefreshTrigger((t) => t + 1);
         } else {
           showToast("Failed to save draft");
         }
@@ -122,10 +172,10 @@ export function ThemeEditorShell() {
         setIsSaving(false);
       }
     },
-    [currentTheme]
+    [currentTheme, activePageType]
   );
 
-  // Trigger auto-save debounce when currentTheme changes and dirty
+  // Trigger auto-save debounce (2 seconds) when currentTheme changes and is dirty
   useEffect(() => {
     if (isInitialLoadRef.current || !isDirty || !currentTheme) {
       return;
@@ -145,6 +195,40 @@ export function ThemeEditorShell() {
       }
     };
   }, [currentTheme, isDirty, saveDraft]);
+
+  // Page Switch Handler (STEP 6)
+  const handlePageSwitch = async (newPageType: string) => {
+    if (newPageType === activePageType) return;
+
+    // Auto-save current page draft if dirty before switching
+    if (isDirty && currentTheme) {
+      await saveDraft(currentTheme);
+    }
+
+    setActivePageType(newPageType);
+    try {
+      localStorage.setItem("nasrify_theme_editor_page", newPageType);
+    } catch {}
+
+    // Reset page-level state
+    setSelectedSectionId(null);
+    setSelectedComponent(null);
+    setUndoStack([]);
+    setRedoStack([]);
+
+    // Load new page's draft
+    try {
+      const res = await fetch(`/api/admin/theme-editor/draft?page=${newPageType}`);
+      if (res.ok) {
+        const data = (await res.json()) as any;
+        if (data?.theme) {
+          setCurrentTheme(data.theme);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load page draft", err);
+    }
+  };
 
   // 3. Actions
   const handleUndo = useCallback(() => {
@@ -175,6 +259,37 @@ export function ThemeEditorShell() {
   const handleEditComponent = (sectionId: string, componentId: string, componentType: string) => {
     setSelectedSectionId(sectionId);
     setSelectedComponent({ sectionId, componentId, componentType });
+  };
+
+  // Confirm delete component (BUG-2)
+  const confirmDeleteComponent = () => {
+    if (!currentTheme || !componentToDelete) return;
+    const { sectionId, componentId } = componentToDelete;
+    pushToUndoStack(currentTheme);
+
+    const updatedSections = currentTheme.sections.map((sec) => {
+      if (sec.id === sectionId && sec.settings?._components) {
+        const nextComponents = { ...sec.settings._components };
+        delete nextComponents[componentId];
+        return {
+          ...sec,
+          settings: {
+            ...sec.settings,
+            _components: nextComponents,
+          },
+        };
+      }
+      return sec;
+    });
+
+    const updatedTheme = { ...currentTheme, sections: updatedSections };
+    setCurrentTheme(updatedTheme);
+    if (selectedComponent?.componentId === componentId) {
+      setSelectedComponent(null);
+    }
+    setComponentToDelete(null);
+    saveDraft(updatedTheme);
+    showToast("Component deleted");
   };
 
   const handleAddComponentToSection = (componentType: string) => {
@@ -312,12 +427,16 @@ export function ThemeEditorShell() {
       const res = await fetch("/api/admin/theme-editor/publish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ theme_json: currentTheme }),
+        body: JSON.stringify({
+          page_type: activePageType,
+          theme_json: currentTheme,
+        }),
       });
 
       if (res.ok) {
         setIsDirty(false);
-        showToast("Theme published successfully to live storefront!");
+        setForceRefreshTrigger((t) => t + 1);
+        showToast(`Theme (${activePageType}) published successfully to live storefront!`);
       } else {
         const err = (await res.json().catch(() => ({}))) as any;
         showToast(err?.error || "Failed to publish theme");
@@ -331,13 +450,13 @@ export function ThemeEditorShell() {
 
   // 5. Discard draft flow
   const handleDiscard = async () => {
-    if (!confirm("Are you sure you want to discard your draft? All unsaved changes will be lost.")) {
+    if (!confirm(`Are you sure you want to discard your ${activePageType} draft? All unsaved changes will be lost.`)) {
       return;
     }
 
     setIsDiscarding(true);
     try {
-      const res = await fetch("/api/admin/theme-editor/discard", {
+      const res = await fetch(`/api/admin/theme-editor/discard?page=${activePageType}`, {
         method: "POST",
       });
 
@@ -350,7 +469,9 @@ export function ThemeEditorShell() {
         setRedoStack([]);
         setIsDirty(false);
         setSelectedSectionId(null);
-        showToast("Draft discarded. Restored live active theme.");
+        setSelectedComponent(null);
+        setForceRefreshTrigger((t) => t + 1);
+        showToast(`Draft discarded. Restored live active ${activePageType}.`);
       } else {
         showToast("Failed to discard draft");
       }
@@ -545,7 +666,9 @@ export function ThemeEditorShell() {
 
       // Esc → Deselect section / close modals
       if (e.key === "Escape") {
-        if (isPickerOpen) {
+        if (componentToDelete) {
+          setComponentToDelete(null);
+        } else if (isPickerOpen) {
           setIsPickerOpen(false);
         } else if (isPublishModalOpen) {
           setIsPublishModalOpen(false);
@@ -567,6 +690,7 @@ export function ThemeEditorShell() {
     handleDeleteSection,
     copiedSection,
     currentTheme,
+    componentToDelete,
     isPickerOpen,
     isPublishModalOpen,
     selectedSectionId,
@@ -601,7 +725,7 @@ export function ThemeEditorShell() {
         </div>
       )}
 
-      {/* Top Bar */}
+      {/* Top Bar with Page Switcher (Stage 47.3-4) */}
       <TopBar
         storeName={currentTheme.name}
         device={device}
@@ -616,6 +740,10 @@ export function ThemeEditorShell() {
         onOpenPublishModal={() => setIsPublishModalOpen(true)}
         onDiscardDraft={handleDiscard}
         isDiscarding={isDiscarding}
+        activePageType={activePageType}
+        onSelectPage={handlePageSwitch}
+        cmsPages={cmsPages}
+        isLoadingPages={isLoadingCmsPages}
       />
 
       {/* 3-Column Main Editor Workspace */}
@@ -640,9 +768,14 @@ export function ThemeEditorShell() {
         <PreviewFrame
           themeConfig={currentTheme}
           device={device}
+          pageType={activePageType}
+          forceRefreshTrigger={forceRefreshTrigger}
           onInlineEdit={handleInlineEdit}
           onSelectSection={handleSelectSection}
           onEditComponent={handleEditComponent}
+          onDeleteComponent={(sectionId, componentId) => {
+            setComponentToDelete({ sectionId, componentId });
+          }}
         />
 
         {/* Right Sidebar: Selected Section or Global Settings (Visual) */}
@@ -688,6 +821,41 @@ export function ThemeEditorShell() {
         isPublishing={isPublishing}
         sectionsCount={currentTheme.sections.length}
       />
+
+      {/* Delete Component Confirmation Modal (BUG-2) */}
+      {componentToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-5 shadow-2xl">
+            <div className="flex items-center gap-3 mb-3 text-rose-400">
+              <div className="w-9 h-9 rounded-full bg-rose-500/10 flex items-center justify-center shrink-0">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </div>
+              <h3 className="text-sm font-semibold text-slate-100">Delete Component</h3>
+            </div>
+            <p className="text-xs text-slate-400 mb-5 leading-relaxed">
+              Are you sure you want to delete this component? It will be removed from the section.
+            </p>
+            <div className="flex items-center justify-end gap-2.5">
+              <button
+                type="button"
+                onClick={() => setComponentToDelete(null)}
+                className="px-3.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-750 text-slate-300 text-xs font-medium transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteComponent}
+                className="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium transition-colors cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

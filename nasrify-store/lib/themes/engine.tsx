@@ -130,8 +130,13 @@ export function renderPageTheme(
   storeData: StoreData
 ): React.ReactNode {
   const activeTheme = theme || DEFAULT_THEME;
+  const normalizedKey = pageType.startsWith("page_") || pageType.startsWith("cms_") ? "page" : pageType;
   const pageSections =
-    activeTheme.page_defaults?.[pageType] || DEFAULT_THEME.page_defaults?.[pageType];
+    activeTheme.page_defaults?.[pageType] ||
+    activeTheme.page_defaults?.[normalizedKey] ||
+    DEFAULT_THEME.page_defaults?.[pageType] ||
+    DEFAULT_THEME.page_defaults?.[normalizedKey] ||
+    (activeTheme.sections && activeTheme.sections.length > 0 ? activeTheme.sections : null);
 
   if (!pageSections || !Array.isArray(pageSections)) {
     return null;
@@ -140,9 +145,18 @@ export function renderPageTheme(
   const settings = activeTheme.settings || DEFAULT_THEME.settings;
   const themeId = (activeTheme as any)?.id || activeTheme?.name || "default";
   const advancedCSS = getThemeAdvancedCSS(pageSections, themeId);
+  const visibilityBaseCSS = `
+    @media (min-width: 1025px) { .hide-desktop { display: none !important; } }
+    @media (min-width: 768px) and (max-width: 1024px) { .hide-tablet { display: none !important; } }
+    @media (max-width: 767px) { .hide-mobile { display: none !important; } }
+  `;
 
   return (
     <>
+      <style
+        id="theme-visibility-page-css"
+        dangerouslySetInnerHTML={{ __html: visibilityBaseCSS }}
+      />
       {advancedCSS && (
         <style
           id="theme-advanced-page-css"

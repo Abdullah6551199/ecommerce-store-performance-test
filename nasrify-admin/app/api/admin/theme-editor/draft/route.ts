@@ -7,17 +7,19 @@ export const dynamic = "force-dynamic";
 
 const DraftSchema = z.object({
   themeId: z.string().optional(),
+  page_type: z.string().optional(),
   theme_json: z.record(z.string(), z.any()),
 });
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const admin = await getCurrentAdmin();
     if (!admin || admin.role !== "admin") {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    const draft = await getThemeDraft();
+    const pageType = req.nextUrl.searchParams.get("page") || "homepage";
+    const draft = await getThemeDraft(pageType);
     return NextResponse.json({ success: true, ...draft });
   } catch (err: any) {
     return NextResponse.json(
@@ -35,9 +37,15 @@ export async function POST(req: NextRequest) {
     }
 
     const rawBody = (await req.json().catch(() => ({}))) as any;
-    // Support either theme_json or themeJson
+    const pageType =
+      rawBody.page_type ||
+      rawBody.pageType ||
+      req.nextUrl.searchParams.get("page") ||
+      "homepage";
+
     const normalizedBody = {
       themeId: rawBody.themeId || "theme-default",
+      page_type: pageType,
       theme_json: rawBody.theme_json || rawBody.themeJson,
     };
 
@@ -52,7 +60,8 @@ export async function POST(req: NextRequest) {
     const result = await saveThemeDraft(
       parsed.data.themeId || "theme-default",
       parsed.data.theme_json,
-      admin.email || "admin"
+      admin.email || "admin",
+      pageType
     );
 
     return NextResponse.json(result);

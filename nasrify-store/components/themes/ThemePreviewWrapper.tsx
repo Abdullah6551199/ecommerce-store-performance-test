@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ThemeConfig, StoreData } from "@/lib/themes/types";
-import { renderTheme } from "@/lib/themes/engine";
+import { renderTheme, renderPageTheme } from "@/lib/themes/engine";
 import { generateThemeVarsCss } from "@/lib/themes/css";
 import { getFontsInUse, getFontFaceCSS } from "@/lib/themes/fonts";
 import { generateAdvancedCSS } from "@/lib/themes/section-css-generator";
@@ -19,10 +19,20 @@ export default function ThemePreviewWrapper({
   storeData,
 }: ThemePreviewWrapperProps) {
   const [theme, setTheme] = useState<ThemeConfig>(initialTheme);
+  const [currentPage, setCurrentPage] = useState<string>("homepage");
+  const [forceRefreshKey, setForceRefreshKey] = useState<number>(0);
 
   useEffect(() => {
     setTheme(initialTheme);
   }, [initialTheme]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const pageParam = params.get("page") || "homepage";
+      setCurrentPage(pageParam);
+    }
+  }, []);
 
   useEffect(() => {
     const isPreviewTheme =
@@ -46,15 +56,19 @@ export default function ThemePreviewWrapper({
       window.location.search.includes("preview=1");
 
     if (isPreviewMode) {
-      // Notify parent admin editor that iframe preview is ready
+      // Notify parent admin editor that iframe preview is ready (handshake)
       try {
         window.parent?.postMessage({ type: "PREVIEW_READY" }, "*");
+        window.parent?.postMessage({ type: "READY" }, "*");
       } catch {}
 
       const handleMessage = (event: MessageEvent) => {
         if (event.data?.type === "UPDATE_THEME" && event.data?.theme) {
           const newTheme = event.data.theme as ThemeConfig;
           setTheme(newTheme);
+          if (event.data?.pageType) {
+            setCurrentPage(event.data.pageType);
+          }
 
           // Live update dynamic CSS variables in <head>
           const styleTag = document.getElementById("nasrify-theme-vars");
@@ -80,6 +94,32 @@ export default function ThemePreviewWrapper({
             newStyle.innerHTML = advancedCSS;
             document.head.appendChild(newStyle);
           }
+        } else if (event.data?.type === "FORCE_REFRESH") {
+          if (event.data?.theme) {
+            setTheme(JSON.parse(JSON.stringify(event.data.theme)));
+          }
+          if (event.data?.pageType) {
+            setCurrentPage(event.data.pageType);
+          }
+
+          const activeTheme = event.data?.theme || theme;
+          const styleTag = document.getElementById("nasrify-theme-vars");
+          if (styleTag) {
+            styleTag.innerHTML = generateThemeVarsCss(activeTheme);
+          }
+          const fontStyleTag = document.getElementById("nasrify-fonts-css");
+          if (fontStyleTag) {
+            const inUse = getFontsInUse(activeTheme);
+            fontStyleTag.innerHTML = getFontFaceCSS(inUse);
+          }
+          const advStyleTag = document.getElementById("theme-advanced-css");
+          const advancedCSS = generateAdvancedCSS(activeTheme);
+          if (advStyleTag) {
+            advStyleTag.innerHTML = advancedCSS;
+          }
+          setForceRefreshKey((k) => k + 1);
+        } else if (event.data?.type === "SWITCH_PAGE" && event.data?.pageType) {
+          setCurrentPage(event.data.pageType);
         }
       };
 
@@ -225,11 +265,74 @@ export default function ThemePreviewWrapper({
     }
   }, []);
 
+  // Enrich storeData with fallbacks for multi-page live rendering
+  const effectiveStoreData: StoreData = {
+    ...storeData,
+    product: storeData?.product || storeData?.products?.[0] || {
+      id: "prod-sample-1",
+      name: "Minimalist Ergonomic Workspace Chair",
+      brand: "Nasrify Design",
+      sku: "NAS-9921",
+      price: 249.0,
+      salePrice: 199.0,
+      rating: 4.8,
+      reviewsCount: 38,
+      inStock: true,
+      images: [
+        "https://images.unsplash.com/photo-1592078615290-033ee584e267?q=80&w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1580481077195-c22ae22d9c0e?q=80&w=800&auto=format&fit=crop",
+      ],
+      variants: [
+        { id: "v1", name: "Matte Black", price: 199.0, inStock: true },
+        { id: "v2", name: "Slate Grey", price: 199.0, inStock: true },
+        { id: "v3", name: "Forest Green", price: 219.0, inStock: true },
+      ],
+      description:
+        "Crafted with precision engineered lumbar support, breathable mesh, and anodized aluminum.",
+    },
+    category: storeData?.category || storeData?.categories?.[0] || {
+      id: "cat-sample-1",
+      name: "Living & Workspace",
+      slug: "living-workspace",
+      description: "Modern interior and workspace essentials.",
+    },
+    cart: storeData?.cart || {
+      items: [
+        {
+          id: "item-1",
+          productId: "prod-sample-1",
+          title: "Minimalist Ergonomic Workspace Chair",
+          quantity: 1,
+          price: 199.0,
+        },
+      ],
+      subtotal: 199.0,
+      total: 199.0,
+    },
+    checkout: storeData?.checkout || {
+      step: 1,
+      subtotal: 199.0,
+      total: 199.0,
+    },
+    account: storeData?.account || {
+      name: "Demo Customer",
+      email: "customer@example.com",
+      ordersCount: 3,
+    },
+    page: storeData?.page || {
+      title: "About Our Brand",
+      content:
+        "<p>We design thoughtfully crafted essentials designed to elevate your everyday living and working spaces.</p>",
+    },
+  };
+
   return (
-    <>
+    <React.Fragment key={`preview-${forceRefreshKey}-${currentPage}`}>
       <ThemeAnimationObserver />
       <ThemePreviewOverlay />
-      {renderTheme(theme, storeData)}
-    </>
+      {currentPage === "homepage" || !currentPage
+        ? renderTheme(theme, effectiveStoreData)
+        : renderPageTheme(theme, currentPage, effectiveStoreData)}
+    </React.Fragment>
   );
 }

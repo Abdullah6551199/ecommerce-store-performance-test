@@ -1471,6 +1471,19 @@ export const themeDrafts = sqliteTable("theme_drafts", {
 export type ThemeDraftRecord = typeof themeDrafts.$inferSelect;
 export type NewThemeDraftRecord = typeof themeDrafts.$inferInsert;
 
+// 61b. Theme Page Drafts Table (Stage 47.3)
+export const themePageDrafts = sqliteTable("theme_page_drafts", {
+  id: text("id").primaryKey(), // composite: {theme_id}::{page_type}
+  themeId: text("theme_id").notNull(),
+  pageType: text("page_type").notNull(),
+  draftJson: text("draft_json").notNull(),
+  updatedBy: text("updated_by"),
+  updatedAt: integer("updated_at"),
+});
+
+export type ThemePageDraftRecord = typeof themePageDrafts.$inferSelect;
+export type NewThemePageDraftRecord = typeof themePageDrafts.$inferInsert;
+
 // 62. Theme Editor History Table (Stage 42.5)
 export const themeEditorHistory = sqliteTable("theme_editor_history", {
   id: text("id").primaryKey(),

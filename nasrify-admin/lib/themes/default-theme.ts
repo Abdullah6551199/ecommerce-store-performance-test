@@ -434,5 +434,147 @@ export const DEFAULT_THEME: any = {
         },
       },
     ],
+    order_success: [
+      {
+        id: "pd-order-success-header",
+        type: "page_header",
+        variant: "simple",
+        enabled: true,
+        settings: {
+          show_breadcrumb: false,
+          alignment: "center",
+          title: "Order Confirmed!",
+        },
+      },
+      {
+        id: "pd-order-success-content",
+        type: "page_content",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          max_width: "max-w-3xl",
+          padding_y: "py-8",
+        },
+      },
+    ],
+    track_order: [
+      {
+        id: "pd-track-order-header",
+        type: "page_header",
+        variant: "simple",
+        enabled: true,
+        settings: {
+          show_breadcrumb: true,
+          alignment: "center",
+          title: "Track Your Order",
+        },
+      },
+      {
+        id: "pd-track-order-content",
+        type: "page_content",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          max_width: "max-w-2xl",
+          padding_y: "py-8",
+        },
+      },
+    ],
+    wishlist: [
+      {
+        id: "pd-wishlist-header",
+        type: "page_header",
+        variant: "simple",
+        enabled: true,
+        settings: {
+          show_breadcrumb: true,
+          alignment: "left",
+          title: "My Wishlist",
+        },
+      },
+      {
+        id: "pd-wishlist-grid",
+        type: "product_grid",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          heading: "Saved Items",
+          columns: 4,
+          show_price: true,
+          show_rating: true,
+          show_add_to_cart: true,
+        },
+      },
+    ],
+    compare: [
+      {
+        id: "pd-compare-header",
+        type: "page_header",
+        variant: "simple",
+        enabled: true,
+        settings: {
+          show_breadcrumb: true,
+          alignment: "center",
+          title: "Product Comparison",
+        },
+      },
+      {
+        id: "pd-compare-content",
+        type: "page_content",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          max_width: "max-w-6xl",
+          padding_y: "py-8",
+        },
+      },
+    ],
+    bundles: [
+      {
+        id: "pd-bundles-header",
+        type: "page_header",
+        variant: "simple",
+        enabled: true,
+        settings: {
+          show_breadcrumb: true,
+          alignment: "center",
+          title: "Special Bundles & Sets",
+        },
+      },
+      {
+        id: "pd-bundles-grid",
+        type: "product_grid",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          heading: "Featured Bundles",
+          columns: 3,
+          show_price: true,
+          show_add_to_cart: true,
+        },
+      },
+    ],
+    custom_page: [
+      {
+        id: "pd-custom-page-header",
+        type: "page_header",
+        variant: "simple",
+        enabled: true,
+        settings: {
+          show_breadcrumb: true,
+          alignment: "center",
+        },
+      },
+      {
+        id: "pd-custom-page-content",
+        type: "page_content",
+        variant: "standard",
+        enabled: true,
+        settings: {
+          max_width: "max-w-4xl",
+          padding_y: "py-8",
+        },
+      },
+    ],
   },
 };

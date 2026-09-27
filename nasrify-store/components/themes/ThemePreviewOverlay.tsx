@@ -201,10 +201,26 @@ export function ThemePreviewOverlay() {
     }
   };
 
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (isComponent && active.componentId) {
+      window.parent?.postMessage(
+        {
+          type: "DELETE_COMPONENT",
+          sectionId: active.sectionId,
+          componentId: active.componentId,
+        },
+        "*"
+      );
+    }
+  };
+
   return (
     <div
       id="nasrify-elementor-overlay"
-      className="fixed pointer-events-none z-50 transition-all duration-75"
+      className="fixed pointer-events-none z-[10000] transition-all duration-75"
       style={{
         top: `${active.rect.top}px`,
         left: `${active.rect.left}px`,
@@ -212,26 +228,45 @@ export function ThemePreviewOverlay() {
         height: `${active.rect.height}px`,
         border: `2px solid ${borderColor}`,
         boxShadow: `0 0 10px ${borderColor}40`,
+        padding: 0,
       }}
     >
-      {/* Top Left Badge */}
+      {/* Top Left Badge (Inside top-left corner) */}
       <div
-        className={`absolute -top-6 left-0 px-2 py-0.5 rounded-t-md text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md ${badgeBg} pointer-events-auto`}
+        className={`absolute top-[6px] left-[6px] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md ${badgeBg} pointer-events-none z-[10000]`}
       >
         <span>{isComponent ? "🧩" : "📑"}</span>
         <span>{active.label}</span>
       </div>
 
-      {/* Top Right Action Button */}
-      <button
-        type="button"
-        onClick={handleEdit}
-        className={`absolute -top-6 right-0 px-2 py-0.5 rounded-t-md text-[11px] font-bold flex items-center gap-1 shadow-md ${badgeBg} pointer-events-auto hover:opacity-90 transition-opacity cursor-pointer`}
-        title={`Edit ${active.label}`}
-      >
-        <span>✏️</span>
-        <span className="text-[10px]">Edit</span>
-      </button>
+      {/* Top Right Action Buttons (Inside box boundary, 28x28px each) */}
+      <div className="absolute top-[6px] right-[6px] flex items-center gap-1.5 pointer-events-auto z-[10000]">
+        {/* Delete Component Button (Only on components, sections delete via sidebar) */}
+        {isComponent && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="w-7 h-7 bg-red-600 hover:bg-red-700 text-white rounded flex items-center justify-center shadow-md transition-colors cursor-pointer shrink-0"
+            title={`Delete ${active.label}`}
+          >
+            <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        )}
+
+        {/* Edit Button (28x28px, green/blue bg, white pencil icon) */}
+        <button
+          type="button"
+          onClick={handleEdit}
+          className={`w-7 h-7 ${isComponent ? "bg-[#25D366] hover:bg-[#1fa851]" : "bg-[#3B82F6] hover:bg-[#2563eb]"} text-white rounded flex items-center justify-center shadow-md transition-colors cursor-pointer shrink-0`}
+          title={`Edit ${active.label}`}
+        >
+          <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }

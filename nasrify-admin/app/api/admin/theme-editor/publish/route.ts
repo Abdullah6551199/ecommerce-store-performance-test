@@ -6,6 +6,7 @@ import { getCurrentAdmin } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 const PublishSchema = z.object({
+  page_type: z.string().optional(),
   theme_json: z.record(z.string(), z.any()),
 });
 
@@ -17,7 +18,14 @@ export async function POST(req: NextRequest) {
     }
 
     const rawBody = (await req.json().catch(() => ({}))) as any;
+    const pageType =
+      rawBody.page_type ||
+      rawBody.pageType ||
+      req.nextUrl.searchParams.get("page") ||
+      "homepage";
+
     const normalizedBody = {
+      page_type: pageType,
       theme_json: rawBody.theme_json || rawBody.themeJson,
     };
 
@@ -31,7 +39,8 @@ export async function POST(req: NextRequest) {
 
     const result = await publishThemeDraft(
       parsed.data.theme_json,
-      admin.email || "admin"
+      admin.email || "admin",
+      pageType
     );
 
     return NextResponse.json(result);

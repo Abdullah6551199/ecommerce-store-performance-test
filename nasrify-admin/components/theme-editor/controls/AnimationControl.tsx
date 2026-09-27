@@ -193,12 +193,17 @@ export function AnimationControl({
                 });
                 triggerReplay();
               }}
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg py-1.5 px-2.5 text-xs text-slate-200 focus:outline-none focus:border-green-500 [&>option]:bg-slate-900 [&>option]:text-slate-100"
+              className="w-full bg-slate-950 border border-slate-700 rounded-lg py-2 px-2.5 text-xs text-slate-100 focus:outline-hidden focus:border-emerald-500 [&>optgroup]:bg-slate-900 [&>optgroup]:text-slate-400 [&>optgroup]:font-bold [&>option]:bg-slate-950 [&>option]:text-slate-100 cursor-pointer"
             >
-              {ANIMATION_PRESETS.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.label} ({p.group})
-                </option>
+              <option value="none">None (No animation)</option>
+              {Array.from(new Set(ANIMATION_PRESETS.filter((p) => p.id !== "none").map((p) => p.group))).map((group) => (
+                <optgroup key={group} label={group}>
+                  {ANIMATION_PRESETS.filter((p) => p.group === group).map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.label}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </div>
@@ -322,12 +327,16 @@ export function AnimationControl({
                       },
                     })
                   }
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg py-1.5 px-2.5 text-xs text-slate-200 focus:outline-none focus:border-green-500 [&>option]:bg-slate-900 [&>option]:text-slate-100"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg py-2 px-2.5 text-xs text-slate-100 focus:outline-hidden focus:border-emerald-500 [&>optgroup]:bg-slate-900 [&>optgroup]:text-slate-400 [&>optgroup]:font-bold [&>option]:bg-slate-950 [&>option]:text-slate-100 cursor-pointer"
                 >
-                  {ANIMATION_PRESETS.filter((p) => p.id !== "none").map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.label}
-                    </option>
+                  {Array.from(new Set(ANIMATION_PRESETS.filter((p) => p.id !== "none").map((p) => p.group))).map((group) => (
+                    <optgroup key={group} label={group}>
+                      {ANIMATION_PRESETS.filter((p) => p.group === group).map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.label}
+                        </option>
+                      ))}
+                    </optgroup>
                   ))}
                 </select>
               </div>

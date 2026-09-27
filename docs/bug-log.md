@@ -221,4 +221,18 @@ This document logs non-blocking, cosmetic, or environmental observations noted d
 | BUG-47-02 | Utility Export Parity | `CustomHTML.tsx` imported `sanitizeHtml`, but `utils.ts` had only exported `sanitizeRichText`. | Exported `sanitizeHtml = sanitizeRichText` alias in `utils.ts` and confirmed XSS security protection across storefront embeds. | Complete |
 | BUG-47-03 | Elementor Hover Target Detection | Elements inside existing sections used `data-editable` attributes, whereas new micro-components used `data-component-id`. | Enhanced `ThemePreviewOverlay.tsx` to detect both `[data-component-id]` and `[data-editable]`, resolving type and parent section ID automatically. | Complete |
 
+---
+
+## Stage 47.1 (Bug Fix — Component Settings + UI Popups + Elementor Font Picker)
+
+| ID | Category | Description | Impact | Target Phase |
+|---|---|---|---|---|
+| BUG-47.1-01 (BUG-1) | Component Settings | Button and micro-components only exposed 1-2 content settings in editor, missing background color, text color, corner radius, borders, and hover states. | Added Content tab Quick Appearance card syncing to `_style`, defaulted Style/Advanced accordions open, and added `!important` selector override in CSS generator to override Tailwind defaults. | Complete |
+| BUG-47.1-02 (BUG-2) | UI / Popup Clipping | Color palette popup was clipped and truncated inside overflow-hidden parent containers in settings panel. | Rewrote `ColorControl.tsx` using `React.createPortal` rendered to `document.body` with `z-index: 9999` and calculated bounding viewport coordinates with collision flipping. | Complete |
+| BUG-47.1-03 (BUG-3) | UI / Dropdown Styling | Motion & Animation effect dropdown was empty with only headers visible due to missing option styling and height constraints. | Replaced custom clipped containers with native `<select>` containing explicit `<optgroup>` categories styled with dark background and contrasting text. | Complete |
+| BUG-47.1-04 (BUG-4) | Font Preview / Admin | Font preview samples in font picker dropdown rendered identical fallback system fonts because Google Font typefaces were not loaded in admin runtime. | Created `load-fonts.ts` dynamically injecting curated Google Fonts link stylesheet for all 21 fonts on mount, rendering real font previews. | Complete |
+| BUG-47.1-05 (BUG-5) | Font Control Elementor Upgrade | Font selection used basic modal without inline search or live typeface rendering. | Rewrote `FontPicker.tsx` into Elementor-style portal dropdown with live search, category pills (All/Sans/Serif/Display/Handwriting/Mono), live typeface preview, and 3-column Browse All modal. | Complete |
+| BUG-47.1-06 (BUG-6) | Component Selector Parity | Component CSS generator strictly checked `.component-${compKey}` and `[data-component-id="${compKey}"]`, missing `[data-editable="${compKey}"]` tags in storefront sections. | Added `[data-editable="${compKey}"]` to `compSelector` across storefront and admin CSS compilers. | Complete |
+
+
 

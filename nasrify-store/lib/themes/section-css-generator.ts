@@ -231,6 +231,7 @@ export function generateSectionCSS(
   }
 
   const selector = customSelector || `.section-${sectionId}`;
+  const imp = customSelector ? " !important" : "";
   const style = advanced.style || {};
   const motion = advanced.animation;
   const responsive = advanced.responsive;
@@ -244,56 +245,60 @@ export function generateSectionCSS(
   // 1. Typography
   if (style.typography) {
     const t = style.typography;
-    if (t.fontFamily) desktopDecls.push(`font-family: "${t.fontFamily}", sans-serif;`);
-    if (t.fontWeight) desktopDecls.push(`font-weight: ${t.fontWeight};`);
-    if (t.fontSize) desktopDecls.push(`font-size: ${t.fontSize};`);
-    if (t.lineHeight) desktopDecls.push(`line-height: ${t.lineHeight};`);
-    if (t.letterSpacing) desktopDecls.push(`letter-spacing: ${t.letterSpacing};`);
-    if (t.wordSpacing) desktopDecls.push(`word-spacing: ${t.wordSpacing};`);
-    if (t.textTransform && t.textTransform !== "none") desktopDecls.push(`text-transform: ${t.textTransform};`);
-    if (t.textDecoration && t.textDecoration !== "none") desktopDecls.push(`text-decoration: ${t.textDecoration};`);
-    if (t.fontStyle && t.fontStyle !== "normal") desktopDecls.push(`font-style: ${t.fontStyle};`);
-    if (t.textAlign) desktopDecls.push(`text-align: ${t.textAlign};`);
-    if (t.color) desktopDecls.push(`color: ${t.color};`);
+    if (t.fontFamily) desktopDecls.push(`font-family: "${t.fontFamily}", sans-serif${imp};`);
+    if (t.fontWeight) desktopDecls.push(`font-weight: ${t.fontWeight}${imp};`);
+    if (t.fontSize) desktopDecls.push(`font-size: ${t.fontSize}${imp};`);
+    if (t.lineHeight) desktopDecls.push(`line-height: ${t.lineHeight}${imp};`);
+    if (t.letterSpacing) desktopDecls.push(`letter-spacing: ${t.letterSpacing}${imp};`);
+    if (t.wordSpacing) desktopDecls.push(`word-spacing: ${t.wordSpacing}${imp};`);
+    if (t.textTransform && t.textTransform !== "none") desktopDecls.push(`text-transform: ${t.textTransform}${imp};`);
+    if (t.textDecoration && t.textDecoration !== "none") desktopDecls.push(`text-decoration: ${t.textDecoration}${imp};`);
+    if (t.fontStyle && t.fontStyle !== "normal") desktopDecls.push(`font-style: ${t.fontStyle}${imp};`);
+    if (t.textAlign) desktopDecls.push(`text-align: ${t.textAlign}${imp};`);
+    if (t.color) desktopDecls.push(`color: ${t.color}${imp};`);
   }
 
   // 2. Background
   if (style.background) {
     const bg = style.background;
     if (bg.type === "color" && bg.color) {
-      desktopDecls.push(`background-color: ${bg.color};`);
+      desktopDecls.push(`background-color: ${bg.color}${imp};`);
     } else if (bg.type === "gradient" && bg.gradient && bg.gradient.stops?.length) {
-      desktopDecls.push(`background: ${compileGradientCSS(bg.gradient)};`);
+      desktopDecls.push(`background: ${compileGradientCSS(bg.gradient)}${imp};`);
     } else if (bg.type === "image" && bg.image?.url) {
-      desktopDecls.push(`background-image: url('${bg.image.url}');`);
-      desktopDecls.push(`background-size: ${bg.image.fit || "cover"};`);
-      desktopDecls.push(`background-position: ${bg.image.position || "center"};`);
-      desktopDecls.push(`background-repeat: ${bg.image.repeat || "no-repeat"};`);
-      desktopDecls.push(`background-attachment: ${bg.image.attachment || "scroll"};`);
+      desktopDecls.push(`background-image: url('${bg.image.url}')${imp};`);
+      desktopDecls.push(`background-size: ${bg.image.fit || "cover"}${imp};`);
+      desktopDecls.push(`background-position: ${bg.image.position || "center"}${imp};`);
+      desktopDecls.push(`background-repeat: ${bg.image.repeat || "no-repeat"}${imp};`);
+      desktopDecls.push(`background-attachment: ${bg.image.attachment || "scroll"}${imp};`);
     }
   }
 
   // 3. Border & Radius
   if (style.border && style.border.style !== "none") {
     const b = style.border;
-    const u = b.width.unit || "px";
-    desktopDecls.push(`border-top-width: ${b.width.top}${u};`);
-    desktopDecls.push(`border-right-width: ${b.width.right}${u};`);
-    desktopDecls.push(`border-bottom-width: ${b.width.bottom}${u};`);
-    desktopDecls.push(`border-left-width: ${b.width.left}${u};`);
-
-    if (b.style === "gradient" && b.gradient) {
-      desktopDecls.push(`border-style: solid;`);
-      desktopDecls.push(`border-image: ${compileGradientCSS(b.gradient)} 1;`);
-    } else {
-      desktopDecls.push(`border-style: ${b.style};`);
-      desktopDecls.push(`border-color: ${b.color};`);
+    const u = b.width?.unit || "px";
+    if (b.width) {
+      desktopDecls.push(`border-top-width: ${b.width.top ?? 1}${u}${imp};`);
+      desktopDecls.push(`border-right-width: ${b.width.right ?? 1}${u}${imp};`);
+      desktopDecls.push(`border-bottom-width: ${b.width.bottom ?? 1}${u}${imp};`);
+      desktopDecls.push(`border-left-width: ${b.width.left ?? 1}${u}${imp};`);
     }
 
-    const ru = b.radius.unit || "px";
-    desktopDecls.push(
-      `border-radius: ${b.radius.topLeft}${ru} ${b.radius.topRight}${ru} ${b.radius.bottomRight}${ru} ${b.radius.bottomLeft}${ru};`
-    );
+    if (b.style === "gradient" && b.gradient) {
+      desktopDecls.push(`border-style: solid${imp};`);
+      desktopDecls.push(`border-image: ${compileGradientCSS(b.gradient)} 1${imp};`);
+    } else {
+      desktopDecls.push(`border-style: ${b.style}${imp};`);
+      desktopDecls.push(`border-color: ${b.color}${imp};`);
+    }
+
+    if (b.radius) {
+      const ru = b.radius.unit || "px";
+      desktopDecls.push(
+        `border-radius: ${b.radius.topLeft ?? 0}${ru} ${b.radius.topRight ?? 0}${ru} ${b.radius.bottomRight ?? 0}${ru} ${b.radius.bottomLeft ?? 0}${ru}${imp};`
+      );
+    }
 
     if (b.animation && b.animation !== "none") {
       const dur = b.animationDuration || 2000;
@@ -549,7 +554,7 @@ export function generateAdvancedCSS(themeConfig: {
           },
         };
 
-        const compSelector = `.section-${section.id} .component-${compKey}, .section-${section.id} [data-component-id="${compKey}"]`;
+        const compSelector = `.section-${section.id} .component-${compKey}, .section-${section.id} [data-component-id="${compKey}"], .section-${section.id} [data-editable="${compKey}"]`;
         const compRes = generateSectionCSS(section.id, compAdvanced, compSelector);
 
         if (compRes.desktopCSS) desktopBlocks.push(compRes.desktopCSS);

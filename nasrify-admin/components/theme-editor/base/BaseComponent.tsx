@@ -14,6 +14,7 @@ import {
   CustomCSSControl,
   PositionControl,
   SpacingControl,
+  ColorControl,
 } from "../controls";
 
 export interface BaseComponentProps {
@@ -35,13 +36,13 @@ export function BaseComponent({
 }: BaseComponentProps) {
   const [internalTab, setInternalTab] = useState<"content" | "style" | "advanced">("content");
   const [openAccordions, setOpenAccordions] = useState<Record<string, boolean>>({
-    typography: false,
-    background: false,
-    border: false,
-    shadow: false,
-    hover: false,
-    layout: false,
-    animation: false,
+    typography: true,
+    background: true,
+    border: true,
+    shadow: true,
+    hover: true,
+    layout: true,
+    animation: true,
     responsive: false,
     customcss: false,
     position: false,
@@ -200,6 +201,90 @@ export function BaseComponent({
               />
             ))
           )}
+
+          {/* Quick Style & Appearance (Stage 47.1 - BUG-1) */}
+          <div className="pt-3 mt-4 border-t border-slate-800 space-y-3 bg-slate-950/40 p-3 rounded-xl border border-slate-800/80">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                <span>🎨</span>
+                <span>Quick Appearance</span>
+              </span>
+              <span className="text-[10px] text-slate-500">Syncs with Style Tab</span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5">
+              <ColorControl
+                label="Background"
+                value={style.background?.color || (typeof style.background === "string" ? style.background : "")}
+                onChange={(c) =>
+                  setStyle({
+                    background: {
+                      ...(typeof style.background === "object" ? style.background : {}),
+                      type: "color",
+                      color: c,
+                    },
+                  })
+                }
+              />
+              <ColorControl
+                label="Text Color"
+                value={style.typography?.color || ""}
+                onChange={(c) =>
+                  setStyle({
+                    typography: {
+                      ...(style.typography || {}),
+                      color: c,
+                    },
+                  })
+                }
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5">
+              <div>
+                <label className="text-xs font-medium text-slate-300 block mb-1">Corner Radius (px)</label>
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={style.border?.radius?.topLeft ?? ""}
+                  placeholder="e.g. 8"
+                  onChange={(e) => {
+                    const r = parseInt(e.target.value) || 0;
+                    setStyle({
+                      border: {
+                        ...(style.border || {}),
+                        style: style.border?.style || "solid",
+                        radius: {
+                          unit: "px",
+                          topLeft: r,
+                          topRight: r,
+                          bottomRight: r,
+                          bottomLeft: r,
+                          linked: true,
+                        },
+                      },
+                    });
+                  }}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100 font-mono focus:outline-hidden focus:border-emerald-500"
+                />
+              </div>
+
+              <ColorControl
+                label="Hover Background"
+                value={style.hover?.backgroundColor || ""}
+                onChange={(c) =>
+                  setStyle({
+                    hover: {
+                      ...(style.hover || {}),
+                      enabled: true,
+                      backgroundColor: c,
+                    },
+                  })
+                }
+              />
+            </div>
+          </div>
         </div>
       )}
 
@@ -394,8 +479,8 @@ export function BaseComponent({
             {openAccordions.animation && (
               <div className="p-3 border-t border-slate-800/80">
                 <AnimationControl
-                  value={advanced.motion}
-                  onChange={(m) => setAdvanced({ motion: m })}
+                  value={advanced.animation || advanced.motion}
+                  onChange={(anim) => setAdvanced({ animation: anim, motion: anim })}
                 />
               </div>
             )}

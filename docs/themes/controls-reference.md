@@ -28,13 +28,14 @@ This document provides a comprehensive reference for the 15 core controls availa
 ---
 
 ## 3. ColorControl (`ColorControl.tsx`)
-- **Capabilities**: High-precision color selection with alpha transparency.
+- **Capabilities**: High-precision color selection with alpha transparency, rendered via React Portal to prevent container clipping.
 - **Controls**:
-  - Native browser HTML5 color picker
-  - Hex code manual input (`#HEX`)
+  - Portal-rendered popup attached to `document.body` (`z-index: 9999`) avoiding clipping by `overflow: hidden` parent sidebars
+  - Native browser HTML5 color picker + Eyedropper API integration
+  - Hex code manual input (`#HEX`) with live conversion
   - Alpha / Opacity slider (0% to 100%) converting automatically to `rgba(...)`
-  - Theme preset color swatches
-  - Browser Eyedropper API integration (where supported)
+  - 14 curated theme preset color swatches
+  - Viewport-aware collision detection (automatically flips popup above/below trigger button)
 - **Use cases**: Text colors, solid background colors, overlay tints, accent highlights.
 
 ---
@@ -213,3 +214,16 @@ This document provides a comprehensive reference for the 15 core controls availa
   - Video background: MP4/WebM URL, Loop, Muted, Autoplay
   - Background overlay: Color picker, opacity slider (0-100%), blend modes (`normal`, `multiply`, `screen`, `overlay`, `darken`, `lighten`)
 - **Use cases**: Hero media backgrounds, video banners, subtle textured sections.
+
+---
+
+## 16. Elementor-Style FontPicker (`FontPicker.tsx`)
+- **Capabilities**: Elementor-grade font selection with real typeface rendering and quick live search.
+- **Controls**:
+  - Trigger button displaying active font styled in its own typeface
+  - Portal-rendered dropdown menu (`z-index: 9999`) avoiding clipping by sidebar boundaries
+  - Inline search bar for real-time typeface filtering
+  - Category pill filters: `All`, `Sans`, `Serif`, `Display`, `Handwriting`, `Mono`
+  - Live typeface previews using dynamic Google Fonts stylesheet injection across all 21 curated fonts
+  - "Browse All Fonts" full modal with 3-column responsive card showcase, category badges, and sample text
+- **Use cases**: Typography headings, body typography, button labels, badge styling.
